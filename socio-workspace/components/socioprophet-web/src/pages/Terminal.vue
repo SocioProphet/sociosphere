@@ -1,1 +1,0 @@
-<template><div><h3 style='color: var(--accent);'>Terminal</h3></div></template><script setup lang='ts'></script>

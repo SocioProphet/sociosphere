@@ -1,4 +1,0 @@
-[hypervisor.qemu]
-default_memory = 1024
-debug = false
-disable_nesting_checks = true

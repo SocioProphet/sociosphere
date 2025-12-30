@@ -1,1 +1,0 @@
-<template><div><h3 style='color: var(--accent);'>Spec Manager</h3></div></template><script setup lang='ts'></script>

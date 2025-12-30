@@ -1,7 +1,0 @@
-transformers
-torch
-onnxruntime
-soundfile
-librosa
-PyYAML
-sentence-transformers
