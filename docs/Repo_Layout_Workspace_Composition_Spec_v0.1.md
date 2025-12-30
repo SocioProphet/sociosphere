@@ -38,7 +38,7 @@ Responsibilities:
 - Shared protocol specs + fixtures
 - CI workflows orchestrating multi-repo builds
 
-Suggested name: `socio-workspace` (or `sourceos-workspace`).
+Suggested name: `sociosphere` (or `sourceos-workspace`).
 
 ### 2) Component Repos
 Independent repos that provide:

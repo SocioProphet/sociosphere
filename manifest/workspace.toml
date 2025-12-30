@@ -1,5 +1,5 @@
 [workspace]
-name = "socio-workspace"
+name = "sociosphere"
 version = "0.1"
 
 # NOTE: This manifest supports both local materialized repos (local_path)

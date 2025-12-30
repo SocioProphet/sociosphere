@@ -1,4 +1,4 @@
-# socio-workspace (v0.1)
+# sociosphere (v0.1)
 
 Workspace controller repo.
 

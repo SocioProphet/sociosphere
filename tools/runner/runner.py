@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""socio-workspace runner (v0.1)
+"""sociosphere runner (v0.1)
 
 Bootstrap runner for our manifest+lock workspace.
 

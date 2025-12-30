@@ -3,7 +3,7 @@
 This document defines how we name repositories, folders, modules, and releases so we preserve semantic clarity, avoid accidental commingling, and keep dependency graphs clean.
 
 ## 1) Core principle: repo identity encodes *domain*, not *version*
-- **Repo names must be stable** and reflect what the thing *is* (e.g. `tritrpc`, `socio-workspace`).
+- **Repo names must be stable** and reflect what the thing *is* (e.g. `tritrpc`, `sociosphere`).
 - **Versions live in tags/releases**, not repo names.
 - Example:
   - ✅ `SocioProphet/tritrpc` with tags `v0.1.1`, `v0.1.2`, …
@@ -25,7 +25,7 @@ We maintain three distinct classes of repositories:
 - Rules:
   - May use submodules or vendoring only when pinned.
   - Must record the “bill of materials” (BOM) in a manifest.
-- Example: `socio-workspace`.
+- Example: `sociosphere`.
 
 ### 2.3 Notes / drafts / narrative archives (non-normative)
 - Purpose: historical exploration, design notes, drafts.
@@ -48,15 +48,15 @@ We use SemVer tags: `vMAJOR.MINOR.PATCH`.
 - Don’t “float” main/master as a dependency.
 
 ## 4) Dependency hygiene: how we avoid commingling
-- `socio-workspace` may depend on `tritrpc` via **submodule pinned to a tag** (preferred), or a specific commit hash.
-- `tritrpc` must not depend on `socio-workspace`.
+- `sociosphere` may depend on `tritrpc` via **submodule pinned to a tag** (preferred), or a specific commit hash.
+- `tritrpc` must not depend on `sociosphere`.
 - Notes archives must not be submodules unless explicitly pulled for research, and should not be transitively required.
 
 ## 5) Canonical documentation locations
 - Normative protocol spec: `tritrpc/spec/*`
 - Reference implementations: `tritrpc/go/*`, `tritrpc/rust/*`, `tritrpc/reference/*`
 - Historical narrative extracted into core: `tritrpc/docs/*`
-- Workspace integration status + pins: `socio-workspace/docs/INTEGRATION_STATUS.md` + `manifest/workspace.toml`
+- Workspace integration status + pins: `sociosphere/docs/INTEGRATION_STATUS.md` + `manifest/workspace.toml`
 
 ## 6) Immediate next actions (backlog-aligned)
 P0:
