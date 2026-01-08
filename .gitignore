@@ -20,3 +20,7 @@ bin/
 # materialized workspace checkouts
 /components/
 /adapters/
+
+# macOS cruft
+.DS_Store
+**/.DS_Store
