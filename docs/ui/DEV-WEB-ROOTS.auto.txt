@@ -1,0 +1,4 @@
+prophet-platform/apps/socioprophet-web/vite.config.ts
+socioprophet-seeds/socioprophet/apps/socioprophet-web/vite.config.ts
+socioprophet-web/vite.config.ts
+sociosphere/apps/ui-workbench/vite.config.ts
