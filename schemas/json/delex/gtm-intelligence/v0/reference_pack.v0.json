@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.sociosphere.local/delex/gtm-intelligence/v0/reference_pack.v0.json",
+  "title": "ReferencePack v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "deal_id", "what_changed", "quantified_outcomes", "proof_links", "approvals", "anonymization_level"],
+  "properties": {
+    "schema_version": { "const": "reference_pack.v0" },
+    "deal_id": { "$ref": "common.v0.json#/$defs/known_id" },
+    "what_changed": { "type": "string", "minLength": 10, "maxLength": 6000 },
+    "quantified_outcomes": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 10, "maxLength": 800 }
+    },
+    "proof_links": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 5, "maxLength": 500 }
+    },
+    "approvals": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["role", "approved_by", "approved_at"],
+        "properties": {
+          "role": { "type": "string", "minLength": 2, "maxLength": 200 },
+          "approved_by": { "type": "string", "minLength": 2, "maxLength": 200 },
+          "approved_at": { "$ref": "common.v0.json#/$defs/iso_datetime" }
+        }
+      }
+    },
+    "anonymization_level": { "type": "string", "enum": ["internal", "external_anonymized", "external_named"] },
+    "notes": { "type": "string", "maxLength": 12000 }
+  }
+}

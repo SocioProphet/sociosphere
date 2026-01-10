@@ -1,0 +1,361 @@
+version: v0
+owner: salesops
+cadence_model:
+  realtime: [recipe_run.status, skill_run.status, ingestion.schema_drift]
+  daily: [pipeline.freshness, followup.sla_breaches, blockers.open_close, asset_usage]
+  weekly: [pod.scorecards, stage_velocity, handoff_defects, coaching_density, artifact_discipline, forecast_volatility]
+  monthly: [conversion_rates, partner_leverage, referenceability_rate, skills_coverage]
+  quarterly: [okr_outcomes, vertical_penetration, retention_expansion, regretted_attrition]
+
+# ---------------------------
+# Event contracts (minimum viable telemetry)
+# ---------------------------
+events:
+  # Core work execution
+  recipe_run:
+    required_fields: [run_id, recipe_id, recipe_version, started_at, ended_at, status, actor_type, pod_id]
+    status_enum: [started, succeeded, failed, canceled]
+    optional_fields: [deal_id, account_id, segment_family, motion, artifacts_produced, error_code, duration_ms]
+  skill_run:
+    required_fields: [run_id, skill_id, skill_version, started_at, ended_at, status, actor_type, pod_id]
+    status_enum: [started, succeeded, failed, canceled]
+    optional_fields: [deal_id, account_id, duration_ms, retries, error_code]
+
+  # GTM lifecycle + pipeline
+  deal_stage_change:
+    required_fields: [event_id, deal_id, account_id, from_stage, to_stage, changed_at, changed_by, pod_id]
+    optional_fields: [deal_value_usd, segment_family, motion, forecast_category]
+  deal_forecast_snapshot:
+    required_fields: [snapshot_id, deal_id, snapshot_at, forecast_category, forecast_amount_usd, close_date, pod_id]
+    forecast_category_enum: [omit, pipeline, best_case, commit]
+  customer_touch:
+    required_fields: [touch_id, deal_id, account_id, touch_at, touch_type, pod_id]
+    touch_type_enum: [meeting, email, call, workshop, exec_briefing]
+    optional_fields: [stakeholder_role]
+  followup_commitment:
+    required_fields: [commitment_id, deal_id, created_at, due_at, completed_at, status, pod_id]
+    status_enum: [open, completed, missed]
+
+  # Cross-functional handoff + delivery truth
+  handoff_event:
+    required_fields: [handoff_id, deal_id, account_id, handoff_at, from_team, to_team, handoff_type, pod_id]
+    handoff_type_enum: [sales_to_delivery, delivery_to_support, sales_to_partner]
+  handoff_defect:
+    required_fields: [defect_id, deal_id, detected_at, category, severity, source_stage, pod_id]
+    category_enum:
+      - scope_ambiguity
+      - missing_acceptance_criteria
+      - unrealistic_timeline
+      - integration_unknown
+      - data_readiness_missing
+      - security_assumption_invalid
+      - stakeholder_misalignment
+      - pricing_packaging_mismatch
+    severity_enum: [s1_low, s2_med, s3_high, s4_critical]
+
+  # Artifact discipline + evidence
+  artifact_event:
+    required_fields: [artifact_event_id, artifact_id, artifact_type, action, action_at, owner, pod_id]
+    action_enum: [created, updated, approved, merged, expired]
+    optional_fields: [deal_id, account_id, quality_score, freshness_expiry_days, approvals]
+  evidence_pack_event:
+    required_fields: [evidence_id, deal_id, status, measured_at, referenceability_score, pod_id]
+    status_enum: [draft, reviewed, final]
+    optional_fields: [baseline_metric_ids, post_metric_ids, attribution_confidence]
+
+  # HR / people (aggregate-first, restricted)
+  hr_skill_validation:
+    required_fields: [event_id, person_hash, skill_id, validated_at, validation_type]
+    validation_type_enum: [artifact_review, peer_review, exam, delivery_outcome]
+    optional_fields: [pod_id]
+  hr_training_assignment:
+    required_fields: [event_id, person_hash, assigned_at, skill_id, due_at, status]
+    status_enum: [assigned, completed, overdue]
+    optional_fields: [pod_id]
+  hr_attrition_event:
+    required_fields: [event_id, pod_id, occurred_at, attrition_type]
+    attrition_type_enum: [regretted, non_regretted]
+
+privacy:
+  defaults:
+    hr_events_visibility: restricted
+    dashboards_default_level: aggregate_pod
+  rules:
+    - "No individual-level HR dashboards outside HR without explicit policy + audit"
+    - "Person identity stored as person_hash only"
+
+# ---------------------------
+# Metric definitions (computable)
+# Each metric: inputs + formula + cadence + thresholds + sample-size rules
+# ---------------------------
+metrics:
+
+  # --- Pipeline hygiene / freshness ---
+  pipeline_freshness_index:
+    description: "How recently top deals/accounts received meaningful touches."
+    cadence: daily
+    inputs: [customer_touch]
+    formula:
+      type: weighted_ratio
+      definition: |
+        For each deal in active_pipeline:
+          days_since_touch = now - max(touch_at)
+          score_deal = clamp(1 - (days_since_touch / freshness_days), 0, 1)
+        pipeline_freshness_index = average(score_deal) weighted by deal_value_usd
+      params:
+        freshness_days: 7
+    thresholds:
+      green_gte: 0.75
+      amber_gte: 0.55
+      red_lt: 0.55
+
+  followup_sla_breach_rate:
+    description: "Percent of follow-up commitments missed."
+    cadence: daily
+    inputs: [followup_commitment]
+    formula:
+      type: ratio
+      definition: "missed / (completed + missed) over last 7 days"
+      window_days: 7
+    thresholds:
+      green_lte: 0.08
+      amber_lte: 0.15
+      red_gt: 0.15
+
+  # --- Stage velocity / churn ---
+  stage_velocity_days:
+    description: "Median time in stage by pod and segment_family."
+    cadence: weekly
+    inputs: [deal_stage_change]
+    formula:
+      type: duration_median
+      definition: |
+        Compute time deltas between consecutive stage_change events per deal.
+        stage_velocity_days(stage) = median(delta_days for deals entering stage within window)
+      window_days: 28
+    sample_size:
+      min_deals_per_stage: 10
+      fallback: "report as 'insufficient_sample' and show last-90d trend"
+    outputs:
+      breakdowns: [pod_id, segment_family, motion, stage]
+
+  stage_churn_rate:
+    description: "Percent of deals that regress stages (to earlier stage) within window."
+    cadence: weekly
+    inputs: [deal_stage_change]
+    formula:
+      type: ratio
+      definition: |
+        regress = count(stage_change where to_stage_order < from_stage_order)
+        total = count(stage_change)
+        churn = regress / total
+      window_days: 28
+    thresholds:
+      green_lte: 0.05
+      amber_lte: 0.10
+      red_gt: 0.10
+
+  # --- Forecast integrity (truth-seeking) ---
+  forecast_volatility_index:
+    description: "Measures whiplash in forecast category + amount for the same deal."
+    cadence: weekly
+    inputs: [deal_forecast_snapshot]
+    formula:
+      type: composite
+      definition: |
+        For each deal:
+          cat_changes = count(category changes across snapshots in window)
+          amt_cv = stdev(forecast_amount_usd) / max(mean(forecast_amount_usd), 1)
+          score_deal = 0.6*normalize(cat_changes) + 0.4*normalize(amt_cv)
+        volatility_index = average(score_deal weighted by forecast_amount_usd)
+      window_days: 42
+      normalization:
+        cat_changes_max: 4
+        amt_cv_max: 0.5
+    thresholds:
+      green_lte: 0.25
+      amber_lte: 0.40
+      red_gt: 0.40
+    notes: "Lower is better. High volatility indicates poor qualification, sandbagging, or weak evidence."
+
+  forecast_accuracy_30d:
+    description: "How close commit forecast amounts are to actual within 30-day horizon (requires actuals feed)."
+    cadence: monthly
+    inputs: [deal_forecast_snapshot]
+    formula:
+      type: placeholder_requires_actuals
+      definition: "abs(actual - forecast) / max(actual,1) aggregated for deals closed within 30d"
+    status: "blocked_until_actuals_ingested"
+
+  # --- Handoff defects (sales ↔ delivery alignment) ---
+  handoff_defect_weighted_rate:
+    description: "Weighted defect rate per handoff, by severity."
+    cadence: weekly
+    inputs: [handoff_event, handoff_defect]
+    weights:
+      s1_low: 1
+      s2_med: 3
+      s3_high: 8
+      s4_critical: 20
+    formula:
+      type: weighted_ratio
+      definition: |
+        defects_weighted = sum(weight(severity) for defects in window)
+        handoffs = count(handoff_events in window)
+        rate = defects_weighted / max(handoffs,1)
+      window_days: 28
+    thresholds:
+      green_lte: 0.75
+      amber_lte: 1.50
+      red_gt: 1.50
+    outputs:
+      breakdowns: [pod_id, category, source_stage]
+
+  handoff_defect_escape_rate:
+    description: "Defects detected after solution_architecture stage (late discoveries)."
+    cadence: weekly
+    inputs: [handoff_defect]
+    formula:
+      type: ratio
+      definition: "count(defects where source_stage in [s4_mvp_execution,s5_production_usage]) / count(defects)"
+      window_days: 56
+    thresholds:
+      green_lte: 0.20
+      amber_lte: 0.35
+      red_gt: 0.35
+
+  # --- Artifact discipline (the 'no artifact, no stage' reality check) ---
+  stage_gate_compliance_rate:
+    description: "Percent of stage transitions that pass required artifact checks."
+    cadence: weekly
+    inputs: [deal_stage_change, artifact_event]
+    formula:
+      type: ratio
+      definition: |
+        compliant = count(stage_change where all required artifacts exist AND not expired at change time)
+        total = count(stage_change)
+        compliance = compliant / total
+      window_days: 28
+    thresholds:
+      green_gte: 0.90
+      amber_gte: 0.80
+      red_lt: 0.80
+
+  artifact_staleness_rate:
+    description: "Percent of active artifacts past expiry or older than freshness policy."
+    cadence: weekly
+    inputs: [artifact_event]
+    formula:
+      type: ratio
+      definition: |
+        stale = count(artifacts where now > expiry OR (now - last_updated_at) > freshness_days_by_type)
+        total = count(active_artifacts)
+        stale_rate = stale / total
+      window_days: 28
+    thresholds:
+      green_lte: 0.10
+      amber_lte: 0.20
+      red_gt: 0.20
+
+  # --- Delivery outcome and referenceability ---
+  production_usage_rate:
+    description: "Percent of deals reaching production usage definition."
+    cadence: monthly
+    inputs: [deal_stage_change]
+    formula:
+      type: ratio
+      definition: "count(deals reaching s5_production_usage) / count(deals entering s3_solution_architecture)"
+      window_days: 180
+    sample_size:
+      min_deals: 20
+      fallback: "show count only"
+
+  referenceability_rate:
+    description: "Percent of production deals with final evidence pack and reference pack."
+    cadence: monthly
+    inputs: [deal_stage_change, evidence_pack_event, artifact_event]
+    formula:
+      type: ratio
+      definition: |
+        eligible = deals that reached s5_production_usage in window
+        referenceable = eligible where evidence_pack.status='final' AND reference_pack approved
+        rate = referenceable / max(eligible,1)
+      window_days: 180
+    thresholds:
+      green_gte: 0.50
+      amber_gte: 0.35
+      red_lt: 0.35
+
+  time_to_first_outcome_days:
+    description: "Median days from discovery start to first measured outcome."
+    cadence: monthly
+    inputs: [deal_stage_change, evidence_pack_event]
+    formula:
+      type: duration_median
+      definition: "median(measured_at - first_entered_stage(s1_discovery)) for deals with evidence measured"
+      window_days: 365
+    outputs:
+      breakdowns: [pod_id, segment_family, motion]
+
+  # --- Partner / ecosystem leverage ---
+  partner_sourced_pipeline_pct:
+    description: "Pipeline value that originated from partner motion."
+    cadence: monthly
+    inputs: [deal_stage_change]
+    formula:
+      type: ratio
+      definition: "sum(deal_value_usd where motion='partner_cosell') / sum(deal_value_usd for active_pipeline)"
+      window_days: 90
+
+  # --- HR / people (aggregate) ---
+  skills_coverage_index:
+    description: "How well pod skill coverage meets recipe-required skills."
+    cadence: monthly
+    inputs: [hr_skill_validation, recipe_run]
+    formula:
+      type: composite
+      definition: |
+        For each pod:
+          required_skills = union(required_skills(recipe_id) for recipes used by pod in window)
+          validated_skills = union(skill_id for hr_skill_validation in pod in last 365d)
+          coverage = |required_skills ∩ validated_skills| / max(|required_skills|,1)
+      window_days: 90
+    thresholds:
+      green_gte: 0.80
+      amber_gte: 0.65
+      red_lt: 0.65
+
+  training_on_time_rate:
+    description: "Percent of training assignments completed by due date (aggregate)."
+    cadence: monthly
+    inputs: [hr_training_assignment]
+    formula:
+      type: ratio
+      definition: "count(completed on_time) / count(assignments due in window)"
+      window_days: 90
+    thresholds:
+      green_gte: 0.85
+      amber_gte: 0.70
+      red_lt: 0.70
+
+  regretted_attrition_rate:
+    description: "Regretted attrition per pod per quarter."
+    cadence: quarterly
+    inputs: [hr_attrition_event]
+    formula:
+      type: rate_per_headcount_placeholder
+      definition: "count(regretted) / avg_headcount (requires headcount feed)"
+    status: "blocked_until_headcount_ingested"
+
+# ---------------------------
+# SLOs for the measurement plane itself (to prevent dashboard theater)
+# ---------------------------
+control_plane_slos:
+  ingestion_freshness_hours:
+    target_lte: 24
+  metric_job_success_rate:
+    target_gte: 0.99
+  weekly_ops_pack_publish_day:
+    target: "Mon"
+  stale_asset_alert_latency_hours:
+    target_lte: 12

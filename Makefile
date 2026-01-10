@@ -40,3 +40,14 @@ schemas-fp:
 
 conformance:
 	@echo "TODO: wire real conformance runner entrypoint under tools/conformance/trirpc-v0"
+
+# --- DelEx GTM Intelligence checks (autogen-safe, idempotent) ---
+.PHONY: schemas-check metrics-check delex-check
+
+schemas-check:
+	python3 tools/schemas_check.py schemas/json/delex/gtm-intelligence/v0
+
+metrics-check:
+	python3 tools/metrics_spec_check.py programs/delex/gtm-intelligence/metrics/metrics.v0.yaml
+
+delex-check: schemas-check metrics-check
