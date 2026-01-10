@@ -1,0 +1,139 @@
+version: 1
+
+# Linkage expresses how operating metrics drive financial outcomes in a traceable way.
+# Each linkage includes: drivers, impacted statement lines, mechanism, expected direction, and typical lag windows.
+linkages:
+  - metric_id: stage_velocity
+    drivers: [revenue_timing, cash_timing, forecast_accuracy]
+    statement_lines:
+      income_statement: [Revenue]
+      cash_flow: [OperatingCashFlow]
+    mechanism: "Shorter cycle time accelerates invoicing/recognition and reduces slippage; improves forecast reliability."
+    expected_direction: "Lower velocity (faster) -> higher near-term revenue recognition and earlier cash collection."
+    typical_lag_days: [7, 30, 90]
+    control_dependencies: [evidence_pack.compliance]
+    notes: "Must cohort by segment and stage definitions; lock stage taxonomy quarterly."
+
+  - metric_id: conversion.rates
+    drivers: [revenue_growth, pipeline_efficiency]
+    statement_lines:
+      income_statement: [Revenue]
+    mechanism: "Higher stage conversions increase closed-won volume for a given lead/oppty input."
+    expected_direction: "Higher conversion -> higher revenue (with lag)."
+    typical_lag_days: [30, 90, 180]
+    control_dependencies: [evidence_pack.compliance]
+    notes: "Requires stable denominator definitions; exclude recycled opps unless explicitly tagged."
+
+  - metric_id: handoff.defects
+    drivers: [cogs_leakage, opex_drag, churn_risk]
+    statement_lines:
+      income_statement: [COGS, OperatingExpenses]
+      cash_flow: [OperatingCashFlow]
+    mechanism: "Defects create rework and support load; increases delivery cost and reduces customer satisfaction."
+    expected_direction: "Higher defects -> lower gross margin and lower OCF (often with short lag)."
+    typical_lag_days: [7, 30, 90]
+    control_dependencies: [pod.scorecards]
+    notes: "Tag defects to source handoff boundary; avoid double counting across teams."
+
+  - metric_id: pod.scorecards
+    drivers: [delivery_margin, capacity, predictability]
+    statement_lines:
+      income_statement: [COGS]
+    mechanism: "Pod health correlates with throughput and quality; poor health increases delivery cost per unit."
+    expected_direction: "Higher pod health -> improved gross margin (lower COGS per unit)."
+    typical_lag_days: [14, 60]
+    control_dependencies: []
+    notes: "Define scorecard components as a separate sub-spec to prevent metric drift."
+
+  - metric_id: coaching.cadence_aggregate
+    drivers: [productivity, conversion_uplift, delivery_quality]
+    statement_lines:
+      income_statement: [Revenue, COGS, OperatingExpenses]
+    mechanism: "Coaching improves selling effectiveness and execution quality; reduces avoidable rework."
+    expected_direction: "More effective coaching -> higher revenue and margin over time."
+    typical_lag_days: [30, 90, 180]
+    control_dependencies: [skills.coverage]
+    notes: "Track effectiveness (pre/post) not just volume."
+
+  - metric_id: evidence_pack.compliance
+    drivers: [revenue_timing, audit_readiness, dispute_reduction]
+    statement_lines:
+      income_statement: [Revenue]
+      balance_sheet: [AccountsReceivable, DeferredRevenue]
+      cash_flow: [OperatingCashFlow]
+    mechanism: "Complete evidence packs reduce approval delays, disputes, and audit exceptions; supports clean revrec."
+    expected_direction: "Higher compliance -> faster close, fewer reversals, fewer disputed invoices."
+    typical_lag_days: [7, 30, 90]
+    control_dependencies: []
+    notes: "This is a control metric; treat as gating for certain postings in the projector."
+
+  - metric_id: partner.leverage
+    drivers: [revenue_growth, cac_efficiency, delivery_acceleration]
+    statement_lines:
+      income_statement: [Revenue, OperatingExpenses]
+    mechanism: "Partners source/influence deals and can reduce GTM cost per win; also accelerate delivery in some models."
+    expected_direction: "Higher leverage -> higher revenue per GTM dollar (with lag)."
+    typical_lag_days: [60, 180]
+    control_dependencies: [referenceability.rate]
+    notes: "Separate sourced vs influenced; avoid attribution inflation."
+
+  - metric_id: referenceability.rate
+    drivers: [conversion_uplift, sales_cycle_reduction]
+    statement_lines:
+      income_statement: [Revenue]
+    mechanism: "Referenceable customers reduce buyer risk and speed decisions, improving win rates."
+    expected_direction: "Higher referenceability -> higher conversion and faster revenue."
+    typical_lag_days: [30, 120]
+    control_dependencies: []
+    notes: "Weight by strategic segment; ensure customer consent evidence."
+
+  - metric_id: skills.coverage
+    drivers: [delivery_margin, quality, capacity]
+    statement_lines:
+      income_statement: [COGS, OperatingExpenses]
+    mechanism: "Skill gaps increase rework and staffing inefficiency; strong coverage improves throughput and reduces defects."
+    expected_direction: "Higher coverage -> lower COGS per unit and fewer OpEx fire drills."
+    typical_lag_days: [30, 180]
+    control_dependencies: [coaching.cadence_aggregate]
+    notes: "HR-restricted: publish aggregate only; ensure audit logs."
+
+  - metric_id: okr.outcomes
+    drivers: [strategy_execution, investment_efficiency]
+    statement_lines:
+      income_statement: [Revenue, OperatingExpenses]
+    mechanism: "OKRs represent investment intent; outcomes should map to measurable revenue, margin, or efficiency deltas."
+    expected_direction: "Higher outcome score -> better revenue/margin efficiency over time."
+    typical_lag_days: [90, 365]
+    control_dependencies: []
+    notes: "Require each OKR to declare its financial driver and measurement plan."
+
+  - metric_id: vertical.penetration
+    drivers: [revenue_growth, concentration_risk, pricing_power]
+    statement_lines:
+      income_statement: [Revenue]
+    mechanism: "Deeper vertical penetration improves relevance and win rate; may improve pricing and expansion."
+    expected_direction: "Higher penetration -> higher revenue and expansion over time."
+    typical_lag_days: [90, 365]
+    control_dependencies: [referenceability.rate]
+    notes: "Avoid vanity metrics; define TAM and target-account list as controlled inputs."
+
+  - metric_id: retention.expansion
+    drivers: [revenue_stability, revenue_growth, cash_quality]
+    statement_lines:
+      income_statement: [Revenue]
+      cash_flow: [OperatingCashFlow]
+    mechanism: "Retention and expansion determine recurring base and growth; reduces volatility and improves predictability."
+    expected_direction: "Higher retention/expansion -> higher revenue and better OCF quality."
+    typical_lag_days: [90, 365]
+    control_dependencies: [handoff.defects]
+    notes: "Tie to cohort definitions and contract terms; distinguish churn vs contraction vs logo churn."
+
+  - metric_id: regretted_attrition
+    drivers: [opex_drag, cogs_leakage, execution_risk]
+    statement_lines:
+      income_statement: [COGS, OperatingExpenses]
+    mechanism: "Loss of critical talent causes replacement costs, ramp time, and execution drag; increases rework and delays."
+    expected_direction: "Higher regretted attrition -> worse margin and higher OpEx over time."
+    typical_lag_days: [30, 180, 365]
+    control_dependencies: [skills.coverage]
+    notes: "HR-restricted: only aggregate outputs; enforce domain access."
