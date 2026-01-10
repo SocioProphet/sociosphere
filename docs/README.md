@@ -23,3 +23,9 @@
 - [Adaptation README](standards/adaptation/README.md)
 - [SourceOS Build Plane Standard v0.1](../standards/build-plane/README.md)
 - [TriRPC v0 Conformance Standard v0.1](../standards/conformance/trirpc-v0/README.md)
+- [Standards index](../standards/README.md)
+
+## Epistemics + HPC
+- [Epistemic Standards](standards/epistemic/README.md)
+- [HPC Reference](hpc/README.md)
+- [Semantic Ontology Loop](semantic-ontology-loop/README.md)
