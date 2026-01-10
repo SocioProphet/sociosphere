@@ -1,0 +1,36 @@
+version: 1
+# Event → Journal Entry templates (double-entry). Debits must equal credits per template instance.
+
+templates:
+  - event_type: invoice.issued
+    description: "Invoice issued; if not yet earned, credit Deferred Revenue."
+    policy_version: "REVREC_v1"
+    lines:
+      - account: 1100
+        side: debit
+        amount_ref: "invoice.total"
+      - account: 2000
+        side: credit
+        amount_ref: "invoice.subtotal"
+
+  - event_type: delivery.completed
+    description: "Revenue recognized on delivery."
+    policy_version: "REVREC_v1"
+    lines:
+      - account: 2000
+        side: debit
+        amount_ref: "delivery.value"
+      - account: 4000
+        side: credit
+        amount_ref: "delivery.value"
+
+  - event_type: payment.settled
+    description: "Cash received against A/R."
+    policy_version: "CASH_v1"
+    lines:
+      - account: 1000
+        side: debit
+        amount_ref: "payment.amount"
+      - account: 1100
+        side: credit
+        amount_ref: "payment.amount"

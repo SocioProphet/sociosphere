@@ -1,0 +1,37 @@
+version: 1
+# Minimal, extensible chart of accounts for statement construction and JE validation.
+# We can expand this later; the key is stable IDs and types.
+
+accounts:
+  - id: 1000
+    name: Cash
+    type: asset
+    statement_line: Cash
+  - id: 1100
+    name: Accounts Receivable
+    type: asset
+    statement_line: AccountsReceivable
+  - id: 2000
+    name: Deferred Revenue
+    type: liability
+    statement_line: DeferredRevenue
+  - id: 2100
+    name: Accounts Payable
+    type: liability
+    statement_line: null
+  - id: 3000
+    name: Equity
+    type: equity
+    statement_line: Equity
+  - id: 4000
+    name: Revenue
+    type: revenue
+    statement_line: Revenue
+  - id: 5000
+    name: COGS
+    type: expense
+    statement_line: COGS
+  - id: 6000
+    name: Operating Expenses
+    type: expense
+    statement_line: OperatingExpenses
