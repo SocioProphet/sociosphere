@@ -1,36 +1,93 @@
-version: 1
-# Event → Journal Entry templates (double-entry). Debits must equal credits per template instance.
+version: 3
 
 templates:
+  # O2C
   - event_type: invoice.issued
-    description: "Invoice issued; if not yet earned, credit Deferred Revenue."
+    description: "Invoice issued; credit Deferred Revenue (revenue recognized later)."
     policy_version: "REVREC_v1"
     lines:
-      - account: 1100
+      - account: "1100"
         side: debit
-        amount_ref: "invoice.total"
-      - account: 2000
+        amount_ref: "invoice.subtotal"
+      - account: "2000"
         side: credit
         amount_ref: "invoice.subtotal"
 
-  - event_type: delivery.completed
-    description: "Revenue recognized on delivery."
+  - event_type: revenue.recognized
+    description: "Revenue recognized per policy; debit Deferred Revenue and credit Revenue."
     policy_version: "REVREC_v1"
     lines:
-      - account: 2000
+      - account: "2000"
         side: debit
-        amount_ref: "delivery.value"
-      - account: 4000
+        amount_ref: "revrec.value"
+      - account: "4000"
         side: credit
-        amount_ref: "delivery.value"
+        amount_ref: "revrec.value"
 
   - event_type: payment.settled
     description: "Cash received against A/R."
     policy_version: "CASH_v1"
     lines:
-      - account: 1000
+      - account: "1000"
         side: debit
         amount_ref: "payment.amount"
-      - account: 1100
+      - account: "1100"
         side: credit
         amount_ref: "payment.amount"
+
+  - event_type: refund.issued
+    description: "Refund/return; book contra-revenue and reduce cash (simplified)."
+    policy_version: "REFUND_v1"
+    lines:
+      - account: "4100"
+        side: debit
+        amount_ref: "refund.amount"
+      - account: "1000"
+        side: credit
+        amount_ref: "refund.amount"
+
+  # P2P
+  - event_type: vendor_invoice.approved
+    description: "Vendor invoice approved; record OpEx and AP (simplified)."
+    policy_version: "P2P_v1"
+    lines:
+      - account: "6000"
+        side: debit
+        amount_ref: "vendor_invoice.amount"
+      - account: "2100"
+        side: credit
+        amount_ref: "vendor_invoice.amount"
+
+  - event_type: vendor_payment.settled
+    description: "Pay vendor invoice; reduce AP and cash."
+    policy_version: "P2P_v1"
+    lines:
+      - account: "2100"
+        side: debit
+        amount_ref: "vendor_payment.amount"
+      - account: "1000"
+        side: credit
+        amount_ref: "vendor_payment.amount"
+
+  # R2R
+  - event_type: depreciation.posted
+    description: "Depreciation; debit OpEx and credit accumulated depreciation."
+    policy_version: "R2R_v1"
+    lines:
+      - account: "6000"
+        side: debit
+        amount_ref: "depr.amount"
+      - account: "1210"
+        side: credit
+        amount_ref: "depr.amount"
+
+  - event_type: fx.revalued
+    description: "FX revaluation delta; record net FX gain/loss (simplified)."
+    policy_version: "R2R_v1"
+    lines:
+      - account: "7100"
+        side: debit
+        amount_ref: "fx.delta"
+      - account: "1000"
+        side: credit
+        amount_ref: "fx.delta"
