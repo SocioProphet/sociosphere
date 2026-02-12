@@ -1,0 +1,7 @@
+# sociosphere workspace controller: canonical ownership registry
+namespaces:
+  caps/slash-topics: { canonical_repo: slash-topics }
+  caps/new-hope: { canonical_repo: new-hope }
+  caps/semantic-search-bi: { canonical_repo: prophet-platform }
+hygiene:
+  forbid: [".DS_Store", "__MACOSX"]
