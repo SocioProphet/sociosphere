@@ -1,0 +1,417 @@
+# ecosystem-status.yaml — SocioProphet live ecosystem status snapshot
+# Updated: 2026-04-06
+# This file is the canonical source of truth for the current state of all ecosystem repos.
+# Re-generate with: python engines/status_reporter.py dashboard
+# schema_version: 1
+
+metadata:
+  snapshot_date: "2026-04-06"
+  total_repos_tracked: 53
+  total_open_prs: 81
+  last_analysis_by: "research-socioprophet-ecosystem (2026-04-06)"
+  authoritative_closeout_artifact: "status/intent-audit-2026-04-06.md"
+
+companion_pr_group:
+  id: workspace-os-boundary-liberty-doctrine
+  prs:
+    - repo: sociosphere
+      pr: 19
+      final_merged_sha: null
+    - repo: socioprophet
+      pr: 257
+      final_merged_sha: null
+  merge_wave: null
+  notes: "Populate final merged SHAs for both PRs once the paired merge is completed."
+
+
+merge_execution:
+  last_snapshot_commit: "PENDING_SET_DURING_WAVE_EXECUTION"
+  snapshot_ttl_hours: 24
+  freeze_window_required: true
+  stale_snapshot_abort: true
+  companion_atomic_groups:
+    - doctrine-boundary-pair-20260406
+  supersession_ledger: status/supersession-ledger.yaml
+  latest_intent_audit: status/intent-audit-2026-04-06.md
+
+# ── Phase 0: Standards & Foundational ────────────────────────────────────────
+phase_0:
+  description: "Standards and governance foundations — must land first."
+  repos:
+    - name: prophet-platform-standards
+      status: active
+      default_branch: main
+      open_prs: 1
+      key_prs:
+        - number: 1
+          title: "Populate with complete DevSecOps, CI/CD, and Observability standards"
+          state: open
+          draft: true
+          branch: copilot/populate-prophet-platform-standards-phase-1
+          ready_to_merge: false
+          blockers: "Needs review — ADR-040/050/060 are the foundational standards for the org"
+          priority: CRITICAL
+      branch_status: active_prs
+      notes: "Single most important PR in the org. Must merge before anything else."
+
+    - name: socioprophet-standards-storage
+      status: active
+      default_branch: main
+      open_prs: 18
+      key_prs:
+        - number: 13
+          title: "Seed local-hybrid slice shared schemas and benchmark note"
+          state: open
+          draft: true
+          branch: seed-local-hybrid-schemas-v0
+          ready_to_merge: false
+          blockers: "Prerequisite for agentplane#12 and TriTRPC#20"
+          priority: HIGH
+        - number: 14
+          title: "Add FIPS 140-2/140-3 and NIST compliance authority docs"
+          state: open
+          draft: true
+          branch: copilot/add-fips-compliance-standards-index
+          ready_to_merge: false
+          blockers: "Base FIPS authority doc — must merge before PRs #15-#23"
+          priority: HIGH
+        - number: 5
+          title: "ADR-040: twin economy repo boundaries"
+          state: open
+          draft: true
+          branch: feat/twin-economy-repo-boundaries-20260328
+          ready_to_merge: false
+          priority: MEDIUM
+      fips_pr_cluster:
+        prs: [14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+        conflict_risk: high
+        merge_order: [14, 15, 16, 18, 19, 17, 20, 21, 22, 23]
+        issue: "10 Copilot-generated PRs targeting main without chained bases — must be triaged"
+      branch_status: needs_triage
+
+    - name: socioprophet-standards-knowledge
+      status: active
+      default_branch: main
+      open_prs: 7
+      ready_to_merge_now:
+        - number: 16
+          title: "Docs: root README"
+        - number: 17
+          title: "Docs: docs/standards README"
+        - number: 18
+          title: "Docs: schemas README"
+        - number: 19
+          title: "Docs: schemas/avro README"
+        - number: 20
+          title: "Docs: schemas/jsonld README"
+        - number: 21
+          title: "Docs: schemas/jsonschema README"
+      notes: "PRs #16-#21 are non-draft, non-conflicting README PRs — merge immediately."
+      branch_status: ready_prs_pending
+
+# ── Phase A: Registry + Automation ───────────────────────────────────────────
+phase_a:
+  description: "sociosphere registry foundation and automation layer."
+  repos:
+    - name: sociosphere
+      status: active
+      default_branch: main
+      open_prs: 9
+      current_work_branch: copilot/research-socioprophet-ecosystem
+      key_prs:
+        - number: 23
+          title: "Phase A — registry foundation for SocioProphet multi-repo ecosystem"
+          state: open
+          draft: true
+          branch: copilot/add-registry-foundation
+          superseded_by: current_branch
+          notes: "Superseded by consolidated registry in this PR"
+        - number: 22
+          title: "Phase A autonomous registry management automation framework"
+          state: open
+          draft: true
+          branch: copilot/create-autonomous-registry-management
+          ready_to_merge: false
+          blockers: "Must wait for registry PR to merge. Auto-merge component is architecturally risky (bypasses ADR-040 Tekton/ArgoCD model)."
+        - number: 21
+          title: "Phase A — add 23 SocioProphet repos to sociosphere registry"
+          state: open
+          draft: true
+          branch: copilot/add-23-new-socioprophet-repos
+          superseded_by: current_branch
+        - number: 20
+          title: "Add Repository Intelligence & DevOps Orchestration System"
+          state: open
+          draft: true
+          branch: copilot/add-canonical-repos-yaml
+          superseded_by: current_branch
+        - number: 19
+          title: "docs: add workspace OS and agent-plane boundary doc"
+          state: open
+          draft: false
+          branch: docs/workspace-os-agent-boundary-refresh-20260405
+          ready_to_merge: true
+          companion_pr: "socioprophet#257"
+        - number: 18
+          title: "Add FIPS 140-2/140-3 compliance artifacts"
+          state: open
+          draft: true
+          branch: copilot/add-fips-compliance-guide
+          ready_to_merge: false
+          notes: "FIPS checker, zero-trust bindings, TriTRPC FIPS spec. Content good — needs review."
+        - number: 16
+          title: "Add workspace event schema for live receipt paths v0.1"
+          state: open
+          draft: true
+          branch: feat/workspace-event-schema-v0-1
+          ready_to_merge: false
+          notes: "Part of live-receipt path chain."
+        - number: 15
+          title: "Add MAIPJ live-receipt workspace manifest extensions v0.1"
+          state: open
+          draft: true
+          branch: feat/maipj-workspace-manifest-v0-1
+          ready_to_merge: false
+          notes: "Part of live-receipt path chain."
+        - number: 12
+          title: "Workspace spine hardening: contract docs + staged runner v0.2"
+          state: open
+          draft: true
+          branch: codex/workspace-hardening-contract-v0-1
+          ready_to_merge: false
+          notes: "runner.v0.2.py — good work; should be reviewed before promotion."
+      branch_status: active_consolidation
+
+# ── Phase B: Integration & Refinement ────────────────────────────────────────
+phase_b:
+  description: "Cross-repo integration, slice work, and receipt path."
+  repos:
+    - name: TriTRPC
+      status: active
+      default_branch: main
+      open_prs: 7
+      key_prs:
+        - number: 18
+          title: "spec: add atlas policy authority-chain drafts and vectors"
+          state: open
+          draft: true
+          branch: spec/atlas-policy-deltas-v1
+          ready_to_merge: false
+          blocker: "Contains write-probe artifact at docs/vnext/generated/.write_probe.txt — must remove before merge"
+        - number: 20
+          title: "Seed local-hybrid slice v0 method and fixture pack"
+          state: open
+          draft: true
+          branch: seed-local-hybrid-slice-v0
+          ready_to_merge: false
+          blockers: "Depends on agentplane#12 for slice layout"
+        - number: 16
+          title: "Add receipt transport binding spec v0.1"
+          state: open
+          draft: true
+          branch: feat/receipt-transport-binding-v0-1
+          ready_to_merge: false
+          blockers: "Part of receipt path chain"
+        - number: 17
+          title: "Add transport event examples for receipt integration v0.1"
+          state: open
+          draft: true
+          branch: feat/transport-event-examples-v0-1
+          ready_to_merge: false
+          blockers: "Depends on TriTRPC#16 for spec alignment"
+      branch_status: active_prs
+
+    - name: agentplane
+      status: active
+      default_branch: main
+      open_prs: 2
+      key_prs:
+        - number: 12
+          title: "Seed agentplane local-hybrid slice docs and runtime layout"
+          state: open
+          draft: true
+          branch: seed-local-hybrid-slice-v0
+          ready_to_merge: false
+          blockers: "Depends on standards-storage#13 for shared schemas"
+          priority: HIGH
+        - number: 11
+          title: "Add AOKC order-to-bundle bridge notes v0.1"
+          state: open
+          draft: true
+          branch: feat/aokc-order-bundle-bridge-v0-1
+          ready_to_merge: false
+      branch_status: active_prs
+
+    - name: slash-topics
+      status: active
+      default_branch: main
+      open_prs: 1
+      key_prs:
+        - number: 14
+          title: "Add topic pack provenance and receipt binding spec v0.1"
+          state: open
+          draft: true
+          branch: feat/context-receipt-binding-v0-1
+          ready_to_merge: false
+          notes: "Part of live-receipt path chain."
+      branch_status: active_prs
+
+    - name: human-digital-twin
+      status: active
+      default_branch: main
+      open_prs: 1
+      key_prs:
+        - number: 4
+          title: "Add policy/approval event schema and consent receipt binding v0.1"
+          state: open
+          draft: true
+          branch: feat/policy-approval-events-v0-1
+          ready_to_merge: false
+          notes: "Part of live-receipt path chain."
+      branch_status: active_prs
+
+    - name: cairnpath-mesh
+      status: active
+      default_branch: import/20260325-cairnpath-mesh-e32545e
+      open_prs: 1
+      key_prs:
+        - number: 1
+          title: "Add twin economy Cairn reconciliation contract"
+          state: open
+          draft: true
+          branch: feat/twin-economy-cairn-reconciliation-20260328
+          base_branch: import/20260325-cairnpath-mesh-e32545e
+          ready_to_merge: false
+          blocker: "Non-main base branch — must verify base is intended before merge"
+      branch_status: non_main_base
+
+    - name: semantic-serdes
+      status: active
+      default_branch: main
+      open_prs: 1
+      key_prs:
+        - number: 1
+          title: "Promote 2026-03-25 semantic-serdes winner"
+          state: open
+          draft: true
+          branch: promote/20260325-semantic-serdes-6cfca93
+          ready_to_merge: false
+          notes: "Promotion overlay — review for canonical fit before merge."
+      branch_status: active_prs
+
+    - name: ontogenesis
+      status: active
+      default_branch: main
+      open_prs: 1
+      key_prs:
+        - number: 1
+          title: "Promote 2026-03-25 ontogenesis winner"
+          state: open
+          draft: true
+          branch: promote/20260325-ontogenesis-v1_1-aa7f903
+          ready_to_merge: false
+          notes: "Promotion overlay — review for canonical fit before merge."
+      branch_status: active_prs
+
+    - name: mcp-a2a-zero-trust
+      status: active
+      default_branch: main
+      open_prs: 1
+      key_prs:
+        - number: 1
+          title: "Issue standards: DoD + Acceptance"
+          state: open
+          draft: false
+          branch: chore/issue-standards
+          ready_to_merge: true
+          notes: "Non-draft, non-conflicting issue standards PR. Ready to merge."
+      branch_status: ready_prs_pending
+
+    - name: gaia-world-model
+      status: active
+      default_branch: main
+      open_prs: 0
+      open_issues: 5
+      branch_status: no_prs
+      notes: "Critical data-plane component with 5 open issues and no PRs — Phase B gap."
+
+# ── Product Repos (single-branch exempt) ─────────────────────────────────────
+product_repos:
+  - name: socioprophet
+    status: active
+    single_branch_exempt: true
+    open_prs: 26
+    stale_dependabot_count: 17
+    stale_dependabot_prs: [137, 138, 139, 145, 149, 150, 151, 155, 157, 158, 159, 211, 235, 240, 242, 243, 245]
+    active_content_prs:
+      - {number: 257, title: "liberty-by-design doctrine", companion_pr: "sociosphere#19", priority: HIGH}
+      - {number: 256, title: "AOKC runtime bootstrap first slice scaffold", priority: HIGH}
+      - {number: 255, title: "AOKC repo alignment and merge-order note", priority: MEDIUM}
+      - {number: 253, title: "CodeQL + gitleaks security workflows", priority: HIGH, ready_to_merge: true}
+      - {number: 250, title: "Orion gov integration spec", priority: MEDIUM}
+      - {number: 249, title: "Government landing page", priority: MEDIUM}
+      - {number: 244, title: "mesh skills + validation control plane", priority: MEDIUM}
+      - {number: 223, title: "docs: ignore vitepress dist/cache", priority: LOW, ready_to_merge: true}
+      - {number: 209, title: "Restore CodeQL workflow + security hygiene", priority: HIGH}
+    notes: "Cannot consolidate to single branch. Recommend: close stale dependabot PRs #137-#158; they are superseded by newer group bumps."
+
+# ── Repos with No PRs (gaps) ──────────────────────────────────────────────────
+no_pr_gaps:
+  - name: gaia-world-model
+    priority: P1
+    issues: 5
+    action_needed: "Create architectural PR to address open issues"
+  - name: workspace-inventory
+    priority: P1
+    issues: 0
+    action_needed: "Create PR to wire inventory tool into sociosphere manifest"
+  - name: prophet-core-contracts
+    priority: P1
+    issues: 0
+    action_needed: "Create contract definitions PR"
+  - name: prophet-core-ledger
+    priority: P1
+    issues: 0
+    action_needed: "Create immutable audit log implementation PR (ADR-050)"
+
+# ── Receipt Path Chain Status ──────────────────────────────────────────────────
+receipt_path_chain:
+  description: "Live receipt path integration — MAIPJ/GAKW first path"
+  spec_complete: 60_pct
+  implementation_complete: 0_pct
+  chain:
+    - step: 1
+      repo: sociosphere
+      pr: 15
+      status: draft
+      description: "workspace manifest extensions"
+    - step: 2
+      repo: sociosphere
+      pr: 16
+      status: draft
+      description: "workspace event schema"
+    - step: 3
+      repo: TriTRPC
+      pr: 16
+      status: draft
+      description: "transport receipt binding"
+    - step: 4
+      repo: TriTRPC
+      pr: 17
+      status: draft
+      description: "transport event examples"
+    - step: 5
+      repo: slash-topics
+      pr: 14
+      status: draft
+      description: "topic-pack provenance + receipt binding"
+    - step: 6
+      repo: human-digital-twin
+      pr: 4
+      status: draft
+      description: "policy/approval event schema + consent binding"
+    - step: 7
+      repo: agentplane
+      pr: null
+      status: not_started
+      description: "receipt builder (consumes all above) — NO PR EXISTS"
