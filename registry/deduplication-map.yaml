@@ -1,3 +1,216 @@
+# sociosphere deduplication map
+# Phase A: scan markers for the 23 new repos.
+# Phase C will act on these markers to consolidate, merge, or deprecate overlapping repos.
+#
+# Schema per entry:
+#   potential_overlaps: [list of existing repos this may overlap with]
+#   namespace_conflicts: [namespace collision notes]
+#   consolidation_candidate: true/false
+#   consolidation_target: [target repo if consolidation is planned]
+#   archive_candidate: true/false
+#   notes: free-text analysis notes
+
+deduplication:
+
+  # ── Prophet Core Cluster ──────────────────────────────────────────────────
+
+  prophet-core-ops-brief:
+    potential_overlaps: [prophet-platform]
+    namespace_conflicts: "prophet-core-* namespace may overlap with prophet-platform; needs Phase C review"
+    consolidation_candidate: true
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — Phase C will evaluate prophet-core-* vs. prophet-platform consolidation"
+
+  prophet-core-ledger:
+    potential_overlaps: [prophet-platform, TriTRPC]
+    namespace_conflicts: "prophet-core-* namespace may overlap with prophet-platform"
+    consolidation_candidate: true
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — potential overlap with event/audit primitives in TriTRPC or prophet-platform"
+
+  prophet-core-scaffolder:
+    potential_overlaps: [prophet-platform, sourceos-a2a-mcp-bootstrap]
+    namespace_conflicts: "prophet-core-* namespace may overlap with prophet-platform"
+    consolidation_candidate: true
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — scaffolding may overlap with bootstrap surfaces"
+
+  prophet-core-libs:
+    potential_overlaps: [prophet-platform]
+    namespace_conflicts: "prophet-core-* namespace may overlap with prophet-platform"
+    consolidation_candidate: true
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — shared libs likely candidates for consolidation into prophet-platform"
+
+  prophet-core-contracts:
+    potential_overlaps: [prophet-platform, graphbrain-contract]
+    namespace_conflicts: "prophet-core-* namespace may overlap with prophet-platform; 'contracts' pattern also in graphbrain-contract"
+    consolidation_candidate: true
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — Phase C will evaluate consolidation with prophet-platform contracts layer"
+
+  # ── GAIA Domain / Data-Plane Cluster ─────────────────────────────────────
+
+  prophet-core-infra:
+    potential_overlaps: [agentplane, prophet-platform]
+    namespace_conflicts: "prophet-core-* namespace may overlap with prophet-platform; infra may overlap with agentplane"
+    consolidation_candidate: true
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — Phase C will evaluate GAIA infra vs. agentplane overlap"
+
+  prophet-core-policy:
+    potential_overlaps: [delivery-excellence-automation, socioprophet-standards-storage]
+    namespace_conflicts: "policy enforcement may overlap with delivery-excellence-automation or standards-storage"
+    consolidation_candidate: true
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — Phase C will evaluate policy layer consolidation"
+
+  prophet-core-query:
+    potential_overlaps: [gaia-world-model, prophet-domain-gaia-ontology]
+    namespace_conflicts: "query surface likely tied to gaia-world-model ontology"
+    consolidation_candidate: false
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — distinct from ontology; unlikely to consolidate but dependencies need mapping"
+
+  prophet-core-catalog:
+    potential_overlaps: [workspace-inventory, prophet-domain-gaia-curation-vault]
+    namespace_conflicts: "catalog vs. inventory vs. curation-vault — potential overlap in asset registration"
+    consolidation_candidate: true
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — Phase C will evaluate catalog/inventory/curation overlap"
+
+  prophet-core-ingest:
+    potential_overlaps: [agentplane, new-hope]
+    namespace_conflicts: "ingest pipeline may overlap with agentplane execution surface or new-hope carrier ingest"
+    consolidation_candidate: true
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — Phase C will evaluate ingest vs. agentplane/new-hope"
+
+  prophet-domain-gaia-ontology:
+    potential_overlaps: [gaia-world-model, ontogenesis]
+    namespace_conflicts: "GAIA ontology may overlap significantly with gaia-world-model (Turtle/RDF) and ontogenesis"
+    consolidation_candidate: true
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — HIGH priority for Phase C: potential consolidation with gaia-world-model"
+
+  prophet-domain-gaia-curation-vault:
+    potential_overlaps: [prophet-core-catalog, socioprophet-standards-storage]
+    namespace_conflicts: "curation vault may overlap with catalog or standards-storage"
+    consolidation_candidate: true
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — Phase C will evaluate"
+
+  # ── Delivery Excellence (DelEx) Cluster ──────────────────────────────────
+
+  delivery-excellence:
+    potential_overlaps: [socioprophet-standards-storage, socioprophet-standards-knowledge]
+    namespace_conflicts: "governance/ADR patterns may overlap with standards-storage"
+    consolidation_candidate: false
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — DelEx appears intentionally separate from standards-storage; confirm in Phase C"
+
+  delivery-excellence-automation:
+    potential_overlaps: [agentplane, delivery-excellence]
+    namespace_conflicts: "automation / CI-validation may overlap with agentplane execution control"
+    consolidation_candidate: false
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — Phase C will confirm scope boundary with agentplane"
+
+  delivery-excellence-innersource:
+    potential_overlaps: [delivery-excellence]
+    namespace_conflicts: "subsystem of delex; no external namespace conflict identified"
+    consolidation_candidate: false
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — likely stays as separate subsystem; confirm in Phase C"
+
+  delivery-excellence-bounties:
+    potential_overlaps: [delivery-excellence]
+    namespace_conflicts: "subsystem of delex; no external namespace conflict identified"
+    consolidation_candidate: false
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — known active; likely stays as separate subsystem; confirm in Phase C"
+
+  delivery-excellence-boards:
+    potential_overlaps: [delivery-excellence]
+    namespace_conflicts: "subsystem of delex; no external namespace conflict identified"
+    consolidation_candidate: false
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — likely stays as separate subsystem; confirm in Phase C"
+
+  # ── SourceOS / A2A Bootstrap ──────────────────────────────────────────────
+
+  sourceos-a2a-mcp-bootstrap:
+    potential_overlaps: [sourceos-workspace, mcp-a2a-zero-trust]
+    namespace_conflicts: "sourceos-* namespace: sourceos-workspace exists in SocioProphet org; mcp-a2a-zero-trust shares A2A+MCP scope"
+    consolidation_candidate: true
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — HIGH priority for Phase C: potential overlap with sourceos-workspace and mcp-a2a-zero-trust"
+
+  # ── Workspace / Inventory ─────────────────────────────────────────────────
+
+  workspace-inventory:
+    potential_overlaps: [sourceos-workspace, prophet-core-catalog]
+    namespace_conflicts: "workspace-* namespace may overlap with sourceos-workspace; inventory may overlap with catalog"
+    consolidation_candidate: true
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — Phase C will evaluate vs. sourceos-workspace and prophet-core-catalog"
+
+  # ── Knowledge / Semantic ──────────────────────────────────────────────────
+
+  alexandrian-academy:
+    potential_overlaps: [socioprophet-standards-knowledge, slash-topics]
+    namespace_conflicts: "knowledge/learning surface may overlap with standards-knowledge or slash-topics"
+    consolidation_candidate: true
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — purpose TBD; Phase C evaluation deferred until Phase B clarifies purpose"
+
+  regis-entity-graph:
+    potential_overlaps: [identity-is-prime-reference, graphbrain-contract]
+    namespace_conflicts: "entity-graph may overlap with identity-is-prime-reference or graphbrain-contract"
+    consolidation_candidate: true
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — Phase C will evaluate vs. identity-is-prime-reference"
+
+  # ── Research / Theory ────────────────────────────────────────────────────
+
+  Heller-Winters-Theorem:
+    potential_overlaps: []
+    namespace_conflicts: "none identified — unique name"
+    consolidation_candidate: false
+    consolidation_target: null
+    archive_candidate: false
+    notes: "Phase A marker — theoretical research; no overlap expected; Phase B will confirm"
+
+  # ── Archive ──────────────────────────────────────────────────────────────
+
+  tritrpc-notes-archive:
+    potential_overlaps: [TriTRPC]
+    namespace_conflicts: "tritrpc-notes-archive is the archived notes companion to the active TriTRPC repo"
+    consolidation_candidate: false
+    consolidation_target: null
+    archive_candidate: true
+    notes: "Phase A marker — ARCHIVE: preserve as-is; may be merged into TriTRPC wiki/docs in Phase C"
 # deduplication-map.yaml
 # Track duplicate repositories across orgs and consolidation progress.
 # Consumed by: cli/dedup-report.py

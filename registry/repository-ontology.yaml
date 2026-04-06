@@ -1,3 +1,239 @@
+# sociosphere repository ontology registry
+# Phase A placeholders — controlled vocabulary and semantic bindings for the 23 new repos.
+# Phase B will replace these with LSA/LSI/LDA-extracted topics from actual code + docs.
+#
+# Schema per entry:
+#   controlled_vocabulary: [list of key terms]
+#   top_topics: [list of topic labels]
+#   semantic_bindings:
+#     - "part_of": [parent clusters]
+#     - "depends_on": [known hard dependencies]
+#     - "used_by": [known consumers]
+
+ontologies:
+
+  # ── Prophet Core Cluster ──────────────────────────────────────────────────
+
+  prophet-core-ops-brief:
+    controlled_vocabulary: [ops, brief, provenance, auditable, operational-summary, open-only]
+    top_topics: [operational-summary, provenance-tracking, audit-logging]
+    semantic_bindings:
+      part_of: [prophet-core]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-ledger:
+    controlled_vocabulary: [ledger, append-only, provenance, auditable, event-log, open-only]
+    top_topics: [event-ledger, provenance-chain, immutable-log]
+    semantic_bindings:
+      part_of: [prophet-core]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-scaffolder:
+    controlled_vocabulary: [scaffolding, bootstrap, templates, provenance, auditable, open-only]
+    top_topics: [project-scaffolding, template-generation, bootstrap]
+    semantic_bindings:
+      part_of: [prophet-core]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-libs:
+    controlled_vocabulary: [libraries, shared, provenance, auditable, utilities, open-only]
+    top_topics: [shared-libraries, utility-functions, core-primitives]
+    semantic_bindings:
+      part_of: [prophet-core]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-contracts:
+    controlled_vocabulary: [contracts, capabilities, services, versioned, provenance, auditable, open-only]
+    top_topics: [capability-contracts, service-definitions, api-surface]
+    semantic_bindings:
+      part_of: [prophet-core]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  # ── GAIA Domain / Data-Plane Cluster ─────────────────────────────────────
+
+  prophet-core-infra:
+    controlled_vocabulary: [infrastructure, compute, network, provenance, auditable, gaia]
+    top_topics: [infrastructure-management, compute-primitives, gaia-infra]
+    semantic_bindings:
+      part_of: [prophet-core, gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-policy:
+    controlled_vocabulary: [policy, compliance, rules, enforcement, provenance, auditable, gaia]
+    top_topics: [policy-enforcement, compliance-gates, rule-evaluation]
+    semantic_bindings:
+      part_of: [prophet-core, gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-query:
+    controlled_vocabulary: [query, structured-query, sparql, provenance, auditable, gaia]
+    top_topics: [structured-query, semantic-search, data-retrieval]
+    semantic_bindings:
+      part_of: [prophet-core, gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-catalog:
+    controlled_vocabulary: [catalog, asset-discovery, registration, provenance, auditable, gaia]
+    top_topics: [data-catalog, asset-registration, metadata-management]
+    semantic_bindings:
+      part_of: [prophet-core, gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-ingest:
+    controlled_vocabulary: [ingest, pipeline, normalization, provenance, auditable, gaia]
+    top_topics: [data-ingestion, pipeline-management, normalization]
+    semantic_bindings:
+      part_of: [prophet-core, gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-domain-gaia-ontology:
+    controlled_vocabulary: [ontology, rdf, owl, gaia, earth-digital-twin, provenance, auditable]
+    top_topics: [domain-ontology, rdf-turtle, semantic-web, earth-model]
+    semantic_bindings:
+      part_of: [gaia-domain]
+      depends_on: []
+      used_by: [prophet-core-query, prophet-core-catalog]
+    notes: "Phase A placeholder — known active; Phase B will extract from Turtle/OWL files"
+
+  prophet-domain-gaia-curation-vault:
+    controlled_vocabulary: [curation, vault, datasets, provenance, auditable, gaia]
+    top_topics: [data-curation, provenance-pinned-storage, review-workflow]
+    semantic_bindings:
+      part_of: [gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  # ── Delivery Excellence (DelEx) Cluster ──────────────────────────────────
+
+  delivery-excellence:
+    controlled_vocabulary: [governance, adr, templates, kpi, okr, scope, delivery-excellence]
+    top_topics: [delivery-governance, adr-management, kpi-tracking, template-library]
+    semantic_bindings:
+      part_of: [delex-cluster]
+      depends_on: []
+      used_by: [delivery-excellence-automation, delivery-excellence-innersource, delivery-excellence-bounties, delivery-excellence-boards]
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  delivery-excellence-automation:
+    controlled_vocabulary: [automation, rbac, routing, ci-validation, delivery-excellence]
+    top_topics: [rbac-automation, ci-gate-validation, routing-rules]
+    semantic_bindings:
+      part_of: [delex-cluster]
+      depends_on: [delivery-excellence]
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  delivery-excellence-innersource:
+    controlled_vocabulary: [innersource, contribution, governance, delivery-excellence]
+    top_topics: [innersource-patterns, contribution-guidelines, open-governance]
+    semantic_bindings:
+      part_of: [delex-cluster]
+      depends_on: [delivery-excellence]
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  delivery-excellence-bounties:
+    controlled_vocabulary: [bounties, incentives, contributions, delivery-excellence]
+    top_topics: [bounty-management, incentive-design, contributor-rewards]
+    semantic_bindings:
+      part_of: [delex-cluster]
+      depends_on: [delivery-excellence]
+      used_by: []
+    notes: "Phase A placeholder — known active via commit history; Phase B will extract from actual repo content"
+
+  delivery-excellence-boards:
+    controlled_vocabulary: [boards, project-management, work-items, delivery-excellence]
+    top_topics: [kanban-board, work-item-tracking, sprint-management]
+    semantic_bindings:
+      part_of: [delex-cluster]
+      depends_on: [delivery-excellence]
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  # ── SourceOS / A2A Bootstrap ──────────────────────────────────────────────
+
+  sourceos-a2a-mcp-bootstrap:
+    controlled_vocabulary: [sourceos, a2a, mcp, bootstrap, workspace, protocol-binding]
+    top_topics: [workspace-bootstrap, a2a-alignment, mcp-integration, protocol-surface]
+    semantic_bindings:
+      part_of: [sourceos-cluster]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — referenced in workspace.toml; Phase B will extract from actual repo content"
+
+  # ── Workspace / Inventory ─────────────────────────────────────────────────
+
+  workspace-inventory:
+    controlled_vocabulary: [workspace, catalog, inventory, index, component-registry]
+    top_topics: [workspace-cataloging, component-indexing, inventory-management]
+    semantic_bindings:
+      part_of: [sociosphere-control]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  # ── Knowledge / Semantic ──────────────────────────────────────────────────
+
+  alexandrian-academy:
+    controlled_vocabulary: [knowledge, learning, academy, semantic, platform]
+    top_topics: [knowledge-platform, learning-surface, semantic-content]
+    semantic_bindings:
+      part_of: []
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — purpose TBD; vocabulary is speculative; Phase B will replace entirely"
+
+  regis-entity-graph:
+    controlled_vocabulary: [entity-graph, governance, identity, actors, roles, relationships]
+    top_topics: [entity-resolution, identity-graph, governance-mapping]
+    semantic_bindings:
+      part_of: [identity-cluster]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — layer assignment tentative; Phase B will extract from actual repo content"
+
+  # ── Research / Theory ────────────────────────────────────────────────────
+
+  Heller-Winters-Theorem:
+    controlled_vocabulary: [theorem, research, theory, formal-methods]
+    top_topics: [theoretical-research, formal-proof, mathematical-modeling]
+    semantic_bindings:
+      part_of: [research-cluster]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — purpose and scope TBD; Phase B will replace once description is confirmed"
+
+  # ── Archive ──────────────────────────────────────────────────────────────
+
+  tritrpc-notes-archive:
+    controlled_vocabulary: [tritrpc, rpc, notes, archive, ternary, deterministic]
+    top_topics: [rpc-protocol-notes, archive, ternary-rpc]
+    semantic_bindings:
+      part_of: [archive]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — archived repo; ontology preserved as-is; no further extraction expected"
 # repository-ontology.yaml
 # Semantic identity of each repository: controlled vocabulary, topic models, and
 # semantic bindings to other repos.
