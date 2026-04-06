@@ -1,0 +1,868 @@
+# canonical-repos.yaml — SocioProphet ecosystem canonical repository registry
+# Source of truth for all 53 curated repos in the SocioProphet multi-repo workspace.
+# Supersedes competing drafts from sociosphere PRs #20, #21, #23.
+# generated_at: 2026-04-06
+# schema_version: 1
+
+repos:
+
+  # ── Standards & Governance ────────────────────────────────────────────────
+  - name: prophet-platform-standards
+    org: SocioProphet
+    layer: governance
+    role: standards
+    purpose: "Normative platform standards: ADRs, Tekton/ArgoCD pipelines, DevSecOps/RBAC/Audit, OTEL, Kyverno policies."
+    language: YAML
+    status: active
+    priority: P0
+    tags: [standards, adr, ci-cd, fips, rbac, otel, kyverno]
+    owners: [mdheller]
+    open_prs: 1
+    notes: "PR#1 (draft) must merge first — foundational ADRs 040/050/060 block all downstream standards compliance."
+
+  - name: socioprophet-standards-storage
+    org: SocioProphet
+    layer: governance
+    role: standards
+    purpose: "Storage, data-layer, FIPS 140-2/140-3, P2P, orchestration, ML/AI, and agent-plane runtime standards."
+    language: Python
+    status: active
+    priority: P0
+    tags: [standards, fips, storage, ml, p2p, agent-plane]
+    owners: [mdheller]
+    open_prs: 18
+    notes: "18 open draft PRs — FIPS cluster (#14–#23) must be triaged and chained before merge. PR#13 (shared schemas) is prerequisite for slice work."
+
+  - name: socioprophet-standards-knowledge
+    org: SocioProphet
+    layer: governance
+    role: standards
+    purpose: "Knowledge context standards: micro-publications, meriotopographics, schema authority (Avro/JSON-LD/JSON Schema)."
+    language: Python
+    status: active
+    priority: P1
+    tags: [standards, knowledge, schema, avro, jsonld, jsonschema]
+    owners: [mdheller]
+    open_prs: 7
+    notes: "PRs #16–#21 (non-draft READMEs) are ready to merge immediately. PR#22 (AOKC taxonomy) is draft."
+
+  - name: sociosphere
+    org: SocioProphet
+    layer: control-plane
+    role: workspace-controller
+    purpose: "Workspace controller, manifest+lock, runner, registry, compliance tooling, and protocol fixtures."
+    language: Python
+    status: active
+    priority: P0
+    tags: [workspace, controller, manifest, registry, compliance, runner]
+    owners: [mdheller]
+    open_prs: 9
+    notes: "Central orchestration repo. PRs #20/#21/#23 conflict on registry/canonical-repos.yaml — superseded by this consolidated registry."
+
+  # ── Transport & Protocol ──────────────────────────────────────────────────
+  - name: TriTRPC
+    org: SocioProphet
+    layer: core-platform
+    role: protocol
+    purpose: "Deterministic, ternary-native RPC protocol with authenticated envelope framing and Rust/Go implementations."
+    language: Python
+    status: active
+    priority: P0
+    tags: [protocol, rpc, ternary, deterministic, fixtures, rust, go, avro, aead]
+    owners: [mdheller]
+    open_prs: 7
+    notes: "PR#18 has a write-probe artifact (.write_probe.txt) that must be removed before merge. PR#20 (local-hybrid slice) depends on agentplane#12."
+
+  - name: agentplane
+    org: SocioProphet
+    layer: core-platform
+    role: execution-plane
+    purpose: "Execution control plane: bundle→validate→run→evidence→replay with governance."
+    language: Shell
+    status: active
+    priority: P0
+    tags: [execution, bundle, evidence, replay, governance, slice]
+    owners: [mdheller]
+    open_prs: 2
+    notes: "PR#12 (local-hybrid slice layout) is prerequisite for TriTRPC#20."
+
+  - name: semantic-serdes
+    org: SocioProphet
+    layer: core-platform
+    role: library
+    purpose: "Semantic serialization/deserialization utilities."
+    language: Python
+    status: active
+    priority: P1
+    tags: [serialization, semantic, library]
+    owners: [mdheller]
+    open_prs: 1
+    notes: "PR#1 (promote 2026-03-25 winner) — review for canonical fit before merge."
+
+  - name: cairnpath-mesh
+    org: SocioProphet
+    layer: core-platform
+    role: replay
+    purpose: "Replayable decision checkpoints and materialization for twin economy reconciliation."
+    language: Python
+    status: active
+    priority: P1
+    tags: [replay, reconciliation, twin-economy, materialization]
+    owners: [mdheller]
+    open_prs: 1
+    notes: "PR#1 (twin economy Cairn reconciliation contract) targets non-main base — verify base branch before merge."
+
+  # ── Human Digital Twin ────────────────────────────────────────────────────
+  - name: human-digital-twin
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Minimal reproducible human API surface: evaluate/promote/export human-centric artifacts under zero-trust."
+    language: Python
+    status: active
+    priority: P1
+    tags: [hdt, human, zero-trust, policy, consent, evidence]
+    owners: [mdheller]
+    open_prs: 1
+    notes: "PR#4 (policy/approval events + consent receipt binding) is part of live-receipt path."
+
+  # ── GAIA Data-Plane ───────────────────────────────────────────────────────
+  - name: gaia-world-model
+    org: SocioProphet
+    layer: data-plane
+    role: ontology
+    purpose: "GAIA world model OWL/RDF ontology — semantic backbone for the GAIA data plane."
+    language: Turtle
+    status: active
+    priority: P1
+    tags: [gaia, ontology, rdf, owl, turtle, knowledge-graph]
+    owners: [mdheller]
+    open_prs: 0
+    notes: "5 open issues, 0 PRs — critical data-plane component without active PR work. Phase B gap."
+
+  - name: prophet-domain-gaia-ontology
+    org: SocioProphet
+    layer: data-plane
+    role: ontology
+    purpose: "Prophet-domain specific GAIA ontology extensions."
+    language: null
+    status: active
+    priority: P2
+    tags: [gaia, ontology, prophet-domain]
+    owners: []
+    open_prs: 0
+    notes: "Potential overlap with gaia-world-model — deduplication candidate (Phase C)."
+
+  - name: prophet-domain-gaia-curation-vault
+    org: SocioProphet
+    layer: data-plane
+    role: data
+    purpose: "Curated GAIA data vault."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [gaia, curation, vault, data]
+    owners: []
+    open_prs: 0
+    notes: "Incubating — needs scope definition."
+
+  - name: socius-kg
+    org: SocioProphet
+    layer: data-plane
+    role: knowledge-graph
+    purpose: "Socius knowledge graph."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [knowledge-graph, socius]
+    owners: []
+    open_prs: 0
+    notes: "1 open issue, 0 PRs."
+
+  - name: regis-entity-graph
+    org: SocioProphet
+    layer: data-plane
+    role: knowledge-graph
+    purpose: "Entity graph for Regis — structured entity relationships."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [entity-graph, regis, knowledge]
+    owners: []
+    open_prs: 0
+    notes: "1 open issue, 0 PRs."
+
+  - name: slash-topics
+    org: SocioProphet
+    layer: data-plane
+    role: topic-pack
+    purpose: "Governed topic packs and membrane outputs feeding embeddings and semantic BI."
+    language: Python
+    status: active
+    priority: P1
+    tags: [topics, semantic, embeddings, bi, receipt-path]
+    owners: [mdheller]
+    open_prs: 1
+    notes: "PR#14 (topic-pack provenance + receipt binding) is part of live-receipt path chain."
+
+  - name: graphbrain-contract
+    org: SocioProphet
+    layer: data-plane
+    role: contract
+    purpose: "GraphBrain integration contracts and binding specs."
+    language: Python
+    status: incubating
+    priority: P2
+    tags: [graphbrain, contract, binding]
+    owners: []
+    open_prs: 0
+
+  - name: ontogenesis
+    org: SocioProphet
+    layer: data-plane
+    role: component
+    purpose: "Ontology generation and management tooling."
+    language: Python
+    status: active
+    priority: P1
+    tags: [ontology, generation, tooling]
+    owners: [mdheller]
+    open_prs: 1
+    notes: "PR#1 (promote 2026-03-25 winner) — review for canonical fit."
+
+  # ── Prophet Core Platform ─────────────────────────────────────────────────
+  - name: prophet-platform
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Go-based Prophet platform core."
+    language: Go
+    status: active
+    priority: P1
+    tags: [prophet, platform, go]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-libs
+    org: SocioProphet
+    layer: core-platform
+    role: library
+    purpose: "Shared Prophet core libraries."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [prophet, core, library]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-contracts
+    org: SocioProphet
+    layer: core-platform
+    role: contracts
+    purpose: "Prophet core API contracts and interface definitions."
+    language: null
+    status: incubating
+    priority: P1
+    tags: [prophet, core, contracts, api]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-ledger
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Auditable, provenance-first ledger and append-only event log."
+    language: null
+    status: incubating
+    priority: P1
+    tags: [prophet, core, ledger, audit, provenance, event-log]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-ingest
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Prophet core data ingestion pipeline."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [prophet, core, ingest, pipeline]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-catalog
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Prophet core asset catalog."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [prophet, core, catalog, assets]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-query
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Prophet core query engine."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [prophet, core, query]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-policy
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Prophet core policy engine and enforcement."
+    language: null
+    status: incubating
+    priority: P1
+    tags: [prophet, core, policy, enforcement]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-infra
+    org: SocioProphet
+    layer: core-platform
+    role: infra
+    purpose: "Prophet core infrastructure definitions (K8s, Helm, Terraform)."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [prophet, core, infra, k8s, helm]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-scaffolder
+    org: SocioProphet
+    layer: core-platform
+    role: tool
+    purpose: "Prophet core repo scaffolding tool."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [prophet, core, scaffolding, tool]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-ops-brief
+    org: SocioProphet
+    layer: core-platform
+    role: docs
+    purpose: "Prophet core operations briefings and runbooks."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [prophet, core, ops, runbooks]
+    owners: []
+    open_prs: 0
+
+  # ── Identity & Zero-Trust ─────────────────────────────────────────────────
+  - name: mcp-a2a-zero-trust
+    org: SocioProphet
+    layer: identity
+    role: security
+    purpose: "MCP agent-to-agent zero-trust communication and attestation."
+    language: Python
+    status: active
+    priority: P1
+    tags: [zero-trust, a2a, mcp, security, attestation, fips]
+    owners: [mdheller]
+    open_prs: 1
+    dedup_candidate: true
+    notes: "Overlap with sourceos-a2a-mcp-bootstrap — consolidation target (Phase C). PR#1 (issue standards DoD) from Jan 2026."
+
+  - name: identity-is-prime-reference
+    org: SocioProphet
+    layer: identity
+    role: reference
+    purpose: "Reference implementation for identity-is-prime principle."
+    language: Python
+    status: incubating
+    priority: P2
+    tags: [identity, reference, zero-trust]
+    owners: []
+    open_prs: 0
+
+  - name: ReputationVault
+    org: SocioProphet
+    layer: identity
+    role: component
+    purpose: "Reputation and trust vault for agent/entity reputation tracking."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [reputation, trust, vault, identity]
+    owners: []
+    open_prs: 0
+
+  # ── SourceOS Bootstrap ────────────────────────────────────────────────────
+  - name: sourceos-a2a-mcp-bootstrap
+    org: SocioProphet
+    layer: core-platform
+    role: bootstrap
+    purpose: "SourceOS agent-to-agent MCP bootstrap tooling."
+    language: Python
+    status: active
+    priority: P1
+    tags: [sourceos, a2a, mcp, bootstrap]
+    owners: []
+    dedup_candidate: true
+    open_prs: 0
+    notes: "Overlap with mcp-a2a-zero-trust — deduplication analysis needed (Phase C)."
+
+  - name: workspace-inventory
+    org: SocioProphet
+    layer: control-plane
+    role: tool
+    purpose: "Workspace inventory tooling for tracking materialized repos."
+    language: Python
+    status: active
+    priority: P1
+    tags: [workspace, inventory, tooling]
+    owners: []
+    open_prs: 0
+    notes: "In workspace manifest; 0 issues; critical for lock file resolution."
+
+  # ── Delivery Excellence ───────────────────────────────────────────────────
+  - name: delivery-excellence
+    org: SocioProphet
+    layer: governance
+    role: process
+    purpose: "Delivery excellence processes, standards, and practices."
+    language: null
+    status: active
+    priority: P2
+    tags: [delivery, excellence, process, governance]
+    owners: []
+    open_prs: 0
+
+  - name: delivery-excellence-automation
+    org: SocioProphet
+    layer: governance
+    role: tool
+    purpose: "Automation tooling for delivery excellence processes."
+    language: Python
+    status: active
+    priority: P2
+    tags: [delivery, automation, tooling]
+    owners: []
+    open_prs: 0
+
+  - name: delivery-excellence-innersource
+    org: SocioProphet
+    layer: governance
+    role: process
+    purpose: "InnerSource delivery excellence standards and practices."
+    language: Shell
+    status: active
+    priority: P2
+    tags: [innersource, delivery, standards]
+    owners: []
+    open_prs: 0
+
+  - name: delivery-excellence-bounties
+    org: SocioProphet
+    layer: governance
+    role: process
+    purpose: "Bounty and incentive programs for delivery excellence."
+    language: Shell
+    status: active
+    priority: P3
+    tags: [bounties, incentives, delivery]
+    owners: []
+    open_prs: 0
+
+  - name: delivery-excellence-boards
+    org: SocioProphet
+    layer: governance
+    role: process
+    purpose: "Project boards and tracking for delivery excellence."
+    language: Shell
+    status: active
+    priority: P3
+    tags: [boards, tracking, delivery]
+    owners: []
+    open_prs: 0
+
+  - name: global-devsecops-intelligence
+    org: SocioProphet
+    layer: governance
+    role: intelligence
+    purpose: "Global DevSecOps intelligence aggregation and analysis."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [devsecops, intelligence, security]
+    owners: []
+    open_prs: 0
+
+  # ── Atlas & Research ──────────────────────────────────────────────────────
+  - name: atlas_master_bundle_complete
+    org: SocioProphet
+    layer: research
+    role: bundle
+    purpose: "Complete Atlas master bundle for full orchestration."
+    language: Python
+    status: active
+    priority: P2
+    tags: [atlas, bundle, orchestration]
+    owners: []
+    open_prs: 0
+
+  - name: atlas_master_bundle_autopilot_fullorchestration
+    org: SocioProphet
+    layer: research
+    role: bundle
+    purpose: "Atlas master bundle with autopilot and full orchestration."
+    language: Python
+    status: active
+    priority: P2
+    tags: [atlas, bundle, autopilot, orchestration]
+    owners: []
+    open_prs: 0
+
+  - name: atlas_os_service_full
+    org: SocioProphet
+    layer: research
+    role: service
+    purpose: "Full Atlas OS service implementation."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [atlas, os, service]
+    owners: []
+    open_prs: 0
+
+  - name: Heller-Winters-Theorem
+    org: SocioProphet
+    layer: research
+    role: research
+    purpose: "Heller-Winters theorem research and implementation."
+    language: Python
+    status: active
+    priority: P3
+    tags: [research, heller-winters, theorem]
+    owners: []
+    open_prs: 0
+    notes: "21 open issues — needs triage."
+
+  - name: systems-learning-loops
+    org: SocioProphet
+    layer: research
+    role: research
+    purpose: "Systems learning loops research and implementation."
+    language: Python
+    status: incubating
+    priority: P3
+    tags: [research, learning, systems]
+    owners: []
+    open_prs: 0
+
+  - name: alexandrian-academy
+    org: SocioProphet
+    layer: research
+    role: research
+    purpose: "Alexandrian Academy knowledge curation and learning."
+    language: Python
+    status: incubating
+    priority: P3
+    tags: [research, academy, knowledge, curation]
+    owners: []
+    open_prs: 0
+
+  - name: usol-space-library
+    org: SocioProphet
+    layer: research
+    role: library
+    purpose: "USOL space library for spatial/orbital computation."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [space, library, usol]
+    owners: []
+    open_prs: 0
+
+  - name: Knowledge_Agent
+    org: SocioProphet
+    layer: research
+    role: agent
+    purpose: "Knowledge agent for automated knowledge extraction and synthesis."
+    language: Python
+    status: incubating
+    priority: P2
+    tags: [knowledge, agent, extraction, synthesis]
+    owners: []
+    open_prs: 0
+
+  - name: exodus
+    org: SocioProphet
+    layer: research
+    role: research
+    purpose: "Exodus research project."
+    language: Python
+    status: incubating
+    priority: P3
+    tags: [research, exodus]
+    owners: []
+    open_prs: 0
+    notes: "4 open issues, 0 PRs."
+
+  # ── Infrastructure ────────────────────────────────────────────────────────
+  - name: cotoami-infra
+    org: SocioProphet
+    layer: core-platform
+    role: infra
+    purpose: "Cotoami infrastructure definitions."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [cotoami, infra, k8s]
+    owners: []
+    open_prs: 0
+
+  - name: cotoami-spec
+    org: SocioProphet
+    layer: core-platform
+    role: spec
+    purpose: "Cotoami protocol and API specifications."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [cotoami, spec, protocol, api]
+    owners: []
+    open_prs: 0
+
+  - name: flux
+    org: SocioProphet
+    layer: core-platform
+    role: infra
+    purpose: "Flux GitOps configuration."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [flux, gitops, infra]
+    owners: []
+    open_prs: 0
+
+  - name: hatchet-quickstart
+    org: SocioProphet
+    layer: core-platform
+    role: tool
+    purpose: "Hatchet workflow engine quickstart configuration."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [hatchet, workflow, quickstart]
+    owners: []
+    open_prs: 0
+
+  - name: porter-self-hosted
+    org: SocioProphet
+    layer: core-platform
+    role: infra
+    purpose: "Porter self-hosted runner configuration."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [porter, self-hosted, runner, infra]
+    owners: []
+    open_prs: 0
+
+  - name: lampstand
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Lampstand platform component."
+    language: Python
+    status: incubating
+    priority: P2
+    tags: [lampstand, component]
+    owners: []
+    open_prs: 0
+
+  - name: hyperswarm-agent-composable-cluster-scaleup
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Hyperswarm agent composable cluster scale-up tooling."
+    language: Python
+    status: incubating
+    priority: P2
+    tags: [hyperswarm, agent, cluster, scaleup, p2p]
+    owners: []
+    dedup_candidate: true
+    open_prs: 0
+    notes: "Deduplication analysis needed against other hyperswarm variants (Phase C)."
+
+  # ── Cloud / Client Services ───────────────────────────────────────────────
+  - name: cloudhaven-rest
+    org: SocioProphet
+    layer: core-platform
+    role: api
+    purpose: "CloudHaven REST API service."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [cloudhaven, rest, api]
+    owners: []
+    open_prs: 0
+
+  - name: cloudhaven-client
+    org: SocioProphet
+    layer: core-platform
+    role: client
+    purpose: "CloudHaven client library."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [cloudhaven, client, library]
+    owners: []
+    open_prs: 0
+
+  - name: cloudshell-fog
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "CloudShell fog computing component."
+    language: null
+    status: archive
+    priority: P3
+    tags: [cloudshell, fog, archive]
+    owners: []
+    dedup_candidate: true
+    open_prs: 0
+    notes: "0 issues, 0 PRs, empty repo — archive candidate (Phase C)."
+
+  # ── Product (non-single-branch — tracked read-only) ────────────────────────
+  - name: socioprophet
+    org: SocioProphet
+    layer: product
+    role: product
+    purpose: "SocioProphet product application — constitutional material and feature work."
+    language: HTML
+    status: active
+    priority: P1
+    tags: [product, web, app, constitution]
+    owners: [mdheller]
+    open_prs: 26
+    single_branch_exempt: true
+    notes: "Cannot consolidate to single branch per user directive. 17 stale dependabot PRs (2022–2023) should be closed. Active content PRs: #257 (liberty-by-design companion), #256 (AOKC bootstrap), #255 (repo alignment), #253 (CodeQL/gitleaks), #250 (Orion gov spec)."
+
+  - name: socioprophet-web-medium
+    org: SocioProphet
+    layer: product
+    role: component
+    purpose: "SocioProphet web medium variant."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [product, web]
+    owners: []
+    open_prs: 0
+
+  - name: socioprophet-docs
+    org: SocioProphet
+    layer: product
+    role: docs
+    purpose: "SocioProphet documentation site."
+    language: JavaScript
+    status: active
+    priority: P2
+    tags: [docs, site, documentation]
+    owners: []
+    open_prs: 5
+    notes: "All 5 PRs are dependabot — no architectural content PRs."
+
+  # ── Research / Misc ───────────────────────────────────────────────────────
+  - name: new-hope
+    org: SocioProphet
+    layer: research
+    role: research
+    purpose: "New-Hope research project."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [research, new-hope]
+    owners: []
+    open_prs: 0
+
+  - name: asterion
+    org: SocioProphet
+    layer: research
+    role: research
+    purpose: "Asterion research project."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [research, asterion]
+    owners: []
+    open_prs: 0
+
+  - name: clymer_research
+    org: SocioProphet
+    layer: research
+    role: research
+    purpose: "Clymer research project."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [research, clymer]
+    owners: []
+    open_prs: 0
+
+  - name: speechlab
+    org: SocioProphet
+    layer: research
+    role: component
+    purpose: "SpeechLab audio/ASR component."
+    language: Makefile
+    status: active
+    priority: P2
+    tags: [speech, asr, audio, lab]
+    owners: []
+    dedup_candidate: true
+    open_prs: 0
+    notes: "Deduplication analysis needed against other orgs (Phase C)."
+
+  - name: Twitterr
+    org: SocioProphet
+    layer: research
+    role: component
+    purpose: "Twitterr integration component."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [twitter, integration, social]
+    owners: []
+    open_prs: 0
+
+  - name: NewsClient
+    org: SocioProphet
+    layer: research
+    role: component
+    purpose: "News client for news ingestion."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [news, client, ingestion]
+    owners: []
+    open_prs: 0
+
+  - name: CDataSoftwaredocs
+    org: SocioProphet
+    layer: research
+    role: docs
+    purpose: "CData software documentation."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [cdata, docs]
+    owners: []
+    open_prs: 0
