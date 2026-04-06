@@ -1,0 +1,67 @@
+# deduplication-map.yaml
+# Track duplicate repositories across orgs and consolidation progress.
+# Consumed by: cli/dedup-report.py
+# Last updated: 2026-04-06
+
+duplicates:
+  speechlab:
+    instances:
+      - org: SocioProphet
+        repo: speechlab
+        language: Makefile
+      - org: SociOS-Linux
+        repo: speechlab
+        language: HTML
+    canonical_home: "SocioProphet/speechlab"
+    status: pending_consolidation
+    owner_action: "mdheller — decide canonical home; redirect SociOS-Linux ref"
+    notes: "Content differs (Makefile vs HTML); review before consolidation"
+
+  cloudshell-fog:
+    instances:
+      - org: SocioProphet
+        repo: cloudshell-fog
+        language: Shell
+      - org: SociOS-Linux
+        repo: cloudshell-fog
+        language: Shell
+    canonical_home: "SocioProphet/cloudshell-fog"
+    status: merge_in_progress
+    owner_action: "Redirect SociOS-Linux/cloudshell-fog references to SocioProphet canonical"
+
+  hyperswarm_variants:
+    instances:
+      - org: SocioProphet
+        repo: hyperswarm-agent-composable-cluster-scaleup
+        language: Python
+        notes: "Variant spelling: scaleup (no hyphen)"
+      - org: SociOS-Linux
+        repo: hyperswarm-agent-composable-cluster-scale-up
+        language: Python
+        notes: "Variant spelling: scale-up (with hyphen)"
+    canonical_home: "SocioProphet/hyperswarm-agent-composable-cluster-scale-up"
+    status: merge_in_progress
+    owner_action: "Consolidate 2 variants into 1 canonical with standardised name (scale-up)"
+    notes: "Standardise on hyphenated form: hyperswarm-agent-composable-cluster-scale-up"
+
+  sourceos_workspace:
+    instances:
+      - org: SocioProphet
+        repo: sourceos-workspace
+        language: Ruby
+        visibility: private
+      - org: SociOS-Linux
+        repo: SourceOS
+        language: Python
+    canonical_home: "to_be_decided"
+    status: pending_review
+    owner_action: "mdheller — determine if these are the same project"
+    notes: "Names suggest overlap; content review needed"
+
+# Summary stats (auto-updated by cli/dedup-report.py)
+stats:
+  total_duplicate_groups: 4
+  resolved: 0
+  in_progress: 2
+  pending: 2
+  completion_pct: 0

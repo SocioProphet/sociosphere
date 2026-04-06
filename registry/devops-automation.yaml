@@ -1,0 +1,170 @@
+# devops-automation.yaml
+# Per-repo build / test / deploy automation rules.
+# Consumed by: engines/devops_orchestrator.py
+# Last updated: 2026-04-06
+
+devops_rules:
+  sociosphere:
+    build:
+      trigger: "code change in sociosphere/"
+      steps:
+        - "python -m pytest tests/"
+        - "python -m py_compile tools/*.py"
+    test:
+      trigger: "dependency change (prophet-platform, TriTRPC)"
+      steps:
+        - "pytest tests/integration/"
+        - "pytest tests/governance/"
+        - "python tools/validate_adaptation_program.py standards/examples/adaptation/program.example.v1.json"
+        - "python standards/qes/tools/validate_qes_contracts.py"
+    deploy:
+      trigger: "successful tests + FIPS validator"
+      environment: staging
+      steps:
+        - "make validate-standards"
+        - "make ui-check"
+
+  prophet-platform:
+    build:
+      trigger: "code change in prophet-platform/"
+      steps:
+        - "go test ./..."
+        - "go build -o prophet-platform"
+        - "go vet ./..."
+    test:
+      trigger: "contract spec change"
+      steps:
+        - "go test ./... -tags=integration"
+    deploy:
+      trigger: "successful tests"
+      environment: staging
+      steps:
+        - "go build -o prophet-platform"
+
+  TriTRPC:
+    build:
+      trigger: "code change in TriTRPC/"
+      steps:
+        - "python -m pytest tests/"
+        - "python -m py_compile *.py"
+    test:
+      trigger: "protocol spec change"
+      steps:
+        - "pytest tests/protocol/"
+        - "pytest tests/framing/"
+    deploy:
+      trigger: "successful tests"
+      environment: staging
+      steps:
+        - "pip install -e ."
+
+  socioprophet-standards-storage:
+    build:
+      trigger: "code change in standards/"
+      steps:
+        - "python -m pytest tests/"
+        - "python tools/validate_standards.py"
+    test:
+      trigger: "policy file change"
+      steps:
+        - "pytest tests/governance/"
+    deploy:
+      trigger: "successful tests + peer review"
+      environment: production
+      steps:
+        - "python tools/publish_standards.py"
+
+  socioprophet-standards-knowledge:
+    build:
+      trigger: "code change"
+      steps:
+        - "python -m pytest tests/"
+    test:
+      trigger: "knowledge context change"
+      steps:
+        - "pytest tests/knowledge/"
+    deploy:
+      trigger: "successful tests"
+      environment: staging
+      steps:
+        - "python tools/index_knowledge.py"
+
+  agentplane:
+    build:
+      trigger: "code change in agentplane/"
+      steps:
+        - "bash tests/run_tests.sh"
+        - "shellcheck *.sh"
+    test:
+      trigger: "governance policy change (sociosphere, standards-storage)"
+      steps:
+        - "bash tests/integration.sh"
+        - "bash tests/governance.sh"
+    deploy:
+      trigger: "successful tests"
+      environment: staging
+      steps:
+        - "bash deploy/deploy.sh staging"
+
+  new-hope:
+    build:
+      trigger: "code change"
+      steps:
+        - "python -m pytest tests/"
+    test:
+      trigger: "dependency change (prophet-platform, slash-topics)"
+      steps:
+        - "pytest tests/carrier/"
+        - "pytest tests/membrane/"
+    deploy:
+      trigger: "successful tests"
+      environment: staging
+      steps:
+        - "python deploy.py staging"
+
+  slash-topics:
+    build:
+      trigger: "code change in slash-topics/"
+      steps:
+        - "python -m pytest tests/"
+    test:
+      trigger: "knowledge standards change"
+      steps:
+        - "pytest tests/topics/"
+        - "python tools/validate_topic_catalog.py"
+    deploy:
+      trigger: "successful tests"
+      environment: staging
+      steps:
+        - "python tools/publish_topics.py"
+
+  human-digital-twin:
+    build:
+      trigger: "code change"
+      steps:
+        - "python -m pytest tests/"
+    test:
+      trigger: "API spec change"
+      steps:
+        - "pytest tests/api/"
+    deploy:
+      trigger: "successful tests"
+      environment: staging
+      steps:
+        - "python deploy.py"
+
+  mcp-a2a-zero-trust:
+    build:
+      trigger: "code change"
+      steps:
+        - "python -m pytest tests/"
+    test:
+      trigger: "protocol or identity change"
+      steps:
+        - "pytest tests/zero_trust/"
+        - "pytest tests/a2a/"
+    deploy:
+      trigger: "successful tests + security scan"
+      environment: staging
+      steps:
+        - "python deploy.py staging"

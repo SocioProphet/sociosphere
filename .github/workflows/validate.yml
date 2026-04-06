@@ -17,6 +17,9 @@ jobs:
           cache: 'npm'
           cache-dependency-path: apps/ui-workbench/package-lock.json
 
+      - name: UI install
+        run: make ui-install
+
       - name: UI check
         run: make ui-check
 
