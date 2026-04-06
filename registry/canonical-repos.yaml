@@ -1,0 +1,220 @@
+# sociosphere canonical repository registry
+# Single source of truth for all SocioProphet repositories.
+# Phase A: initial population — all entries marked for Phase B ontology extraction
+# and Phase C deduplication/consolidation.
+#
+# layer values:
+#   control-plane   – workspace orchestration, runner, CI/CD gating
+#   core-platform   – contracts, capabilities, shared libraries
+#   data-plane      – GAIA domain: ingest, catalog, query, storage
+#   governance      – delivery excellence, policy, compliance, ADRs
+#   identity        – identity primitives, entity graph
+#   research        – theoretical, experimental, benchmarking
+#   archive         – read-only preservation
+#
+# status values:
+#   active      – actively maintained and developed
+#   incubating  – early-stage or purpose not yet confirmed
+#   archive     – read-only, no further active development
+
+repos:
+
+  # ── Prophet Core Cluster ───────────────────────────────────────────────────
+
+  - name: prophet-core-ops-brief
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Auditable, provenance-first operational summary surface for prophet-core cluster."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; awaiting: ontology extraction, dependency analysis, potential consolidation into prophet-core"
+
+  - name: prophet-core-ledger
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Auditable, provenance-first ledger / append-only event log for prophet-core cluster."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; awaiting: ontology extraction, dependency analysis, potential consolidation into prophet-core"
+
+  - name: prophet-core-scaffolder
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Auditable, provenance-first scaffolding tooling for bootstrapping prophet-core components."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; awaiting: ontology extraction, dependency analysis, potential consolidation into prophet-core"
+
+  - name: prophet-core-libs
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Shared, auditable, provenance-first libraries for the prophet-core cluster."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; awaiting: ontology extraction, dependency analysis, potential consolidation into prophet-core"
+
+  - name: prophet-core-contracts
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Versioned capability/service contracts for the prophet-core cluster (open-only)."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; awaiting: ontology extraction, dependency analysis, potential consolidation into prophet-core"
+
+  # ── GAIA Domain / Data-Plane Cluster ──────────────────────────────────────
+
+  - name: prophet-core-infra
+    org: SocioProphet
+    layer: data-plane
+    purpose: "GAIA infrastructure layer: auditable, provenance-first compute/network primitives."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; GAIA cluster assignment tentative; awaiting: ontology extraction, dependency analysis"
+
+  - name: prophet-core-policy
+    org: SocioProphet
+    layer: data-plane
+    purpose: "GAIA policy enforcement layer: auditable rules and compliance gates."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; GAIA cluster assignment tentative; awaiting: ontology extraction, dependency analysis"
+
+  - name: prophet-core-query
+    org: SocioProphet
+    layer: data-plane
+    purpose: "GAIA query surface: auditable, provenance-first structured query interface."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; GAIA cluster assignment tentative; awaiting: ontology extraction, dependency analysis"
+
+  - name: prophet-core-catalog
+    org: SocioProphet
+    layer: data-plane
+    purpose: "GAIA data catalog: auditable, provenance-first asset discovery and registration."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; GAIA cluster assignment tentative; awaiting: ontology extraction, dependency analysis"
+
+  - name: prophet-core-ingest
+    org: SocioProphet
+    layer: data-plane
+    purpose: "GAIA ingest pipeline: auditable, provenance-first data intake and normalization."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; GAIA cluster assignment tentative; awaiting: ontology extraction, dependency analysis"
+
+  - name: prophet-domain-gaia-ontology
+    org: SocioProphet
+    layer: data-plane
+    purpose: "GAIA domain ontology: RDF/OWL ontology definitions for the auditable Earth digital twin."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; known active via commit history; awaiting: full ontology extraction, dependency analysis"
+
+  - name: prophet-domain-gaia-curation-vault
+    org: SocioProphet
+    layer: data-plane
+    purpose: "GAIA curation vault: provenance-pinned curated dataset storage and review surface."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; GAIA cluster assignment tentative; awaiting: ontology extraction, dependency analysis"
+
+  # ── Delivery Excellence (DelEx) Cluster ───────────────────────────────────
+
+  - name: delivery-excellence
+    org: SocioProphet
+    layer: governance
+    purpose: "DelEx governance hub: scope definition, ADRs, templates, KPIs/OKRs for delivery excellence."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; awaiting: ontology extraction, dependency analysis"
+
+  - name: delivery-excellence-automation
+    org: SocioProphet
+    layer: governance
+    purpose: "DelEx automation: RBAC policies, routing rules, CI validation gates."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; awaiting: ontology extraction, dependency analysis"
+
+  - name: delivery-excellence-innersource
+    org: SocioProphet
+    layer: governance
+    purpose: "DelEx innersource subsystem: inner-source governance patterns and contribution tooling."
+    status: incubating
+    owners: []
+    notes: "newly added from snapshot; status tentative (incubating); awaiting: ontology extraction, dependency analysis"
+
+  - name: delivery-excellence-bounties
+    org: SocioProphet
+    layer: governance
+    purpose: "DelEx bounties subsystem: bounty/incentive management for open contributions."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; known active via commit history; awaiting: ontology extraction, dependency analysis"
+
+  - name: delivery-excellence-boards
+    org: SocioProphet
+    layer: governance
+    purpose: "DelEx boards subsystem: project board and work-item tracking surface."
+    status: incubating
+    owners: []
+    notes: "newly added from snapshot; status tentative (incubating); awaiting: ontology extraction, dependency analysis"
+
+  # ── SourceOS / A2A Bootstrap ───────────────────────────────────────────────
+
+  - name: sourceos-a2a-mcp-bootstrap
+    org: SocioProphet
+    layer: control-plane
+    purpose: "Bootstrap surface for SourceOS + A2A + MCP alignment: workspace init and protocol binding."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; referenced in workspace.toml as sourceos_a2a_mcp_bootstrap; awaiting: ontology extraction, dependency analysis"
+
+  # ── Workspace / Inventory ─────────────────────────────────────────────────
+
+  - name: workspace-inventory
+    org: SocioProphet
+    layer: control-plane
+    purpose: "Workspace catalog/index surface: enumerates and tracks all components in the sociosphere."
+    status: incubating
+    owners: []
+    notes: "newly added from snapshot; status tentative (incubating); awaiting: ontology extraction, dependency analysis"
+
+  # ── Knowledge / Semantic ──────────────────────────────────────────────────
+
+  - name: alexandrian-academy
+    org: SocioProphet
+    layer: research
+    purpose: "Purpose TBD — newly surfaced; likely a knowledge/learning platform surface."
+    status: incubating
+    owners: []
+    notes: "newly added from snapshot; purpose unknown at time of addition; awaiting: full description, ontology extraction"
+
+  - name: regis-entity-graph
+    org: SocioProphet
+    layer: identity
+    purpose: "Entity graph for governance and identity: maps actors, roles, and relationships."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; layer assignment tentative (identity vs. data-plane); awaiting: ontology extraction, dependency analysis"
+
+  # ── Research / Theory ────────────────────────────────────────────────────
+
+  - name: Heller-Winters-Theorem
+    org: SocioProphet
+    layer: research
+    purpose: "Theoretical research repository; specific theorem/model TBD."
+    status: incubating
+    owners: []
+    notes: "newly added from snapshot; purpose and scope TBD; awaiting: description, ontology extraction"
+
+  # ── Archive ──────────────────────────────────────────────────────────────
+
+  - name: tritrpc-notes-archive
+    org: SocioProphet
+    layer: archive
+    purpose: "Archived notes for the TriTRPC protocol project — preserved as-is, no active development."
+    status: archive
+    owners: []
+    notes: "newly added from snapshot; archived — preserve as-is; no further changes expected"

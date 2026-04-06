@@ -1,0 +1,141 @@
+# sociosphere dependency graph
+# Phase A: empty stubs for the 23 new repos.
+# Phase B will populate depends_on and dependents via static analysis and manual review.
+#
+# Schema per entry:
+#   depends_on: [list of repo names this repo directly depends on]
+#   dependents: [list of repo names that directly depend on this repo]
+#   notes: free-text analysis status
+
+dependencies:
+
+  # ── Prophet Core Cluster ──────────────────────────────────────────────────
+
+  prophet-core-ops-brief:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  prophet-core-ledger:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  prophet-core-scaffolder:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  prophet-core-libs:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — likely a leaf library; may be depended on by other prophet-core-* repos"
+
+  prophet-core-contracts:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — likely depended on by prophet-core-* consumers"
+
+  # ── GAIA Domain / Data-Plane Cluster ─────────────────────────────────────
+
+  prophet-core-infra:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  prophet-core-policy:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  prophet-core-query:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — likely depends on prophet-domain-gaia-ontology"
+
+  prophet-core-catalog:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — likely depends on prophet-domain-gaia-ontology"
+
+  prophet-core-ingest:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  prophet-domain-gaia-ontology:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — likely consumed by prophet-core-query and prophet-core-catalog"
+
+  prophet-domain-gaia-curation-vault:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  # ── Delivery Excellence (DelEx) Cluster ──────────────────────────────────
+
+  delivery-excellence:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — expected to be root of delex-cluster; other delex repos likely depend on it"
+
+  delivery-excellence-automation:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — expected dependency on delivery-excellence (root)"
+
+  delivery-excellence-innersource:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — expected dependency on delivery-excellence (root)"
+
+  delivery-excellence-bounties:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — expected dependency on delivery-excellence (root)"
+
+  delivery-excellence-boards:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — expected dependency on delivery-excellence (root)"
+
+  # ── SourceOS / A2A Bootstrap ──────────────────────────────────────────────
+
+  sourceos-a2a-mcp-bootstrap:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — referenced in workspace.toml; may bind to SourceOS-Linux/SourceOS"
+
+  # ── Workspace / Inventory ─────────────────────────────────────────────────
+
+  workspace-inventory:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  # ── Knowledge / Semantic ──────────────────────────────────────────────────
+
+  alexandrian-academy:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — purpose TBD"
+
+  regis-entity-graph:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  # ── Research / Theory ────────────────────────────────────────────────────
+
+  Heller-Winters-Theorem:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — theoretical research; likely no runtime dependencies"
+
+  # ── Archive ──────────────────────────────────────────────────────────────
+
+  tritrpc-notes-archive:
+    depends_on: []
+    dependents: []
+    notes: "archived — no dependency analysis planned; preserve as-is"
