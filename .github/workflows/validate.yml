@@ -22,6 +22,17 @@ jobs:
           cache: 'npm'
           cache-dependency-path: apps/ui-workbench/package-lock.json
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python deps
+        run: python3 -m pip install -r requirements-dev.txt
+
+      - name: UI install
+        run: make ui-install
+
       - name: UI check
         run: make ui-check
 
