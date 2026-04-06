@@ -14,3 +14,8 @@
 
 ## P3 SourceOS integration
 - [ ] integration spec + bootstrap script + systemd units (SourceOS)
+
+## Intent Audit Follow-ups
+- [ ] Enforce 24h snapshot TTL check before each wave merge window.
+- [ ] Add automation to mark `fips_triage.chain_validation.*.validated` based on live PR base checks.
+- [ ] Add companion-pair merge gate for sociosphere#19 and socioprophet#257.
