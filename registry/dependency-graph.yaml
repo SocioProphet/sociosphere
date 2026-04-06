@@ -1,0 +1,577 @@
+# sociosphere dependency graph
+# Phase A: empty stubs for the 23 new repos.
+# Phase B will populate depends_on and dependents via static analysis and manual review.
+#
+# Schema per entry:
+#   depends_on: [list of repo names this repo directly depends on]
+#   dependents: [list of repo names that directly depend on this repo]
+#   notes: free-text analysis status
+
+dependencies:
+
+  # ── Prophet Core Cluster ──────────────────────────────────────────────────
+
+  prophet-core-ops-brief:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  prophet-core-ledger:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  prophet-core-scaffolder:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  prophet-core-libs:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — likely a leaf library; may be depended on by other prophet-core-* repos"
+
+  prophet-core-contracts:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — likely depended on by prophet-core-* consumers"
+
+  # ── GAIA Domain / Data-Plane Cluster ─────────────────────────────────────
+
+  prophet-core-infra:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  prophet-core-policy:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  prophet-core-query:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — likely depends on prophet-domain-gaia-ontology"
+
+  prophet-core-catalog:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — likely depends on prophet-domain-gaia-ontology"
+
+  prophet-core-ingest:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  prophet-domain-gaia-ontology:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — likely consumed by prophet-core-query and prophet-core-catalog"
+
+  prophet-domain-gaia-curation-vault:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  # ── Delivery Excellence (DelEx) Cluster ──────────────────────────────────
+
+  delivery-excellence:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — expected to be root of delex-cluster; other delex repos likely depend on it"
+
+  delivery-excellence-automation:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — expected dependency on delivery-excellence (root)"
+
+  delivery-excellence-innersource:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — expected dependency on delivery-excellence (root)"
+
+  delivery-excellence-bounties:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — expected dependency on delivery-excellence (root)"
+
+  delivery-excellence-boards:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — expected dependency on delivery-excellence (root)"
+
+  # ── SourceOS / A2A Bootstrap ──────────────────────────────────────────────
+
+  sourceos-a2a-mcp-bootstrap:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — referenced in workspace.toml; may bind to SourceOS-Linux/SourceOS"
+
+  # ── Workspace / Inventory ─────────────────────────────────────────────────
+
+  workspace-inventory:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  # ── Knowledge / Semantic ──────────────────────────────────────────────────
+
+  alexandrian-academy:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — purpose TBD"
+
+  regis-entity-graph:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed"
+
+  # ── Research / Theory ────────────────────────────────────────────────────
+
+  Heller-Winters-Theorem:
+    depends_on: []
+    dependents: []
+    notes: "not yet analyzed — theoretical research; likely no runtime dependencies"
+
+  # ── Archive ──────────────────────────────────────────────────────────────
+
+  tritrpc-notes-archive:
+    depends_on: []
+    dependents: []
+    notes: "archived — no dependency analysis planned; preserve as-is"
+# dependency-graph.yaml
+# Impact analysis: if repo A changes, what repos need to be updated?
+# Each entry lists what a repo depends on (imports/calls) and what depends on it.
+# Auto-updated by: python cli/validate-deps.py
+# Last updated: 2026-04-06
+
+dependencies:
+  sociosphere:
+    depends_on:
+      - name: prophet-platform
+        type: imports
+        reason: "Imports core contracts and capability definitions"
+      - name: socioprophet-standards-storage
+        type: reads-standards
+        reason: "Reads governance policy and decision standards"
+      - name: socioprophet-standards-knowledge
+        type: reads-standards
+        reason: "Reads knowledge context standards"
+      - name: TriTRPC
+        type: rpc-calls
+        reason: "Uses TriTRPC for deterministic RPC transport"
+      - name: ontogenesis
+        type: imports
+        reason: "Uses ontogenesis for ontology extraction"
+    dependents:
+      - name: agentplane
+        type: governed-by
+        reason: "Agentplane consumes governance gates from sociosphere"
+      - name: new-hope
+        type: reads-config
+        reason: "new-hope reads workspace config from sociosphere"
+      - name: all-repos
+        type: governed-by
+        reason: "All repos subject to sociosphere governance"
+
+  prophet-platform:
+    depends_on:
+      - name: TriTRPC
+        type: rpc-transport
+        reason: "Uses TriTRPC as RPC transport layer"
+      - name: socioprophet-standards-knowledge
+        type: reads-standards
+        reason: "Reads contract specifications from knowledge standards"
+    dependents:
+      - name: sociosphere
+        type: imports
+        reason: "sociosphere imports prophet-platform contracts"
+      - name: agentplane
+        type: imports
+        reason: "agentplane uses execution rules from prophet-platform"
+      - name: new-hope
+        type: imports
+        reason: "new-hope uses semantic runtime from prophet-platform"
+      - name: hyperswarm-agent-composable-cluster-scaleup
+        type: imports
+        reason: "hyperswarm agents depend on prophet-platform primitives"
+      - name: mcp-a2a-zero-trust
+        type: imports
+        reason: "mcp-a2a uses prophet-platform protocols"
+
+  TriTRPC:
+    depends_on: []
+    dependents:
+      - name: prophet-platform
+        type: rpc-transport
+        reason: "prophet-platform uses TriTRPC as its transport"
+      - name: sociosphere
+        type: rpc-calls
+        reason: "sociosphere makes RPC calls via TriTRPC"
+      - name: agentplane
+        type: rpc-calls
+        reason: "agentplane executes via TriTRPC"
+      - name: mcp-a2a-zero-trust
+        type: rpc-transport
+        reason: "mcp-a2a uses TriTRPC for secure agent-to-agent transport"
+
+  socioprophet-standards-storage:
+    depends_on: []
+    dependents:
+      - name: sociosphere
+        type: reads-standards
+        reason: "sociosphere reads governance policy"
+      - name: agentplane
+        type: reads-standards
+        reason: "agentplane reads execution policy"
+      - name: socioprophet-standards-knowledge
+        type: extends
+        reason: "knowledge standards extends storage standards"
+      - name: all-repos
+        type: governed-by
+        reason: "All repos are governed by storage standards"
+
+  socioprophet-standards-knowledge:
+    depends_on:
+      - name: socioprophet-standards-storage
+        type: extends
+        reason: "Knowledge standards extend storage standards"
+    dependents:
+      - name: prophet-platform
+        type: reads-standards
+        reason: "prophet-platform reads contract specs"
+      - name: sociosphere
+        type: reads-standards
+        reason: "sociosphere reads knowledge context"
+      - name: new-hope
+        type: reads-standards
+        reason: "new-hope uses knowledge context standards"
+      - name: slash-topics
+        type: reads-standards
+        reason: "slash-topics reads topic governance standards"
+
+  agentplane:
+    depends_on:
+      - name: sociosphere
+        type: governed-by
+        reason: "agentplane is governed by sociosphere"
+      - name: prophet-platform
+        type: imports
+        reason: "agentplane uses prophet-platform execution rules"
+      - name: TriTRPC
+        type: rpc-calls
+        reason: "agentplane runs via TriTRPC"
+      - name: socioprophet-standards-storage
+        type: reads-standards
+        reason: "agentplane reads execution policy"
+    dependents:
+      - name: hyperswarm-agent-composable-cluster-scaleup
+        type: runs-on
+        reason: "hyperswarm agents run on agentplane"
+
+  new-hope:
+    depends_on:
+      - name: sociosphere
+        type: reads-config
+        reason: "reads workspace config from sociosphere"
+      - name: prophet-platform
+        type: imports
+        reason: "uses semantic runtime"
+      - name: slash-topics
+        type: reads-data
+        reason: "reads topic packs and embeddings"
+      - name: socioprophet-standards-knowledge
+        type: reads-standards
+        reason: "reads knowledge context standards"
+    dependents: []
+
+  hyperswarm-agent-composable-cluster-scaleup:
+    depends_on:
+      - name: agentplane
+        type: runs-on
+        reason: "agents run on agentplane execution control plane"
+      - name: prophet-platform
+        type: imports
+        reason: "uses prophet-platform primitives"
+    dependents: []
+
+  slash-topics:
+    depends_on:
+      - name: socioprophet-standards-knowledge
+        type: reads-standards
+        reason: "topic governance uses knowledge standards"
+    dependents:
+      - name: new-hope
+        type: reads-data
+        reason: "new-hope consumes topic packs"
+      - name: sociosphere
+        type: reads-data
+        reason: "sociosphere uses topic packs for semantic BI"
+
+  ontogenesis:
+    depends_on: []
+    dependents:
+      - name: sociosphere
+        type: imports
+        reason: "sociosphere uses ontogenesis for ontology extraction"
+      - name: gaia-world-model
+        type: imports
+        reason: "gaia world model uses ontogenesis"
+
+  gaia-world-model:
+    depends_on:
+      - name: ontogenesis
+        type: imports
+        reason: "uses ontogenesis for ontology generation"
+      - name: graphbrain-contract
+        type: imports
+        reason: "uses graphbrain contracts for semantic reasoning"
+    dependents:
+      - name: prophet-domain-gaia-ontology
+        type: extends
+        reason: "prophet-domain-gaia-ontology extends gaia-world-model"
+
+  mcp-a2a-zero-trust:
+    depends_on:
+      - name: TriTRPC
+        type: rpc-transport
+        reason: "uses TriTRPC for zero-trust agent transport"
+      - name: identity-is-prime-reference
+        type: imports
+        reason: "uses identity primitives"
+      - name: sociosphere
+        type: governed-by
+        reason: "governed by sociosphere"
+    dependents: []
+
+  human-digital-twin:
+    depends_on:
+      - name: prophet-platform
+        type: imports
+        reason: "uses prophet-platform protocols"
+      - name: identity-is-prime-reference
+        type: imports
+        reason: "uses identity primitives for human API surface"
+    dependents: []
+
+  identity-is-prime-reference:
+    depends_on: []
+    dependents:
+      - name: mcp-a2a-zero-trust
+        type: imports
+        reason: "mcp-a2a uses identity primitives"
+      - name: human-digital-twin
+        type: imports
+        reason: "human-digital-twin uses identity primitives"
+      - name: cairnpath-mesh
+        type: imports
+        reason: "cairnpath-mesh uses identity routing"
+# dependency-graph.yaml — SocioProphet workspace directed dependency graph
+# Topological levels (0 = no deps, higher = more deps).
+# schema_version: 1
+
+metadata:
+  version: "1.0"
+  cycle_detected: false
+  total_nodes: 53
+  total_edges: 28
+
+# ── Topological Levels ────────────────────────────────────────────────────────
+# Level 0: no dependencies — can always build/merge first
+level_0:
+  - prophet-platform-standards    # normative ADR foundation
+  - socioprophet-standards-knowledge  # schema authority
+  - TriTRPC                       # standalone transport protocol
+
+# Level 1: depend only on level-0
+level_1:
+  - socioprophet-standards-storage  # depends on prophet-platform-standards (governs)
+  - gaia-world-model                # depends on socioprophet-standards-knowledge (governs)
+  - agentplane                      # depends on TriTRPC (transport) + standards-storage (schemas)
+
+# Level 2: depend on level-0 or level-1
+level_2:
+  - sociosphere                   # depends on all of level-0 and level-1 (orchestrates)
+  - slash-topics                  # depends on agentplane (receipt path)
+  - human-digital-twin            # depends on agentplane (receipt path)
+  - cairnpath-mesh                # depends on agentplane (replay materialisation)
+  - ontogenesis                   # depends on gaia-world-model (ontology generation)
+  - semantic-serdes               # depends on TriTRPC (serialization)
+  - prophet-core-contracts        # depends on prophet-platform-standards (implements)
+  - prophet-core-ledger           # depends on prophet-platform-standards ADR-050 (audit)
+
+# Level 3: depend on level-2
+level_3:
+  - prophet-core-libs             # depends on prophet-core-contracts
+  - prophet-core-policy           # depends on prophet-core-contracts, agentplane
+  - prophet-core-catalog          # depends on prophet-core-libs, gaia-world-model
+  - prophet-core-query            # depends on prophet-core-catalog
+  - prophet-core-ingest           # depends on prophet-core-catalog, gaia-world-model
+  - mcp-a2a-zero-trust            # depends on sociosphere (compliance), TriTRPC
+  - sourceos-a2a-mcp-bootstrap    # depends on agentplane, mcp-a2a-zero-trust
+  - workspace-inventory           # depends on sociosphere (manifest)
+
+# Level 4: depend on level-3+
+level_4:
+  - prophet-core-infra            # depends on prophet-core-libs, prophet-core-policy
+  - prophet-core-scaffolder       # depends on prophet-core-libs
+  - prophet-platform              # depends on prophet-core-* cluster
+  - socioprophet                  # product — depends on everything (tracked separately)
+
+# Ungrouped (incubating / research — no strong deps yet defined)
+ungrouped:
+  - socioprophet-standards-knowledge  # listed above, repeated for clarity
+  - Knowledge_Agent
+  - exodus
+  - Heller-Winters-Theorem
+  - systems-learning-loops
+  - alexandrian-academy
+  - atlas_master_bundle_complete
+  - atlas_master_bundle_autopilot_fullorchestration
+  - atlas_os_service_full
+  - delivery-excellence
+  - delivery-excellence-automation
+  - delivery-excellence-innersource
+  - delivery-excellence-bounties
+  - delivery-excellence-boards
+  - global-devsecops-intelligence
+  - cotoami-infra
+  - cotoami-spec
+  - flux
+  - hatchet-quickstart
+  - porter-self-hosted
+  - lampstand
+  - hyperswarm-agent-composable-cluster-scaleup
+  - cloudhaven-rest
+  - cloudhaven-client
+  - cloudshell-fog
+  - socius-kg
+  - regis-entity-graph
+  - graphbrain-contract
+  - prophet-domain-gaia-ontology
+  - prophet-domain-gaia-curation-vault
+  - identity-is-prime-reference
+  - ReputationVault
+  - speechlab
+  - new-hope
+  - asterion
+  - clymer_research
+  - socioprophet-docs
+  - socioprophet-web-medium
+  - usol-space-library
+  - Twitterr
+  - NewsClient
+  - CDataSoftwaredocs
+
+# ── Explicit Edges ────────────────────────────────────────────────────────────
+edges:
+  - from: agentplane
+    to: TriTRPC
+    type: depends_on
+    rationale: "agentplane uses TriTRPC for execution transport"
+    pr_evidence: "agentplane#12, TriTRPC#20"
+
+  - from: agentplane
+    to: socioprophet-standards-storage
+    type: depends_on
+    rationale: "Shared schemas (PR#13) needed for local-hybrid slice"
+    pr_evidence: "standards-storage#13, agentplane#12"
+
+  - from: TriTRPC
+    to: socioprophet-standards-storage
+    type: depends_on
+    rationale: "TriTRPC local-hybrid slice shares payload schemas"
+    pr_evidence: "standards-storage#13, TriTRPC#20"
+
+  - from: agentplane
+    to: prophet-platform-standards
+    type: governed_by
+    rationale: "Execution plane must comply with ADR-040/050/060"
+
+  - from: TriTRPC
+    to: prophet-platform-standards
+    type: governed_by
+    rationale: "Transport protocol must comply with ADR-040 and audit ADR-050"
+
+  - from: socioprophet-standards-storage
+    to: prophet-platform-standards
+    type: governed_by
+    rationale: "Storage standards must implement normative platform ADRs"
+
+  - from: slash-topics
+    to: agentplane
+    type: produces_for
+    rationale: "topic-pack context events flow into agentplane receipt builder"
+    pr_evidence: "slash-topics#14"
+
+  - from: human-digital-twin
+    to: agentplane
+    type: produces_for
+    rationale: "policy/approval events flow into agentplane receipt builder"
+    pr_evidence: "human-digital-twin#4"
+
+  - from: cairnpath-mesh
+    to: agentplane
+    type: depends_on
+    rationale: "cairnpath-mesh replay materialises agentplane bundle artifacts"
+    pr_evidence: "cairnpath-mesh#1"
+
+  - from: ontogenesis
+    to: gaia-world-model
+    type: produces_for
+    rationale: "ontogenesis generates ontology artifacts for gaia-world-model"
+
+  - from: semantic-serdes
+    to: TriTRPC
+    type: implements
+    rationale: "semantic-serdes implements TriTRPC serialization patterns"
+
+  - from: prophet-core-ledger
+    to: prophet-platform-standards
+    type: implements
+    rationale: "Ledger implements immutable audit log spec from ADR-050"
+
+  - from: gaia-world-model
+    to: socioprophet-standards-knowledge
+    type: governed_by
+    rationale: "GAIA ontology must follow knowledge schema standards"
+
+  - from: mcp-a2a-zero-trust
+    to: TriTRPC
+    type: depends_on
+    rationale: "zero-trust agent communication uses TriTRPC transport"
+
+  - from: sociosphere
+    to: agentplane
+    type: controls
+    rationale: "sociosphere manifest orchestrates agentplane execution"
+
+  - from: sociosphere
+    to: prophet-platform-standards
+    type: controls
+    rationale: "sociosphere compliance checker enforces platform standards"
+
+  - from: prophet-core-contracts
+    to: prophet-platform-standards
+    type: implements
+    rationale: "Core contracts implement platform API standards from ADR-040"
+
+  - from: prophet-core-policy
+    to: prophet-platform-standards
+    type: implements
+    rationale: "Core policy implements ADR-050 RBAC and audit requirements"
+
+  - from: workspace-inventory
+    to: sociosphere
+    type: part_of
+    rationale: "workspace-inventory is a tool within the sociosphere control plane"
+
+  - from: prophet-domain-gaia-ontology
+    to: gaia-world-model
+    type: deduplicates_with
+    rationale: "Overlapping GAIA ontology scope — Phase C deduplication required"
+
+  - from: mcp-a2a-zero-trust
+    to: sourceos-a2a-mcp-bootstrap
+    type: deduplicates_with
+    rationale: "Both provide A2A/MCP bootstrap — Phase C consolidation target"
