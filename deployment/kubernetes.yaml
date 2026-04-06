@@ -1,0 +1,201 @@
+---
+# Kubernetes deployment manifest for the Phase A automation framework.
+# Apply with:  kubectl apply -f deployment/kubernetes.yaml
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sociosphere-automation
+
+---
+# ConfigMap – registry YAML files are mounted as files inside the pods.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: registry-config
+  namespace: sociosphere-automation
+data:
+  # Override / extend these entries with your real registry files.
+  canonical-repos.yaml: |
+    # placeholder — mount your real canonical-repos.yaml here
+    repos: []
+
+---
+# Secret – GitHub webhook secret.
+# In production, populate via:
+#   kubectl create secret generic github-secrets \
+#     --from-literal=webhook-secret=<YOUR_SECRET> \
+#     --from-literal=github-token=<YOUR_TOKEN> \
+#     -n sociosphere-automation
+apiVersion: v1
+kind: Secret
+metadata:
+  name: github-secrets
+  namespace: sociosphere-automation
+type: Opaque
+data:
+  # base64-encoded placeholders – replace before deploying
+  webhook-secret: ""
+  github-token: ""
+
+---
+# PersistentVolumeClaim – APScheduler job store.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: scheduler-jobstore
+  namespace: sociosphere-automation
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+# Service – exposes the webhook handler on port 5000.
+apiVersion: v1
+kind: Service
+metadata:
+  name: webhooks
+  namespace: sociosphere-automation
+  labels:
+    app: webhooks
+spec:
+  selector:
+    app: webhooks
+  ports:
+    - name: http
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP
+
+---
+# Deployment – webhook handler (Flask).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webhooks
+  namespace: sociosphere-automation
+  labels:
+    app: webhooks
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: webhooks
+  template:
+    metadata:
+      labels:
+        app: webhooks
+    spec:
+      initContainers:
+        - name: auto-merge
+          image: sociosphere/automation:latest
+          command:
+            - python
+            - -c
+            - |
+              from automation.auto_merge_handler import AutoMergeHandler
+              import os, github
+              gh = github.Github(os.environ["GITHUB_TOKEN"])
+              handler = AutoMergeHandler(gh, "SocioProphet/sociosphere")
+              handler.run()
+          env:
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github-secrets
+                  key: github-token
+      containers:
+        - name: webhooks
+          image: sociosphere/automation:latest
+          command: ["python", "-m", "automation.webhooks"]
+          ports:
+            - containerPort: 5000
+          env:
+            - name: GITHUB_WEBHOOK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: github-secrets
+                  key: webhook-secret
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          volumeMounts:
+            - name: registry
+              mountPath: /app/registry
+      volumes:
+        - name: registry
+          configMap:
+            name: registry-config
+
+---
+# Deployment – APScheduler (single replica, no scaling).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scheduler
+  namespace: sociosphere-automation
+  labels:
+    app: scheduler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scheduler
+  template:
+    metadata:
+      labels:
+        app: scheduler
+    spec:
+      containers:
+        - name: scheduler
+          image: sociosphere/automation:latest
+          command: ["python", "-m", "automation.scheduler"]
+          env:
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: github-secrets
+                  key: github-token
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "2000m"
+              memory: "4Gi"
+          livenessProbe:
+            exec:
+              command: ["python", "-c", "import automation.scheduler; print('ok')"]
+            initialDelaySeconds: 30
+            periodSeconds: 60
+          volumeMounts:
+            - name: jobstore
+              mountPath: /app/jobstore
+            - name: registry
+              mountPath: /app/registry
+      volumes:
+        - name: jobstore
+          persistentVolumeClaim:
+            claimName: scheduler-jobstore
+        - name: registry
+          configMap:
+            name: registry-config

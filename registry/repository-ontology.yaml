@@ -226,3 +226,954 @@ status_values:
   experimental:
     description: "Prototype; API/contract unstable"
     propagation_enabled: true
+# sociosphere repository ontology registry
+# Phase A placeholders — controlled vocabulary and semantic bindings for the 23 new repos.
+# Phase B will replace these with LSA/LSI/LDA-extracted topics from actual code + docs.
+#
+# Schema per entry:
+#   controlled_vocabulary: [list of key terms]
+#   top_topics: [list of topic labels]
+#   semantic_bindings:
+#     - "part_of": [parent clusters]
+#     - "depends_on": [known hard dependencies]
+#     - "used_by": [known consumers]
+
+ontologies:
+
+  # ── Prophet Core Cluster ──────────────────────────────────────────────────
+
+  prophet-core-ops-brief:
+    controlled_vocabulary: [ops, brief, provenance, auditable, operational-summary, open-only]
+    top_topics: [operational-summary, provenance-tracking, audit-logging]
+    semantic_bindings:
+      part_of: [prophet-core]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-ledger:
+    controlled_vocabulary: [ledger, append-only, provenance, auditable, event-log, open-only]
+    top_topics: [event-ledger, provenance-chain, immutable-log]
+    semantic_bindings:
+      part_of: [prophet-core]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-scaffolder:
+    controlled_vocabulary: [scaffolding, bootstrap, templates, provenance, auditable, open-only]
+    top_topics: [project-scaffolding, template-generation, bootstrap]
+    semantic_bindings:
+      part_of: [prophet-core]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-libs:
+    controlled_vocabulary: [libraries, shared, provenance, auditable, utilities, open-only]
+    top_topics: [shared-libraries, utility-functions, core-primitives]
+    semantic_bindings:
+      part_of: [prophet-core]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-contracts:
+    controlled_vocabulary: [contracts, capabilities, services, versioned, provenance, auditable, open-only]
+    top_topics: [capability-contracts, service-definitions, api-surface]
+    semantic_bindings:
+      part_of: [prophet-core]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  # ── GAIA Domain / Data-Plane Cluster ─────────────────────────────────────
+
+  prophet-core-infra:
+    controlled_vocabulary: [infrastructure, compute, network, provenance, auditable, gaia]
+    top_topics: [infrastructure-management, compute-primitives, gaia-infra]
+    semantic_bindings:
+      part_of: [prophet-core, gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-policy:
+    controlled_vocabulary: [policy, compliance, rules, enforcement, provenance, auditable, gaia]
+    top_topics: [policy-enforcement, compliance-gates, rule-evaluation]
+    semantic_bindings:
+      part_of: [prophet-core, gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-query:
+    controlled_vocabulary: [query, structured-query, sparql, provenance, auditable, gaia]
+    top_topics: [structured-query, semantic-search, data-retrieval]
+    semantic_bindings:
+      part_of: [prophet-core, gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-catalog:
+    controlled_vocabulary: [catalog, asset-discovery, registration, provenance, auditable, gaia]
+    top_topics: [data-catalog, asset-registration, metadata-management]
+    semantic_bindings:
+      part_of: [prophet-core, gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-ingest:
+    controlled_vocabulary: [ingest, pipeline, normalization, provenance, auditable, gaia]
+    top_topics: [data-ingestion, pipeline-management, normalization]
+    semantic_bindings:
+      part_of: [prophet-core, gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-domain-gaia-ontology:
+    controlled_vocabulary: [ontology, rdf, owl, gaia, earth-digital-twin, provenance, auditable]
+    top_topics: [domain-ontology, rdf-turtle, semantic-web, earth-model]
+    semantic_bindings:
+      part_of: [gaia-domain]
+      depends_on: []
+      used_by: [prophet-core-query, prophet-core-catalog]
+    notes: "Phase A placeholder — known active; Phase B will extract from Turtle/OWL files"
+
+  prophet-domain-gaia-curation-vault:
+    controlled_vocabulary: [curation, vault, datasets, provenance, auditable, gaia]
+    top_topics: [data-curation, provenance-pinned-storage, review-workflow]
+    semantic_bindings:
+      part_of: [gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  # ── Delivery Excellence (DelEx) Cluster ──────────────────────────────────
+
+  delivery-excellence:
+    controlled_vocabulary: [governance, adr, templates, kpi, okr, scope, delivery-excellence]
+    top_topics: [delivery-governance, adr-management, kpi-tracking, template-library]
+    semantic_bindings:
+      part_of: [delex-cluster]
+      depends_on: []
+      used_by: [delivery-excellence-automation, delivery-excellence-innersource, delivery-excellence-bounties, delivery-excellence-boards]
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  delivery-excellence-automation:
+    controlled_vocabulary: [automation, rbac, routing, ci-validation, delivery-excellence]
+    top_topics: [rbac-automation, ci-gate-validation, routing-rules]
+    semantic_bindings:
+      part_of: [delex-cluster]
+      depends_on: [delivery-excellence]
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  delivery-excellence-innersource:
+    controlled_vocabulary: [innersource, contribution, governance, delivery-excellence]
+    top_topics: [innersource-patterns, contribution-guidelines, open-governance]
+    semantic_bindings:
+      part_of: [delex-cluster]
+      depends_on: [delivery-excellence]
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  delivery-excellence-bounties:
+    controlled_vocabulary: [bounties, incentives, contributions, delivery-excellence]
+    top_topics: [bounty-management, incentive-design, contributor-rewards]
+    semantic_bindings:
+      part_of: [delex-cluster]
+      depends_on: [delivery-excellence]
+      used_by: []
+    notes: "Phase A placeholder — known active via commit history; Phase B will extract from actual repo content"
+
+  delivery-excellence-boards:
+    controlled_vocabulary: [boards, project-management, work-items, delivery-excellence]
+    top_topics: [kanban-board, work-item-tracking, sprint-management]
+    semantic_bindings:
+      part_of: [delex-cluster]
+      depends_on: [delivery-excellence]
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  # ── SourceOS / A2A Bootstrap ──────────────────────────────────────────────
+
+  sourceos-a2a-mcp-bootstrap:
+    controlled_vocabulary: [sourceos, a2a, mcp, bootstrap, workspace, protocol-binding]
+    top_topics: [workspace-bootstrap, a2a-alignment, mcp-integration, protocol-surface]
+    semantic_bindings:
+      part_of: [sourceos-cluster]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — referenced in workspace.toml; Phase B will extract from actual repo content"
+
+  # ── Workspace / Inventory ─────────────────────────────────────────────────
+
+  workspace-inventory:
+    controlled_vocabulary: [workspace, catalog, inventory, index, component-registry]
+    top_topics: [workspace-cataloging, component-indexing, inventory-management]
+    semantic_bindings:
+      part_of: [sociosphere-control]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  # ── Knowledge / Semantic ──────────────────────────────────────────────────
+
+  alexandrian-academy:
+    controlled_vocabulary: [knowledge, learning, academy, semantic, platform]
+    top_topics: [knowledge-platform, learning-surface, semantic-content]
+    semantic_bindings:
+      part_of: []
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — purpose TBD; vocabulary is speculative; Phase B will replace entirely"
+
+  regis-entity-graph:
+    controlled_vocabulary: [entity-graph, governance, identity, actors, roles, relationships]
+    top_topics: [entity-resolution, identity-graph, governance-mapping]
+    semantic_bindings:
+      part_of: [identity-cluster]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — layer assignment tentative; Phase B will extract from actual repo content"
+
+  # ── Research / Theory ────────────────────────────────────────────────────
+
+  Heller-Winters-Theorem:
+    controlled_vocabulary: [theorem, research, theory, formal-methods]
+    top_topics: [theoretical-research, formal-proof, mathematical-modeling]
+    semantic_bindings:
+      part_of: [research-cluster]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — purpose and scope TBD; Phase B will replace once description is confirmed"
+
+  # ── Archive ──────────────────────────────────────────────────────────────
+
+  tritrpc-notes-archive:
+    controlled_vocabulary: [tritrpc, rpc, notes, archive, ternary, deterministic]
+    top_topics: [rpc-protocol-notes, archive, ternary-rpc]
+    semantic_bindings:
+      part_of: [archive]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — archived repo; ontology preserved as-is; no further extraction expected"
+# repository-ontology.yaml
+# Semantic identity of each repository: controlled vocabulary, topic models, and
+# semantic bindings to other repos.
+# Auto-updated by: python cli/analyze-ontology.py
+# Last updated: 2026-04-06
+
+ontologies:
+  # ── SocioProphet core repos ──────────────────────────────────────────────
+
+  sociosphere:
+    layer: control-plane
+    controlled_vocabulary:
+      - workspace
+      - governance
+      - composition
+      - validation
+      - gates
+      - manifest
+      - runner
+      - standards
+      - policy
+      - orchestration
+    top_topics:
+      - workspace-orchestration
+      - governance-enforcement
+      - policy-validation
+      - manifest-management
+      - standards-compliance
+    semantic_bindings:
+      controls:
+        - prophet-platform
+        - agentplane
+        - new-hope
+        - slash-topics
+      governed_by:
+        - socioprophet-standards-storage
+        - socioprophet-standards-knowledge
+      uses:
+        - TriTRPC
+        - ontogenesis
+    lsa_topics:
+      - topic: "workspace-control"
+        terms: [workspace, manifest, runner, component, lock, toml]
+      - topic: "governance-gates"
+        terms: [governance, validate, policy, standards, gate, fips]
+      - topic: "semantic-composition"
+        terms: [composition, semantic, ontology, graph, binding]
+
+  prophet-platform:
+    layer: core-platform
+    controlled_vocabulary:
+      - contract
+      - capability
+      - service
+      - interface
+      - protocol
+      - rpc
+      - transport
+      - envelope
+      - framing
+    top_topics:
+      - contract-specification
+      - service-interface
+      - capability-declaration
+      - rpc-transport
+      - protocol-framing
+    semantic_bindings:
+      used_by:
+        - sociosphere
+        - agentplane
+        - new-hope
+        - slash-topics
+      depends_on:
+        - TriTRPC
+        - socioprophet-standards-knowledge
+    lsa_topics:
+      - topic: "contract-layer"
+        terms: [contract, capability, service, interface, declare]
+      - topic: "transport"
+        terms: [rpc, transport, envelope, framing, protocol]
+      - topic: "platform-core"
+        terms: [platform, core, service, provider, consumer]
+
+  TriTRPC:
+    layer: core-platform
+    controlled_vocabulary:
+      - ternary
+      - rpc
+      - deterministic
+      - authenticated
+      - envelope
+      - framing
+      - fixture
+      - reference
+      - protocol
+    top_topics:
+      - rpc-protocol
+      - deterministic-transport
+      - authenticated-framing
+      - ternary-logic
+    semantic_bindings:
+      used_by:
+        - sociosphere
+        - prophet-platform
+        - agentplane
+    lsa_topics:
+      - topic: "ternary-rpc"
+        terms: [ternary, rpc, deterministic, logic, protocol]
+      - topic: "auth-framing"
+        terms: [authenticated, envelope, framing, signed, verified]
+
+  socioprophet-standards-storage:
+    layer: standards
+    controlled_vocabulary:
+      - standards
+      - decision
+      - incident
+      - intelligence
+      - vendor-neutral
+      - open
+      - governance
+      - policy
+      - compliance
+    top_topics:
+      - standards-authority
+      - incident-intelligence
+      - decision-packages
+      - governance-policy
+    semantic_bindings:
+      governs:
+        - sociosphere
+        - agentplane
+        - all-repos
+      referenced_by:
+        - socioprophet-standards-knowledge
+    lsa_topics:
+      - topic: "standards-governance"
+        terms: [standards, decision, governance, policy, authority]
+      - topic: "incident-intelligence"
+        terms: [incident, intelligence, alert, event, detection]
+
+  socioprophet-standards-knowledge:
+    layer: standards
+    controlled_vocabulary:
+      - knowledge
+      - context
+      - micro-publication
+      - meriotopographic
+      - masking
+      - tokenization
+      - indexing
+    top_topics:
+      - knowledge-context
+      - micro-publications
+      - tokenization
+      - semantic-indexing
+    semantic_bindings:
+      used_by:
+        - prophet-platform
+        - sociosphere
+        - new-hope
+      extends:
+        - socioprophet-standards-storage
+    lsa_topics:
+      - topic: "knowledge-standards"
+        terms: [knowledge, context, standard, publication, spec]
+      - topic: "data-masking"
+        terms: [masking, tokenization, indexing, privacy, transform]
+
+  agentplane:
+    layer: execution
+    controlled_vocabulary:
+      - bundle
+      - validate
+      - run
+      - evidence
+      - replay
+      - governance
+      - execution
+      - control-plane
+      - audit
+    top_topics:
+      - execution-control
+      - bundle-validation
+      - evidence-replay
+      - governance-enforcement
+    semantic_bindings:
+      governed_by:
+        - sociosphere
+        - socioprophet-standards-storage
+      uses:
+        - TriTRPC
+        - prophet-platform
+      runs:
+        - hyperswarm-agent-composable-cluster-scaleup
+        - new-hope
+    lsa_topics:
+      - topic: "execution-pipeline"
+        terms: [bundle, validate, run, execute, pipeline, step]
+      - topic: "evidence-audit"
+        terms: [evidence, replay, audit, provenance, record]
+
+  new-hope:
+    layer: execution
+    controlled_vocabulary:
+      - carrier
+      - ingest
+      - membrane
+      - decision
+      - scoped
+      - social
+      - knowledge
+      - alignment
+    top_topics:
+      - carrier-ingest
+      - membrane-decisions
+      - knowledge-alignment
+      - social-knowledge
+    semantic_bindings:
+      governed_by:
+        - sociosphere
+      uses:
+        - prophet-platform
+        - slash-topics
+        - socioprophet-standards-knowledge
+    lsa_topics:
+      - topic: "carrier-membrane"
+        terms: [carrier, ingest, membrane, decision, scope]
+      - topic: "knowledge-alignment"
+        terms: [knowledge, alignment, social, semantic, context]
+
+  hyperswarm-agent-composable-cluster-scaleup:
+    layer: agents
+    controlled_vocabulary:
+      - hyperswarm
+      - agent
+      - composable
+      - cluster
+      - scale-up
+      - policy
+      - primitive
+      - wrapper
+    top_topics:
+      - agent-orchestration
+      - cluster-scaling
+      - hyperswarm
+      - composable-agents
+    semantic_bindings:
+      runs_on:
+        - agentplane
+      depends_on:
+        - prophet-platform
+    lsa_topics:
+      - topic: "cluster-ops"
+        terms: [cluster, scale, replicate, node, swarm]
+      - topic: "agent-compose"
+        terms: [agent, compose, composable, orchestrate, policy]
+
+  slash-topics:
+    layer: data-layer
+    controlled_vocabulary:
+      - topic
+      - pack
+      - membrane
+      - embedding
+      - semantic
+      - bi
+      - governance
+      - output
+    top_topics:
+      - topic-governance
+      - embeddings
+      - semantic-bi
+      - membrane-output
+    semantic_bindings:
+      feeds:
+        - new-hope
+        - sociosphere
+      governed_by:
+        - socioprophet-standards-knowledge
+    lsa_topics:
+      - topic: "topic-packs"
+        terms: [topic, pack, governed, catalog, schema]
+      - topic: "semantic-output"
+        terms: [embedding, semantic, bi, output, membrane]
+
+  gaia-world-model:
+    layer: ontology
+    controlled_vocabulary:
+      - earth
+      - digital-twin
+      - provenance
+      - ontology
+      - auditable
+      - constrained
+      - actions
+      - scaffolding
+    top_topics:
+      - digital-twin
+      - provenance-ontology
+      - earth-model
+      - auditable-actions
+    semantic_bindings:
+      uses:
+        - ontogenesis
+        - graphbrain-contract
+      referenced_by:
+        - prophet-domain-gaia-ontology
+    lsa_topics:
+      - topic: "earth-twin"
+        terms: [earth, twin, world, model, digital, globe]
+      - topic: "provenance-audit"
+        terms: [provenance, audit, constrain, pin, trace]
+
+  ontogenesis:
+    layer: ontology
+    controlled_vocabulary:
+      - ontology
+      - generation
+      - evolution
+      - semantic
+      - graph
+      - reasoning
+      - emergence
+    top_topics:
+      - ontology-generation
+      - semantic-evolution
+      - graph-reasoning
+    semantic_bindings:
+      used_by:
+        - sociosphere
+        - gaia-world-model
+        - graphbrain-contract
+    lsa_topics:
+      - topic: "ontology-gen"
+        terms: [ontology, generate, evolve, schema, semantic]
+      - topic: "graph-reason"
+        terms: [graph, reason, infer, node, edge, traverse]
+
+  human-digital-twin:
+    layer: human-interface
+    controlled_vocabulary:
+      - human
+      - api
+      - digital-twin
+      - reproducible
+      - minimal
+      - protocol
+      - evaluate
+      - prompt
+    top_topics:
+      - human-api
+      - digital-twin
+      - reproducible-interface
+    semantic_bindings:
+      uses:
+        - prophet-platform
+        - identity-is-prime-reference
+    lsa_topics:
+      - topic: "human-api"
+        terms: [human, api, interface, evaluate, prompt, surface]
+      - topic: "twin-protocol"
+        terms: [twin, reproduce, minimal, protocol, digital]
+
+  mcp-a2a-zero-trust:
+    layer: agents
+    controlled_vocabulary:
+      - mcp
+      - agent
+      - zero-trust
+      - a2a
+      - secure
+      - communication
+      - attestation
+    top_topics:
+      - zero-trust
+      - agent-to-agent
+      - mcp-protocol
+    semantic_bindings:
+      uses:
+        - TriTRPC
+        - identity-is-prime-reference
+      governed_by:
+        - sociosphere
+    lsa_topics:
+      - topic: "zero-trust-comm"
+        terms: [zero, trust, secure, attest, verify, channel]
+      - topic: "agent-protocol"
+        terms: [agent, protocol, mcp, a2a, message, transport]
+# repository-ontology.yaml — SocioProphet workspace role/relationship ontology
+# Defines the controlled vocabulary, 16 roles, 8 relationship types, and semantic bindings.
+# schema_version: 1
+
+metadata:
+  base_iri: "https://sociosphere.socioprophet.io/ontology/"
+  version: "1.0"
+  description: "Role and relationship ontology for the SocioProphet multi-repo ecosystem."
+
+# ── Layers ────────────────────────────────────────────────────────────────────
+# Top-level architectural layers that repos belong to.
+layers:
+  - id: control-plane
+    label: "Control Plane"
+    description: "Workspace orchestration, manifest/lock, runner, registry, compliance."
+  - id: core-platform
+    label: "Core Platform"
+    description: "Core protocol, execution, identity, and infrastructure components."
+  - id: governance
+    label: "Governance"
+    description: "Standards, policies, ADRs, delivery processes, and compliance frameworks."
+  - id: data-plane
+    label: "Data Plane"
+    description: "Ontologies, knowledge graphs, topic packs, and semantic data stores."
+  - id: identity
+    label: "Identity"
+    description: "Zero-trust identity, attestation, reputation, and security components."
+  - id: product
+    label: "Product"
+    description: "User-facing product applications and documentation."
+  - id: research
+    label: "Research"
+    description: "Research projects, experiments, and exploratory work."
+
+# ── Roles (16) ────────────────────────────────────────────────────────────────
+roles:
+  - id: workspace-controller
+    label: "Workspace Controller"
+    layer: control-plane
+    description: "Owns the manifest+lock, runner, registry, and compliance tooling."
+    singleton: true
+
+  - id: standards
+    label: "Standards"
+    layer: governance
+    description: "Normative standards documents, ADRs, and policy definitions."
+
+  - id: protocol
+    label: "Protocol"
+    layer: core-platform
+    description: "Wire protocols, RPC definitions, fixture packs, and encoding specs."
+
+  - id: execution-plane
+    label: "Execution Plane"
+    layer: core-platform
+    description: "Bundle execution, evidence collection, replay, and governance."
+
+  - id: ontology
+    label: "Ontology"
+    layer: data-plane
+    description: "OWL/RDF ontologies, semantic models, and knowledge bases."
+
+  - id: knowledge-graph
+    label: "Knowledge Graph"
+    layer: data-plane
+    description: "Graph-structured knowledge stores and entity relationship models."
+
+  - id: topic-pack
+    label: "Topic Pack"
+    layer: data-plane
+    description: "Governed topic packs, membrane outputs, and semantic BI feeds."
+
+  - id: component
+    label: "Component"
+    layer: core-platform
+    description: "Feature component with build/test/deploy task contract."
+
+  - id: library
+    label: "Library"
+    layer: core-platform
+    description: "Shared library or utility code."
+
+  - id: tool
+    label: "Tool"
+    layer: control-plane
+    description: "CLI tool or automation script."
+
+  - id: infra
+    label: "Infrastructure"
+    layer: core-platform
+    description: "Infrastructure-as-code definitions (K8s, Helm, Terraform)."
+
+  - id: api
+    label: "API"
+    layer: core-platform
+    description: "REST or RPC API service definition or implementation."
+
+  - id: security
+    label: "Security"
+    layer: identity
+    description: "Security, zero-trust, attestation, and compliance enforcement."
+
+  - id: bootstrap
+    label: "Bootstrap"
+    layer: core-platform
+    description: "Bootstrap tooling for initializing a subsystem or environment."
+
+  - id: process
+    label: "Process"
+    layer: governance
+    description: "Process definitions, workflows, and delivery practices."
+
+  - id: product
+    label: "Product"
+    layer: product
+    description: "User-facing product application with constitutional material."
+
+  - id: research
+    label: "Research"
+    layer: research
+    description: "Research projects, experiments, and exploratory work."
+
+  - id: docs
+    label: "Documentation"
+    layer: governance
+    description: "Documentation sites and reference material."
+
+  - id: replay
+    label: "Replay"
+    layer: core-platform
+    description: "Replayable execution checkpoints and materialization."
+
+  - id: contracts
+    label: "Contracts"
+    layer: core-platform
+    description: "API contracts, interface definitions, and compatibility specs."
+
+  - id: contract
+    label: "Contract"
+    layer: core-platform
+    description: "API contracts, interface definitions, and compatibility specs."
+
+  - id: reference
+    label: "Reference"
+    layer: identity
+    description: "Reference implementations demonstrating architectural patterns."
+
+  - id: agent
+    label: "Agent"
+    layer: research
+    description: "Autonomous agent implementation."
+
+  - id: bundle
+    label: "Bundle"
+    layer: research
+    description: "Combined artifact bundle for deployment or research."
+
+  - id: service
+    label: "Service"
+    layer: research
+    description: "Standalone service implementation."
+
+  - id: intelligence
+    label: "Intelligence"
+    layer: governance
+    description: "Intelligence aggregation, analysis, and reporting."
+
+  - id: data
+    label: "Data"
+    layer: data-plane
+    description: "Curated data sets and data vaults."
+
+  - id: spec
+    label: "Specification"
+    layer: core-platform
+    description: "Protocol or system specification documents."
+
+  - id: client
+    label: "Client"
+    layer: core-platform
+    description: "Client library for a service or API."
+
+# ── Relationship Types (8) ────────────────────────────────────────────────────
+relationships:
+  - id: controls
+    label: "controls"
+    description: "Source repo orchestrates or manages target repo."
+    inverse: controlled_by
+
+  - id: depends_on
+    label: "depends_on"
+    description: "Source repo requires target repo at build/test/runtime."
+    inverse: depended_on_by
+
+  - id: governed_by
+    label: "governed_by"
+    description: "Source repo must comply with standards defined in target repo."
+    inverse: governs
+
+  - id: implements
+    label: "implements"
+    description: "Source repo implements a protocol or spec defined in target repo."
+    inverse: implemented_by
+
+  - id: extends
+    label: "extends"
+    description: "Source repo extends or specialises target repo."
+    inverse: extended_by
+
+  - id: deduplicates_with
+    label: "deduplicates_with"
+    description: "Source and target repos have overlapping scope — consolidation needed."
+    symmetric: true
+
+  - id: produces_for
+    label: "produces_for"
+    description: "Source repo produces artifacts consumed by target repo."
+    inverse: consumes_from
+
+  - id: part_of
+    label: "part_of"
+    description: "Source repo is a sub-component or sub-module of target repo."
+    inverse: has_part
+
+# ── Semantic Bindings (core repos) ───────────────────────────────────────────
+# Explicit relationship assertions for the most important cross-repo links.
+semantic_bindings:
+  - subject: sociosphere
+    predicate: controls
+    object: agentplane
+    note: "sociosphere manifest drives agentplane execution bundle"
+
+  - subject: sociosphere
+    predicate: controls
+    object: prophet-platform-standards
+    note: "sociosphere registry tracks and enforces standards compliance"
+
+  - subject: agentplane
+    predicate: depends_on
+    object: TriTRPC
+    note: "agentplane uses TriTRPC for execution transport"
+
+  - subject: agentplane
+    predicate: depends_on
+    object: socioprophet-standards-storage
+    note: "agentplane depends on shared schemas from standards-storage PR#13"
+
+  - subject: TriTRPC
+    predicate: depends_on
+    object: socioprophet-standards-storage
+    note: "TriTRPC slice shared schemas defined in standards-storage"
+
+  - subject: TriTRPC
+    predicate: governed_by
+    object: prophet-platform-standards
+    note: "TriTRPC must comply with ADR-040 transport and ADR-050 audit standards"
+
+  - subject: agentplane
+    predicate: governed_by
+    object: prophet-platform-standards
+    note: "agentplane execution must comply with ADR-040/050/060"
+
+  - subject: slash-topics
+    predicate: produces_for
+    object: agentplane
+    note: "slash-topics provides topic-pack context to agentplane receipt path"
+
+  - subject: human-digital-twin
+    predicate: produces_for
+    object: agentplane
+    note: "human-digital-twin provides policy/approval events to agentplane receipt path"
+
+  - subject: gaia-world-model
+    predicate: governed_by
+    object: socioprophet-standards-knowledge
+    note: "GAIA ontology must follow knowledge standards"
+
+  - subject: prophet-domain-gaia-ontology
+    predicate: deduplicates_with
+    object: gaia-world-model
+    note: "Potential overlap — Phase C deduplication required"
+
+  - subject: mcp-a2a-zero-trust
+    predicate: deduplicates_with
+    object: sourceos-a2a-mcp-bootstrap
+    note: "Overlap in A2A/MCP scope — Phase C consolidation target"
+
+  - subject: socioprophet-standards-storage
+    predicate: governed_by
+    object: prophet-platform-standards
+    note: "Storage standards must comply with normative platform ADRs"
+
+  - subject: prophet-core-ledger
+    predicate: implements
+    object: prophet-platform-standards
+    note: "Ledger implements immutable audit log spec from ADR-050"
+
+  - subject: cairnpath-mesh
+    predicate: depends_on
+    object: agentplane
+    note: "cairnpath-mesh replay materializes agentplane bundle artifacts"
+
+  - subject: ontogenesis
+    predicate: produces_for
+    object: gaia-world-model
+    note: "ontogenesis generates ontology artifacts consumed by gaia-world-model"
+
+# ── Controlled Vocabulary ─────────────────────────────────────────────────────
+controlled_vocabulary:
+  status:
+    - active      # Actively developed with real PRs/issues
+    - incubating  # Created but not yet substantially developed
+    - archive     # Deprecated or absorbed; should be archived
+  priority:
+    - P0  # Must-have: blocks critical path
+    - P1  # High: next-wave work, unblocks downstream
+    - P2  # Medium: important but not blocking
+    - P3  # Low: exploratory, research, or cleanup
+  layer:
+    - control-plane
+    - core-platform
+    - governance
+    - data-plane
+    - identity
+    - product
+    - research

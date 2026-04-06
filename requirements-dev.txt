@@ -1,1 +1,6 @@
 pyyaml
+flask>=3.0,<4.0
+apscheduler>=3.10,<4.0
+PyGithub>=2.3,<3.0
+pytest>=8.0
+pytest-mock>=3.12

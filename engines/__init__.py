@@ -11,3 +11,4 @@ __all__ = [
     "DevOpsOrchestrator",
     "MetricsCollector",
 ]
+# engines package — SocioProphet workspace registry engines
