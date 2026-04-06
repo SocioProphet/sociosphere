@@ -39,7 +39,12 @@ These PRs are non-draft, non-conflicting, and safe to merge right now.
 | 3 | `sociosphere` | #19 | Workspace OS/agent-plane boundary doc | Review with socioprophet#257 |
 | 4 | `socioprophet` | #257 | liberty-by-design doctrine | Review with sociosphere#19 |
 
-After wave 2 lands, close sociosphere PRs #20, #21, #23 as superseded by the consolidated registry.
+### Wave 2 closeout (required before superseded PR closure)
+
+Before closing superseded sociosphere PRs #20, #21, and #23:
+1. Complete and review `status/supersession-ledger.yaml` (intent enumeration, mapping, and gap actions).
+2. Confirm ledger checklist is satisfied for all three superseded PRs.
+3. Only then close the superseded PRs as replaced by the consolidated registry.
 
 ---
 
