@@ -62,7 +62,7 @@ def main() -> int:
     # ── Unknown repos in graph ────────────────────────────────────────────────
     print("\n[2/4] Checking for unknown repos in dependency edges …")
     unknown: set[str] = set()
-    for repo_id in list(prop._adjacency.keys()) + list(prop._reverse_adjacency.keys()):
+    for repo_id in prop.all_graph_nodes():
         if repo_id not in all_repo_ids:
             unknown.add(repo_id)
     if unknown:
@@ -77,9 +77,7 @@ def main() -> int:
 
     # ── Orphaned active repos (no deps, no dependents) ────────────────────────
     print("\n[3/4] Checking for isolated active repos …")
-    all_graph_nodes = (
-        set(prop._adjacency.keys()) | set(prop._reverse_adjacency.keys())
-    )
+    all_graph_nodes = prop.all_graph_nodes()
     isolated = active_repo_ids - all_graph_nodes
     # Some repos are intentionally standalone (documentation, testing top-level, tooling)
     intentionally_isolated = {

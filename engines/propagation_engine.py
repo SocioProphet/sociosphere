@@ -182,6 +182,11 @@ class PropagationEngine:
 
         return results
 
+    def all_graph_nodes(self) -> set[str]:
+        """Return all repo ids that appear in any dependency edge."""
+        self._ensure_loaded()
+        return set(self._adjacency.keys()) | set(self._reverse_adjacency.keys())
+
     def detect_cycles(self) -> list[list[str]]:
         """
         Detect dependency cycles in the graph.
