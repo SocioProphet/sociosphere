@@ -10,17 +10,17 @@ metadata:
   total_open_prs: 81
   last_analysis_by: "research-socioprophet-ecosystem (2026-04-06)"
 
-companion_pr_groups:
-  - id: workspace-os-boundary-liberty-doctrine
-    prs:
-      - repo: sociosphere
-        pr: 19
-        merged_sha: pending
-      - repo: socioprophet
-        pr: 257
-        merged_sha: pending
-    merge_wave: pending
-    notes: "Record final merged SHAs once both companion PRs merge in the same wave window."
+companion_pr_group:
+  id: workspace-os-boundary-liberty-doctrine
+  prs:
+    - repo: sociosphere
+      pr: 19
+      final_merged_sha: null
+    - repo: socioprophet
+      pr: 257
+      final_merged_sha: null
+  merge_wave: null
+  notes: "Populate final merged SHAs for both PRs once the paired merge is completed."
 
 # ── Phase 0: Standards & Foundational ────────────────────────────────────────
 phase_0:

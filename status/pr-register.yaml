@@ -11,23 +11,23 @@ metadata:
   needs_triage: 17
   draft_active: 44
 
-companion_groups:
-  - id: workspace-os-boundary-liberty-doctrine
-    description: "Paired documentation PRs that must be reviewed and merged together."
-    prs:
-      - repo: sociosphere
-        pr: 19
-      - repo: socioprophet
-        pr: 257
-    policy:
-      joint_review_required: true
-      compatibility_note_required: true
-      rereview_on_material_change: true
-      same_wave_merge_required: true
-    status:
-      review_state: pending_joint_signoff
-      compatibility_note: pending
-      merge_wave: pending
+companion_group:
+  id: workspace-os-boundary-liberty-doctrine
+  description: "Paired documentation PRs that must be reviewed and merged together."
+  prs:
+    - repo: sociosphere
+      pr: 19
+    - repo: socioprophet
+      pr: 257
+  policy:
+    joint_review_signoff_required: true
+    explicit_compatibility_note_required: true
+    rereview_on_material_change_required: true
+    same_wave_merge_or_defer_required: true
+  status:
+    review_state: pending_joint_signoff
+    compatibility_note_state: pending
+    merge_wave_state: pending
 
 # ── Priority 1: Merge immediately (non-draft, no conflicts) ──────────────────
 ready_to_merge:
