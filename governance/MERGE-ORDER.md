@@ -12,6 +12,18 @@
 
 ---
 
+## Pre-wave Refresh Checklist
+
+Run this checklist **before each wave** (Wave 1, Wave 2, etc.) to avoid stale sequencing and moving-branch conflicts.
+
+1. Refresh `status/pr-register.yaml` from live repository and PR state (open/closed, draft/ready, mergeability) immediately before wave planning/execution.
+2. Stamp a new `metadata.snapshot_date` in the register and recompute summary counters, including `total_open_prs`, `ready_to_merge`, `needs_review`, and any other derived status totals used by merge planning.
+3. Declare a temporary per-wave freeze window: no retargeting, rebasing, or base-branch motion outside the designated wave integrator until the wave is completed or explicitly aborted.
+4. Execute wave merges only against the refreshed snapshot commit hash recorded in `status/ecosystem-status.yaml`; if the hash differs from the active working state, refresh first and restart wave preparation.
+5. Abort wave start when the snapshot is stale: if snapshot age exceeds 24 hours from `metadata.snapshot_date`, stop and refresh status artifacts before any merge actions.
+
+---
+
 ## Wave 1 — Immediate (no blockers, no conflicts)
 
 These PRs are non-draft, non-conflicting, and safe to merge right now.
