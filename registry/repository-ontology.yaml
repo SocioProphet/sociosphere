@@ -1,3 +1,392 @@
+# repository-ontology.yaml
+# Semantic identity of each repository: controlled vocabulary, topic models, and
+# semantic bindings to other repos.
+# Auto-updated by: python cli/analyze-ontology.py
+# Last updated: 2026-04-06
+
+ontologies:
+  # ── SocioProphet core repos ──────────────────────────────────────────────
+
+  sociosphere:
+    layer: control-plane
+    controlled_vocabulary:
+      - workspace
+      - governance
+      - composition
+      - validation
+      - gates
+      - manifest
+      - runner
+      - standards
+      - policy
+      - orchestration
+    top_topics:
+      - workspace-orchestration
+      - governance-enforcement
+      - policy-validation
+      - manifest-management
+      - standards-compliance
+    semantic_bindings:
+      controls:
+        - prophet-platform
+        - agentplane
+        - new-hope
+        - slash-topics
+      governed_by:
+        - socioprophet-standards-storage
+        - socioprophet-standards-knowledge
+      uses:
+        - TriTRPC
+        - ontogenesis
+    lsa_topics:
+      - topic: "workspace-control"
+        terms: [workspace, manifest, runner, component, lock, toml]
+      - topic: "governance-gates"
+        terms: [governance, validate, policy, standards, gate, fips]
+      - topic: "semantic-composition"
+        terms: [composition, semantic, ontology, graph, binding]
+
+  prophet-platform:
+    layer: core-platform
+    controlled_vocabulary:
+      - contract
+      - capability
+      - service
+      - interface
+      - protocol
+      - rpc
+      - transport
+      - envelope
+      - framing
+    top_topics:
+      - contract-specification
+      - service-interface
+      - capability-declaration
+      - rpc-transport
+      - protocol-framing
+    semantic_bindings:
+      used_by:
+        - sociosphere
+        - agentplane
+        - new-hope
+        - slash-topics
+      depends_on:
+        - TriTRPC
+        - socioprophet-standards-knowledge
+    lsa_topics:
+      - topic: "contract-layer"
+        terms: [contract, capability, service, interface, declare]
+      - topic: "transport"
+        terms: [rpc, transport, envelope, framing, protocol]
+      - topic: "platform-core"
+        terms: [platform, core, service, provider, consumer]
+
+  TriTRPC:
+    layer: core-platform
+    controlled_vocabulary:
+      - ternary
+      - rpc
+      - deterministic
+      - authenticated
+      - envelope
+      - framing
+      - fixture
+      - reference
+      - protocol
+    top_topics:
+      - rpc-protocol
+      - deterministic-transport
+      - authenticated-framing
+      - ternary-logic
+    semantic_bindings:
+      used_by:
+        - sociosphere
+        - prophet-platform
+        - agentplane
+    lsa_topics:
+      - topic: "ternary-rpc"
+        terms: [ternary, rpc, deterministic, logic, protocol]
+      - topic: "auth-framing"
+        terms: [authenticated, envelope, framing, signed, verified]
+
+  socioprophet-standards-storage:
+    layer: standards
+    controlled_vocabulary:
+      - standards
+      - decision
+      - incident
+      - intelligence
+      - vendor-neutral
+      - open
+      - governance
+      - policy
+      - compliance
+    top_topics:
+      - standards-authority
+      - incident-intelligence
+      - decision-packages
+      - governance-policy
+    semantic_bindings:
+      governs:
+        - sociosphere
+        - agentplane
+        - all-repos
+      referenced_by:
+        - socioprophet-standards-knowledge
+    lsa_topics:
+      - topic: "standards-governance"
+        terms: [standards, decision, governance, policy, authority]
+      - topic: "incident-intelligence"
+        terms: [incident, intelligence, alert, event, detection]
+
+  socioprophet-standards-knowledge:
+    layer: standards
+    controlled_vocabulary:
+      - knowledge
+      - context
+      - micro-publication
+      - meriotopographic
+      - masking
+      - tokenization
+      - indexing
+    top_topics:
+      - knowledge-context
+      - micro-publications
+      - tokenization
+      - semantic-indexing
+    semantic_bindings:
+      used_by:
+        - prophet-platform
+        - sociosphere
+        - new-hope
+      extends:
+        - socioprophet-standards-storage
+    lsa_topics:
+      - topic: "knowledge-standards"
+        terms: [knowledge, context, standard, publication, spec]
+      - topic: "data-masking"
+        terms: [masking, tokenization, indexing, privacy, transform]
+
+  agentplane:
+    layer: execution
+    controlled_vocabulary:
+      - bundle
+      - validate
+      - run
+      - evidence
+      - replay
+      - governance
+      - execution
+      - control-plane
+      - audit
+    top_topics:
+      - execution-control
+      - bundle-validation
+      - evidence-replay
+      - governance-enforcement
+    semantic_bindings:
+      governed_by:
+        - sociosphere
+        - socioprophet-standards-storage
+      uses:
+        - TriTRPC
+        - prophet-platform
+      runs:
+        - hyperswarm-agent-composable-cluster-scaleup
+        - new-hope
+    lsa_topics:
+      - topic: "execution-pipeline"
+        terms: [bundle, validate, run, execute, pipeline, step]
+      - topic: "evidence-audit"
+        terms: [evidence, replay, audit, provenance, record]
+
+  new-hope:
+    layer: execution
+    controlled_vocabulary:
+      - carrier
+      - ingest
+      - membrane
+      - decision
+      - scoped
+      - social
+      - knowledge
+      - alignment
+    top_topics:
+      - carrier-ingest
+      - membrane-decisions
+      - knowledge-alignment
+      - social-knowledge
+    semantic_bindings:
+      governed_by:
+        - sociosphere
+      uses:
+        - prophet-platform
+        - slash-topics
+        - socioprophet-standards-knowledge
+    lsa_topics:
+      - topic: "carrier-membrane"
+        terms: [carrier, ingest, membrane, decision, scope]
+      - topic: "knowledge-alignment"
+        terms: [knowledge, alignment, social, semantic, context]
+
+  hyperswarm-agent-composable-cluster-scaleup:
+    layer: agents
+    controlled_vocabulary:
+      - hyperswarm
+      - agent
+      - composable
+      - cluster
+      - scale-up
+      - policy
+      - primitive
+      - wrapper
+    top_topics:
+      - agent-orchestration
+      - cluster-scaling
+      - hyperswarm
+      - composable-agents
+    semantic_bindings:
+      runs_on:
+        - agentplane
+      depends_on:
+        - prophet-platform
+    lsa_topics:
+      - topic: "cluster-ops"
+        terms: [cluster, scale, replicate, node, swarm]
+      - topic: "agent-compose"
+        terms: [agent, compose, composable, orchestrate, policy]
+
+  slash-topics:
+    layer: data-layer
+    controlled_vocabulary:
+      - topic
+      - pack
+      - membrane
+      - embedding
+      - semantic
+      - bi
+      - governance
+      - output
+    top_topics:
+      - topic-governance
+      - embeddings
+      - semantic-bi
+      - membrane-output
+    semantic_bindings:
+      feeds:
+        - new-hope
+        - sociosphere
+      governed_by:
+        - socioprophet-standards-knowledge
+    lsa_topics:
+      - topic: "topic-packs"
+        terms: [topic, pack, governed, catalog, schema]
+      - topic: "semantic-output"
+        terms: [embedding, semantic, bi, output, membrane]
+
+  gaia-world-model:
+    layer: ontology
+    controlled_vocabulary:
+      - earth
+      - digital-twin
+      - provenance
+      - ontology
+      - auditable
+      - constrained
+      - actions
+      - scaffolding
+    top_topics:
+      - digital-twin
+      - provenance-ontology
+      - earth-model
+      - auditable-actions
+    semantic_bindings:
+      uses:
+        - ontogenesis
+        - graphbrain-contract
+      referenced_by:
+        - prophet-domain-gaia-ontology
+    lsa_topics:
+      - topic: "earth-twin"
+        terms: [earth, twin, world, model, digital, globe]
+      - topic: "provenance-audit"
+        terms: [provenance, audit, constrain, pin, trace]
+
+  ontogenesis:
+    layer: ontology
+    controlled_vocabulary:
+      - ontology
+      - generation
+      - evolution
+      - semantic
+      - graph
+      - reasoning
+      - emergence
+    top_topics:
+      - ontology-generation
+      - semantic-evolution
+      - graph-reasoning
+    semantic_bindings:
+      used_by:
+        - sociosphere
+        - gaia-world-model
+        - graphbrain-contract
+    lsa_topics:
+      - topic: "ontology-gen"
+        terms: [ontology, generate, evolve, schema, semantic]
+      - topic: "graph-reason"
+        terms: [graph, reason, infer, node, edge, traverse]
+
+  human-digital-twin:
+    layer: human-interface
+    controlled_vocabulary:
+      - human
+      - api
+      - digital-twin
+      - reproducible
+      - minimal
+      - protocol
+      - evaluate
+      - prompt
+    top_topics:
+      - human-api
+      - digital-twin
+      - reproducible-interface
+    semantic_bindings:
+      uses:
+        - prophet-platform
+        - identity-is-prime-reference
+    lsa_topics:
+      - topic: "human-api"
+        terms: [human, api, interface, evaluate, prompt, surface]
+      - topic: "twin-protocol"
+        terms: [twin, reproduce, minimal, protocol, digital]
+
+  mcp-a2a-zero-trust:
+    layer: agents
+    controlled_vocabulary:
+      - mcp
+      - agent
+      - zero-trust
+      - a2a
+      - secure
+      - communication
+      - attestation
+    top_topics:
+      - zero-trust
+      - agent-to-agent
+      - mcp-protocol
+    semantic_bindings:
+      uses:
+        - TriTRPC
+        - identity-is-prime-reference
+      governed_by:
+        - sociosphere
+    lsa_topics:
+      - topic: "zero-trust-comm"
+        terms: [zero, trust, secure, attest, verify, channel]
+      - topic: "agent-protocol"
+        terms: [agent, protocol, mcp, a2a, message, transport]
 # repository-ontology.yaml — SocioProphet workspace role/relationship ontology
 # Defines the controlled vocabulary, 16 roles, 8 relationship types, and semantic bindings.
 # schema_version: 1

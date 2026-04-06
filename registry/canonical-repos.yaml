@@ -1,3 +1,521 @@
+# canonical-repos.yaml
+# Single source of truth for all SocioProphet repositories.
+# Auto-updated by: python cli/rebuild-registry.py
+# Last updated: 2026-04-06
+
+repositories:
+  # ── control-plane ────────────────────────────────────────────────────────
+  - name: sociosphere
+    org: SocioProphet
+    layer: control-plane
+    purpose: "Workspace controller + governance gates (composition + validation)"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [workspace-orchestration, governance-enforcement, policy-validation]
+
+  # ── core-platform ────────────────────────────────────────────────────────
+  - name: prophet-platform
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Core platform repo (contracts/capabilities/services) for SocioProphet"
+    language: Go
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [contract-specification, service-interface, capability-declaration]
+
+  - name: TriTRPC
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Deterministic, ternary-native RPC protocol with authenticated envelope framing"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [rpc-protocol, deterministic-transport, authenticated-framing]
+
+  # ── standards ────────────────────────────────────────────────────────────
+  - name: socioprophet-standards-storage
+    org: SocioProphet
+    layer: standards
+    purpose: "Standards and decision package for open, vendor-neutral incident intelligence"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [standards-authority, incident-intelligence, decision-packages]
+
+  - name: socioprophet-standards-knowledge
+    org: SocioProphet
+    layer: standards
+    purpose: "SocioProphet Knowledge Context standards (micro-publications, meriotopographics)"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [knowledge-context, micro-publications, tokenization]
+
+  # ── execution ────────────────────────────────────────────────────────────
+  - name: agentplane
+    org: SocioProphet
+    layer: execution
+    purpose: "Execution control plane (bundle→validate→run→evidence→replay) with governance"
+    language: Shell
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [execution-control, bundle-validation, evidence-replay]
+
+  - name: new-hope
+    org: SocioProphet
+    layer: execution
+    purpose: "Safe carrier ingest + membrane decisions for scoped social knowledge alignment"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [carrier-ingest, membrane-decisions, knowledge-alignment]
+
+  # ── agents ───────────────────────────────────────────────────────────────
+  - name: hyperswarm-agent-composable-cluster-scaleup
+    org: SocioProphet
+    layer: agents
+    purpose: "Reproducible, policy-forward wrapper pinning upstream scale-up primitives"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [agent-orchestration, cluster-scaling, hyperswarm]
+    notes: "Variant 1 of 3 — see deduplication-map.yaml"
+
+  - name: mcp-a2a-zero-trust
+    org: SocioProphet
+    layer: agents
+    purpose: "MCP agent-to-agent zero-trust communication framework"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [zero-trust, agent-to-agent, mcp-protocol]
+
+  # ── ontology ─────────────────────────────────────────────────────────────
+  - name: gaia-world-model
+    org: SocioProphet
+    layer: ontology
+    purpose: "Auditable Earth digital twin scaffolding: provenance-pinned ontologies"
+    language: Turtle
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [digital-twin, provenance-ontology, earth-model]
+
+  - name: ontogenesis
+    org: SocioProphet
+    layer: ontology
+    purpose: "Ontology generation and evolution tooling"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [ontology-generation, semantic-evolution, graph-reasoning]
+
+  - name: graphbrain-contract
+    org: SocioProphet
+    layer: ontology
+    purpose: "Graph-brain contract definitions for semantic reasoning"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [graph-contracts, semantic-reasoning, knowledge-graph]
+
+  # ── data-layer ───────────────────────────────────────────────────────────
+  - name: slash-topics
+    org: SocioProphet
+    layer: data-layer
+    purpose: "Governed topic packs + membrane outputs feeding embeddings and semantic BI"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [topic-governance, embeddings, semantic-bi]
+
+  - name: semantic-serdes
+    org: SocioProphet
+    layer: data-layer
+    purpose: "Semantic serialization/deserialization framework"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [serialization, semantic-encoding, data-interchange]
+
+  - name: systems-learning-loops
+    org: SocioProphet
+    layer: data-layer
+    purpose: "Systems-level learning loop infrastructure"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [learning-loops, feedback-systems, adaptive-control]
+
+  # ── identity ─────────────────────────────────────────────────────────────
+  - name: identity-is-prime-reference
+    org: SocioProphet
+    layer: identity
+    purpose: "Prime reference implementation for identity primitives"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [identity-primitives, authentication, zero-trust]
+
+  - name: cairnpath-mesh
+    org: SocioProphet
+    layer: identity
+    purpose: "Cairnpath mesh networking for distributed identity routing"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [mesh-networking, distributed-identity, routing]
+
+  # ── human-interface ──────────────────────────────────────────────────────
+  - name: human-digital-twin
+    org: SocioProphet
+    layer: human-interface
+    purpose: "Protocol + reference implementation for minimal reproducible human API surface"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [human-api, digital-twin, reproducible-interface]
+
+  - name: lampstand
+    org: SocioProphet
+    layer: human-interface
+    purpose: "Lampstand: human-readable output and display layer"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [display-layer, human-readable, output-formatting]
+
+  # ── atlas-bundles ────────────────────────────────────────────────────────
+  - name: atlas_master_bundle_autopilot_fullorchestration
+    org: SocioProphet
+    layer: atlas-bundles
+    purpose: "Atlas master bundle with full autopilot orchestration"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [autopilot, full-orchestration, atlas-bundle]
+
+  - name: atlas_master_bundle_complete
+    org: SocioProphet
+    layer: atlas-bundles
+    purpose: "Atlas master bundle — complete configuration"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [atlas-bundle, complete-config, workspace-bundle]
+
+  - name: atlas_os_service_full
+    org: SocioProphet
+    layer: atlas-bundles
+    purpose: "Atlas OS service — full service definition"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [os-service, atlas, service-definition]
+
+  # ── intelligence ─────────────────────────────────────────────────────────
+  - name: global-devsecops-intelligence
+    org: SocioProphet
+    layer: intelligence
+    purpose: "Global DevSecOps intelligence aggregation and analysis"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [devsecops, intelligence, security-analytics]
+
+  - name: socioprophet
+    org: SocioProphet
+    layer: intelligence
+    purpose: "Open collaborative socio-data-lytics platform"
+    language: HTML
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [collaborative-platform, social-analytics, data-lytics]
+
+  # ── infra ────────────────────────────────────────────────────────────────
+  - name: cloudshell-fog
+    org: SocioProphet
+    layer: infra
+    purpose: "Cloud shell fog layer for distributed workspace access"
+    language: Shell
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [cloud-shell, fog-computing, workspace-access]
+    notes: "Duplicate also exists in SociOS-Linux — see deduplication-map.yaml"
+
+  - name: speechlab
+    org: SocioProphet
+    layer: infra
+    purpose: "Speech processing lab tooling"
+    language: Makefile
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [speech-processing, audio-lab, asr]
+    notes: "Duplicate also exists in SociOS-Linux/SourceOS-Linux — see deduplication-map.yaml"
+
+  # ── private ──────────────────────────────────────────────────────────────
+  - name: prophet-cli
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Command-line interface for the prophet platform"
+    language: unknown
+    status: active
+    visibility: private
+    owners: [mdheller]
+    topics: [cli, developer-tooling, prophet-platform]
+
+  - name: memory-mesh-upstream
+    org: SocioProphet
+    layer: agents
+    purpose: "Memory mesh upstream synchronization"
+    language: Python
+    status: active
+    visibility: private
+    owners: [mdheller]
+    topics: [memory-mesh, upstream-sync, agent-memory]
+
+  - name: sourceos-workspace
+    org: SocioProphet
+    layer: infra
+    purpose: "SourceOS workspace configuration"
+    language: Ruby
+    status: active
+    visibility: private
+    owners: [mdheller]
+    topics: [workspace-config, sourceos, ruby-tooling]
+
+  - name: Shining-Apple
+    org: SocioProphet
+    layer: unknown
+    purpose: "Unknown — private repository"
+    language: unknown
+    status: active
+    visibility: private
+    owners: [mdheller]
+    topics: []
+    notes: "To be classified"
+
+  # ── domain-models ────────────────────────────────────────────────────────
+  - name: prophet-domain-gaia-ontology
+    org: SocioProphet
+    layer: ontology
+    purpose: "Gaia domain ontology for the prophet platform"
+    language: unknown
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [domain-ontology, gaia, prophet-platform]
+
+  # ── SociOS-Linux repos ───────────────────────────────────────────────────
+  - name: agentos-starter
+    org: SociOS-Linux
+    layer: agents
+    purpose: "AgentOS starter kit"
+    language: unknown
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [agentos, starter-kit, agent-bootstrap]
+
+  - name: imagelab
+    org: SociOS-Linux
+    layer: infra
+    purpose: "Image processing laboratory tooling"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [image-processing, lab, computer-vision]
+
+  - name: workstation-contracts
+    org: SociOS-Linux
+    layer: standards
+    purpose: "Workstation/CI lane contract spec: versioned JSON Schema + validator + CI gate"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [workstation-contracts, ci-gate, json-schema]
+
+  - name: socios
+    org: SociOS-Linux
+    layer: core-platform
+    purpose: "Core socios platform"
+    language: unknown
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [socios, platform-core, collaborative]
+
+  - name: agentos-spine
+    org: SociOS-Linux
+    layer: agents
+    purpose: "AgentOS spine — core agent runtime spine"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [agentos, agent-runtime, spine]
+
+  - name: hyperswarm-agent-composable-cluster-scale-up
+    org: SociOS-Linux
+    layer: agents
+    purpose: "HyperSwarm agent composable cluster scale up"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [agent-orchestration, cluster-scaling, hyperswarm]
+    notes: "Variant 2 of 3 — see deduplication-map.yaml"
+
+  - name: socioslinux-web
+    org: SociOS-Linux
+    layer: human-interface
+    purpose: "Public web and docs surface for the Socios Linux stack"
+    language: Shell
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [public-web, documentation, socios-linux]
+
+  - name: speechlab
+    org: SociOS-Linux
+    layer: infra
+    purpose: "Speech lab (SociOS-Linux mirror)"
+    language: HTML
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [speech-processing, audio-lab, asr]
+    notes: "Duplicate of SocioProphet/speechlab — see deduplication-map.yaml"
+
+  - name: videolab
+    org: SociOS-Linux
+    layer: infra
+    purpose: "Video processing laboratory tooling"
+    language: Shell
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [video-processing, lab, media]
+
+  - name: ocrlab
+    org: SociOS-Linux
+    layer: infra
+    purpose: "OCR laboratory tooling"
+    language: Shell
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [ocr, image-processing, lab]
+
+  - name: SourceOS
+    org: SociOS-Linux
+    layer: core-platform
+    purpose: "SourceOS core platform"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [sourceos, platform, os-abstraction]
+
+  - name: cloudshell-fog
+    org: SociOS-Linux
+    layer: infra
+    purpose: "Cloud shell fog (SociOS-Linux mirror)"
+    language: Shell
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [cloud-shell, fog-computing, workspace-access]
+    notes: "Duplicate of SocioProphet/cloudshell-fog — see deduplication-map.yaml"
+
+  # ── SourceOS-Linux repos ─────────────────────────────────────────────────
+  - name: sourceos-spec
+    org: SourceOS-Linux
+    layer: standards
+    purpose: "SourceOS specification"
+    language: unknown
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [sourceos, specification, standards]
+
+  - name: openclaw
+    org: SourceOS-Linux
+    layer: human-interface
+    purpose: "Personal AI assistant — any OS, any platform"
+    language: TypeScript
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [ai-assistant, cross-platform, cli]
+
+  - name: dnote
+    org: SourceOS-Linux
+    layer: human-interface
+    purpose: "Simple command line notebook for programmers"
+    language: Go
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [notebook, cli, knowledge-management]
+
+  - name: nix-openclaw
+    org: SourceOS-Linux
+    layer: infra
+    purpose: "Packages clawdis for nix"
+    language: Nix
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [nix, packaging, openclaw]
+
+  - name: nocalhost
+    org: SourceOS-Linux
+    layer: infra
+    purpose: "Cloud native dev environment"
+    language: Go
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [cloud-native, dev-environment, kubernetes]
+
+  - name: LLM-RGB
+    org: SourceOS-Linux
+    layer: intelligence
+    purpose: "LLM reasoning and generation benchmark"
+    language: TypeScript
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [llm-benchmark, reasoning, generation]
 # canonical-repos.yaml — SocioProphet ecosystem canonical repository registry
 # Source of truth for all 53 curated repos in the SocioProphet multi-repo workspace.
 # Supersedes competing drafts from sociosphere PRs #20, #21, #23.

@@ -1,3 +1,230 @@
+# dependency-graph.yaml
+# Impact analysis: if repo A changes, what repos need to be updated?
+# Each entry lists what a repo depends on (imports/calls) and what depends on it.
+# Auto-updated by: python cli/validate-deps.py
+# Last updated: 2026-04-06
+
+dependencies:
+  sociosphere:
+    depends_on:
+      - name: prophet-platform
+        type: imports
+        reason: "Imports core contracts and capability definitions"
+      - name: socioprophet-standards-storage
+        type: reads-standards
+        reason: "Reads governance policy and decision standards"
+      - name: socioprophet-standards-knowledge
+        type: reads-standards
+        reason: "Reads knowledge context standards"
+      - name: TriTRPC
+        type: rpc-calls
+        reason: "Uses TriTRPC for deterministic RPC transport"
+      - name: ontogenesis
+        type: imports
+        reason: "Uses ontogenesis for ontology extraction"
+    dependents:
+      - name: agentplane
+        type: governed-by
+        reason: "Agentplane consumes governance gates from sociosphere"
+      - name: new-hope
+        type: reads-config
+        reason: "new-hope reads workspace config from sociosphere"
+      - name: all-repos
+        type: governed-by
+        reason: "All repos subject to sociosphere governance"
+
+  prophet-platform:
+    depends_on:
+      - name: TriTRPC
+        type: rpc-transport
+        reason: "Uses TriTRPC as RPC transport layer"
+      - name: socioprophet-standards-knowledge
+        type: reads-standards
+        reason: "Reads contract specifications from knowledge standards"
+    dependents:
+      - name: sociosphere
+        type: imports
+        reason: "sociosphere imports prophet-platform contracts"
+      - name: agentplane
+        type: imports
+        reason: "agentplane uses execution rules from prophet-platform"
+      - name: new-hope
+        type: imports
+        reason: "new-hope uses semantic runtime from prophet-platform"
+      - name: hyperswarm-agent-composable-cluster-scaleup
+        type: imports
+        reason: "hyperswarm agents depend on prophet-platform primitives"
+      - name: mcp-a2a-zero-trust
+        type: imports
+        reason: "mcp-a2a uses prophet-platform protocols"
+
+  TriTRPC:
+    depends_on: []
+    dependents:
+      - name: prophet-platform
+        type: rpc-transport
+        reason: "prophet-platform uses TriTRPC as its transport"
+      - name: sociosphere
+        type: rpc-calls
+        reason: "sociosphere makes RPC calls via TriTRPC"
+      - name: agentplane
+        type: rpc-calls
+        reason: "agentplane executes via TriTRPC"
+      - name: mcp-a2a-zero-trust
+        type: rpc-transport
+        reason: "mcp-a2a uses TriTRPC for secure agent-to-agent transport"
+
+  socioprophet-standards-storage:
+    depends_on: []
+    dependents:
+      - name: sociosphere
+        type: reads-standards
+        reason: "sociosphere reads governance policy"
+      - name: agentplane
+        type: reads-standards
+        reason: "agentplane reads execution policy"
+      - name: socioprophet-standards-knowledge
+        type: extends
+        reason: "knowledge standards extends storage standards"
+      - name: all-repos
+        type: governed-by
+        reason: "All repos are governed by storage standards"
+
+  socioprophet-standards-knowledge:
+    depends_on:
+      - name: socioprophet-standards-storage
+        type: extends
+        reason: "Knowledge standards extend storage standards"
+    dependents:
+      - name: prophet-platform
+        type: reads-standards
+        reason: "prophet-platform reads contract specs"
+      - name: sociosphere
+        type: reads-standards
+        reason: "sociosphere reads knowledge context"
+      - name: new-hope
+        type: reads-standards
+        reason: "new-hope uses knowledge context standards"
+      - name: slash-topics
+        type: reads-standards
+        reason: "slash-topics reads topic governance standards"
+
+  agentplane:
+    depends_on:
+      - name: sociosphere
+        type: governed-by
+        reason: "agentplane is governed by sociosphere"
+      - name: prophet-platform
+        type: imports
+        reason: "agentplane uses prophet-platform execution rules"
+      - name: TriTRPC
+        type: rpc-calls
+        reason: "agentplane runs via TriTRPC"
+      - name: socioprophet-standards-storage
+        type: reads-standards
+        reason: "agentplane reads execution policy"
+    dependents:
+      - name: hyperswarm-agent-composable-cluster-scaleup
+        type: runs-on
+        reason: "hyperswarm agents run on agentplane"
+
+  new-hope:
+    depends_on:
+      - name: sociosphere
+        type: reads-config
+        reason: "reads workspace config from sociosphere"
+      - name: prophet-platform
+        type: imports
+        reason: "uses semantic runtime"
+      - name: slash-topics
+        type: reads-data
+        reason: "reads topic packs and embeddings"
+      - name: socioprophet-standards-knowledge
+        type: reads-standards
+        reason: "reads knowledge context standards"
+    dependents: []
+
+  hyperswarm-agent-composable-cluster-scaleup:
+    depends_on:
+      - name: agentplane
+        type: runs-on
+        reason: "agents run on agentplane execution control plane"
+      - name: prophet-platform
+        type: imports
+        reason: "uses prophet-platform primitives"
+    dependents: []
+
+  slash-topics:
+    depends_on:
+      - name: socioprophet-standards-knowledge
+        type: reads-standards
+        reason: "topic governance uses knowledge standards"
+    dependents:
+      - name: new-hope
+        type: reads-data
+        reason: "new-hope consumes topic packs"
+      - name: sociosphere
+        type: reads-data
+        reason: "sociosphere uses topic packs for semantic BI"
+
+  ontogenesis:
+    depends_on: []
+    dependents:
+      - name: sociosphere
+        type: imports
+        reason: "sociosphere uses ontogenesis for ontology extraction"
+      - name: gaia-world-model
+        type: imports
+        reason: "gaia world model uses ontogenesis"
+
+  gaia-world-model:
+    depends_on:
+      - name: ontogenesis
+        type: imports
+        reason: "uses ontogenesis for ontology generation"
+      - name: graphbrain-contract
+        type: imports
+        reason: "uses graphbrain contracts for semantic reasoning"
+    dependents:
+      - name: prophet-domain-gaia-ontology
+        type: extends
+        reason: "prophet-domain-gaia-ontology extends gaia-world-model"
+
+  mcp-a2a-zero-trust:
+    depends_on:
+      - name: TriTRPC
+        type: rpc-transport
+        reason: "uses TriTRPC for zero-trust agent transport"
+      - name: identity-is-prime-reference
+        type: imports
+        reason: "uses identity primitives"
+      - name: sociosphere
+        type: governed-by
+        reason: "governed by sociosphere"
+    dependents: []
+
+  human-digital-twin:
+    depends_on:
+      - name: prophet-platform
+        type: imports
+        reason: "uses prophet-platform protocols"
+      - name: identity-is-prime-reference
+        type: imports
+        reason: "uses identity primitives for human API surface"
+    dependents: []
+
+  identity-is-prime-reference:
+    depends_on: []
+    dependents:
+      - name: mcp-a2a-zero-trust
+        type: imports
+        reason: "mcp-a2a uses identity primitives"
+      - name: human-digital-twin
+        type: imports
+        reason: "human-digital-twin uses identity primitives"
+      - name: cairnpath-mesh
+        type: imports
+        reason: "cairnpath-mesh uses identity routing"
 # dependency-graph.yaml — SocioProphet workspace directed dependency graph
 # Topological levels (0 = no deps, higher = more deps).
 # schema_version: 1

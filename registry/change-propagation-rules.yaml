@@ -1,3 +1,131 @@
+# change-propagation-rules.yaml
+# Automation trigger rules: when repo A merges to main, what cascades?
+# Consumed by: engines/propagation_engine.py
+# Last updated: 2026-04-06
+
+propagation_rules:
+  sociosphere:
+    on_main_merge:
+      trigger: "rebuild governance gates"
+      affected_repos:
+        - agentplane
+        - new-hope
+      automation:
+        - type: re-validate
+          targets: [agentplane, new-hope]
+          reason: "sociosphere governance gates changed — re-validate all governed repos"
+        - type: integration-test
+          targets: [agentplane]
+          reason: "agentplane depends on sociosphere governance"
+        - type: notify
+          recipients: [workspace-admins]
+          message: "sociosphere governance updated — downstream re-validation triggered"
+
+  prophet-platform:
+    on_main_merge:
+      trigger: "update contracts"
+      affected_repos:
+        - sociosphere
+        - agentplane
+        - new-hope
+        - hyperswarm-agent-composable-cluster-scaleup
+        - mcp-a2a-zero-trust
+      automation:
+        - type: rebuild
+          targets: [sociosphere, agentplane]
+          reason: "contracts changed — rebuild all consumers"
+        - type: contract-test
+          targets: [sociosphere, agentplane, new-hope]
+          reason: "verify all consumers still satisfy updated contracts"
+        - type: redeploy
+          targets: [prophet-cli]
+          reason: "CLI may expose updated contracts"
+
+  TriTRPC:
+    on_main_merge:
+      trigger: "update RPC transport"
+      affected_repos:
+        - prophet-platform
+        - sociosphere
+        - agentplane
+        - mcp-a2a-zero-trust
+      automation:
+        - type: integration-test
+          targets: [prophet-platform, agentplane]
+          reason: "TriTRPC protocol changed — test all RPC consumers"
+        - type: contract-test
+          targets: [mcp-a2a-zero-trust]
+          reason: "zero-trust transport may be affected"
+
+  socioprophet-standards-storage:
+    on_main_merge:
+      trigger: "update governance standards"
+      affected_repos:
+        - sociosphere
+        - agentplane
+        - socioprophet-standards-knowledge
+        - all-repos
+      automation:
+        - type: re-validate
+          targets: [sociosphere, agentplane]
+          reason: "governance policy changed — re-validate all enforcing repos"
+        - type: notify
+          recipients: [all-maintainers]
+          message: "standards-storage updated — governance policy has changed"
+        - type: audit
+          targets: [all-repos]
+          reason: "run compliance audit across all repos"
+
+  socioprophet-standards-knowledge:
+    on_main_merge:
+      trigger: "update knowledge standards"
+      affected_repos:
+        - prophet-platform
+        - sociosphere
+        - new-hope
+        - slash-topics
+      automation:
+        - type: re-validate
+          targets: [prophet-platform, new-hope]
+          reason: "knowledge context standards changed"
+        - type: reindex
+          targets: [slash-topics]
+          reason: "topic packs may need reindexing after knowledge standard change"
+
+  agentplane:
+    on_main_merge:
+      trigger: "update execution control plane"
+      affected_repos:
+        - hyperswarm-agent-composable-cluster-scaleup
+      automation:
+        - type: integration-test
+          targets: [hyperswarm-agent-composable-cluster-scaleup]
+          reason: "agents run on agentplane — test after execution layer changes"
+
+  slash-topics:
+    on_main_merge:
+      trigger: "update topic packs"
+      affected_repos:
+        - new-hope
+        - sociosphere
+      automation:
+        - type: reindex
+          targets: [new-hope]
+          reason: "new-hope consumes topic packs — trigger reindex"
+        - type: notify
+          recipients: [data-team]
+          message: "topic packs updated — embeddings may need regeneration"
+
+  ontogenesis:
+    on_main_merge:
+      trigger: "update ontology tooling"
+      affected_repos:
+        - sociosphere
+        - gaia-world-model
+      automation:
+        - type: re-analyze
+          targets: [sociosphere, gaia-world-model]
+          reason: "ontology extraction tooling changed — re-analyze affected repos"
 # change-propagation-rules.yaml — SocioProphet cascade rules
 # Defines what happens when a repo merges to main:
 #   notify: send status event to downstream repos
