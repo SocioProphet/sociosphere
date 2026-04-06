@@ -45,6 +45,17 @@ After merge, update tracking notes so each checklist item is marked **satisfied*
 - short proof pointer (file/path/section or CI run reference).
 
 No PR is considered operationally complete until all checklist items are closed with merge-SHA evidence.
+5. **Companion PR lockstep** — Companion PR pairs must complete review and merge in the same wave window.
+
+### Companion PR Policy (Required)
+
+For companion PR pair `sociosphere#19` and `socioprophet#257`:
+
+1. **Joint review sign-off is required on both PRs before either PR merges.**
+2. **Each PR must include an explicit compatibility note confirming terminology alignment** (for example, boundary/doctrine term alignment).
+3. **If one companion PR changes materially, re-request review on the paired PR before merge.**
+4. **Merge both within the same wave window, or defer both.**
+5. **After merge, record the final merged commit SHAs for both PRs in `status/ecosystem-status.yaml`.**
 
 ---
 
@@ -75,7 +86,12 @@ These PRs are non-draft, non-conflicting, and safe to merge right now.
 | 3 | `sociosphere` | #19 | Workspace OS/agent-plane boundary doc | Review with socioprophet#257 |
 | 4 | `socioprophet` | #257 | liberty-by-design doctrine | Review with sociosphere#19 |
 
-After wave 2 lands, close sociosphere PRs #20, #21, #23 as superseded by the consolidated registry.
+### Wave 2 closeout (required before superseded PR closure)
+
+Before closing superseded sociosphere PRs #20, #21, and #23:
+1. Complete and review `status/supersession-ledger.yaml` (intent enumeration, mapping, and gap actions).
+2. Confirm ledger checklist is satisfied for all three superseded PRs.
+3. Only then close the superseded PRs as replaced by the consolidated registry.
 
 ---
 
@@ -101,6 +117,29 @@ After wave 2 lands, close sociosphere PRs #20, #21, #23 as superseded by the con
 Also in wave 3:
 - `socioprophet-standards-storage` #5 (ADR-040 twin economy) — standalone, merge after #14
 - `socioprophet-standards-storage` #13 (shared schemas) — prerequisite for Wave 4
+
+### Chain Validation
+
+Validation scope: `socioprophet-standards-storage` PRs #14, #15, #16, #18, #19, #17, #20, #21, #22, #23.
+
+| PR | Expected base | Validation result |
+|----|---------------|-------------------|
+| #14 | `main` | ✅ pass (root of chain) |
+| #15 | `#14` branch | ❌ fail (currently targets `main`) |
+| #16 | `#15` branch | ❌ fail (currently targets `main`) |
+| #18 | `#16` branch | ❌ fail (currently targets `main`) |
+| #19 | `#18` branch | ❌ fail (currently targets `main`) |
+| #17 | `#19` branch | ❌ fail (currently targets `main`) |
+| #20 | `#17` branch | ❌ fail (currently targets `main`) |
+| #21 | `#20` branch | ❌ fail (currently targets `main`) |
+| #22 | `#21` branch | ❌ fail (currently targets `main`) |
+| #23 | `#22` branch | ❌ fail (currently targets `main`) |
+
+Incremental diff-scope validation relative to immediate predecessor is **blocked** until the base-branch chain is corrected for all 10 PRs.
+
+**Recomputed merge order status**: **not recomputed**. Per policy, recomputation can only occur after all 10 base relationships pass.
+
+**Merge blocker**: Any FIPS PR in this chain targeting `main` directly (other than #14) is blocked from merge until rebased to the immediate predecessor branch in the documented chain.
 
 ---
 

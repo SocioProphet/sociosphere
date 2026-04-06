@@ -9,6 +9,19 @@ metadata:
   total_repos_tracked: 53
   total_open_prs: 81
   last_analysis_by: "research-socioprophet-ecosystem (2026-04-06)"
+  authoritative_closeout_artifact: "status/intent-audit-2026-04-06.md"
+
+companion_pr_group:
+  id: workspace-os-boundary-liberty-doctrine
+  prs:
+    - repo: sociosphere
+      pr: 19
+      final_merged_sha: null
+    - repo: socioprophet
+      pr: 257
+      final_merged_sha: null
+  merge_wave: null
+  notes: "Populate final merged SHAs for both PRs once the paired merge is completed."
 
 # ── Phase 0: Standards & Foundational ────────────────────────────────────────
 phase_0:
