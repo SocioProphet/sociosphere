@@ -21,6 +21,21 @@ from flask import Flask, Response, jsonify, request
 
 logger = logging.getLogger(__name__)
 
+
+def _sanitize_for_log(value) -> str:
+    """
+    Sanitize potentially user-controlled data before logging.
+
+    Removes carriage returns and newlines to reduce the risk of log injection
+    when logs are written as plain text.
+    """
+    if value is None:
+        return ""
+    text = str(value)
+    # Strip CR/LF characters that could be used to forge additional log lines.
+    return text.replace("\r", "").replace("\n", "")
+
+
 # ---------------------------------------------------------------------------
 # Thread-safe event queue shared across the application
 # ---------------------------------------------------------------------------
@@ -141,7 +156,7 @@ def create_app(
                 }
                 event_queue.put(entry)
                 _inc("webhooks_queued")
-                logger.info("Queued push event for %s", entry["repo"])
+                logger.info("Queued push event for %s", _sanitize_for_log(entry["repo"]))
                 return jsonify({"status": "queued"}), 202
             else:
                 _inc("webhooks_ignored")
