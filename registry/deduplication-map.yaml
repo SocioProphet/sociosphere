@@ -1,3 +1,129 @@
+# registry/deduplication-map.yaml
+# Consolidation tracking: records duplicate/overlapping repositories
+# and the canonical target each should be merged into.
+version: "1.0.0"
+updated_at: "2026-04-06"
+
+# Status values:
+#   pending      — duplication identified, migration not yet started
+#   in_progress  — migration actively under way
+#   completed    — migration done, source archived
+#   dismissed    — reviewed and decided to keep both
+
+duplicates:
+  - id: dup-001
+    status: completed
+    source: socios
+    canonical: source-os
+    reason: >
+      'socios' was the original macOS/VirtualBox installer.  All functionality
+      has been migrated to 'source-os'.  'socios' is now archived.
+    completed_at: "2025-06-01"
+    migration_pr: null
+
+  - id: dup-002
+    status: completed
+    source: tritrpc-notes-archive
+    canonical: tritrpc
+    reason: >
+      Raw historical TritRPC drafts (RTF/HTML) curated into tritrpc/docs/.
+      The notes archive is now archived and read-only.
+    completed_at: "2025-08-15"
+    migration_pr: null
+
+  - id: dup-003
+    status: pending
+    source: ui-workbench
+    canonical: prophet-ui
+    reason: >
+      'ui-workbench' (inside the sociosphere monorepo) and the standalone
+      'prophet-ui' repo contain overlapping Vue 3 code.  Plan: move shared
+      components into 'design-system'; keep 'ui-workbench' as the in-monorepo
+      dev shell; make 'prophet-ui' the production build target.
+    migration_notes: >
+      Step 1 — audit component overlap.
+      Step 2 — extract shared components to design-system.
+      Step 3 — remove duplicates from ui-workbench and prophet-ui.
+    ticket: null
+
+  - id: dup-004
+    status: pending
+    source: workspace-runner
+    canonical: sociosphere
+    reason: >
+      'workspace-runner' logic partially duplicates tools/runner inside
+      'sociosphere'.  Plan: absorb workspace-runner into sociosphere/tools/
+      and deprecate the standalone repo.
+    migration_notes: >
+      Step 1 — inventory runner features.
+      Step 2 — port missing features to sociosphere/tools/runner.
+      Step 3 — archive workspace-runner.
+    ticket: null
+
+  - id: dup-005
+    status: dismissed
+    source: connector-kafka
+    canonical: event-bus
+    reason: >
+      Initially flagged as duplicate because both wrap Kafka.  After review,
+      'connector-kafka' is a thin producer/consumer adapter, while 'event-bus'
+      is the broker management and schema-registry layer.  Keeping both.
+    dismissed_at: "2026-01-10"
+    dismissed_by: "platform-team"
+
+  - id: dup-006
+    status: in_progress
+    source: maipj-manifest
+    canonical: workspace-event-schema
+    reason: >
+      The MAIPJ live-receipt manifest extensions overlap significantly with
+      workspace event schema definitions.  Consolidating into a single schema
+      repo with extension points.
+    migration_notes: >
+      Step 1 (done) — map overlapping fields.
+      Step 2 (in progress) — merge MAIPJ extensions into workspace-event-schema.
+      Step 3 — update all consumers to use the unified schema.
+    ticket: null
+
+  - id: dup-007
+    status: pending
+    source: architecture-docs
+    canonical: sociosphere
+    reason: >
+      Architecture ADRs are split between 'architecture-docs' and
+      'sociosphere/docs/architecture/'.  Plan: consolidate all ADRs into
+      'sociosphere/docs/architecture/' and archive 'architecture-docs'.
+    migration_notes: >
+      Step 1 — audit ADR inventory in both locations.
+      Step 2 — copy missing ADRs to sociosphere.
+      Step 3 — archive architecture-docs.
+    ticket: null
+
+  - id: dup-008
+    status: dismissed
+    source: onboarding-docs
+    canonical: sociosphere
+    reason: >
+      Onboarding docs are intentionally kept in a separate repo so that
+      external contributors can access them without navigating the full
+      monorepo.  Keeping separate.
+    dismissed_at: "2026-02-05"
+    dismissed_by: "dx-team"
+
+consolidation_summary:
+  total_identified: 8
+  completed: 2
+  in_progress: 1
+  pending: 3
+  dismissed: 2
+  repos_archived_as_result: [socios, tritrpc-notes-archive]
+  repos_pending_archive: [workspace-runner, architecture-docs, maipj-manifest]
+
+policy:
+  review_cycle_days: 90
+  auto_archive_after_days: 180
+  require_migration_pr: true
+  require_ticket: false
 # sociosphere deduplication map
 # Phase A: scan markers for the 23 new repos.
 # Phase C will act on these markers to consolidate, merge, or deprecate overlapping repos.

@@ -1,3 +1,231 @@
+# registry/repository-ontology.yaml
+# Semantic ontology for the SocioProphet repository ecosystem
+version: "1.0.0"
+updated_at: "2026-04-06"
+
+namespace: "https://sociosphere.io/ontology/"
+
+roles:
+  orchestrator:
+    iri: "https://sociosphere.io/ontology/role/orchestrator"
+    description: "Top-level workspace coordination and standards enforcement"
+    responsibilities:
+      - manifest management
+      - dependency pinning
+      - CI orchestration
+      - standards validation
+
+  platform:
+    iri: "https://sociosphere.io/ontology/role/platform"
+    description: "Foundational runtime or operating layer"
+    responsibilities:
+      - runtime environment
+      - bootstrap
+      - system services
+
+  protocol:
+    iri: "https://sociosphere.io/ontology/role/protocol"
+    description: "Communication protocol specs and reference implementations"
+    responsibilities:
+      - spec authoring
+      - fixture provision
+      - compatibility surface
+
+  component:
+    iri: "https://sociosphere.io/ontology/role/component"
+    description: "Feature-bearing service or library"
+    responsibilities:
+      - feature implementation
+      - API exposure
+      - data ownership
+
+  adapter:
+    iri: "https://sociosphere.io/ontology/role/adapter"
+    description: "Boundary translation layer between two systems"
+    responsibilities:
+      - protocol translation
+      - data mapping
+      - connector logic
+
+  frontend:
+    iri: "https://sociosphere.io/ontology/role/frontend"
+    description: "User-facing web application or UI component"
+    responsibilities:
+      - user interaction
+      - state management
+      - API consumption
+
+  tooling:
+    iri: "https://sociosphere.io/ontology/role/tooling"
+    description: "Developer tooling, CLI, and automation scripts"
+    responsibilities:
+      - build automation
+      - developer experience
+      - scaffolding
+
+  infrastructure:
+    iri: "https://sociosphere.io/ontology/role/infrastructure"
+    description: "Deployment, networking, and platform infrastructure"
+    responsibilities:
+      - deployment manifests
+      - resource configuration
+      - networking
+
+  compliance:
+    iri: "https://sociosphere.io/ontology/role/compliance"
+    description: "Regulatory and standards compliance artifacts"
+    responsibilities:
+      - control validation
+      - audit evidence
+      - certification support
+
+  security:
+    iri: "https://sociosphere.io/ontology/role/security"
+    description: "Security policy, cryptography, and trust management"
+    responsibilities:
+      - policy enforcement
+      - key management
+      - threat modelling
+
+  standards:
+    iri: "https://sociosphere.io/ontology/role/standards"
+    description: "Shared contract and schema definitions"
+    responsibilities:
+      - schema authoring
+      - contract validation
+      - interoperability
+
+  sdk:
+    iri: "https://sociosphere.io/ontology/role/sdk"
+    description: "Developer SDK for external integrations"
+    responsibilities:
+      - API wrapping
+      - client generation
+      - documentation
+
+  documentation:
+    iri: "https://sociosphere.io/ontology/role/documentation"
+    description: "Human-readable documentation and guides"
+    responsibilities:
+      - technical writing
+      - runbooks
+      - architecture records
+
+  testing:
+    iri: "https://sociosphere.io/ontology/role/testing"
+    description: "Test suites for quality assurance"
+    responsibilities:
+      - test authoring
+      - test execution
+      - quality gates
+
+  legacy:
+    iri: "https://sociosphere.io/ontology/role/legacy"
+    description: "Deprecated or superseded repository"
+    responsibilities:
+      - historical reference
+
+  archive:
+    iri: "https://sociosphere.io/ontology/role/archive"
+    description: "Read-only historical archive"
+    responsibilities:
+      - historical reference
+
+relationships:
+  depends_on:
+    iri: "https://sociosphere.io/ontology/rel/depends_on"
+    description: "Runtime or build-time dependency"
+    inverse: required_by
+
+  extends:
+    iri: "https://sociosphere.io/ontology/rel/extends"
+    description: "Adds capability on top of a base repo"
+    inverse: extended_by
+
+  implements:
+    iri: "https://sociosphere.io/ontology/rel/implements"
+    description: "Implements a protocol or contract defined elsewhere"
+    inverse: implemented_by
+
+  consumes:
+    iri: "https://sociosphere.io/ontology/rel/consumes"
+    description: "Consumes an API or event stream"
+    inverse: consumed_by
+
+  produces:
+    iri: "https://sociosphere.io/ontology/rel/produces"
+    description: "Produces events or data consumed by others"
+    inverse: produced_by
+
+  supersedes:
+    iri: "https://sociosphere.io/ontology/rel/supersedes"
+    description: "Replaces a legacy or archived repository"
+    inverse: superseded_by
+
+  tested_by:
+    iri: "https://sociosphere.io/ontology/rel/tested_by"
+    description: "Has a dedicated test suite in another repo"
+    inverse: tests
+
+  documented_by:
+    iri: "https://sociosphere.io/ontology/rel/documented_by"
+    description: "Primary documentation lives in another repo"
+    inverse: documents
+
+  deployed_by:
+    iri: "https://sociosphere.io/ontology/rel/deployed_by"
+    description: "Deployment manifests are in another repo"
+    inverse: deploys
+
+tag_taxonomy:
+  domains:
+    - workspace
+    - platform
+    - ai
+    - ml
+    - security
+    - compliance
+    - identity
+    - data
+    - ui
+    - infrastructure
+    - tooling
+    - testing
+    - documentation
+    - protocol
+    - messaging
+    - api
+
+  cross_cutting:
+    - orchestrator
+    - monorepo
+    - microservice
+    - adapter
+    - connector
+    - sdk
+    - spec
+    - archive
+    - legacy
+
+language_categories:
+  compiled: [Go, Rust, C, C++]
+  interpreted: [Python, JavaScript, TypeScript, Shell]
+  declarative: [YAML, HCL, Markdown]
+  mixed: [TypeScript, Python]
+
+status_values:
+  active:
+    description: "Actively developed and maintained"
+    propagation_enabled: true
+  archived:
+    description: "Read-only; no new commits expected"
+    propagation_enabled: false
+  deprecated:
+    description: "Scheduled for removal; migration in progress"
+    propagation_enabled: false
+  experimental:
+    description: "Prototype; API/contract unstable"
+    propagation_enabled: true
 # sociosphere repository ontology registry
 # Phase A placeholders — controlled vocabulary and semantic bindings for the 23 new repos.
 # Phase B will replace these with LSA/LSI/LDA-extracted topics from actual code + docs.

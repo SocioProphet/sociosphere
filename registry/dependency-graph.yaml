@@ -1,3 +1,331 @@
+# registry/dependency-graph.yaml
+# Dependency mappings for the SocioProphet repository ecosystem
+version: "1.0.0"
+updated_at: "2026-04-06"
+
+# Format: each entry names a repo and lists its direct dependencies,
+# the type of dependency, and an optional comment.
+
+edges:
+  - from: sociosphere
+    to: tritrpc
+    type: submodule
+    comment: "Pinned at v0.1.1 via .gitmodules"
+
+  - from: sociosphere
+    to: trit-to-trust
+    type: submodule
+    comment: "Pinned at v0.1.1 via .gitmodules"
+
+  - from: sociosphere
+    to: adapter-contracts
+    type: standards
+    comment: "Adapter contract fixtures used in CI"
+
+  - from: sociosphere
+    to: qes-contracts
+    type: standards
+    comment: "QES contract validation in CI"
+
+  - from: sociosphere
+    to: workspace-event-schema
+    type: standards
+    comment: "Event schema used for workspace events"
+
+  - from: sociosphere
+    to: maipj-manifest
+    type: standards
+    comment: "Manifest extensions for live-receipt paths"
+
+
+  - from: prophet-platform
+    to: embeddings-service
+    type: runtime
+    comment: "Platform calls embeddings service for semantic ops"
+
+  - from: prophet-platform
+    to: asr-service
+    type: runtime
+    comment: "Platform delegates ASR tasks to asr-service"
+
+  - from: prophet-platform
+    to: vision-classifier
+    type: runtime
+    comment: "Platform delegates vision classification"
+
+  - from: prophet-platform
+    to: cc-router
+    type: runtime
+    comment: "Platform routes model requests via cc-router"
+
+  - from: prophet-platform
+    to: knowledge-graph
+    type: runtime
+    comment: "Platform persists knowledge in graph store"
+
+  - from: prophet-platform
+    to: event-bus
+    type: runtime
+    comment: "Platform publishes events to Kafka bus"
+
+  - from: prophet-platform
+    to: trust-registry
+    type: runtime
+    comment: "Platform verifies credentials via trust registry"
+
+  - from: prophet-platform
+    to: fips-compliance
+    type: compliance
+    comment: "Platform binaries validated against FIPS checker"
+
+  - from: prophet-cli
+    to: prophet-sdk
+    type: runtime
+    comment: "CLI is built on top of the SDK"
+
+  - from: prophet-sdk
+    to: prophet-platform
+    type: runtime
+    comment: "SDK wraps platform APIs"
+
+  - from: prophet-ui
+    to: prophet-platform
+    type: runtime
+    comment: "UI calls platform APIs"
+
+  - from: prophet-ui
+    to: design-system
+    type: runtime
+    comment: "UI imports shared design components"
+
+  - from: prophet-ui
+    to: graph-explorer
+    type: runtime
+    comment: "UI embeds graph explorer as a module"
+
+  - from: prophet-ai-eval
+    to: embeddings-service
+    type: runtime
+    comment: "Eval harness calls embeddings service"
+
+  - from: prophet-ai-eval
+    to: asr-service
+    type: runtime
+    comment: "Eval harness calls ASR service"
+
+  - from: prophet-ai-eval
+    to: vision-classifier
+    type: runtime
+    comment: "Eval harness calls vision classifier"
+
+  - from: prophet-ai-eval
+    to: cc-router
+    type: runtime
+    comment: "Eval deploys models via cc-router"
+
+  - from: semantic-search-bi
+    to: embeddings-service
+    type: runtime
+    comment: "Semantic search uses embeddings for indexing"
+
+  - from: semantic-search-bi
+    to: knowledge-graph
+    type: runtime
+    comment: "BI queries go through knowledge graph"
+
+  - from: knowledge-graph
+    to: event-bus
+    type: runtime
+    comment: "Graph changes published as events"
+
+  - from: trust-registry
+    to: did-resolver
+    type: runtime
+    comment: "Trust registry resolves DIDs"
+
+  - from: trust-registry
+    to: vc-verifier
+    type: runtime
+    comment: "Trust registry verifies credentials"
+
+  - from: vc-issuer
+    to: fips-compliance
+    type: compliance
+    comment: "VC issuer uses FIPS-validated crypto"
+
+  - from: vc-issuer
+    to: crypto-carriers
+    type: runtime
+    comment: "VC issuer wraps credentials in COSE carriers"
+
+  - from: vc-verifier
+    to: crypto-carriers
+    type: runtime
+    comment: "VC verifier validates COSE carriers"
+
+  - from: vc-verifier
+    to: fips-compliance
+    type: compliance
+    comment: "VC verifier uses FIPS-validated crypto"
+
+  - from: zero-trust-bindings
+    to: fips-compliance
+    type: compliance
+    comment: "Zero-trust policies are FIPS-validated"
+
+  - from: zero-trust-bindings
+    to: nist-800-53-controls
+    type: compliance
+    comment: "Bindings enforce NIST 800-53 controls"
+
+  - from: connector-github
+    to: event-bus
+    type: runtime
+    comment: "GitHub events pushed to Kafka bus"
+
+  - from: connector-gitlab
+    to: event-bus
+    type: runtime
+    comment: "GitLab events pushed to Kafka bus"
+
+  - from: connector-jira
+    to: event-bus
+    type: runtime
+    comment: "Jira events pushed to Kafka bus"
+
+  - from: connector-slack
+    to: event-bus
+    type: runtime
+    comment: "Slack messages pushed to event bus"
+
+  - from: connector-kafka
+    to: event-bus
+    type: runtime
+    comment: "Kafka connector wraps the event bus"
+
+  - from: data-pipeline
+    to: event-bus
+    type: runtime
+    comment: "Pipeline consumes events from Kafka"
+
+  - from: data-pipeline
+    to: knowledge-graph
+    type: runtime
+    comment: "Pipeline writes processed data to graph"
+
+  - from: k8s-manifests
+    to: prophet-platform
+    type: deployment
+    comment: "K8s manifests deploy the platform"
+
+  - from: k8s-manifests
+    to: embeddings-service
+    type: deployment
+    comment: "K8s manifests deploy embeddings service"
+
+  - from: k8s-manifests
+    to: asr-service
+    type: deployment
+    comment: "K8s manifests deploy ASR service"
+
+  - from: k8s-manifests
+    to: vision-classifier
+    type: deployment
+    comment: "K8s manifests deploy vision classifier"
+
+  - from: k8s-manifests
+    to: cc-router
+    type: deployment
+    comment: "K8s manifests deploy CC router"
+
+  - from: k8s-manifests
+    to: trust-registry
+    type: deployment
+    comment: "K8s manifests deploy trust registry"
+
+  - from: helm-charts
+    to: k8s-manifests
+    type: tooling
+    comment: "Helm charts are higher-level wrappers for K8s manifests"
+
+
+  - from: integration-tests
+    to: prophet-platform
+    type: testing
+    comment: "Integration tests exercise platform APIs"
+
+  - from: integration-tests
+    to: trust-registry
+    type: testing
+    comment: "Integration tests exercise trust registry"
+
+  - from: e2e-tests
+    to: prophet-ui
+    type: testing
+    comment: "E2E tests exercise the UI workbench"
+
+  - from: e2e-tests
+    to: curation-ui
+    type: testing
+    comment: "E2E tests exercise the curation UI"
+
+  - from: load-tests
+    to: prophet-platform
+    type: testing
+    comment: "Load tests target platform endpoints"
+
+  - from: load-tests
+    to: embeddings-service
+    type: testing
+    comment: "Load tests target embeddings service"
+
+
+  - from: new-hope
+    to: tritrpc
+    type: protocol
+    comment: "New-hope adapter implements TritRPC protocol"
+
+  - from: trit-to-trust
+    to: tritrpc
+    type: protocol
+    comment: "Trust layer extends TritRPC semantics"
+
+  - from: socios
+    to: source-os
+    type: superseded_by
+    comment: "socios (legacy) is superseded by source-os"
+
+  - from: slash-topics
+    to: event-bus
+    type: runtime
+    comment: "Slash-topics publishes topic events to the event bus"
+
+  - from: trust-registry-ui
+    to: trust-registry
+    type: runtime
+    comment: "Trust registry UI calls trust registry APIs"
+
+  - from: ui-workbench
+    to: design-system
+    type: runtime
+    comment: "UI workbench imports shared design system components"
+
+dependency_levels:
+  # Topological ordering (level 0 = no deps inside this registry)
+  0: [tritrpc, workspace-event-schema, maipj-manifest, adapter-contracts,
+      qes-contracts, architecture-docs, api-specs, onboarding-docs, runbooks,
+      design-system, fips-compliance, nist-800-53-controls]
+  1: [trit-to-trust, crypto-carriers, zero-trust-bindings, did-resolver,
+      embeddings-service, asr-service, vision-classifier, event-bus]
+  2: [knowledge-graph, trust-registry, vc-issuer, vc-verifier, cc-router,
+      data-pipeline, workspace-runner, connector-kafka]
+  3: [prophet-platform, semantic-search-bi, new-hope, slash-topics,
+      connector-github, connector-gitlab, connector-jira, connector-slack]
+  4: [prophet-sdk, prophet-ai-eval, graph-explorer, trust-registry-ui,
+      curation-ui, k8s-manifests]
+  5: [prophet-cli, prophet-ui, helm-charts, integration-tests, load-tests]
+  6: [sociosphere, e2e-tests, source-os]
+  archived: [socios, tritrpc-notes-archive]
 # sociosphere dependency graph
 # Phase A: empty stubs for the 23 new repos.
 # Phase B will populate depends_on and dependents via static analysis and manual review.

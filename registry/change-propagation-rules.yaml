@@ -1,3 +1,236 @@
+# registry/change-propagation-rules.yaml
+# Automation rules for cascading changes through the dependency graph
+version: "1.0.0"
+updated_at: "2026-04-06"
+
+# When a repository is updated, these rules determine which downstream
+# repositories should be notified or auto-updated.
+
+defaults:
+  notification_channel: github_issue
+  auto_pr: false
+  require_ci_pass: true
+  max_cascade_depth: 3
+
+rules:
+  # ── Protocol changes cascade broadly ───────────────────────────────────────
+  - id: tritrpc-protocol-change
+    trigger:
+      repo: tritrpc
+      events: [push, release]
+      branches: [main]
+    propagate_to:
+      - repo: trit-to-trust
+        action: notify
+        message: "tritrpc updated — verify TritRPC bindings are still compatible"
+      - repo: new-hope
+        action: notify
+        message: "tritrpc updated — re-test TritRPC implementation"
+      - repo: sociosphere
+        action: notify
+        message: "tritrpc submodule pin may need updating"
+        auto_pr: true
+        pr_title: "chore(deps): bump tritrpc submodule pin"
+    max_cascade_depth: 2
+
+  # ── Platform changes cascade to SDK, CLI, UI, and tests ────────────────────
+  - id: prophet-platform-change
+    trigger:
+      repo: prophet-platform
+      events: [push, release]
+      branches: [main]
+    propagate_to:
+      - repo: prophet-sdk
+        action: notify
+        message: "prophet-platform updated — SDK may need updated API bindings"
+      - repo: prophet-cli
+        action: notify
+        message: "prophet-platform updated — CLI may need updating"
+      - repo: prophet-ui
+        action: notify
+        message: "prophet-platform API changed — UI integration check needed"
+      - repo: integration-tests
+        action: trigger_ci
+        message: "Run integration tests against updated platform"
+      - repo: load-tests
+        action: trigger_ci
+        message: "Run load tests against updated platform"
+    max_cascade_depth: 2
+
+  # ── FIPS compliance changes cascade to security-sensitive repos ────────────
+  - id: fips-compliance-change
+    trigger:
+      repo: fips-compliance
+      events: [push, release]
+      branches: [main]
+    propagate_to:
+      - repo: prophet-platform
+        action: notify
+        message: "FIPS compliance artifacts updated — re-validate platform binaries"
+      - repo: vc-issuer
+        action: notify
+        message: "FIPS compliance updated — verify VC issuer crypto still valid"
+      - repo: vc-verifier
+        action: notify
+        message: "FIPS compliance updated — verify VC verifier crypto still valid"
+      - repo: zero-trust-bindings
+        action: notify
+        message: "FIPS compliance updated — review zero-trust bindings"
+
+  # ── Trust registry changes cascade to identity layer ───────────────────────
+  - id: trust-registry-change
+    trigger:
+      repo: trust-registry
+      events: [push, release]
+      branches: [main]
+    propagate_to:
+      - repo: prophet-platform
+        action: notify
+        message: "Trust registry API changed — platform trust integration check"
+      - repo: integration-tests
+        action: trigger_ci
+        message: "Run integration tests against updated trust registry"
+      - repo: trust-registry-ui
+        action: notify
+        message: "Trust registry API changed — UI may need updating"
+
+  # ── Event bus changes cascade to all producers/consumers ───────────────────
+  - id: event-bus-change
+    trigger:
+      repo: event-bus
+      events: [push, release]
+      branches: [main]
+    propagate_to:
+      - repo: connector-github
+        action: notify
+        message: "Event bus API changed — GitHub connector check"
+      - repo: connector-gitlab
+        action: notify
+        message: "Event bus API changed — GitLab connector check"
+      - repo: connector-jira
+        action: notify
+        message: "Event bus API changed — Jira connector check"
+      - repo: connector-slack
+        action: notify
+        message: "Event bus API changed — Slack connector check"
+      - repo: data-pipeline
+        action: notify
+        message: "Event bus API changed — pipeline consumer check"
+      - repo: knowledge-graph
+        action: notify
+        message: "Event bus API changed — graph consumer check"
+
+  # ── Schema changes cascade to all schema consumers ─────────────────────────
+  - id: workspace-event-schema-change
+    trigger:
+      repo: workspace-event-schema
+      events: [push, release]
+      branches: [main]
+    propagate_to:
+      - repo: sociosphere
+        action: notify
+        message: "Workspace event schema updated — review manifest changes"
+      - repo: event-bus
+        action: notify
+        message: "Event schema updated — update Kafka topic schemas"
+      - repo: connector-github
+        action: notify
+        message: "Event schema updated — review GitHub connector events"
+
+  # ── Design system changes cascade to UI repos ──────────────────────────────
+  - id: design-system-change
+    trigger:
+      repo: design-system
+      events: [push, release]
+      branches: [main]
+    propagate_to:
+      - repo: prophet-ui
+        action: notify
+        message: "Design system updated — visual regression check recommended"
+      - repo: ui-workbench
+        action: notify
+        message: "Design system updated — check workbench component usage"
+      - repo: trust-registry-ui
+        action: notify
+        message: "Design system updated — check trust registry UI"
+      - repo: curation-ui
+        action: notify
+        message: "Design system updated — check curation UI"
+      - repo: graph-explorer
+        action: notify
+        message: "Design system updated — check graph explorer UI"
+      - repo: e2e-tests
+        action: trigger_ci
+        message: "Run E2E tests to catch visual regressions"
+
+  # ── Adapter contract changes cascade to all adapters ───────────────────────
+  - id: adapter-contracts-change
+    trigger:
+      repo: adapter-contracts
+      events: [push, release]
+      branches: [main]
+    propagate_to:
+      - repo: connector-github
+        action: notify
+        message: "Adapter contracts updated — validate GitHub connector"
+      - repo: connector-gitlab
+        action: notify
+        message: "Adapter contracts updated — validate GitLab connector"
+      - repo: connector-jira
+        action: notify
+        message: "Adapter contracts updated — validate Jira connector"
+      - repo: connector-slack
+        action: notify
+        message: "Adapter contracts updated — validate Slack connector"
+      - repo: connector-kafka
+        action: notify
+        message: "Adapter contracts updated — validate Kafka connector"
+      - repo: trit-to-trust
+        action: notify
+        message: "Adapter contracts updated — validate trit-to-trust adapter"
+      - repo: new-hope
+        action: notify
+        message: "Adapter contracts updated — validate new-hope adapter"
+
+  # ── K8s manifest changes trigger deployment validation ─────────────────────
+  - id: k8s-manifests-change
+    trigger:
+      repo: k8s-manifests
+      events: [push]
+      branches: [main]
+    propagate_to:
+      - repo: helm-charts
+        action: notify
+        message: "K8s manifests updated — verify Helm chart wrappers are in sync"
+      - repo: monitoring-stack
+        action: notify
+        message: "K8s manifests updated — verify monitoring targets are current"
+
+  # ── Sociosphere (this repo) changes cascade to documentation ───────────────
+  - id: sociosphere-change
+    trigger:
+      repo: sociosphere
+      events: [push, release]
+      branches: [main]
+    propagate_to:
+      - repo: onboarding-docs
+        action: notify
+        message: "sociosphere updated — review onboarding docs for accuracy"
+      - repo: architecture-docs
+        action: notify
+        message: "sociosphere updated — review architecture docs for accuracy"
+
+cascade_policy:
+  circular_dependency_detection: strict
+  max_notification_depth: 3
+  deduplication_window_seconds: 300
+  backoff:
+    initial_delay_seconds: 5
+    max_delay_seconds: 300
+    multiplier: 2.0
+  failure_policy:
+    on_notification_failure: log_and_continue
+    on_ci_trigger_failure: alert_and_stop
 # change-propagation-rules.yaml
 # Automation trigger rules: when repo A merges to main, what cascades?
 # Consumed by: engines/propagation_engine.py

@@ -1,3 +1,362 @@
+# registry/devops-automation.yaml
+# Build, test, and deploy rules for the SocioProphet repository ecosystem
+version: "1.0.0"
+updated_at: "2026-04-06"
+
+defaults:
+  ci_provider: github_actions
+  docker_registry: ghcr.io/socioprophet
+  k8s_cluster: socioprophet-prod
+  timeout_minutes: 30
+  retry_count: 2
+  retry_backoff_seconds: 30
+
+language_build_templates:
+  python:
+    install: "pip install -r requirements.txt"
+    lint: "ruff check . && mypy ."
+    test: "pytest --tb=short -q"
+    build_artifact: wheel
+    build_cmd: "python -m build"
+
+  typescript:
+    install: "npm ci"
+    lint: "npm run lint"
+    test: "npm test"
+    build_cmd: "npm run build"
+    build_artifact: dist
+
+  go:
+    install: "go mod download"
+    lint: "golangci-lint run"
+    test: "go test ./..."
+    build_cmd: "go build ./..."
+    build_artifact: binary
+
+  shell:
+    lint: "shellcheck **/*.sh"
+    test: "bats tests/"
+    build_artifact: null
+
+  yaml:
+    lint: "yamllint ."
+    test: null
+    build_artifact: null
+
+repos:
+  sociosphere:
+    language: TypeScript
+    build_template: typescript
+    ci_steps:
+      - name: ui-install
+        cmd: "make ui-install"
+      - name: ui-check
+        cmd: "make ui-check"
+      - name: validate-standards
+        cmd: "make validate-standards"
+    deploy: false
+    fips_required: false
+
+  tritrpc:
+    language: Go
+    build_template: go
+    ci_steps:
+      - name: build
+        cmd: "go build ./..."
+      - name: test
+        cmd: "go test ./..."
+      - name: lint
+        cmd: "golangci-lint run"
+    deploy: false
+    fips_required: false
+
+  prophet-platform:
+    language: Python
+    build_template: python
+    ci_steps:
+      - name: install
+        cmd: "pip install -r requirements.txt"
+      - name: lint
+        cmd: "ruff check ."
+      - name: test
+        cmd: "pytest --tb=short -q"
+      - name: build-image
+        cmd: "docker build -t ${DOCKER_REGISTRY}/prophet-platform:${TAG} ."
+    deploy: true
+    deploy_steps:
+      - name: push-image
+        cmd: "docker push ${DOCKER_REGISTRY}/prophet-platform:${TAG}"
+      - name: apply-k8s
+        cmd: "kubectl apply -f k8s/platform/"
+    fips_required: true
+    fips_validator: "python fips-compliance/checker.py --target prophet-platform"
+
+  embeddings-service:
+    language: Python
+    build_template: python
+    ci_steps:
+      - name: install
+        cmd: "pip install -r requirements.txt"
+      - name: test
+        cmd: "pytest --tb=short -q"
+      - name: build-image
+        cmd: "docker build -t ${DOCKER_REGISTRY}/embeddings-service:${TAG} ."
+    deploy: true
+    deploy_steps:
+      - name: push-image
+        cmd: "docker push ${DOCKER_REGISTRY}/embeddings-service:${TAG}"
+      - name: apply-k8s
+        cmd: "kubectl apply -f k8s/embeddings/"
+    fips_required: false
+
+  asr-service:
+    language: Python
+    build_template: python
+    ci_steps:
+      - name: install
+        cmd: "pip install -r requirements.txt"
+      - name: test
+        cmd: "pytest --tb=short -q"
+      - name: build-image
+        cmd: "docker build -t ${DOCKER_REGISTRY}/asr-service:${TAG} ."
+    deploy: true
+    deploy_steps:
+      - name: push-image
+        cmd: "docker push ${DOCKER_REGISTRY}/asr-service:${TAG}"
+      - name: apply-k8s
+        cmd: "kubectl apply -f k8s/asr/"
+    fips_required: false
+
+  vision-classifier:
+    language: Python
+    build_template: python
+    ci_steps:
+      - name: install
+        cmd: "pip install -r requirements.txt"
+      - name: test
+        cmd: "pytest --tb=short -q"
+      - name: build-image
+        cmd: "docker build -t ${DOCKER_REGISTRY}/vision-classifier:${TAG} ."
+    deploy: true
+    deploy_steps:
+      - name: push-image
+        cmd: "docker push ${DOCKER_REGISTRY}/vision-classifier:${TAG}"
+      - name: apply-k8s
+        cmd: "kubectl apply -f k8s/vision/"
+    fips_required: false
+
+  trust-registry:
+    language: Python
+    build_template: python
+    ci_steps:
+      - name: install
+        cmd: "pip install -r requirements.txt"
+      - name: lint
+        cmd: "ruff check ."
+      - name: test
+        cmd: "pytest --tb=short -q"
+      - name: build-image
+        cmd: "docker build -t ${DOCKER_REGISTRY}/trust-registry:${TAG} ."
+    deploy: true
+    deploy_steps:
+      - name: push-image
+        cmd: "docker push ${DOCKER_REGISTRY}/trust-registry:${TAG}"
+      - name: apply-k8s
+        cmd: "kubectl apply -f k8s/trust-registry/"
+    fips_required: true
+    fips_validator: "python fips-compliance/checker.py --target trust-registry"
+
+  vc-issuer:
+    language: Python
+    build_template: python
+    ci_steps:
+      - name: install
+        cmd: "pip install -r requirements.txt"
+      - name: test
+        cmd: "pytest --tb=short -q"
+      - name: fips-check
+        cmd: "python fips-compliance/checker.py --target vc-issuer"
+      - name: build-image
+        cmd: "docker build -t ${DOCKER_REGISTRY}/vc-issuer:${TAG} ."
+    deploy: true
+    fips_required: true
+
+  vc-verifier:
+    language: Python
+    build_template: python
+    ci_steps:
+      - name: install
+        cmd: "pip install -r requirements.txt"
+      - name: test
+        cmd: "pytest --tb=short -q"
+      - name: fips-check
+        cmd: "python fips-compliance/checker.py --target vc-verifier"
+      - name: build-image
+        cmd: "docker build -t ${DOCKER_REGISTRY}/vc-verifier:${TAG} ."
+    deploy: true
+    fips_required: true
+
+  prophet-ui:
+    language: TypeScript
+    build_template: typescript
+    ci_steps:
+      - name: install
+        cmd: "npm ci"
+      - name: lint
+        cmd: "npm run lint"
+      - name: build
+        cmd: "npm run build"
+      - name: test
+        cmd: "npm test"
+    deploy: true
+    deploy_steps:
+      - name: push-image
+        cmd: "docker push ${DOCKER_REGISTRY}/prophet-ui:${TAG}"
+      - name: apply-k8s
+        cmd: "kubectl apply -f k8s/prophet-ui/"
+    fips_required: false
+
+  semantic-search-bi:
+    language: Python
+    build_template: python
+    ci_steps:
+      - name: install
+        cmd: "pip install -r requirements.txt"
+      - name: test
+        cmd: "pytest --tb=short -q"
+    deploy: true
+    fips_required: false
+
+  knowledge-graph:
+    language: Python
+    build_template: python
+    ci_steps:
+      - name: install
+        cmd: "pip install -r requirements.txt"
+      - name: test
+        cmd: "pytest --tb=short -q"
+    deploy: true
+    fips_required: false
+
+  event-bus:
+    language: Python
+    build_template: python
+    ci_steps:
+      - name: install
+        cmd: "pip install -r requirements.txt"
+      - name: test
+        cmd: "pytest --tb=short -q"
+    deploy: true
+    fips_required: false
+
+  data-pipeline:
+    language: Python
+    build_template: python
+    ci_steps:
+      - name: install
+        cmd: "pip install -r requirements.txt"
+      - name: test
+        cmd: "pytest --tb=short -q"
+    deploy: true
+    fips_required: false
+
+  fips-compliance:
+    language: Python
+    build_template: python
+    ci_steps:
+      - name: install
+        cmd: "pip install -r requirements.txt"
+      - name: test
+        cmd: "pytest --tb=short -q"
+    deploy: false
+    fips_required: false
+
+  zero-trust-bindings:
+    language: Python
+    build_template: python
+    ci_steps:
+      - name: install
+        cmd: "pip install -r requirements.txt"
+      - name: test
+        cmd: "pytest --tb=short -q"
+    deploy: false
+    fips_required: true
+
+  integration-tests:
+    language: Python
+    build_template: python
+    ci_steps:
+      - name: install
+        cmd: "pip install -r requirements.txt"
+      - name: run
+        cmd: "pytest --tb=short -q"
+    deploy: false
+    fips_required: false
+    requires_services: [prophet-platform, trust-registry]
+
+  e2e-tests:
+    language: TypeScript
+    build_template: typescript
+    ci_steps:
+      - name: install
+        cmd: "npm ci && npx playwright install --with-deps"
+      - name: run
+        cmd: "npx playwright test"
+    deploy: false
+    fips_required: false
+    requires_services: [prophet-ui]
+
+  load-tests:
+    language: JavaScript
+    build_template: typescript
+    ci_steps:
+      - name: run
+        cmd: "k6 run tests/load-test.js"
+    deploy: false
+    fips_required: false
+    requires_services: [prophet-platform, embeddings-service]
+
+pipeline_stages:
+  - id: lint
+    runs_on_pr: true
+    runs_on_push_main: true
+    blocking: true
+
+  - id: build
+    runs_on_pr: true
+    runs_on_push_main: true
+    blocking: true
+
+  - id: test
+    runs_on_pr: true
+    runs_on_push_main: true
+    blocking: true
+
+  - id: fips_check
+    runs_on_pr: true
+    runs_on_push_main: true
+    blocking: true
+    applies_to_fips_required_only: true
+
+  - id: build_image
+    runs_on_pr: false
+    runs_on_push_main: true
+    blocking: true
+    applies_to_deployable_only: true
+
+  - id: push_image
+    runs_on_pr: false
+    runs_on_push_main: true
+    blocking: true
+    applies_to_deployable_only: true
+
+  - id: deploy
+    runs_on_pr: false
+    runs_on_push_main: true
+    blocking: false
+    applies_to_deployable_only: true
+    requires_approval: false
+    environment: production
 # devops-automation.yaml
 # Per-repo build / test / deploy automation rules.
 # Consumed by: engines/devops_orchestrator.py
