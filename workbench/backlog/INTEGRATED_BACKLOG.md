@@ -14,3 +14,7 @@
 
 ## P3 SourceOS integration
 - [ ] integration spec + bootstrap script + systemd units (SourceOS)
+
+## Intent audit follow-ups (2026-04-06)
+- [ ] Require explicit `intent_checklist` content for each PR and persist it in-repo as part of closeout artifacts (`status/intent-audit-YYYY-MM-DD.md`).
+- [ ] Add CI validation that blocks closeout completion when a merged PR lacks intent provenance (`intent_checklist` source reference + verification status).
