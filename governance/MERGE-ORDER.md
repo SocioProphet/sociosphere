@@ -9,6 +9,17 @@
 2. **Schemas before consumers** — Shared schema definitions before anything that reads/writes them.
 3. **Specs before fixtures** — Protocol specs before reference fixtures.
 4. **No cascading conflicts** — Each PR in a cluster must target the previous one's merged result, not `main`.
+5. **Companion PR lockstep** — Companion PR pairs must complete review and merge in the same wave window.
+
+### Companion PR Policy (Required)
+
+For companion PR pair `sociosphere#19` and `socioprophet#257`:
+
+1. **Joint review sign-off is required on both PRs before either PR merges.**
+2. **Each PR must include an explicit compatibility note confirming terminology alignment** (for example, boundary/doctrine term alignment).
+3. **If one companion PR changes materially, re-request review on the paired PR before merge.**
+4. **Merge both within the same wave window, or defer both.**
+5. **After merge, record the final merged commit SHAs for both PRs in `status/ecosystem-status.yaml`.**
 
 ---
 
