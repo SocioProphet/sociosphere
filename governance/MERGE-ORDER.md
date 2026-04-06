@@ -9,6 +9,42 @@
 2. **Schemas before consumers** — Shared schema definitions before anything that reads/writes them.
 3. **Specs before fixtures** — Protocol specs before reference fixtures.
 4. **No cascading conflicts** — Each PR in a cluster must target the previous one's merged result, not `main`.
+5. **Intent must be verifiable** — Every tracked PR must carry a concrete acceptance checklist in `status/pr-register.yaml`.
+
+---
+
+## Intent Checklist Process (required for promotion and merge)
+
+This process applies to all entries in:
+- `promote_and_review`
+- `fips_triage.recommended_merge_order`
+- `tritrpc_prs.required_merge_order`
+
+### 1) Derive acceptance checks from PR intent
+
+For each PR, copy key claims from the PR title/body (plus coupling/dependency notes when relevant) into **3–7 bullet acceptance checks**.  
+Store these bullets under the per-PR `intent_checklist` field in `status/pr-register.yaml`.
+
+Use existing `notes` patterns as seed material, including:
+- companion PR coupling (example: review together requirements),
+- dependency ordering (example: promote after upstream PR),
+- blocker removal requirements (example: generated probe artifact removal).
+
+### 2) Gate draft promotion on checklist completeness
+
+A PR **must not** be promoted from draft until **every** checklist item has:
+- a reviewer owner, and
+- a verification note (what was checked, where, and outcome).
+
+If any checklist item lacks owner or verification note, promotion remains blocked.
+
+### 3) Post-merge evidence closure
+
+After merge, update tracking notes so each checklist item is marked **satisfied** with:
+- merge commit SHA evidence, and
+- short proof pointer (file/path/section or CI run reference).
+
+No PR is considered operationally complete until all checklist items are closed with merge-SHA evidence.
 
 ---
 
