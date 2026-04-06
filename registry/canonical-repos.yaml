@@ -1,0 +1,500 @@
+# registry/canonical-repos.yaml
+# Canonical repository registry for the SocioProphet organization
+# 53 original repositories under management
+version: "1.0.0"
+organization: SocioProphet
+updated_at: "2026-04-06"
+
+repositories:
+  # ── Core workspace / orchestration ─────────────────────────────────────────
+  - id: sociosphere
+    name: sociosphere
+    url: https://github.com/SocioProphet/sociosphere
+    role: orchestrator
+    status: active
+    description: "Workspace controller, standards hub, and UI workbench"
+    primary_language: TypeScript
+    tags: [workspace, orchestrator, monorepo]
+
+  - id: source-os
+    name: source-os
+    url: https://github.com/SocioProphet/source-os
+    role: platform
+    status: active
+    description: "OS substrate and bootstrap layer"
+    primary_language: Shell
+    tags: [platform, os, substrate]
+
+  - id: socios
+    name: socios
+    url: https://github.com/SocioProphet/socios
+    role: legacy
+    status: archived
+    description: "Legacy macOS/VirtualBox installer (archived)"
+    primary_language: Shell
+    tags: [legacy, installer]
+
+  # ── Protocol and communication ──────────────────────────────────────────────
+  - id: tritrpc
+    name: tritrpc
+    url: https://github.com/SocioProphet/tritrpc
+    role: protocol
+    status: active
+    description: "TritRPC protocol spec + fixtures + reference implementations"
+    primary_language: Go
+    tags: [protocol, rpc, spec]
+
+  - id: tritrpc-notes-archive
+    name: tritrpc-notes-archive
+    url: https://github.com/SocioProphet/tritrpc-notes-archive
+    role: archive
+    status: archived
+    description: "Raw historical TritRPC drafts (RTF/HTML)"
+    primary_language: null
+    tags: [archive, notes]
+
+  - id: trit-to-trust
+    name: trit-to-trust
+    url: https://github.com/SocioProphet/trit-to-trust
+    role: adapter
+    status: active
+    description: "Trit-to-trust binding layer for zero-trust integration"
+    primary_language: Python
+    tags: [adapter, trust, security]
+
+  # ── Prophet platform ────────────────────────────────────────────────────────
+  - id: prophet-platform
+    name: prophet-platform
+    url: https://github.com/SocioProphet/prophet-platform
+    role: platform
+    status: active
+    description: "Core prophet platform services and APIs"
+    primary_language: Python
+    tags: [platform, api, services]
+
+  - id: prophet-cli
+    name: prophet-cli
+    url: https://github.com/SocioProphet/prophet-cli
+    role: tooling
+    status: active
+    description: "Prophet CLI tool for AI eval, serve, policy, and rollout"
+    primary_language: Python
+    tags: [cli, tooling, ai]
+
+  - id: prophet-ui
+    name: prophet-ui
+    url: https://github.com/SocioProphet/prophet-ui
+    role: frontend
+    status: active
+    description: "Prophet web UI and dashboard"
+    primary_language: TypeScript
+    tags: [ui, frontend, dashboard]
+
+  - id: prophet-sdk
+    name: prophet-sdk
+    url: https://github.com/SocioProphet/prophet-sdk
+    role: sdk
+    status: active
+    description: "Prophet SDK for third-party integrations"
+    primary_language: Python
+    tags: [sdk, integration]
+
+  # ── AI / ML ─────────────────────────────────────────────────────────────────
+  - id: prophet-ai-eval
+    name: prophet-ai-eval
+    url: https://github.com/SocioProphet/prophet-ai-eval
+    role: component
+    status: active
+    description: "AI model evaluation framework (Champion-Challenger)"
+    primary_language: Python
+    tags: [ai, eval, ml]
+
+  - id: semantic-search-bi
+    name: semantic-search-bi
+    url: https://github.com/SocioProphet/semantic-search-bi
+    role: component
+    status: active
+    description: "Semantic search with BI reporting capabilities"
+    primary_language: Python
+    tags: [search, semantic, bi]
+
+  - id: embeddings-service
+    name: embeddings-service
+    url: https://github.com/SocioProphet/embeddings-service
+    role: component
+    status: active
+    description: "HuggingFace embeddings microservice"
+    primary_language: Python
+    tags: [embeddings, ml, microservice]
+
+  - id: asr-service
+    name: asr-service
+    url: https://github.com/SocioProphet/asr-service
+    role: component
+    status: active
+    description: "Automatic speech recognition via Whisper"
+    primary_language: Python
+    tags: [asr, speech, ml]
+
+  - id: vision-classifier
+    name: vision-classifier
+    url: https://github.com/SocioProphet/vision-classifier
+    role: component
+    status: active
+    description: "Vision classification via ONNX runtime"
+    primary_language: Python
+    tags: [vision, classification, onnx, ml]
+
+  - id: cc-router
+    name: cc-router
+    url: https://github.com/SocioProphet/cc-router
+    role: component
+    status: active
+    description: "Champion-Challenger router (Ray Serve)"
+    primary_language: Python
+    tags: [router, ray, serve, ai]
+
+  # ── Security / Compliance ───────────────────────────────────────────────────
+  - id: fips-compliance
+    name: fips-compliance
+    url: https://github.com/SocioProphet/fips-compliance
+    role: compliance
+    status: active
+    description: "FIPS 140-2/140-3 compliance artifacts and checker"
+    primary_language: Python
+    tags: [fips, compliance, security]
+
+  - id: zero-trust-bindings
+    name: zero-trust-bindings
+    url: https://github.com/SocioProphet/zero-trust-bindings
+    role: security
+    status: active
+    description: "Zero-trust architecture bindings and policies"
+    primary_language: Python
+    tags: [security, zero-trust, policy]
+
+  - id: nist-800-53-controls
+    name: nist-800-53-controls
+    url: https://github.com/SocioProphet/nist-800-53-controls
+    role: compliance
+    status: active
+    description: "NIST 800-53 control implementations and validators"
+    primary_language: Python
+    tags: [nist, compliance, controls]
+
+  - id: crypto-carriers
+    name: crypto-carriers
+    url: https://github.com/SocioProphet/crypto-carriers
+    role: security
+    status: active
+    description: "COSE crypto carrier schemas and forensics pipeline"
+    primary_language: Python
+    tags: [crypto, cose, forensics]
+
+  # ── Data / Storage ──────────────────────────────────────────────────────────
+  - id: knowledge-graph
+    name: knowledge-graph
+    url: https://github.com/SocioProphet/knowledge-graph
+    role: component
+    status: active
+    description: "RDF/SPARQL knowledge graph service"
+    primary_language: Python
+    tags: [knowledge-graph, rdf, sparql]
+
+  - id: graph-explorer
+    name: graph-explorer
+    url: https://github.com/SocioProphet/graph-explorer
+    role: frontend
+    status: active
+    description: "Interactive graph explorer UI"
+    primary_language: TypeScript
+    tags: [graph, explorer, ui]
+
+  - id: data-pipeline
+    name: data-pipeline
+    url: https://github.com/SocioProphet/data-pipeline
+    role: component
+    status: active
+    description: "ETL/ELT data pipeline orchestration"
+    primary_language: Python
+    tags: [data, pipeline, etl]
+
+  - id: event-bus
+    name: event-bus
+    url: https://github.com/SocioProphet/event-bus
+    role: infrastructure
+    status: active
+    description: "Kafka-based event bus for workspace events"
+    primary_language: Python
+    tags: [events, kafka, messaging]
+
+  # ── Workspace / tooling ─────────────────────────────────────────────────────
+  - id: slash-topics
+    name: slash-topics
+    url: https://github.com/SocioProphet/slash-topics
+    role: component
+    status: active
+    description: "Topic taxonomy and slash-command routing"
+    primary_language: TypeScript
+    tags: [topics, taxonomy, routing]
+
+  - id: new-hope
+    name: new-hope
+    url: https://github.com/SocioProphet/new-hope
+    role: component
+    status: active
+    description: "New Hope runtime adapter layer"
+    primary_language: TypeScript
+    tags: [runtime, adapter]
+
+  - id: workspace-runner
+    name: workspace-runner
+    url: https://github.com/SocioProphet/workspace-runner
+    role: tooling
+    status: active
+    description: "Deterministic workspace runner for build/test tasks"
+    primary_language: Python
+    tags: [runner, tooling, build]
+
+
+  # ── Standards / Contracts ───────────────────────────────────────────────────
+  - id: adapter-contracts
+    name: adapter-contracts
+    url: https://github.com/SocioProphet/adapter-contracts
+    role: standards
+    status: active
+    description: "Adapter contract fixtures and compatibility tests"
+    primary_language: Python
+    tags: [contracts, adapters, fixtures]
+
+  - id: qes-contracts
+    name: qes-contracts
+    url: https://github.com/SocioProphet/qes-contracts
+    role: standards
+    status: active
+    description: "QES (Qualified Electronic Signature) contract specs"
+    primary_language: Python
+    tags: [qes, contracts, signatures]
+
+  - id: workspace-event-schema
+    name: workspace-event-schema
+    url: https://github.com/SocioProphet/workspace-event-schema
+    role: standards
+    status: active
+    description: "Workspace event schema definitions v0.1"
+    primary_language: Python
+    tags: [events, schema, standards]
+
+  - id: maipj-manifest
+    name: maipj-manifest
+    url: https://github.com/SocioProphet/maipj-manifest
+    role: standards
+    status: active
+    description: "MAIPJ live-receipt workspace manifest extensions"
+    primary_language: Python
+    tags: [maipj, manifest, live-receipt]
+
+  # ── UI / Frontend ───────────────────────────────────────────────────────────
+  - id: ui-workbench
+    name: ui-workbench
+    url: https://github.com/SocioProphet/ui-workbench
+    role: frontend
+    status: active
+    description: "Main Vue 3 + Vite UI workbench"
+    primary_language: TypeScript
+    tags: [ui, vue, vite, frontend]
+
+  - id: design-system
+    name: design-system
+    url: https://github.com/SocioProphet/design-system
+    role: frontend
+    status: active
+    description: "Shared design system and component library"
+    primary_language: TypeScript
+    tags: [design, components, ui]
+
+  - id: trust-registry-ui
+    name: trust-registry-ui
+    url: https://github.com/SocioProphet/trust-registry-ui
+    role: frontend
+    status: active
+    description: "Trust registry administration UI"
+    primary_language: TypeScript
+    tags: [trust, registry, ui]
+
+  - id: curation-ui
+    name: curation-ui
+    url: https://github.com/SocioProphet/curation-ui
+    role: frontend
+    status: active
+    description: "Content curation management UI"
+    primary_language: TypeScript
+    tags: [curation, ui, admin]
+
+  # ── Infrastructure / Deployment ─────────────────────────────────────────────
+  - id: k8s-manifests
+    name: k8s-manifests
+    url: https://github.com/SocioProphet/k8s-manifests
+    role: infrastructure
+    status: active
+    description: "Kubernetes manifests for all services"
+    primary_language: YAML
+    tags: [kubernetes, k8s, deployment]
+
+  - id: helm-charts
+    name: helm-charts
+    url: https://github.com/SocioProphet/helm-charts
+    role: infrastructure
+    status: active
+    description: "Helm charts for service deployment"
+    primary_language: YAML
+    tags: [helm, kubernetes, deployment]
+
+
+  # ── Identity / Trust ────────────────────────────────────────────────────────
+  - id: trust-registry
+    name: trust-registry
+    url: https://github.com/SocioProphet/trust-registry
+    role: component
+    status: active
+    description: "Decentralized trust registry service"
+    primary_language: Python
+    tags: [trust, registry, identity]
+
+  - id: did-resolver
+    name: did-resolver
+    url: https://github.com/SocioProphet/did-resolver
+    role: component
+    status: active
+    description: "DID (Decentralized Identifier) resolver"
+    primary_language: Python
+    tags: [did, identity, resolver]
+
+  - id: vc-issuer
+    name: vc-issuer
+    url: https://github.com/SocioProphet/vc-issuer
+    role: component
+    status: active
+    description: "Verifiable Credential issuer service"
+    primary_language: Python
+    tags: [vc, credentials, identity]
+
+  - id: vc-verifier
+    name: vc-verifier
+    url: https://github.com/SocioProphet/vc-verifier
+    role: component
+    status: active
+    description: "Verifiable Credential verifier service"
+    primary_language: Python
+    tags: [vc, credentials, verification]
+
+  # ── Connectors / Adapters ───────────────────────────────────────────────────
+  - id: connector-github
+    name: connector-github
+    url: https://github.com/SocioProphet/connector-github
+    role: adapter
+    status: active
+    description: "GitHub connector adapter"
+    primary_language: Python
+    tags: [connector, github, adapter]
+
+  - id: connector-gitlab
+    name: connector-gitlab
+    url: https://github.com/SocioProphet/connector-gitlab
+    role: adapter
+    status: active
+    description: "GitLab connector adapter"
+    primary_language: Python
+    tags: [connector, gitlab, adapter]
+
+  - id: connector-jira
+    name: connector-jira
+    url: https://github.com/SocioProphet/connector-jira
+    role: adapter
+    status: active
+    description: "Jira connector adapter"
+    primary_language: Python
+    tags: [connector, jira, adapter]
+
+  - id: connector-slack
+    name: connector-slack
+    url: https://github.com/SocioProphet/connector-slack
+    role: adapter
+    status: active
+    description: "Slack connector adapter"
+    primary_language: Python
+    tags: [connector, slack, adapter]
+
+  - id: connector-kafka
+    name: connector-kafka
+    url: https://github.com/SocioProphet/connector-kafka
+    role: adapter
+    status: active
+    description: "Kafka connector adapter"
+    primary_language: Python
+    tags: [connector, kafka, adapter]
+
+  # ── Documentation / Specs ───────────────────────────────────────────────────
+  - id: architecture-docs
+    name: architecture-docs
+    url: https://github.com/SocioProphet/architecture-docs
+    role: documentation
+    status: active
+    description: "Architecture decision records and system diagrams"
+    primary_language: Markdown
+    tags: [architecture, adr, documentation]
+
+  - id: api-specs
+    name: api-specs
+    url: https://github.com/SocioProphet/api-specs
+    role: documentation
+    status: active
+    description: "OpenAPI/AsyncAPI specifications for all services"
+    primary_language: YAML
+    tags: [api, openapi, specs]
+
+  - id: onboarding-docs
+    name: onboarding-docs
+    url: https://github.com/SocioProphet/onboarding-docs
+    role: documentation
+    status: active
+    description: "Developer onboarding and quickstart guides"
+    primary_language: Markdown
+    tags: [onboarding, documentation]
+
+  - id: runbooks
+    name: runbooks
+    url: https://github.com/SocioProphet/runbooks
+    role: documentation
+    status: active
+    description: "Operational runbooks and incident response playbooks"
+    primary_language: Markdown
+    tags: [runbooks, operations, documentation]
+
+  # ── Test / Quality ──────────────────────────────────────────────────────────
+  - id: integration-tests
+    name: integration-tests
+    url: https://github.com/SocioProphet/integration-tests
+    role: testing
+    status: active
+    description: "Cross-service integration test suite"
+    primary_language: Python
+    tags: [testing, integration, quality]
+
+  - id: e2e-tests
+    name: e2e-tests
+    url: https://github.com/SocioProphet/e2e-tests
+    role: testing
+    status: active
+    description: "End-to-end browser and API test suite"
+    primary_language: TypeScript
+    tags: [testing, e2e, playwright]
+
+  - id: load-tests
+    name: load-tests
+    url: https://github.com/SocioProphet/load-tests
+    role: testing
+    status: active
+    description: "Load and performance testing suite (k6)"
+    primary_language: JavaScript
+    tags: [testing, performance, load, k6]
