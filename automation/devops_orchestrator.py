@@ -144,7 +144,8 @@ class DevOpsOrchestrator:
         if self.rate_limiter:
             self.rate_limiter.acquire(cost=1)
 
-        self._metrics["builds" if phase == "build" else "builds"] += 0  # no-op counter
+        if phase == "build":
+            self._metrics["builds"] += 1
 
         for step in steps:
             if not self._run_step(repo, phase, step, timeout=timeout):
