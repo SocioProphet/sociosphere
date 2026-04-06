@@ -137,6 +137,52 @@ promote_and_review:
 # ── Priority 3: FIPS cluster — triage and chain ──────────────────────────────
 fips_triage:
   description: "10 FIPS PRs in socioprophet-standards-storage must be chained before merge. All currently target main independently."
+  chain_validation:
+    validated_on: "2026-04-06"
+    chain_validated: false
+    merge_order_recomputed: false
+    merge_blocker: "PRs #15, #16, #18, #19, #17, #20, #21, #22, and #23 incorrectly target main; only #14 may target main as the chain root."
+    checks:
+      - pr: 14
+        expected_base: main
+        base_valid: true
+        incremental_diff_valid: true
+      - pr: 15
+        expected_base: 14
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 16
+        expected_base: 15
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 18
+        expected_base: 16
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 19
+        expected_base: 18
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 17
+        expected_base: 19
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 20
+        expected_base: 17
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 21
+        expected_base: 20
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 22
+        expected_base: 21
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 23
+        expected_base: 22
+        base_valid: false
+        incremental_diff_valid: false
   recommended_merge_order:
     - pr: 14
       title: "FIPS authority docs"

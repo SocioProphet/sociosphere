@@ -66,6 +66,29 @@ Also in wave 3:
 - `socioprophet-standards-storage` #5 (ADR-040 twin economy) — standalone, merge after #14
 - `socioprophet-standards-storage` #13 (shared schemas) — prerequisite for Wave 4
 
+### Chain Validation
+
+Validation scope: `socioprophet-standards-storage` PRs #14, #15, #16, #18, #19, #17, #20, #21, #22, #23.
+
+| PR | Expected base | Validation result |
+|----|---------------|-------------------|
+| #14 | `main` | ✅ pass (root of chain) |
+| #15 | `#14` branch | ❌ fail (currently targets `main`) |
+| #16 | `#15` branch | ❌ fail (currently targets `main`) |
+| #18 | `#16` branch | ❌ fail (currently targets `main`) |
+| #19 | `#18` branch | ❌ fail (currently targets `main`) |
+| #17 | `#19` branch | ❌ fail (currently targets `main`) |
+| #20 | `#17` branch | ❌ fail (currently targets `main`) |
+| #21 | `#20` branch | ❌ fail (currently targets `main`) |
+| #22 | `#21` branch | ❌ fail (currently targets `main`) |
+| #23 | `#22` branch | ❌ fail (currently targets `main`) |
+
+Incremental diff-scope validation relative to immediate predecessor is **blocked** until the base-branch chain is corrected for all 10 PRs.
+
+**Recomputed merge order status**: **not recomputed**. Per policy, recomputation can only occur after all 10 base relationships pass.
+
+**Merge blocker**: Any FIPS PR in this chain targeting `main` directly (other than #14) is blocked from merge until rebased to the immediate predecessor branch in the documented chain.
+
 ---
 
 ## Wave 4 — Slice work (depends on Wave 3 #13)
