@@ -29,6 +29,23 @@ companion_groups:
       - shared_terminology_note
       - synchronized_review_signoff
       - re_review_if_either_changes
+companion_group:
+  id: workspace-os-boundary-liberty-doctrine
+  description: "Paired documentation PRs that must be reviewed and merged together."
+  prs:
+    - repo: sociosphere
+      pr: 19
+    - repo: socioprophet
+      pr: 257
+  policy:
+    joint_review_signoff_required: true
+    explicit_compatibility_note_required: true
+    rereview_on_material_change_required: true
+    same_wave_merge_or_defer_required: true
+  status:
+    review_state: pending_joint_signoff
+    compatibility_note_state: pending
+    merge_wave_state: pending
 
 # ── Priority 1: Merge immediately (non-draft, no conflicts) ──────────────────
 ready_to_merge:
@@ -109,6 +126,10 @@ promote_and_review:
       - "ADR scope is complete for DevSecOps, CI/CD, and observability."
       - "Policy sections are actionable (controls mapped to implementation owners)."
       - "No contradiction with existing governance baselines."
+      - "DevSecOps standards are complete and internally consistent."
+      - "CI/CD standards include required controls and operational ownership."
+      - "Observability standards define minimum telemetry, alerting, and audit expectations."
+      - "Review quorum is recorded in PR verification notes before promotion."
 
   - repo: sociosphere
     pr: 19
@@ -124,6 +145,9 @@ promote_and_review:
       - "Boundary language is consistent with socioprophet#257 doctrine terms."
       - "Ownership boundaries are testable and map to repo responsibilities."
       - "No overlap ambiguity between workspace OS and agent-plane components."
+      - "Workspace OS and agent-plane boundary documentation is present and accurate."
+      - "Boundary terminology aligns with current sociosphere governance language."
+      - "Companion review with socioprophet#257 is completed and noted."
 
   - repo: socioprophet
     pr: 253
@@ -137,6 +161,9 @@ promote_and_review:
       - "CodeQL is active for default branch and PR events."
       - "gitleaks policy is non-bypass for protected branches."
       - "Failure conditions are documented for contributors."
+      - "CodeQL workflow is present, enabled, and scoped to relevant code paths."
+      - "gitleaks workflow is present and blocks on credential leak findings."
+      - "Security CI expectations are documented for all code repositories."
 
   - repo: socioprophet-standards-storage
     pr: 13
@@ -150,6 +177,9 @@ promote_and_review:
       - "Shared schema identifiers are stable and versioned."
       - "Benchmark assumptions are explicit and reproducible."
       - "Downstream repos can consume without local schema forks."
+      - "Shared schemas for local-hybrid slice are seeded and versioned."
+      - "Benchmark note is included and references schema usage expectations."
+      - "Prerequisite relationship to agentplane#12 and TriTRPC#20 is explicitly verified."
 
   - repo: agentplane
     pr: 12
@@ -163,6 +193,9 @@ promote_and_review:
       - "Layout references standards-storage#13 schema locations exactly."
       - "Runtime handoff interfaces are compatible with TriTRPC slice docs."
       - "No placeholder pathing that would break bootstrap automation."
+      - "Local-hybrid slice docs and runtime layout are fully seeded."
+      - "Runtime layout references schemas from standards-storage#13."
+      - "Dependency on standards-storage#13 is verified before promotion."
 
   - repo: socioprophet
     pr: 257
@@ -178,6 +211,9 @@ promote_and_review:
       - "Doctrine definitions and scope boundaries align with sociosphere#19."
       - "Implementation implications are explicit for product teams."
       - "No policy conflict with existing security/governance docs."
+      - "Product-scoped liberty-by-design doctrine is documented end-to-end."
+      - "Doctrine language is consistent with product governance terms."
+      - "Companion review with sociosphere#19 is completed and recorded."
 
 # ── Priority 3: FIPS cluster — triage and chain ──────────────────────────────
 fips_triage:
@@ -214,6 +250,51 @@ fips_triage:
     pr_23:
       expected_base: "#22"
       validated: false
+    validated_on: "2026-04-06"
+    chain_validated: false
+    merge_order_recomputed: false
+    merge_blocker: "PRs #15, #16, #18, #19, #17, #20, #21, #22, and #23 incorrectly target main; only #14 may target main as the chain root."
+    checks:
+      - pr: 14
+        expected_base: main
+        base_valid: true
+        incremental_diff_valid: true
+      - pr: 15
+        expected_base: 14
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 16
+        expected_base: 15
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 18
+        expected_base: 16
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 19
+        expected_base: 18
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 17
+        expected_base: 19
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 20
+        expected_base: 17
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 21
+        expected_base: 20
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 22
+        expected_base: 21
+        base_valid: false
+        incremental_diff_valid: false
+      - pr: 23
+        expected_base: 22
+        base_valid: false
+        incremental_diff_valid: false
   recommended_merge_order:
     - pr: 14
       title: "FIPS authority docs"
@@ -221,51 +302,81 @@ fips_triage:
       intent_checklist:
         - "Defines normative compliance authority references."
         - "References are traceable to governance catalog."
+        - "Authority baseline is clearly defined for all downstream FIPS work."
+        - "Document is validated as the merge base for the FIPS chain."
+        - "Review note confirms this PR is merged before dependent FIPS PRs."
     - pr: 15
       title: "Data layer FIPS"
       note: "Rebase on #14 before merge"
       intent_checklist:
         - "Data-layer control mappings are explicit and testable."
+        - "Data-layer FIPS controls are fully specified."
+        - "Branch is rebased on PR #14 before review sign-off."
+        - "Verification notes confirm no divergence from authority baseline."
     - pr: 16
       title: "Orchestration layer FIPS"
       note: "Rebase on #15 before merge"
       intent_checklist:
         - "Orchestration controls do not duplicate data-layer controls."
+        - "Orchestration-layer FIPS controls are fully specified."
+        - "Branch is rebased on PR #15 before review sign-off."
+        - "Verification notes confirm compatibility with data-layer controls."
     - pr: 18
       title: "P2P/Distributed FIPS"
       note: "Rebase on #16 before merge"
       intent_checklist:
         - "Distributed controls inherit prior layer references cleanly."
+        - "P2P/distributed FIPS controls are documented with clear scope."
+        - "Branch is rebased on PR #16 before review sign-off."
+        - "Verification notes confirm no chain-order regressions."
     - pr: 19
       title: "ML/AI FIPS"
       note: "Rebase on #18 before merge"
       intent_checklist:
         - "ML/AI controls reference authority chain without divergence."
+        - "ML/AI FIPS controls are documented with required governance constraints."
+        - "Branch is rebased on PR #18 before review sign-off."
+        - "Verification notes confirm alignment with prior distributed controls."
     - pr: 17
       title: "FIPS cross-link"
       note: "Must be last in core cluster — cross-links all above"
       intent_checklist:
         - "Cross-links resolve and cover every core FIPS section."
+        - "Cross-links cover all prior core FIPS PR documents."
+        - "PR is merged last in the core cluster sequence."
+        - "Verification notes confirm link integrity after rebases."
     - pr: 20
       title: "Semantic layer FIPS"
       note: "After #17"
       intent_checklist:
         - "Semantic layer adds no orphan requirements."
+        - "Semantic-layer FIPS controls are clearly defined."
+        - "PR is sequenced after #17 in the chain."
+        - "Verification notes confirm semantic controls inherit core baseline."
     - pr: 21
       title: "FIPS governance docs (PRs 2-4)"
       note: "Aggregates governance material"
       intent_checklist:
         - "Governance references match merged technical controls."
+        - "Governance docs aggregate PRs 2-4 material without omissions."
+        - "Governance responsibilities and escalation paths are explicit."
+        - "Verification notes confirm aggregation sources and reviewer ownership."
     - pr: 22
       title: "FIPS activation rollout"
       note: "After governance docs"
       intent_checklist:
         - "Rollout sequence uses merged governance baseline."
+        - "Activation rollout plan includes sequencing, owners, and checkpoints."
+        - "PR is sequenced after governance docs PR #21."
+        - "Verification notes confirm rollout readiness criteria are met."
     - pr: 23
       title: "FIPS Week 1 activation plan"
       note: "Final — after rollout coordination"
       intent_checklist:
         - "Week 1 milestones are executable and owned."
+        - "Week 1 activation tasks are concrete, dated, and owner-assigned."
+        - "PR is merged only after rollout coordination artifacts are complete."
+        - "Verification notes confirm final-stage readiness and handoff."
 
 # ── Priority 4: TriTRPC slice work ────────────────────────────────────────────
 tritrpc_prs:
@@ -276,38 +387,59 @@ tritrpc_prs:
       notes: "Oldest PR — check overlap with #12 before deciding"
       intent_checklist:
         - "Selected winner requirements are still canonical."
+        - "Requirements winner content remains valid against current TriTRPC roadmap."
+        - "Overlap analysis with PR #12 is documented."
+        - "Decision to merge, split, or supersede is captured in verification notes."
     - pr: 12
       title: "v4.1: governance and telemetry scaffolding"
       action: PROMOTE_AND_REVIEW
       notes: "Additive-only; follow-on PR needed for existing-file rewrites"
       intent_checklist:
         - "Scaffolding is additive and non-breaking."
+        - "Governance scaffolding is additive and does not rewrite existing files."
+        - "Telemetry scaffolding defines baseline event and metric expectations."
+        - "Follow-on PR requirement for rewrites is recorded with owner."
     - pr: 16
       title: "Receipt transport binding spec v0.1"
       action: PROMOTE_AND_REVIEW
       intent_checklist:
         - "Binding spec aligns with downstream receipt consumers."
+        - "Receipt transport binding spec v0.1 is complete and internally consistent."
+        - "Spec terminology aligns with existing transport and receipt docs."
+        - "Verification notes include reviewer owner for protocol correctness."
     - pr: 17
       title: "Transport event examples"
       action: PROMOTE_AFTER_16
       intent_checklist:
         - "Examples validate against binding schema from #16."
+        - "Transport event examples map directly to receipt binding spec behaviors."
+        - "PR promotion occurs only after PR #16 review completion."
+        - "Verification notes confirm examples are executable or testable artifacts."
     - pr: 18
       title: "Atlas policy authority-chain"
       action: REMOVE_PROBE_ARTIFACT_THEN_REVIEW
       blocker: "Must remove docs/vnext/generated/.write_probe.txt before merge"
       intent_checklist:
         - "Authority-chain examples are policy-consistent and probe artifact-free."
+        - "Atlas policy authority-chain content is complete and reviewable."
+        - "docs/vnext/generated/.write_probe.txt is removed before promotion."
+        - "Verification notes confirm no generated probe artifacts remain."
     - pr: 19
       title: "AOKC descriptor and order transport notes"
       action: PROMOTE_AND_REVIEW
       intent_checklist:
         - "Descriptor/order semantics map cleanly to agentplane outputs."
+        - "AOKC descriptor content is complete and aligns with transport design."
+        - "Order transport notes cover expected lifecycle and handoff semantics."
+        - "Verification notes include reviewer owner for descriptor correctness."
     - pr: 20
       title: "Seed local-hybrid slice v0"
       action: PROMOTE_AFTER_AGENTPLANE_12
       intent_checklist:
         - "Slice artifact layout matches agentplane#12 conventions."
+        - "Local-hybrid slice v0 seed content is complete and coherent."
+        - "Promotion occurs only after agentplane PR #12 is verified."
+        - "Verification notes confirm dependency alignment and reviewer ownership."
 
 # ── Stale dependabot PRs (close recommended) ──────────────────────────────────
 stale_dependabot:

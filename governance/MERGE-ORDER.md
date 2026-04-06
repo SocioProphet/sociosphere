@@ -24,6 +24,65 @@
    - No branch retargeting/rebasing outside designated wave integrator.
    - No merge execution if snapshot is older than 24 hours.
 4. Abort the wave if snapshot and live PR states differ materially.
+5. **Intent must be verifiable** — Every tracked PR must carry a concrete acceptance checklist in `status/pr-register.yaml`.
+
+---
+
+## Intent Checklist Process (required for promotion and merge)
+
+This process applies to all entries in:
+- `promote_and_review`
+- `fips_triage.recommended_merge_order`
+- `tritrpc_prs.required_merge_order`
+
+### 1) Derive acceptance checks from PR intent
+
+For each PR, copy key claims from the PR title/body (plus coupling/dependency notes when relevant) into **3–7 bullet acceptance checks**.  
+Store these bullets under the per-PR `intent_checklist` field in `status/pr-register.yaml`.
+
+Use existing `notes` patterns as seed material, including:
+- companion PR coupling (example: review together requirements),
+- dependency ordering (example: promote after upstream PR),
+- blocker removal requirements (example: generated probe artifact removal).
+
+### 2) Gate draft promotion on checklist completeness
+
+A PR **must not** be promoted from draft until **every** checklist item has:
+- a reviewer owner, and
+- a verification note (what was checked, where, and outcome).
+
+If any checklist item lacks owner or verification note, promotion remains blocked.
+
+### 3) Post-merge evidence closure
+
+After merge, update tracking notes so each checklist item is marked **satisfied** with:
+- merge commit SHA evidence, and
+- short proof pointer (file/path/section or CI run reference).
+
+No PR is considered operationally complete until all checklist items are closed with merge-SHA evidence.
+5. **Companion PR lockstep** — Companion PR pairs must complete review and merge in the same wave window.
+
+### Companion PR Policy (Required)
+
+For companion PR pair `sociosphere#19` and `socioprophet#257`:
+
+1. **Joint review sign-off is required on both PRs before either PR merges.**
+2. **Each PR must include an explicit compatibility note confirming terminology alignment** (for example, boundary/doctrine term alignment).
+3. **If one companion PR changes materially, re-request review on the paired PR before merge.**
+4. **Merge both within the same wave window, or defer both.**
+5. **After merge, record the final merged commit SHAs for both PRs in `status/ecosystem-status.yaml`.**
+
+---
+
+## Pre-wave Refresh Checklist
+
+Run this checklist **before each wave** (Wave 1, Wave 2, etc.) to avoid stale sequencing and moving-branch conflicts.
+
+1. Refresh `status/pr-register.yaml` from live repository and PR state (open/closed, draft/ready, mergeability) immediately before wave planning/execution.
+2. Stamp a new `metadata.snapshot_date` in the register and recompute summary counters, including `total_open_prs`, `ready_to_merge`, `needs_review`, and any other derived status totals used by merge planning.
+3. Declare a temporary per-wave freeze window: no retargeting, rebasing, or base-branch motion outside the designated wave integrator until the wave is completed or explicitly aborted.
+4. Execute wave merges only against the refreshed snapshot commit hash recorded in `status/ecosystem-status.yaml`; if the hash differs from the active working state, refresh first and restart wave preparation.
+5. Abort wave start when the snapshot is stale: if snapshot age exceeds 24 hours from `metadata.snapshot_date`, stop and refresh status artifacts before any merge actions.
 
 ---
 
@@ -66,6 +125,12 @@ Companion PR pairs must follow atomic review semantics:
   4. Merge both in same wave window or defer both.
 
 After wave 2 lands, close sociosphere PRs #20, #21, #23 as superseded by the consolidated registry.
+### Wave 2 closeout (required before superseded PR closure)
+
+Before closing superseded sociosphere PRs #20, #21, and #23:
+1. Complete and review `status/supersession-ledger.yaml` (intent enumeration, mapping, and gap actions).
+2. Confirm ledger checklist is satisfied for all three superseded PRs.
+3. Only then close the superseded PRs as replaced by the consolidated registry.
 
 ---
 
@@ -100,6 +165,29 @@ Before any merge in this cluster:
 Also in wave 3:
 - `socioprophet-standards-storage` #5 (ADR-040 twin economy) — standalone, merge after #14
 - `socioprophet-standards-storage` #13 (shared schemas) — prerequisite for Wave 4
+
+### Chain Validation
+
+Validation scope: `socioprophet-standards-storage` PRs #14, #15, #16, #18, #19, #17, #20, #21, #22, #23.
+
+| PR | Expected base | Validation result |
+|----|---------------|-------------------|
+| #14 | `main` | ✅ pass (root of chain) |
+| #15 | `#14` branch | ❌ fail (currently targets `main`) |
+| #16 | `#15` branch | ❌ fail (currently targets `main`) |
+| #18 | `#16` branch | ❌ fail (currently targets `main`) |
+| #19 | `#18` branch | ❌ fail (currently targets `main`) |
+| #17 | `#19` branch | ❌ fail (currently targets `main`) |
+| #20 | `#17` branch | ❌ fail (currently targets `main`) |
+| #21 | `#20` branch | ❌ fail (currently targets `main`) |
+| #22 | `#21` branch | ❌ fail (currently targets `main`) |
+| #23 | `#22` branch | ❌ fail (currently targets `main`) |
+
+Incremental diff-scope validation relative to immediate predecessor is **blocked** until the base-branch chain is corrected for all 10 PRs.
+
+**Recomputed merge order status**: **not recomputed**. Per policy, recomputation can only occur after all 10 base relationships pass.
+
+**Merge blocker**: Any FIPS PR in this chain targeting `main` directly (other than #14) is blocked from merge until rebased to the immediate predecessor branch in the documented chain.
 
 ---
 
