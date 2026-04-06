@@ -23,6 +23,17 @@ companion_pr_group:
   merge_wave: null
   notes: "Populate final merged SHAs for both PRs once the paired merge is completed."
 
+
+merge_execution:
+  last_snapshot_commit: "PENDING_SET_DURING_WAVE_EXECUTION"
+  snapshot_ttl_hours: 24
+  freeze_window_required: true
+  stale_snapshot_abort: true
+  companion_atomic_groups:
+    - doctrine-boundary-pair-20260406
+  supersession_ledger: status/supersession-ledger.yaml
+  latest_intent_audit: status/intent-audit-2026-04-06.md
+
 # ── Phase 0: Standards & Foundational ────────────────────────────────────────
 phase_0:
   description: "Standards and governance foundations — must land first."

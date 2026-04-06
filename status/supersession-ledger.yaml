@@ -1,3 +1,67 @@
+# supersession-ledger.yaml — mapping of superseded PR intent to retained artifacts
+# Updated: 2026-04-06
+# schema_version: 1
+
+superseded_prs:
+  - repo: sociosphere
+    pr: 20
+    title: "Add Repository Intelligence & DevOps Orchestration System"
+    intent_mapping:
+      - intent: "Canonical repository intelligence coverage for ecosystem repos"
+        preserved_in:
+          - registry/canonical-repos.yaml
+          - registry/dependency-graph.yaml
+        status: preserved
+      - intent: "Operational and compliance orchestration visibility"
+        preserved_in:
+          - telemetry/compliance-policy.yaml
+          - telemetry/compliance_checker.py
+          - status/pr-register.yaml
+        status: preserved
+      - intent: "Execution governance signalization"
+        preserved_in:
+          - governance/MERGE-ORDER.md
+          - status/ecosystem-status.yaml
+        status: preserved
+
+  - repo: sociosphere
+    pr: 21
+    title: "Phase A — add 23 SocioProphet repos to sociosphere registry"
+    intent_mapping:
+      - intent: "Phase A registry population"
+        preserved_in:
+          - registry/canonical-repos.yaml
+        status: preserved
+      - intent: "Cross-repo dependency awareness"
+        preserved_in:
+          - registry/dependency-graph.yaml
+        status: preserved
+      - intent: "Scaffold for ongoing status tracking"
+        preserved_in:
+          - status/ecosystem-status.yaml
+          - status/pr-register.yaml
+        status: preserved
+
+  - repo: sociosphere
+    pr: 23
+    title: "Phase A — registry foundation for SocioProphet multi-repo ecosystem"
+    intent_mapping:
+      - intent: "Foundational multi-repo registry"
+        preserved_in:
+          - registry/canonical-repos.yaml
+          - registry/repository-ontology.yaml
+        status: preserved
+      - intent: "Workflow-safe merge sequencing"
+        preserved_in:
+          - governance/MERGE-ORDER.md
+        status: preserved
+      - intent: "Operationalization via tooling"
+        preserved_in:
+          - engines/status_reporter.py
+          - telemetry/compliance_checker.py
+        status: preserved
+
+open_gaps: []
 # supersession-ledger.yaml — Intent traceability for superseded sociosphere PRs
 # Snapshot date: 2026-04-06
 # Purpose: Ensure no intent is lost when superseded PRs are closed.

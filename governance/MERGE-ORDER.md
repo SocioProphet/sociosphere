@@ -9,6 +9,21 @@
 2. **Schemas before consumers** — Shared schema definitions before anything that reads/writes them.
 3. **Specs before fixtures** — Protocol specs before reference fixtures.
 4. **No cascading conflicts** — Each PR in a cluster must target the previous one's merged result, not `main`.
+5. **Words are contracts** — PR titles and bodies must be converted into executable acceptance checks before merge.
+
+---
+
+## Pre-wave Refresh Checklist (required before every wave)
+
+1. Refresh `status/pr-register.yaml` from current PR state and update:
+   - `metadata.snapshot_date`
+   - `metadata.total_open_prs`
+   - state counters (`ready_to_merge`, `needs_review`, `needs_triage`, `draft_active`)
+2. Record the refresh commit SHA in `status/ecosystem-status.yaml` under `merge_execution.last_snapshot_commit`.
+3. Enforce a wave freeze window:
+   - No branch retargeting/rebasing outside designated wave integrator.
+   - No merge execution if snapshot is older than 24 hours.
+4. Abort the wave if snapshot and live PR states differ materially.
 5. **Intent must be verifiable** — Every tracked PR must carry a concrete acceptance checklist in `status/pr-register.yaml`.
 
 ---
@@ -98,6 +113,18 @@ These PRs are non-draft, non-conflicting, and safe to merge right now.
 | 3 | `sociosphere` | #19 | Workspace OS/agent-plane boundary doc | Review with socioprophet#257 |
 | 4 | `socioprophet` | #257 | liberty-by-design doctrine | Review with sociosphere#19 |
 
+### Companion PR atomicity gate (required)
+
+Companion PR pairs must follow atomic review semantics:
+
+- Pair: `sociosphere#19` ↔ `socioprophet#257`
+- Required before merge:
+  1. Shared terminology compatibility note posted on both PRs.
+  2. Review sign-off completed for both PRs.
+  3. If either PR changes materially after review, re-request review on both.
+  4. Merge both in same wave window or defer both.
+
+After wave 2 lands, close sociosphere PRs #20, #21, #23 as superseded by the consolidated registry.
 ### Wave 2 closeout (required before superseded PR closure)
 
 Before closing superseded sociosphere PRs #20, #21, and #23:
@@ -125,6 +152,15 @@ Before closing superseded sociosphere PRs #20, #21, and #23:
 | 8 | `socioprophet-standards-storage` | #21 | FIPS governance docs | `#20` branch |
 | 9 | `socioprophet-standards-storage` | #22 | FIPS activation rollout | `#21` branch |
 | 10 | `socioprophet-standards-storage` | #23 | FIPS Week 1 activation plan | `#22` branch |
+
+### FIPS chain validation checklist (required)
+
+Before any merge in this cluster:
+
+1. Verify each PR base target equals the previous PR branch in the chain.
+2. Verify diff is incremental versus immediate predecessor (no independent main-target rewrite).
+3. Mark `status/pr-register.yaml.fips_triage.chain_validation.pr_<num>.validated`.
+4. Block merge if any PR still targets `main` incorrectly.
 
 Also in wave 3:
 - `socioprophet-standards-storage` #5 (ADR-040 twin economy) — standalone, merge after #14
@@ -191,6 +227,23 @@ Incremental diff-scope validation relative to immediate predecessor is **blocked
 | 3 | `cairnpath-mesh` | #1 | Twin economy Cairn reconciliation | Verify base branch target |
 | 4 | `socioprophet` | #256 | AOKC runtime bootstrap | After Wave 4 |
 | 5 | `socioprophet` | #255 | AOKC repo alignment note | After Wave 4 |
+
+---
+
+## Intent preservation and supersession controls
+
+### Superseded PR closure protocol
+
+Before closing superseded PRs, complete `status/supersession-ledger.yaml` mapping each superseded PR intent to retained artifacts.
+
+### Post-merge intent audit protocol
+
+At the end of each wave:
+
+1. Generate `status/intent-audit-YYYY-MM-DD.md`.
+2. For every merged PR, mark each intent checklist item as satisfied/partial/missed.
+3. Create backlog tasks for any partial/missed item in `workbench/backlog/INTEGRATED_BACKLOG.md`.
+4. Link audit file from `status/ecosystem-status.yaml.merge_execution.latest_intent_audit`.
 
 ---
 
