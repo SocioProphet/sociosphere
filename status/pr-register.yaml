@@ -1,0 +1,227 @@
+# pr-register.yaml — Open PR register for the SocioProphet ecosystem
+# Snapshot date: 2026-04-06
+# All 81 known open PRs across the org, with merge priority and status.
+# schema_version: 1
+
+metadata:
+  snapshot_date: "2026-04-06"
+  total_open_prs: 81
+  ready_to_merge: 8
+  needs_review: 12
+  needs_triage: 17
+  draft_active: 44
+
+# ── Priority 1: Merge immediately (non-draft, no conflicts) ──────────────────
+ready_to_merge:
+  - repo: socioprophet-standards-knowledge
+    pr: 16
+    title: "Docs: root README"
+    branch: feat/readme-root-20260128
+    draft: false
+    age_days: 68
+    action: MERGE
+
+  - repo: socioprophet-standards-knowledge
+    pr: 17
+    title: "Docs: docs/standards README"
+    branch: feat/docs-standards-readme-20260128
+    draft: false
+    age_days: 68
+    action: MERGE
+
+  - repo: socioprophet-standards-knowledge
+    pr: 18
+    title: "Docs: schemas README"
+    branch: feat/schemas-readme-20260128
+    draft: false
+    age_days: 68
+    action: MERGE
+
+  - repo: socioprophet-standards-knowledge
+    pr: 19
+    title: "Docs: schemas/avro README"
+    branch: feat/schemas-avro-readme-20260128
+    draft: false
+    age_days: 68
+    action: MERGE
+
+  - repo: socioprophet-standards-knowledge
+    pr: 20
+    title: "Docs: schemas/jsonld README"
+    branch: feat/schemas-jsonld-readme-20260128
+    draft: false
+    age_days: 68
+    action: MERGE
+
+  - repo: socioprophet-standards-knowledge
+    pr: 21
+    title: "Docs: schemas/jsonschema README"
+    branch: feat/schemas-jsonschema-readme-20260128
+    draft: false
+    age_days: 68
+    action: MERGE
+
+  - repo: mcp-a2a-zero-trust
+    pr: 1
+    title: "Issue standards: DoD + Acceptance"
+    branch: chore/issue-standards
+    draft: false
+    age_days: 89
+    action: MERGE
+
+  - repo: socioprophet
+    pr: 223
+    title: "docs: ignore and untrack vitepress dist/cache"
+    branch: chore/docs-hygiene
+    draft: false
+    action: MERGE
+
+# ── Priority 2: Promote from draft and review ────────────────────────────────
+promote_and_review:
+  - repo: prophet-platform-standards
+    pr: 1
+    title: "Populate with complete DevSecOps, CI/CD, and Observability standards"
+    branch: copilot/populate-prophet-platform-standards-phase-1
+    draft: true
+    priority: CRITICAL
+    action: PROMOTE_AND_REVIEW
+    notes: "Most important PR in the org. Establish review quorum before merge."
+
+  - repo: sociosphere
+    pr: 19
+    title: "docs: add workspace OS and agent-plane boundary doc"
+    branch: docs/workspace-os-agent-boundary-refresh-20260405
+    draft: false
+    priority: HIGH
+    companion_pr: socioprophet/257
+    action: REVIEW_AND_MERGE
+    notes: "Companion to socioprophet#257 — review together."
+
+  - repo: socioprophet
+    pr: 253
+    title: "Add CodeQL and gitleaks security workflows"
+    branch: codex/review-repo-for-security-compliance-e5gcca
+    draft: false
+    priority: HIGH
+    action: REVIEW_AND_MERGE
+    notes: "Security CI — important for all code repos."
+
+  - repo: socioprophet-standards-storage
+    pr: 13
+    title: "Seed local-hybrid slice shared schemas and benchmark note"
+    branch: seed-local-hybrid-schemas-v0
+    draft: true
+    priority: HIGH
+    action: PROMOTE_AND_REVIEW
+    notes: "Prerequisite for agentplane#12 and TriTRPC#20."
+
+  - repo: agentplane
+    pr: 12
+    title: "Seed agentplane local-hybrid slice docs and runtime layout"
+    branch: seed-local-hybrid-slice-v0
+    draft: true
+    priority: HIGH
+    action: PROMOTE_AFTER_STANDARDS_STORAGE_13
+    notes: "Depends on standards-storage#13."
+
+  - repo: socioprophet
+    pr: 257
+    title: "docs: add product-scoped liberty-by-design doctrine"
+    branch: docs/liberty-by-design-product-cleanup-20260404
+    draft: true
+    priority: HIGH
+    companion_pr: sociosphere/19
+    action: PROMOTE_AND_REVIEW
+    notes: "Companion to sociosphere#19."
+
+# ── Priority 3: FIPS cluster — triage and chain ──────────────────────────────
+fips_triage:
+  description: "10 FIPS PRs in socioprophet-standards-storage must be chained before merge. All currently target main independently."
+  recommended_merge_order:
+    - pr: 14
+      title: "FIPS authority docs"
+      note: "Base authority document — merge first"
+    - pr: 15
+      title: "Data layer FIPS"
+      note: "Rebase on #14 before merge"
+    - pr: 16
+      title: "Orchestration layer FIPS"
+      note: "Rebase on #15 before merge"
+    - pr: 18
+      title: "P2P/Distributed FIPS"
+      note: "Rebase on #16 before merge"
+    - pr: 19
+      title: "ML/AI FIPS"
+      note: "Rebase on #18 before merge"
+    - pr: 17
+      title: "FIPS cross-link"
+      note: "Must be last in core cluster — cross-links all above"
+    - pr: 20
+      title: "Semantic layer FIPS"
+      note: "After #17"
+    - pr: 21
+      title: "FIPS governance docs (PRs 2-4)"
+      note: "Aggregates governance material"
+    - pr: 22
+      title: "FIPS activation rollout"
+      note: "After governance docs"
+    - pr: 23
+      title: "FIPS Week 1 activation plan"
+      note: "Final — after rollout coordination"
+
+# ── Priority 4: TriTRPC slice work ────────────────────────────────────────────
+tritrpc_prs:
+  required_merge_order:
+    - pr: 11
+      title: "Promote 2026-03-25 requirements winner"
+      action: REVIEW_FIRST
+      notes: "Oldest PR — check overlap with #12 before deciding"
+    - pr: 12
+      title: "v4.1: governance and telemetry scaffolding"
+      action: PROMOTE_AND_REVIEW
+      notes: "Additive-only; follow-on PR needed for existing-file rewrites"
+    - pr: 16
+      title: "Receipt transport binding spec v0.1"
+      action: PROMOTE_AND_REVIEW
+    - pr: 17
+      title: "Transport event examples"
+      action: PROMOTE_AFTER_16
+    - pr: 18
+      title: "Atlas policy authority-chain"
+      action: REMOVE_PROBE_ARTIFACT_THEN_REVIEW
+      blocker: "Must remove docs/vnext/generated/.write_probe.txt before merge"
+    - pr: 19
+      title: "AOKC descriptor and order transport notes"
+      action: PROMOTE_AND_REVIEW
+    - pr: 20
+      title: "Seed local-hybrid slice v0"
+      action: PROMOTE_AFTER_AGENTPLANE_12
+
+# ── Stale dependabot PRs (close recommended) ──────────────────────────────────
+stale_dependabot:
+  repo: socioprophet
+  action: CLOSE_AS_SUPERSEDED
+  reason: "All superseded by later group bump PRs #235, #240, #242, #243, #245, #248"
+  prs_to_close: [137, 138, 139, 145, 149, 150, 151, 155, 157, 158]
+  prs_to_evaluate: [211]  # Newer — check if superseded by #245/248
+
+  repo_docs:
+    repo: socioprophet-docs
+    action: EVALUATE
+    reason: "5 dependabot PRs — evaluate if any are security-critical"
+    prs: [73, 111, 112, 113, 119]
+
+# ── Superseded sociosphere PRs (close after this branch merges) ──────────────
+superseded_by_this_branch:
+  - repo: sociosphere
+    pr: 20
+    title: "Add Repository Intelligence & DevOps Orchestration System"
+    reason: "Superseded by consolidated registry in this PR (53 repos vs 49, more complete)"
+  - repo: sociosphere
+    pr: 21
+    title: "Phase A — add 23 SocioProphet repos to sociosphere registry"
+    reason: "Superseded by consolidated registry in this PR (53 repos vs 23)"
+  - repo: sociosphere
+    pr: 23
+    title: "Phase A — registry foundation for SocioProphet multi-repo ecosystem"
+    reason: "Content preserved in this PR with additions (status tracking, compliance tooling)"

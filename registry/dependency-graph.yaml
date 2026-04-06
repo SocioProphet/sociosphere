@@ -1,0 +1,209 @@
+# dependency-graph.yaml — SocioProphet workspace directed dependency graph
+# Topological levels (0 = no deps, higher = more deps).
+# schema_version: 1
+
+metadata:
+  version: "1.0"
+  cycle_detected: false
+  total_nodes: 53
+  total_edges: 28
+
+# ── Topological Levels ────────────────────────────────────────────────────────
+# Level 0: no dependencies — can always build/merge first
+level_0:
+  - prophet-platform-standards    # normative ADR foundation
+  - socioprophet-standards-knowledge  # schema authority
+  - TriTRPC                       # standalone transport protocol
+
+# Level 1: depend only on level-0
+level_1:
+  - socioprophet-standards-storage  # depends on prophet-platform-standards (governs)
+  - gaia-world-model                # depends on socioprophet-standards-knowledge (governs)
+  - agentplane                      # depends on TriTRPC (transport) + standards-storage (schemas)
+
+# Level 2: depend on level-0 or level-1
+level_2:
+  - sociosphere                   # depends on all of level-0 and level-1 (orchestrates)
+  - slash-topics                  # depends on agentplane (receipt path)
+  - human-digital-twin            # depends on agentplane (receipt path)
+  - cairnpath-mesh                # depends on agentplane (replay materialisation)
+  - ontogenesis                   # depends on gaia-world-model (ontology generation)
+  - semantic-serdes               # depends on TriTRPC (serialization)
+  - prophet-core-contracts        # depends on prophet-platform-standards (implements)
+  - prophet-core-ledger           # depends on prophet-platform-standards ADR-050 (audit)
+
+# Level 3: depend on level-2
+level_3:
+  - prophet-core-libs             # depends on prophet-core-contracts
+  - prophet-core-policy           # depends on prophet-core-contracts, agentplane
+  - prophet-core-catalog          # depends on prophet-core-libs, gaia-world-model
+  - prophet-core-query            # depends on prophet-core-catalog
+  - prophet-core-ingest           # depends on prophet-core-catalog, gaia-world-model
+  - mcp-a2a-zero-trust            # depends on sociosphere (compliance), TriTRPC
+  - sourceos-a2a-mcp-bootstrap    # depends on agentplane, mcp-a2a-zero-trust
+  - workspace-inventory           # depends on sociosphere (manifest)
+
+# Level 4: depend on level-3+
+level_4:
+  - prophet-core-infra            # depends on prophet-core-libs, prophet-core-policy
+  - prophet-core-scaffolder       # depends on prophet-core-libs
+  - prophet-platform              # depends on prophet-core-* cluster
+  - socioprophet                  # product — depends on everything (tracked separately)
+
+# Ungrouped (incubating / research — no strong deps yet defined)
+ungrouped:
+  - socioprophet-standards-knowledge  # listed above, repeated for clarity
+  - Knowledge_Agent
+  - exodus
+  - Heller-Winters-Theorem
+  - systems-learning-loops
+  - alexandrian-academy
+  - atlas_master_bundle_complete
+  - atlas_master_bundle_autopilot_fullorchestration
+  - atlas_os_service_full
+  - delivery-excellence
+  - delivery-excellence-automation
+  - delivery-excellence-innersource
+  - delivery-excellence-bounties
+  - delivery-excellence-boards
+  - global-devsecops-intelligence
+  - cotoami-infra
+  - cotoami-spec
+  - flux
+  - hatchet-quickstart
+  - porter-self-hosted
+  - lampstand
+  - hyperswarm-agent-composable-cluster-scaleup
+  - cloudhaven-rest
+  - cloudhaven-client
+  - cloudshell-fog
+  - socius-kg
+  - regis-entity-graph
+  - graphbrain-contract
+  - prophet-domain-gaia-ontology
+  - prophet-domain-gaia-curation-vault
+  - identity-is-prime-reference
+  - ReputationVault
+  - speechlab
+  - new-hope
+  - asterion
+  - clymer_research
+  - socioprophet-docs
+  - socioprophet-web-medium
+  - usol-space-library
+  - Twitterr
+  - NewsClient
+  - CDataSoftwaredocs
+
+# ── Explicit Edges ────────────────────────────────────────────────────────────
+edges:
+  - from: agentplane
+    to: TriTRPC
+    type: depends_on
+    rationale: "agentplane uses TriTRPC for execution transport"
+    pr_evidence: "agentplane#12, TriTRPC#20"
+
+  - from: agentplane
+    to: socioprophet-standards-storage
+    type: depends_on
+    rationale: "Shared schemas (PR#13) needed for local-hybrid slice"
+    pr_evidence: "standards-storage#13, agentplane#12"
+
+  - from: TriTRPC
+    to: socioprophet-standards-storage
+    type: depends_on
+    rationale: "TriTRPC local-hybrid slice shares payload schemas"
+    pr_evidence: "standards-storage#13, TriTRPC#20"
+
+  - from: agentplane
+    to: prophet-platform-standards
+    type: governed_by
+    rationale: "Execution plane must comply with ADR-040/050/060"
+
+  - from: TriTRPC
+    to: prophet-platform-standards
+    type: governed_by
+    rationale: "Transport protocol must comply with ADR-040 and audit ADR-050"
+
+  - from: socioprophet-standards-storage
+    to: prophet-platform-standards
+    type: governed_by
+    rationale: "Storage standards must implement normative platform ADRs"
+
+  - from: slash-topics
+    to: agentplane
+    type: produces_for
+    rationale: "topic-pack context events flow into agentplane receipt builder"
+    pr_evidence: "slash-topics#14"
+
+  - from: human-digital-twin
+    to: agentplane
+    type: produces_for
+    rationale: "policy/approval events flow into agentplane receipt builder"
+    pr_evidence: "human-digital-twin#4"
+
+  - from: cairnpath-mesh
+    to: agentplane
+    type: depends_on
+    rationale: "cairnpath-mesh replay materialises agentplane bundle artifacts"
+    pr_evidence: "cairnpath-mesh#1"
+
+  - from: ontogenesis
+    to: gaia-world-model
+    type: produces_for
+    rationale: "ontogenesis generates ontology artifacts for gaia-world-model"
+
+  - from: semantic-serdes
+    to: TriTRPC
+    type: implements
+    rationale: "semantic-serdes implements TriTRPC serialization patterns"
+
+  - from: prophet-core-ledger
+    to: prophet-platform-standards
+    type: implements
+    rationale: "Ledger implements immutable audit log spec from ADR-050"
+
+  - from: gaia-world-model
+    to: socioprophet-standards-knowledge
+    type: governed_by
+    rationale: "GAIA ontology must follow knowledge schema standards"
+
+  - from: mcp-a2a-zero-trust
+    to: TriTRPC
+    type: depends_on
+    rationale: "zero-trust agent communication uses TriTRPC transport"
+
+  - from: sociosphere
+    to: agentplane
+    type: controls
+    rationale: "sociosphere manifest orchestrates agentplane execution"
+
+  - from: sociosphere
+    to: prophet-platform-standards
+    type: controls
+    rationale: "sociosphere compliance checker enforces platform standards"
+
+  - from: prophet-core-contracts
+    to: prophet-platform-standards
+    type: implements
+    rationale: "Core contracts implement platform API standards from ADR-040"
+
+  - from: prophet-core-policy
+    to: prophet-platform-standards
+    type: implements
+    rationale: "Core policy implements ADR-050 RBAC and audit requirements"
+
+  - from: workspace-inventory
+    to: sociosphere
+    type: part_of
+    rationale: "workspace-inventory is a tool within the sociosphere control plane"
+
+  - from: prophet-domain-gaia-ontology
+    to: gaia-world-model
+    type: deduplicates_with
+    rationale: "Overlapping GAIA ontology scope — Phase C deduplication required"
+
+  - from: mcp-a2a-zero-trust
+    to: sourceos-a2a-mcp-bootstrap
+    type: deduplicates_with
+    rationale: "Both provide A2A/MCP bootstrap — Phase C consolidation target"
