@@ -1,0 +1,126 @@
+fog_pack_count: 7
+pack_repos:
+- ibm_pack_analog: Cloud Pak for Data
+  repo: SocioProphet/fog-pack-data
+  priority: Wave 0 / now
+  status: Seed here first
+  fog_surfaces:
+  - Base
+  - Lake
+  - Catalog
+  - Knowledge
+  - Trust
+  - Search UI (thin)
+  - Studio (dev-only)
+  anchors:
+  - SocioProphet/sociosphere
+  - SocioProphet/TriTRPC
+  - SocioProphet/agentplane
+  - SocioProphet/gaia-world-model
+  - SocioProphet/database
+  - SocioProphet/postgres
+  - SocioProphet/elasticsearch
+  - SocioProphet/kbpedia
+  why: This is the Fog Stack for Data home. All v14-v17 artifacts belong here first.
+- ibm_pack_analog: Cloud Pak for Business Automation
+  repo: SocioProphet/fog-pack-business-automation
+  priority: Wave 1
+  status: Create after data pack spine is stable
+  fog_surfaces:
+  - Flow
+  - Trust
+  - Content (actional layer)
+  - selective Agents
+  anchors:
+  - SocioProphet/agentplane
+  - SocioProphet/common-workflow-language
+  - SocioProphet/schema_salad
+  - SocioProphet/sociosphere
+  why: Keep workflow and case-heavy surfaces out of the data distro core.
+- ibm_pack_analog: Cloud Pak for Integration
+  repo: SocioProphet/fog-pack-integration
+  priority: Wave 1
+  status: Create next to automation
+  fog_surfaces:
+  - Flow
+  - Trust (egress policy)
+  - protocol bridges
+  anchors:
+  - SocioProphet/TriTRPC
+  - SocioProphet/api-spec
+  - SocioProphet/servicebroker
+  - SocioProphet/deploykit
+  - SocioProphet/bridge-operator
+  why: This is the main trusted action/egress plane and should not be buried in the
+    data repo.
+- ibm_pack_analog: Cloud Pak for AIOps
+  repo: SocioProphet/fog-pack-aiops
+  priority: Wave 1/2
+  status: Create after deployment graph is rebound
+  fog_surfaces:
+  - Observe
+  - Agents
+  - Trust
+  anchors:
+  - SocioProphet/prom-system
+  - SocioProphet/agentplane
+  - SocioProphet/k8sclient
+  - SocioProphet/cert-operator
+  why: Ops should have its own control pack, not remain an appendix to the data release.
+- ibm_pack_analog: Cloud Pak for Applications
+  repo: SocioProphet/fog-pack-applications
+  priority: Wave 2
+  status: Create later
+  fog_surfaces:
+  - Applications
+  - Search UI
+  - Studio
+  - selective Agents
+  anchors:
+  - SocioProphet/socioprophet
+  - SocioProphet/sociosphere
+  - SocioProphet/react-terminal-component
+  - SocioProphet/javascript-terminal
+  why: Application surfaces should consume lower-layer packs rather than define them.
+- ibm_pack_analog: Cloud Pak for Network Automation
+  repo: SocioProphet/fog-pack-network-automation
+  priority: Wave 3
+  status: Defer
+  fog_surfaces:
+  - Observe
+  - Flow
+  - infrastructure control
+  anchors:
+  - SocioProphet/hybrid-cloud-plugin
+  - SocioProphet/kubefed
+  - SocioProphet/cluster-registry
+  - SocioProphet/kubernetes-cluster-federation
+  why: Do not let network-specialist concerns distort the first data/knowledge distro.
+- ibm_pack_analog: Cloud Pak for Security
+  repo: SocioProphet/fog-pack-security
+  priority: Wave 3
+  status: Defer
+  fog_surfaces:
+  - Trust
+  - Observe
+  - security actions
+  anchors:
+  - SocioProphet/hyper-secret-sharing
+  - SocioProphet/cert-operator
+  - SocioProphet/bridge-operator
+  - SocioProphet/k8scloudconfig
+  why: Security needs a hard trust boundary and should not be smuggled in under data
+    or integration.
+shared_foundations:
+- repo: SocioProphet/sociosphere
+  role: shared distro/meta-workspace
+  verified_via: GitHub connector search/list
+- repo: SocioProphet/TriTRPC
+  role: shared protocol/spec/control-wire
+  verified_via: GitHub connector search
+- repo: SocioProphet/agentplane
+  role: shared agent control plane
+  verified_via: GitHub connector search
+- repo: SocioProphet/socioprophet
+  role: shared docs/web/product surface
+  verified_via: GitHub connector repo list
