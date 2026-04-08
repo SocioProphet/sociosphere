@@ -109,7 +109,15 @@ class OntologyEngine:
 
     def load(self) -> None:
         repos_raw = _load_yaml(self._dir / "canonical-repos.yaml")
-        self._repos = {repo["id"]: repo for repo in repos_raw.get("repositories", [])}
+        repos: dict[str, dict[str, Any]] = {}
+        for repo in repos_raw.get("repositories", []):
+            if not isinstance(repo, dict):
+                continue
+            repo_id = repo.get("id") or repo.get("name")
+            if not repo_id:
+                continue
+            repos[repo_id] = repo
+        self._repos = repos
         self._ontology = _load_yaml(self._dir / "repository-ontology.yaml")
         self._loaded = True
 
