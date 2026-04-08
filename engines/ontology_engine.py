@@ -143,19 +143,49 @@ class OntologyEngine:
 
     def get_role_definition(self, role: str) -> dict[str, Any] | None:
         self._ensure_loaded()
-        return self._ontology.get("roles", {}).get(role)
+        roles = self._ontology.get("roles", {})
+        if isinstance(roles, dict):
+            return roles.get(role)
+        if isinstance(roles, list):
+            for item in roles:
+                if not isinstance(item, dict):
+                    continue
+                rid = item.get("id")
+                if rid == role:
+                    return item
+        return None
 
     def all_roles(self) -> list[str]:
         self._ensure_loaded()
-        return list(self._ontology.get("roles", {}).keys())
+        roles = self._ontology.get("roles", {})
+        if isinstance(roles, dict):
+            return list(roles.keys())
+        if isinstance(roles, list):
+            return [r.get("id") for r in roles if isinstance(r, dict) and r.get("id")]
+        return []
 
     def get_relationship_definition(self, rel: str) -> dict[str, Any] | None:
         self._ensure_loaded()
-        return self._ontology.get("relationships", {}).get(rel)
+        rels = self._ontology.get("relationships", {})
+        if isinstance(rels, dict):
+            return rels.get(rel)
+        if isinstance(rels, list):
+            for item in rels:
+                if not isinstance(item, dict):
+                    continue
+                rid = item.get("id")
+                if rid == rel:
+                    return item
+        return None
 
     def all_relationships(self) -> list[str]:
         self._ensure_loaded()
-        return list(self._ontology.get("relationships", {}).keys())
+        rels = self._ontology.get("relationships", {})
+        if isinstance(rels, dict):
+            return list(rels.keys())
+        if isinstance(rels, list):
+            return [r.get("id") for r in rels if isinstance(r, dict) and r.get("id")]
+        return []
 
     def extract_tag_cloud(self) -> dict[str, int]:
         self._ensure_loaded()
@@ -183,7 +213,7 @@ class OntologyEngine:
 
     def validate_repos_against_ontology(self) -> list[str]:
         self._ensure_loaded()
-        known_roles = set(self._ontology.get("roles", {}).keys())
+        known_roles = set(self.all_roles())
         warnings: list[str] = []
         for repo_id, repo in self._repos.items():
             role = repo.get("role")
