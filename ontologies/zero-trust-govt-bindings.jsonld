@@ -1,0 +1,430 @@
+{
+  "@context": {
+    "@vocab": "https://sociosphere.example.org/ontology/zero-trust#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "nist": "https://csrc.nist.gov/ns/800-53/rev5#",
+    "fips": "https://csrc.nist.gov/ns/fips#",
+    "schema": "https://schema.org/",
+    "zt": "https://sociosphere.example.org/ontology/zero-trust#",
+    "label": "rdfs:label",
+    "comment": "rdfs:comment"
+  },
+  "@graph": [
+    {
+      "@id": "zt:ZeroTrustBindingCatalog",
+      "@type": "zt:BindingCatalog",
+      "label": "Sociosphere Zero-Trust Government Binding Catalog",
+      "comment": "Authoritative catalog of zero-trust interaction patterns for the sociosphere workspace controller, per NIST SP 800-207 and NIST SP 800-53 Rev. 5.",
+      "schema:version": "1.0.0",
+      "schema:dateModified": {
+        "@value": "2026-04-05",
+        "@type": "xsd:date"
+      },
+      "schema:author": "SocioProphet/sociosphere",
+      "zt:referencedStandards": [
+        "https://csrc.nist.gov/publications/detail/sp/800-207",
+        "https://csrc.nist.gov/publications/detail/sp/800-53/rev-5",
+        "https://csrc.nist.gov/publications/detail/sp/800-88",
+        "https://tools.ietf.org/html/rfc8446",
+        "https://tools.ietf.org/html/rfc3161"
+      ],
+      "zt:containsBinding": [
+        { "@id": "zt:ManifestFetchBinding" },
+        { "@id": "zt:BuildExecutionBinding" }
+      ]
+    },
+
+    {
+      "@id": "zt:ManifestFetchBinding",
+      "@type": "zt:InteractionBinding",
+      "label": "Manifest Fetch Binding",
+      "comment": "Read-only zero-trust binding for workspace manifest fetch operations. Enforces OIDC authentication and cryptographic signature verification. Classified as low-risk / read-only.",
+      "zt:operationType": "read-only",
+      "zt:riskLevel": "low",
+      "zt:trustLevel": "zero-trust",
+
+      "zt:authenticationRequirements": {
+        "@type": "zt:AuthenticationSpec",
+        "zt:primaryMethod": "OIDC",
+        "zt:oidcRequirements": {
+          "@type": "zt:OIDCSpec",
+          "zt:minimumAcrValues": "urn:mace:incommon:iap:bronze",
+          "zt:tokenMaxAgeSeconds": {
+            "@value": "900",
+            "@type": "xsd:integer"
+          },
+          "zt:requiredClaims": ["sub", "iss", "aud", "exp", "iat"],
+          "zt:signingAlgorithm": "ES256",
+          "zt:issuerPinned": true
+        },
+        "zt:mfaRequired": false,
+        "zt:cryptographicSignatureRequired": true,
+        "zt:signatureAlgorithm": "ECDSA-P256",
+        "zt:signatureHashAlgorithm": "SHA-256"
+      },
+
+      "zt:transportRequirements": {
+        "@type": "zt:TransportSpec",
+        "zt:protocol": "TLS",
+        "zt:minimumTLSVersion": "1.3",
+        "zt:cipherSuites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_CHACHA20_POLY1305_SHA256"
+        ],
+        "zt:mtlsRequired": false,
+        "zt:certificatePinning": false,
+        "zt:reference": "https://tools.ietf.org/html/rfc8446"
+      },
+
+      "zt:rateLimiting": {
+        "@type": "zt:RateLimitSpec",
+        "zt:requestsPerMinute": {
+          "@value": "60",
+          "@type": "xsd:integer"
+        },
+        "zt:requestsPerHour": {
+          "@value": "1000",
+          "@type": "xsd:integer"
+        },
+        "zt:burstAllowed": {
+          "@value": "10",
+          "@type": "xsd:integer"
+        },
+        "zt:rateLimitScope": "per-subject-per-resource"
+      },
+
+      "zt:temporalConstraints": {
+        "@type": "zt:TemporalSpec",
+        "zt:tokenMaxAgeSeconds": {
+          "@value": "900",
+          "@type": "xsd:integer"
+        },
+        "zt:clockSkewToleranceSeconds": {
+          "@value": "30",
+          "@type": "xsd:integer"
+        },
+        "zt:sessionMaxDurationSeconds": {
+          "@value": "3600",
+          "@type": "xsd:integer"
+        }
+      },
+
+      "zt:auditRequirements": {
+        "@type": "zt:AuditSpec",
+        "zt:auditLevel": "standard",
+        "zt:immutableStorage": true,
+        "zt:wormCompliant": true,
+        "zt:hashChainRequired": true,
+        "zt:hashAlgorithm": "SHA-256",
+        "zt:rfcTimestampRequired": false,
+        "zt:retentionYears": {
+          "@value": "3",
+          "@type": "xsd:integer"
+        },
+        "zt:auditFields": [
+          "event_id",
+          "timestamp",
+          "actor.sub",
+          "actor.iss",
+          "resource",
+          "action",
+          "outcome",
+          "previous_hash",
+          "record_hash"
+        ],
+        "zt:storageReference": "NIST SP 800-88 Rev. 1"
+      },
+
+      "zt:nist80053Controls": [
+        {
+          "@id": "nist:AC-2",
+          "label": "Account Management",
+          "comment": "OIDC subject claim maps to a provisioned account. Account lifecycle events are audited."
+        },
+        {
+          "@id": "nist:AC-3",
+          "label": "Access Enforcement",
+          "comment": "RBAC policy derived from OIDC roles claim enforces read-only access to manifest resources."
+        },
+        {
+          "@id": "nist:IA-2",
+          "label": "Identification and Authentication (Organizational Users)",
+          "comment": "OIDC authentication with pinned issuer satisfies IA-2 for read-only operations."
+        },
+        {
+          "@id": "nist:AU-2",
+          "label": "Event Logging",
+          "comment": "Manifest fetch events are logged with actor identity, resource, outcome, and timestamp."
+        },
+        {
+          "@id": "nist:SC-8",
+          "label": "Transmission Confidentiality and Integrity",
+          "comment": "TLS 1.3 with AEAD cipher suite protects all manifest fetch traffic."
+        },
+        {
+          "@id": "nist:SC-12",
+          "label": "Cryptographic Key Establishment and Management",
+          "comment": "OIDC token signing keys and TLS certificates are managed per SP 800-57."
+        }
+      ]
+    },
+
+    {
+      "@id": "zt:BuildExecutionBinding",
+      "@type": "zt:InteractionBinding",
+      "label": "Build Execution Binding",
+      "comment": "Critical zero-trust binding for workspace build execution operations. Enforces OIDC + MFA + cryptographic binding. Classified as critical / write-execute. Produces immutable audit records with RFC 3161 timestamps and non-repudiation signatures.",
+      "zt:operationType": "execute",
+      "zt:riskLevel": "critical",
+      "zt:trustLevel": "zero-trust",
+
+      "zt:authenticationRequirements": {
+        "@type": "zt:AuthenticationSpec",
+        "zt:primaryMethod": "OIDC",
+        "zt:oidcRequirements": {
+          "@type": "zt:OIDCSpec",
+          "zt:minimumAcrValues": "urn:mace:incommon:iap:silver",
+          "zt:tokenMaxAgeSeconds": {
+            "@value": "300",
+            "@type": "xsd:integer"
+          },
+          "zt:requiredClaims": ["sub", "iss", "aud", "exp", "iat", "acr", "amr"],
+          "zt:signingAlgorithm": "ES256",
+          "zt:issuerPinned": true
+        },
+        "zt:mfaRequired": true,
+        "zt:mfaMethods": [
+          {
+            "@type": "zt:MFAMethod",
+            "zt:methodType": "TOTP",
+            "zt:standard": "RFC 6238",
+            "zt:hashAlgorithm": "HMAC-SHA-256",
+            "zt:timeStepSeconds": {
+              "@value": "30",
+              "@type": "xsd:integer"
+            }
+          },
+          {
+            "@type": "zt:MFAMethod",
+            "zt:methodType": "hardware-token",
+            "zt:standard": "FIDO2/WebAuthn",
+            "zt:attestationRequired": true
+          }
+        ],
+        "zt:cryptographicSignatureRequired": true,
+        "zt:signatureAlgorithm": "ECDSA-P256",
+        "zt:signatureHashAlgorithm": "SHA-256",
+        "zt:cryptographicBindingSpec": {
+          "@type": "zt:CryptoBindingSpec",
+          "zt:bindingType": "request-signing",
+          "zt:signingKeyLocation": "HSM",
+          "zt:signingKeyAlgorithm": "ECDSA-P256",
+          "zt:signedFields": [
+            "actor.sub",
+            "resource",
+            "action",
+            "timestamp",
+            "request_nonce"
+          ],
+          "zt:nonceRequired": true,
+          "zt:nonceLengthBytes": {
+            "@value": "32",
+            "@type": "xsd:integer"
+          }
+        }
+      },
+
+      "zt:transportRequirements": {
+        "@type": "zt:TransportSpec",
+        "zt:protocol": "TLS",
+        "zt:minimumTLSVersion": "1.3",
+        "zt:cipherSuites": [
+          "TLS_AES_256_GCM_SHA384",
+          "TLS_CHACHA20_POLY1305_SHA256"
+        ],
+        "zt:mtlsRequired": true,
+        "zt:mtlsCertificateAlgorithm": "ECDSA-P256",
+        "zt:certificatePinning": true,
+        "zt:reference": "https://tools.ietf.org/html/rfc8446"
+      },
+
+      "zt:rateLimiting": {
+        "@type": "zt:RateLimitSpec",
+        "zt:requestsPerMinute": {
+          "@value": "5",
+          "@type": "xsd:integer"
+        },
+        "zt:requestsPerHour": {
+          "@value": "50",
+          "@type": "xsd:integer"
+        },
+        "zt:burstAllowed": {
+          "@value": "2",
+          "@type": "xsd:integer"
+        },
+        "zt:rateLimitScope": "per-subject-per-resource"
+      },
+
+      "zt:temporalConstraints": {
+        "@type": "zt:TemporalSpec",
+        "zt:tokenMaxAgeSeconds": {
+          "@value": "300",
+          "@type": "xsd:integer"
+        },
+        "zt:clockSkewToleranceSeconds": {
+          "@value": "10",
+          "@type": "xsd:integer"
+        },
+        "zt:sessionMaxDurationSeconds": {
+          "@value": "1800",
+          "@type": "xsd:integer"
+        },
+        "zt:reAuthRequiredAfterSeconds": {
+          "@value": "900",
+          "@type": "xsd:integer"
+        }
+      },
+
+      "zt:auditRequirements": {
+        "@type": "zt:AuditSpec",
+        "zt:auditLevel": "critical",
+        "zt:immutableStorage": true,
+        "zt:wormCompliant": true,
+        "zt:hashChainRequired": true,
+        "zt:hashAlgorithm": "SHA-256",
+        "zt:rfcTimestampRequired": true,
+        "zt:rfcTimestampStandard": "RFC 3161",
+        "zt:nonRepudiationRequired": true,
+        "zt:nonRepudiationMethod": "ECDSA-P256 digital signature over audit record",
+        "zt:retentionYears": {
+          "@value": "7",
+          "@type": "xsd:integer"
+        },
+        "zt:auditFields": [
+          "event_id",
+          "timestamp",
+          "timestamp_tsa",
+          "actor.sub",
+          "actor.iss",
+          "actor.mfa_method",
+          "resource",
+          "action",
+          "outcome",
+          "request_nonce",
+          "artifact_digest",
+          "previous_hash",
+          "record_hash",
+          "signature"
+        ],
+        "zt:storageReference": "NIST SP 800-88 Rev. 1"
+      },
+
+      "zt:nist80053Controls": [
+        {
+          "@id": "nist:AC-2",
+          "label": "Account Management",
+          "comment": "Build execution is only permitted to accounts with the build-executor role; provisioning is audited."
+        },
+        {
+          "@id": "nist:AC-3",
+          "label": "Access Enforcement",
+          "comment": "RBAC enforces that only subjects with build-executor role may invoke this binding."
+        },
+        {
+          "@id": "nist:IA-2",
+          "label": "Identification and Authentication",
+          "comment": "OIDC authentication with MFA (TOTP or hardware token) is required for all build executions."
+        },
+        {
+          "@id": "nist:IA-5",
+          "label": "Authenticator Management",
+          "comment": "TOTP secrets and hardware token attestation certificates are managed per SP 800-57; rotation enforced annually."
+        },
+        {
+          "@id": "nist:AU-2",
+          "label": "Event Logging",
+          "comment": "Build start, completion, failure, artifact digest, and actor identity are logged."
+        },
+        {
+          "@id": "nist:AU-12",
+          "label": "Audit Record Generation",
+          "comment": "Structured JSON audit records with hash chain and RFC 3161 timestamp are generated for every build execution event."
+        },
+        {
+          "@id": "nist:SC-7",
+          "label": "Boundary Protection",
+          "comment": "Build execution endpoint is accessible only through the mTLS-enforced service mesh; no direct external access."
+        },
+        {
+          "@id": "nist:SC-12",
+          "label": "Cryptographic Key Establishment and Management",
+          "comment": "Build signing keys are HSM-resident ECDSA-P256 keys managed per SP 800-57 key lifecycle."
+        }
+      ]
+    },
+
+    {
+      "@id": "zt:InteractionBinding",
+      "@type": "rdfs:Class",
+      "label": "Zero-Trust Interaction Binding",
+      "comment": "Abstract class representing a zero-trust interaction pattern between a subject and a resource in the sociosphere workspace controller."
+    },
+
+    {
+      "@id": "zt:AuthenticationSpec",
+      "@type": "rdfs:Class",
+      "label": "Authentication Specification",
+      "comment": "Defines the authentication requirements for a zero-trust interaction binding."
+    },
+
+    {
+      "@id": "zt:AuditSpec",
+      "@type": "rdfs:Class",
+      "label": "Audit Specification",
+      "comment": "Defines the audit trail requirements for a zero-trust interaction binding, per NIST SP 800-88."
+    },
+
+    {
+      "@id": "zt:TransportSpec",
+      "@type": "rdfs:Class",
+      "label": "Transport Specification",
+      "comment": "Defines the network transport security requirements for a zero-trust interaction binding."
+    },
+
+    {
+      "@id": "zt:RateLimitSpec",
+      "@type": "rdfs:Class",
+      "label": "Rate Limit Specification",
+      "comment": "Defines the rate limiting policy for a zero-trust interaction binding."
+    },
+
+    {
+      "@id": "zt:TemporalSpec",
+      "@type": "rdfs:Class",
+      "label": "Temporal Specification",
+      "comment": "Defines the temporal constraints (token lifetime, session duration) for a zero-trust interaction binding."
+    },
+
+    {
+      "@id": "zt:MFAMethod",
+      "@type": "rdfs:Class",
+      "label": "Multi-Factor Authentication Method",
+      "comment": "Describes an accepted MFA method for a zero-trust interaction binding requiring step-up authentication."
+    },
+
+    {
+      "@id": "zt:CryptoBindingSpec",
+      "@type": "rdfs:Class",
+      "label": "Cryptographic Binding Specification",
+      "comment": "Defines the cryptographic request-signing requirements that bind the request to the authenticated actor's key material."
+    },
+
+    {
+      "@id": "zt:BindingCatalog",
+      "@type": "rdfs:Class",
+      "label": "Binding Catalog",
+      "comment": "A named collection of zero-trust interaction bindings for a specific system or deployment context."
+    }
+  ]
+}

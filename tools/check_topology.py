@@ -92,21 +92,29 @@ def check_no_self_dependency(repos: list[dict]) -> list[str]:
 
 
 def check_third_party_pinned(repos: list[dict], lock: dict) -> list[str]:
-    """Rule 3: third_party entries must be pinned to exact revs in the lock."""
+    """Rule 3: third_party and protocol-submodule entries must be pinned to exact revs in the lock."""
     lock_index = {lr["name"]: lr for lr in lock.get("repos", [])}
     violations: list[str] = []
+    # Submodule paths tell us which repos are pinned as submodules
+    submodule_paths = {m.get("path", "") for m in parse_gitmodules(GITMODULES)}
     for r in repos:
-        if r.get("role") != "third_party":
+        role = r.get("role")
+        if role not in ("third_party", "protocol"):
             continue
         if not r.get("url"):
             continue  # local-only, not verifiable
+        # For protocol repos, only enforce pinning if they're also a submodule
+        if role == "protocol":
+            local_path = r.get("local_path", "")
+            if not any(local_path.startswith(sp.rstrip("/")) for sp in submodule_paths if sp):
+                continue
         lr = lock_index.get(r["name"])
         if lr is None:
             violations.append(f"UNTRACKED-THIRD-PARTY {r['name']}: not in lock file")
             continue
         if not lr.get("rev"):
             violations.append(
-                f"UNPINNED-THIRD-PARTY {r['name']}: third_party entry has no rev in lock"
+                f"UNPINNED-THIRD-PARTY {r['name']}: {role} entry has no rev in lock"
             )
     return violations
 

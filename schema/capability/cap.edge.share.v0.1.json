@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "cap.edge.share@0.1",
+  "type": "object",
+  "required": ["capability", "version", "inputs", "outputs"],
+  "properties": {
+    "capability": { "const": "cap.edge.share" },
+    "version": { "const": "0.1" },
+    "inputs": {
+      "type": "object",
+      "required": ["peer"],
+      "properties": {
+        "peer": { "type": "string", "description": "Airshare peer username/handle." },
+        "send": {
+          "type": "object",
+          "properties": {
+            "paths": { "type": "array", "items": { "type": "string" } },
+            "clipboard_text": { "type": "string" }
+          }
+        },
+        "receive": {
+          "type": "object",
+          "properties": {
+            "save_dir": { "type": "string" },
+            "clipboard_copy": { "type": "boolean", "default": false }
+          }
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "required": ["receipt_schema"],
+      "properties": { "receipt_schema": { "type": "string" } }
+    }
+  }
+}

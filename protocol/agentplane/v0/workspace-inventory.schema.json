@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "WorkspaceInventoryArtifact",
+  "type": "object",
+  "required": ["kind", "workspace", "generatedAt", "manifestDigest", "lockDigest", "repos"],
+  "properties": {
+    "kind": { "const": "WorkspaceInventoryArtifact" },
+    "workspace": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "manifestDigest": { "type": "string" },
+    "lockDigest": { "type": "string" },
+    "runnerVersion": { "type": "string" },
+    "repos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "role", "localPath", "status", "lockDrift"],
+        "properties": {
+          "name": { "type": "string" },
+          "role": { "type": "string" },
+          "localPath": { "type": "string" },
+          "url": { "type": ["string", "null"] },
+          "ref": { "type": ["string", "null"] },
+          "rev": { "type": ["string", "null"] },
+          "headRev": { "type": ["string", "null"] },
+          "status": { "type": "string" },
+          "lockDrift": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

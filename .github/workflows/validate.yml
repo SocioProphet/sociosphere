@@ -4,16 +4,16 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -21,6 +21,11 @@ jobs:
           node-version: '20'
           cache: 'npm'
           cache-dependency-path: apps/ui-workbench/package-lock.json
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
       - name: Runner smoke test (list)
         run: python3 tools/runner/runner.py list
@@ -34,8 +39,29 @@ jobs:
       - name: Topology check
         run: python3 tools/check_topology.py
 
+      - name: UI install
+        run: make ui-install
+
       - name: UI check
         run: make ui-check
 
       - name: Standards validation
         run: make validate-standards
+
+  registry:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Registry validate (ontology + cycles)
+        run: make registry-validate

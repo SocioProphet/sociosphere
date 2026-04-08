@@ -2,195 +2,231 @@
 name = "sociosphere"
 version = "0.1"
 
-# Manifest for the SocioProphet workspace controller.
+# NOTE: This manifest supports both local materialized repos (local_path)
+# and remote repos (url + ref/rev). The lock file resolves remote inputs.
+# Registry of all 53 ecosystem repos: registry/canonical-repos.yaml
+# Merge order for open PRs: governance/MERGE-ORDER.md
 # Fields:
-#   name          – stable identifier (underscores; maps to lock entries)
-#   role          – component | adapter | third_party | governance | docs | tool
-#   url           – canonical GitHub HTTPS URL (omit for local-only repos)
-#   ref           – branch or tag to track (resolved to rev in the lock)
-#   rev           – exact commit SHA (overrides ref; used for third_party pins)
+#   name          – stable identifier
+#   role          – component | adapter | tool | protocol | execution-plane |
+#                   library | ontology | topic-pack | security | standards |
+#                   replay | docs
+#   url           – canonical GitHub HTTPS URL
+#   ref           – branch or tag to track
+#   rev           – exact commit SHA (overrides ref; pinned in lock)
 #   local_path    – path inside this workspace after materialization
 #   license_hint  – non-authoritative; used by supply-chain policy checks
 #   entry         – optional runtime metadata (kind, module, etc.)
 #   required_capabilities – adapter-only capability declarations
 
-# ---------------------------------------------------------------------------
-# Components – independently developed services / libraries / CLIs
-# ---------------------------------------------------------------------------
+# ── Control-plane tools ──────────────────────────────────────────────────────
+
+[[repos]]
+name = "workspace_inventory"
+role = "tool"
+url = "https://github.com/SocioProphet/workspace-inventory"
+ref = "main"
+license_hint = "MIT"
+
+# ── Components (materialized locally) ────────────────────────────────────────
 
 [[repos]]
 name = "prophet_cli"
 role = "component"
-url  = "https://github.com/SocioProphet/prophet-platform"
-ref  = "main"
-local_path   = "components/prophet_cli"
+local_path = "components/prophet_cli"
+url = "https://github.com/SocioProphet/prophet-platform"
+ref = "main"
 license_hint = "MIT"
 entry = { kind = "go", module = "./" }
 
 [[repos]]
 name = "sourceos_a2a_mcp_bootstrap"
 role = "component"
-url  = "https://github.com/SocioProphet/sourceos-a2a-mcp-bootstrap"
-ref  = "main"
-local_path   = "components/sourceos_a2a_mcp_bootstrap"
+local_path = "components/sourceos_a2a_mcp_bootstrap"
+url = "https://github.com/SocioProphet/sourceos-a2a-mcp-bootstrap"
+ref = "main"
 license_hint = "MIT"
 
 [[repos]]
 name = "socioprophet_web"
 role = "component"
-url  = "https://github.com/SocioProphet/socioprophet"
-ref  = "main"
-local_path   = "components/socioprophet-web"
+local_path = "components/socioprophet-web"
+url = "https://github.com/SocioProphet/socioprophet"
+ref = "main"
 license_hint = "MIT"
-
-[[repos]]
-name = "human_digital_twin"
-role = "component"
-url  = "https://github.com/SocioProphet/human-digital-twin"
-ref  = "main"
-local_path   = "components/human_digital_twin"
-license_hint = "MIT"
-
-[[repos]]
-name = "ontogenesis"
-role = "component"
-url  = "https://github.com/SocioProphet/ontogenesis"
-ref  = "main"
-local_path   = "components/ontogenesis"
-license_hint = "MIT"
-
-[[repos]]
-name = "agentplane"
-role = "component"
-url  = "https://github.com/SocioProphet/agentplane"
-ref  = "main"
-local_path   = "components/agentplane"
-license_hint = "MIT"
-
-[[repos]]
-name = "new_hope"
-role = "component"
-url  = "https://github.com/SocioProphet/new-hope"
-ref  = "main"
-local_path   = "components/new-hope"
-license_hint = "MIT"
-
-[[repos]]
-name = "slash_topics"
-role = "component"
-url  = "https://github.com/SocioProphet/slash-topics"
-ref  = "main"
-local_path   = "components/slash-topics"
-license_hint = "MIT"
-
-# Local-only components (no upstream GitHub repo yet)
 
 [[repos]]
 name = "dev_api"
 role = "component"
 local_path = "components/dev-api"
+url = "https://github.com/SocioProphet/dev-api"
+ref = "main"
 
 [[repos]]
 name = "hdt_app"
 role = "component"
 local_path = "components/hdt_app"
-
-# ---------------------------------------------------------------------------
-# Adapters – execution-primitive backends (container, fs, deps, policy)
-# ---------------------------------------------------------------------------
+url = "https://github.com/SocioProphet/hdt_app"
+ref = "main"
 
 [[repos]]
-name = "mcp_a2a_zero_trust"
-role = "adapter"
-url  = "https://github.com/SocioProphet/mcp-a2a-zero-trust"
-ref  = "main"
-local_path   = "adapters/mcp-a2a-zero-trust"
+name = "human_digital_twin"
+role = "component"
+local_path = "components/human_digital_twin"
+url = "https://github.com/SocioProphet/human-digital-twin"
+ref = "main"
 license_hint = "MIT"
-required_capabilities = ["zero_trust", "a2a", "mcp"]
 
 [[repos]]
-name = "delivery_excellence_automation"
-role = "adapter"
-url  = "https://github.com/SocioProphet/delivery-excellence-automation"
-ref  = "main"
-local_path   = "adapters/delivery-excellence-automation"
+name = "ontogenesis"
+role = "component"
+local_path = "components/ontogenesis"
+url = "https://github.com/SocioProphet/ontogenesis"
+ref = "main"
 license_hint = "MIT"
-required_capabilities = ["rbac", "ci_validation", "routing"]
 
-# Local-only adapters
+# ── Protocol & transport ──────────────────────────────────────────────────────
+
+[[repos]]
+name = "tritrpc"
+role = "protocol"
+url = "https://github.com/SocioProphet/TriTRPC"
+ref = "main"
+local_path = "third_party/tritrpc"
+license_hint = "MIT"
+# rev is pinned in the lock; do NOT float on main for production
+
+[[repos]]
+name = "agentplane"
+role = "execution-plane"
+url = "https://github.com/SocioProphet/agentplane"
+ref = "main"
+local_path = "components/agentplane"
+license_hint = "MIT"
+
+[[repos]]
+name = "semantic_serdes"
+role = "library"
+url = "https://github.com/SocioProphet/semantic-serdes"
+ref = "main"
+local_path = "components/semantic_serdes"
+
+[[repos]]
+name = "cairnpath_mesh"
+role = "replay"
+url = "https://github.com/SocioProphet/cairnpath-mesh"
+ref = "main"
+local_path = "components/cairnpath_mesh"
+
+# ── Standards & governance ────────────────────────────────────────────────────
+
+[[repos]]
+name = "prophet_platform_standards"
+role = "standards"
+url = "https://github.com/SocioProphet/prophet-platform-standards"
+ref = "main"
+local_path = "components/prophet_platform_standards"
+
+[[repos]]
+name = "socioprophet_standards_storage"
+role = "standards"
+url = "https://github.com/SocioProphet/socioprophet-standards-storage"
+ref = "main"
+local_path = "components/socioprophet_standards_storage"
+
+[[repos]]
+name = "socioprophet_standards_knowledge"
+role = "standards"
+url = "https://github.com/SocioProphet/socioprophet-standards-knowledge"
+ref = "main"
+local_path = "components/socioprophet_standards_knowledge"
+
+# ── Data plane ────────────────────────────────────────────────────────────────
+
+[[repos]]
+name = "gaia_world_model"
+role = "ontology"
+url = "https://github.com/SocioProphet/gaia-world-model"
+ref = "main"
+local_path = "components/gaia_world_model"
+license_hint = "MIT"
+
+[[repos]]
+name = "slash_topics"
+role = "topic-pack"
+url = "https://github.com/SocioProphet/slash-topics"
+ref = "main"
+local_path = "components/slash_topics"
+license_hint = "MIT"
+
+# ── Adapters ──────────────────────────────────────────────────────────────────
 
 [[repos]]
 name = "cc"
 role = "adapter"
 local_path = "adapters/cc"
+url = "https://github.com/SocioProphet/cc"
+ref = "main"
 required_capabilities = ["container_exec", "fs_ops", "deps_inventory"]
 
 [[repos]]
 name = "configs"
 role = "adapter"
 local_path = "adapters/configs"
+url = "https://github.com/SocioProphet/configs"
+ref = "main"
 required_capabilities = ["policy", "defaults"]
 
-# ---------------------------------------------------------------------------
-# Governance – scope docs, ADRs, KPIs / OKRs, policy definitions
-# ---------------------------------------------------------------------------
+# ── Identity & security ────────────────────────────────────────────────────────
+
+[[repos]]
+name = "mcp_a2a_zero_trust"
+role = "security"
+url = "https://github.com/SocioProphet/mcp-a2a-zero-trust"
+ref = "main"
+local_path = "components/mcp_a2a_zero_trust"
+license_hint = "MIT"
+
+[[repos]]
+name = "new_hope"
+role = "component"
+url = "https://github.com/SocioProphet/new-hope"
+ref = "main"
+local_path = "components/new-hope"
+license_hint = "MIT"
+
+# ── Governance ────────────────────────────────────────────────────────────────
 
 [[repos]]
 name = "delivery_excellence"
-role = "governance"
-url  = "https://github.com/SocioProphet/delivery-excellence"
-ref  = "main"
-local_path   = "governance/delivery-excellence"
-license_hint = "MIT"
-
-# ---------------------------------------------------------------------------
-# Third-party – external dependencies pinned by exact rev
-# (submodule at third_party/tritrpc is the authoritative pin;
-#  this manifest entry keeps the lock in sync)
-# ---------------------------------------------------------------------------
-
-[[repos]]
-name = "tritrpc"
-role = "third_party"
-url  = "https://github.com/SocioProphet/TriTRPC"
-# rev is pinned in the lock; do NOT float on main
-rev  = "efc114b0132b61472d3abb29007441597bca0cfc"
-local_path   = "third_party/tritrpc"
-license_hint = "MIT"
-
-[[repos]]
-name = "gaia_world_model"
-role = "third_party"
-url  = "https://github.com/SocioProphet/gaia-world-model"
-ref  = "main"
-local_path   = "third_party/gaia-world-model"
-license_hint = "MIT"
-
-# ---------------------------------------------------------------------------
-# Tools – workspace-level tooling and inventory helpers
-# ---------------------------------------------------------------------------
-
-[[repos]]
-name = "workspace_inventory"
-role = "tool"
-url  = "https://github.com/SocioProphet/workspace-inventory"
-ref  = "main"
-local_path   = "tools/workspace-inventory"
-license_hint = "MIT"
-
-# ---------------------------------------------------------------------------
-# Docs – documentation sites and integration notes
-# ---------------------------------------------------------------------------
-
-[[repos]]
-name = "socioprophet_docs"
 role = "docs"
-url  = "https://github.com/SocioProphet/socioprophet-docs"
-ref  = "main"
-local_path   = "docs/socioprophet-docs"
+url = "https://github.com/SocioProphet/delivery-excellence"
+ref = "main"
+local_path = "docs/delivery-excellence"
 license_hint = "MIT"
+
+[[repos]]
+name = "delivery_excellence_automation"
+role = "adapter"
+url = "https://github.com/SocioProphet/delivery-excellence-automation"
+ref = "main"
+local_path = "adapters/delivery-excellence-automation"
+license_hint = "MIT"
+required_capabilities = ["rbac", "ci_validation", "routing"]
+
+# ── Docs ──────────────────────────────────────────────────────────────────────
 
 [[repos]]
 name = "socioprophet_integration"
 role = "docs"
 local_path = "components/socioprophet_integration"
+url = "https://github.com/SocioProphet/socioprophet_integration"
+ref = "main"
+
+[[repos]]
+name = "socioprophet_docs"
+role = "docs"
+url = "https://github.com/SocioProphet/socioprophet-docs"
+ref = "main"
+local_path = "docs/socioprophet-docs"
+license_hint = "MIT"
