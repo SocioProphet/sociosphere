@@ -1,22 +1,29 @@
+# Integration Status
 
-## TritRPC + Trit-to-Trust
-- Added as submodules: third_party/tritrpc and third_party/trit-to-trust
-- Next: pin versions/tags + wire into manifest/workspace.toml + reference from protocol/ docs
+This file is the **single current-state ledger** for cross-repo integration
+facts that were previously repeated in multiple sections.
 
-## TritRPC + Trit-to-Trust (pinned)
-- tritrpc: tag v0.1.0
-- trit-to-trust: tag v0.1.0
+## TritRPC integration (current)
 
-## TritRPC + Trit-to-Trust (pinned)
-- tritrpc: v0.1.1 @ 6091e55
-- trit-to-trust:  v0.1.1 @ 68186ab
-- Policy: do not move tags; bump patch tags for cleanup-only changes.
+- Canonical upstream: `https://github.com/SocioProphet/TriTRPC`
+- Workspace entry: `manifest/workspace.toml` repo `tritrpc`
+- Materialization path: `third_party/tritrpc`
+- Dependency status: active workspace dependency
 
-## TritRPC core (repin + de-commingle)
-- TritRPC is a core project; pinned to v0.1.2
-- Trit-to-Trust repo is no longer a workspace dependency (notes are folded into TritRPC/docs)
+## Trit-to-Trust integration (current)
 
-## TritRPC
-- TritRPC is a core standalone project: SocioProphet/tritrpc
-- Workspace pins TritRPC by tag via submodule: third_party/tritrpc (v0.1.2)
-- Trit-to-Trust sources were folded into TritRPC docs; workspace no longer depends on trit-to-trust as a submodule.
+- Workspace dependency status: **removed**
+- Notes and related content were folded into TritRPC documentation.
+
+## Historical sequence (resolved)
+
+1. TritRPC + Trit-to-Trust were initially tracked together.
+2. Both were temporarily pinned during migration.
+3. Workspace was de-commingled to keep TritRPC as the only active dependency.
+4. Trit-to-Trust was retired from workspace dependency lists.
+
+## Interpretation rule
+
+If any other document references older Trit-to-Trust workspace dependencies,
+treat that as historical context only. Current behavior is defined by
+`manifest/workspace.toml` and the lock file.
