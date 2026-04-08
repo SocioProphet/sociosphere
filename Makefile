@@ -10,7 +10,7 @@ ui-preflight:
 	./tools/ui-preflight.sh
 
 ui-install:
-	cd $(UI_DIR) && npm install && npm install -D vue-tsc typescript
+	cd $(UI_DIR) && npm ci
 
 ui-build:
 	cd $(UI_DIR) && npm run build
@@ -76,4 +76,3 @@ merge-order:
 
 workspace-check: validate registry-validate compliance-check
 	@echo "OK: workspace-check passed"
-
