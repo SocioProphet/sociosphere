@@ -27,22 +27,34 @@ from typing import Any, Iterable
 
 try:
     import tomllib  # py>=3.11
-except Exception as e:  # pragma: no cover
-    print("ERROR: Python 3.11+ required (tomllib missing)", file=sys.stderr)
-    raise
+except ModuleNotFoundError:  # pragma: no cover
+    import tomli as tomllib  # py<3.11 fallback
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_PATH = ROOT / "manifest" / "workspace.toml"
 LOCK_PATH = ROOT / "manifest" / "workspace.lock.json"
 ARTIFACTS_ROOT = ROOT / "artifacts" / "workspace"
-VALID_ROLES = {"component", "adapter", "third_party", "docs"}
+VALID_ROLES = {
+    "adapter",
+    "component",
+    "docs",
+    "execution-plane",
+    "library",
+    "ontology",
+    "protocol",
+    "replay",
+    "security",
+    "standards",
+    "tool",
+    "topic-pack",
+}
 
 
 @dataclass(frozen=True)
 class Repo:
     name: str
     role: str
-    local_path: Path
+    local_path: Path | None
     url: str | None = None
     ref: str | None = None
     rev: str | None = None
@@ -78,7 +90,8 @@ def load_manifest() -> list[Repo]:
     data = tomllib.loads(MANIFEST_PATH.read_text("utf-8"))
     repos: list[Repo] = []
     for r in data.get("repos", []):
-        lp = ROOT / r["local_path"]
+        lp_raw = r.get("local_path")
+        lp = (ROOT / lp_raw) if lp_raw else None
         repos.append(
             Repo(
                 name=r["name"],
@@ -105,11 +118,13 @@ def locked_rev(lock: dict[str, Any], name: str) -> str | None:
     return None
 
 
-def repo_is_git(p: Path) -> bool:
+def repo_is_git(p: Path | None) -> bool:
+    if p is None:
+        return False
     return (p / ".git").exists()
 
 
-def repo_head_rev(p: Path) -> str | None:
+def repo_head_rev(p: Path | None) -> str | None:
     if not repo_is_git(p):
         return None
     try:
@@ -118,7 +133,9 @@ def repo_head_rev(p: Path) -> str | None:
         return None
 
 
-def materialized_status(p: Path) -> str:
+def materialized_status(p: Path | None) -> str:
+    if p is None:
+        return "REMOTE"
     if not p.exists():
         return "MISSING"
     if repo_is_git(p):
@@ -154,7 +171,7 @@ def inventory_payload(repos: list[Repo], lock: dict[str, Any]) -> dict[str, Any]
             {
                 "name": r.name,
                 "role": r.role,
-                "localPath": str(r.local_path),
+                "localPath": str(r.local_path) if r.local_path else None,
                 "url": r.url,
                 "ref": r.ref,
                 "rev": r.rev,
@@ -180,7 +197,7 @@ def cmd_list(args: argparse.Namespace) -> int:
     errs = role_errors(repos)
 
     for r in repos:
-        head = repo_head_rev(r.local_path) if r.local_path.exists() else None
+        head = repo_head_rev(r.local_path) if r.local_path and r.local_path.exists() else None
         lrev = locked_rev(lock, r.name)
         status = materialized_status(r.local_path)
         drift = ""
@@ -212,6 +229,13 @@ def cmd_fetch(args: argparse.Namespace) -> int:
         return 2
 
     for r in repos:
+        if r.local_path is None:
+            if r.url:
+                print(f"SKIP {r.name}: remote-only entry (no local_path)")
+            else:
+                print(f"SKIP {r.name}: no local_path and no url", file=sys.stderr)
+            continue
+
         r.local_path.parent.mkdir(parents=True, exist_ok=True)
 
         if r.local_path.exists():
@@ -340,6 +364,25 @@ def cmd_run(args: argparse.Namespace) -> int:
         started = now_iso()
         stdout_ref = None
         stderr_ref = None
+        if r.local_path is None:
+            print(f"REMOTE-ONLY {r.name}: no local_path to run '{args.task}'", file=sys.stderr)
+            rc = 2
+            payload = {
+                "kind": "TaskRunArtifact",
+                "generatedAt": now_iso(),
+                "repo": {"name": r.name, "role": r.role},
+                "task": args.task,
+                "contractType": "none",
+                "command": [],
+                "startedAt": started,
+                "finishedAt": now_iso(),
+                "exitCode": 2,
+                "stdoutRef": stdout_ref,
+                "stderrRef": stderr_ref,
+            }
+            write_json(run_dir / f"task-run-{r.name}.json", payload)
+            continue
+
         if not r.local_path.exists():
             print(f"MISSING {r.name}: {r.local_path} (run fetch first)", file=sys.stderr)
             rc = 2
