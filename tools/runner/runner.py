@@ -48,6 +48,19 @@ VALID_ROLES = {
     "tool",
     "topic-pack",
 }
+TOPOLOGY_PREFIXES = {
+    "adapter": ("adapters/",),
+    "docs": ("components/", "docs/"),
+    "execution-plane": ("components/",),
+    "library": ("components/",),
+    "ontology": ("components/",),
+    "protocol": ("third_party/", "protocol/", "components/"),
+    "replay": ("components/",),
+    "security": ("components/",),
+    "standards": ("components/", "standards/"),
+    "topic-pack": ("components/",),
+    "component": ("components/",),
+}
 
 
 @dataclass(frozen=True)
@@ -151,6 +164,22 @@ def role_errors(repos: Iterable[Repo]) -> list[str]:
     return errs
 
 
+def topology_errors(repos: Iterable[Repo]) -> list[str]:
+    errs: list[str] = []
+    for r in repos:
+        if r.local_path is None:
+            continue
+        allowed = TOPOLOGY_PREFIXES.get(r.role)
+        if not allowed:
+            continue
+        rel = r.local_path.relative_to(ROOT).as_posix()
+        if not any(rel.startswith(prefix) for prefix in allowed):
+            errs.append(
+                f"{r.name}: role '{r.role}' path '{rel}' violates topology (allowed prefixes: {', '.join(allowed)})"
+            )
+    return errs
+
+
 def artifact_run_dir() -> Path:
     run_dir = ARTIFACTS_ROOT / now_iso().replace(":", "-")
     run_dir.mkdir(parents=True, exist_ok=True)
@@ -194,7 +223,7 @@ def inventory_payload(repos: list[Repo], lock: dict[str, Any]) -> dict[str, Any]
 def cmd_list(args: argparse.Namespace) -> int:
     repos = load_manifest()
     lock = load_lock()
-    errs = role_errors(repos)
+    errs = role_errors(repos) + topology_errors(repos)
 
     for r in repos:
         head = repo_head_rev(r.local_path) if r.local_path and r.local_path.exists() else None
@@ -222,7 +251,7 @@ def cmd_list(args: argparse.Namespace) -> int:
 def cmd_fetch(args: argparse.Namespace) -> int:
     repos = load_manifest()
     lock = load_lock()
-    errs = role_errors(repos)
+    errs = role_errors(repos) + topology_errors(repos)
     if errs:
         for e in errs:
             print(f"ERROR: {e}", file=sys.stderr)
@@ -290,7 +319,7 @@ def iter_targets(repos: Iterable[Repo], only: list[str] | None, role: str | None
 def cmd_lock_verify(args: argparse.Namespace) -> int:
     repos = load_manifest()
     lock = load_lock()
-    msgs = role_errors(repos)
+    msgs = role_errors(repos) + topology_errors(repos)
     unresolved: list[str] = []
     drifted: list[str] = []
 

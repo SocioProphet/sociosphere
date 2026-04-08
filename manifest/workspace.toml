@@ -21,27 +21,37 @@ ref = "main"
 name = "prophet_cli"
 role = "component"
 local_path = "components/prophet_cli"
+url = "https://github.com/SocioProphet/prophet_cli"
+ref = "main"
 entry = { kind = "go", module = "./" }
 
 [[repos]]
 name = "sourceos_a2a_mcp_bootstrap"
 role = "component"
 local_path = "components/sourceos_a2a_mcp_bootstrap"
+url = "https://github.com/SocioProphet/sourceos_a2a_mcp_bootstrap"
+ref = "main"
 
 [[repos]]
 name = "socioprophet-web"
 role = "component"
 local_path = "components/socioprophet-web"
+url = "https://github.com/SocioProphet/socioprophet-web"
+ref = "main"
 
 [[repos]]
 name = "dev-api"
 role = "component"
 local_path = "components/dev-api"
+url = "https://github.com/SocioProphet/dev-api"
+ref = "main"
 
 [[repos]]
 name = "hdt_app"
 role = "component"
 local_path = "components/hdt_app"
+url = "https://github.com/SocioProphet/hdt_app"
+ref = "main"
 
 [[repos]]
 name = "human_digital_twin"
@@ -132,12 +142,16 @@ local_path = "components/slash_topics"
 name = "cc"
 role = "adapter"
 local_path = "adapters/cc"
+url = "https://github.com/SocioProphet/cc"
+ref = "main"
 required_capabilities = ["container_exec", "fs_ops", "deps_inventory"]
 
 [[repos]]
 name = "configs"
 role = "adapter"
 local_path = "adapters/configs"
+url = "https://github.com/SocioProphet/configs"
+ref = "main"
 required_capabilities = ["policy", "defaults"]
 
 # ── Identity & security ────────────────────────────────────────────────────────
@@ -155,4 +169,5 @@ local_path = "components/mcp_a2a_zero_trust"
 name = "socioprophet_integration"
 role = "docs"
 local_path = "components/socioprophet_integration"
-
+url = "https://github.com/SocioProphet/socioprophet_integration"
+ref = "main"

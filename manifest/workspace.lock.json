@@ -3,8 +3,8 @@
     "name": "sociosphere",
     "version": "0.1"
   },
-  "generated_at": "2026-04-06T00:00:00Z",
-  "_note": "Remote repos have null rev/tree_hash until 'runner fetch' is run against live GitHub refs. Local-path repos are resolved at build time.",
+  "generated_at": "2026-04-08T00:00:00Z",
+  "_note": "Lock refreshed with canonical repo URLs; rev/tree_hash remain null until a credentialed live fetch resolves remote refs.",
   "repos": [
     {
       "name": "workspace_inventory",
@@ -19,8 +19,8 @@
     {
       "name": "prophet_cli",
       "role": "component",
-      "url": null,
-      "ref": null,
+      "url": "https://github.com/SocioProphet/prophet_cli",
+      "ref": "main",
       "rev": null,
       "local_path": "components/prophet_cli",
       "tree_hash": null,
@@ -29,8 +29,8 @@
     {
       "name": "sourceos_a2a_mcp_bootstrap",
       "role": "component",
-      "url": null,
-      "ref": null,
+      "url": "https://github.com/SocioProphet/sourceos_a2a_mcp_bootstrap",
+      "ref": "main",
       "rev": null,
       "local_path": "components/sourceos_a2a_mcp_bootstrap",
       "tree_hash": null,
@@ -39,8 +39,8 @@
     {
       "name": "socioprophet-web",
       "role": "component",
-      "url": null,
-      "ref": null,
+      "url": "https://github.com/SocioProphet/socioprophet-web",
+      "ref": "main",
       "rev": null,
       "local_path": "components/socioprophet-web",
       "tree_hash": null,
@@ -49,8 +49,8 @@
     {
       "name": "dev-api",
       "role": "component",
-      "url": null,
-      "ref": null,
+      "url": "https://github.com/SocioProphet/dev-api",
+      "ref": "main",
       "rev": null,
       "local_path": "components/dev-api",
       "tree_hash": null,
@@ -59,8 +59,8 @@
     {
       "name": "hdt_app",
       "role": "component",
-      "url": null,
-      "ref": null,
+      "url": "https://github.com/SocioProphet/hdt_app",
+      "ref": "main",
       "rev": null,
       "local_path": "components/hdt_app",
       "tree_hash": null,
@@ -179,8 +179,8 @@
     {
       "name": "cc",
       "role": "adapter",
-      "url": null,
-      "ref": null,
+      "url": "https://github.com/SocioProphet/cc",
+      "ref": "main",
       "rev": null,
       "local_path": "adapters/cc",
       "tree_hash": null,
@@ -189,8 +189,8 @@
     {
       "name": "configs",
       "role": "adapter",
-      "url": null,
-      "ref": null,
+      "url": "https://github.com/SocioProphet/configs",
+      "ref": "main",
       "rev": null,
       "local_path": "adapters/configs",
       "tree_hash": null,
@@ -209,8 +209,8 @@
     {
       "name": "socioprophet_integration",
       "role": "docs",
-      "url": null,
-      "ref": null,
+      "url": "https://github.com/SocioProphet/socioprophet_integration",
+      "ref": "main",
       "rev": null,
       "local_path": "components/socioprophet_integration",
       "tree_hash": null,

@@ -29,13 +29,12 @@ jobs:
 
       - name: Protocol compatibility surface
         run: python3 tools/runner/runner.py protocol:test --json-out artifacts/workspace-ci/protocol-compatibility.json
-        run: python3 tools/runner/runner.v0.2.py list --json-out artifacts/workspace-ci/workspace-inventory.json
 
-      - name: Lock verification
-        run: python3 tools/runner/runner.v0.2.py lock-verify --json-out artifacts/workspace-ci/lock-verification.json
+      - name: Topology enforcement
+        run: python3 tools/runner/runner.py list --json-out artifacts/workspace-ci/workspace-topology.json
 
-      - name: Protocol compatibility surface
-        run: python3 tools/runner/runner.v0.2.py protocol:test --json-out artifacts/workspace-ci/protocol-compatibility.json
+      - name: Staged runner lock verification
+        run: python3 tools/runner/runner.v0.2.py lock-verify --json-out artifacts/workspace-ci/lock-verification-v0.2.json
 
       - name: Standards validation
         run: make validate-standards
