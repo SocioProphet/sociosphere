@@ -27,9 +27,6 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Python deps
-        run: python3 -m pip install -r requirements-dev.txt
-
       - name: UI install
         run: make ui-install
 
@@ -56,4 +53,3 @@ jobs:
 
       - name: Registry validate (ontology + cycles)
         run: make registry-validate
-
