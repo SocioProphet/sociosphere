@@ -761,6 +761,7 @@ def main() -> int:
 
     sp = sub.add_parser("inventory", help="Print supply-chain inventory (name/role/rev/license/url)")
     sp.add_argument("--json", action="store_true", help="Emit JSON instead of a table")
+    sp.add_argument("--output", default="-", metavar="FILE", help="Output file path (default: stdout)")
     sp.set_defaults(fn=cmd_inventory)
 
     sp = sub.add_parser("protocol:test", help="Run protocol fixture compatibility checks (stub surface)")
@@ -777,10 +778,6 @@ def main() -> int:
 
     sp = sub.add_parser("check-manifest", help="Validate manifest role/path naming conventions (P1)")
     sp.set_defaults(fn=cmd_check_manifest)
-
-    sp = sub.add_parser("inventory", help="Emit JSON inventory of workspace repos (P2)")
-    sp.add_argument("--output", default="-", metavar="FILE", help="Output file path (default: stdout)")
-    sp.set_defaults(fn=cmd_inventory)
 
     sp = sub.add_parser("sbom", help="Emit CycloneDX 1.4 JSON SBOM for the workspace (P2)")
     sp.add_argument("--output", default="-", metavar="FILE", help="Output file path (default: stdout)")

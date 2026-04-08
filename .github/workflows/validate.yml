@@ -28,25 +28,25 @@ jobs:
           cache-dependency-path: apps/ui-workbench/package-lock.json
 
       - name: Runner smoke test (list)
-        run: python3 tools/runner/runner.py list
+        run: python tools/runner/runner.py list
 
       - name: Runner check-manifest
-        run: python3 tools/runner/runner.py check-manifest
+        run: python tools/runner/runner.py check-manifest
 
       - name: Runner lock-verify
-        run: python3 tools/runner/runner.py lock-verify
+        run: python tools/runner/runner.py lock-verify
 
       - name: Runner smoke test (list)
-        run: python3 tools/runner/runner.py list
+        run: python tools/runner/runner.py list
 
       - name: Lock verify
-        run: python3 tools/runner/runner.py lock-verify
+        run: python tools/runner/runner.py lock-verify
 
       - name: Inventory
-        run: python3 tools/runner/runner.py inventory
+        run: python tools/runner/runner.py inventory
 
       - name: Topology check
-        run: python3 tools/check_topology.py
+        run: python tools/check_topology.py
 
       - name: UI install
         run: make ui-install
