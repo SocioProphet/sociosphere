@@ -1,0 +1,98 @@
+apiVersion: fog.stack/v0.1
+kind: FogReleaseLock
+metadata:
+  name: fog-knowledge-v0.1-lock
+  profile: knowledge
+  release: 0.1.0
+  date: '2026-04-06'
+packagingDecisions:
+  coreProfile: knowledge
+  externalized:
+  - ingress/gateway
+  - s3-compatible object storage
+  deferred:
+  - hybrid-ingestion-runner
+  - full content governance
+  - master data
+  bootstrap: argocd installed first, then Argo manages the rest
+artifacts:
+- id: argocd
+  kind: helm
+  repoURL: https://argoproj.github.io/argo-helm
+  chart: argo-cd
+  targetRevision: 9.4.16
+  appVersion: 3.3.5
+  bundleState: bundled-core
+  confidence: high
+- id: cert-manager
+  kind: helm
+  repoURL: oci://quay.io/jetstack/charts
+  chart: cert-manager
+  targetRevision: v1.20.0
+  appVersion: v1.20.0
+  bundleState: bundled-core
+  confidence: high
+- id: external-secrets
+  kind: helm
+  repoURL: https://charts.external-secrets.io
+  chart: external-secrets
+  targetRevision: 2.2.0
+  appVersion: 2.2.0
+  bundleState: bundled-core
+  confidence: medium
+- id: cloudnative-pg
+  kind: helm
+  repoURL: https://cloudnative-pg.github.io/charts
+  chart: cloudnative-pg
+  targetRevision: 0.28.0
+  appVersion: 1.29.0
+  bundleState: bundled-core
+  confidence: medium
+- id: trino
+  kind: helm
+  repoURL: https://trinodb.github.io/charts
+  chart: trino
+  targetRevision: 1.42.1
+  appVersion: '477'
+  bundleState: bundled-core
+  confidence: high
+- id: opensearch
+  kind: helm
+  repoURL: https://opensearch-project.github.io/helm-charts/
+  chart: opensearch
+  targetRevision: 2.37.0
+  appVersion: 2.x-track
+  bundleState: bundled-core
+  confidence: high
+- id: qdrant
+  kind: helm
+  repoURL: https://qdrant.to/helm
+  chart: qdrant
+  targetRevision: 1.16.3
+  appVersion: 1.16.3
+  bundleState: bundled-core
+  confidence: high
+- id: otel-collector
+  kind: helm
+  repoURL: https://open-telemetry.github.io/opentelemetry-helm-charts
+  chart: opentelemetry-collector
+  targetRevision: 0.147.1
+  appVersion: override-explicit-image
+  bundleState: bundled-core
+  confidence: medium
+- id: openmetadata
+  kind: helm
+  repoURL: https://helm.open-metadata.org
+  chart: openmetadata
+  targetRevision: 1.12.4
+  appVersion: 1.12.4
+  bundleState: bundled-core
+  confidence: high
+- id: kyverno
+  kind: helm
+  repoURL: https://kyverno.github.io/kyverno/
+  chart: kyverno
+  targetRevision: 3.7.0
+  appVersion: 1.17.0
+  bundleState: bundled-core
+  confidence: medium

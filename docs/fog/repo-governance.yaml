@@ -1,0 +1,24 @@
+rules:
+- rule: mirror_ibm_pack_count
+  decision: 7 Fog pack repos
+  reason: one-to-one strategic mapping
+- rule: do_not_count_shared_foundations_as_packs
+  decision:
+  - SocioProphet/sociosphere
+  - SocioProphet/TriTRPC
+  - SocioProphet/agentplane
+  - SocioProphet/socioprophet
+  reason: substrate/protocol/docs are cross-pack assets
+- rule: fog_stack_for_data_home
+  decision: SocioProphet/fog-pack-data
+  reason: current codex and release artifacts belong in the data pack first
+- rule: creation_sequence
+  decision:
+  - fog-pack-data
+  - fog-pack-integration
+  - fog-pack-business-automation
+  - fog-pack-aiops
+  - fog-pack-applications
+  - fog-pack-network-automation
+  - fog-pack-security
+  reason: follow maturity and avoid sprawl

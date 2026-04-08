@@ -22,7 +22,12 @@ yarn-error.log*
 # Coverage / test artifacts
 coverage/
 *.lcov
+.pytest_cache/
 
 # Local env
 .env
 .env.*
+
+# Runtime metrics / logs (generated at runtime — not committed)
+metrics/*.jsonl
+metrics/registry-metrics.json

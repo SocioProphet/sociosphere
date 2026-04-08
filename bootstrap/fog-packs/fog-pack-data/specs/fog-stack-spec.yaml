@@ -1,0 +1,22 @@
+name: Fog Stack for Data
+version: '0.1'
+definition: Thin, open, self-hostable data/knowledge/action distribution inspired
+  by Cloud Pak for Data but re-scoped for modular deployment and operator clarity.
+mission: Give a solo operator or small team a sane path to deploy governed data, retrieval,
+  agents, and trusted action without suite bloat.
+core_principles:
+- default_minimalism
+- open_protocol_seams
+- gitops_first
+- policy_before_side_effect
+- modular_optional_surfaces
+- small_team_operator_clarity
+stable_protocols:
+- MCP
+- A2A
+- ACP
+- HTTP/OpenAPI
+- SQL
+- S3-compatible object APIs
+recommended_first_profile: knowledge
+minimum_supported_profile: core-lite
