@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "cairn.edge.share.transfer@0.1",
+  "type": "object",
+  "required": ["cairn_type", "version", "event_time", "direction", "peer", "payload", "evidence"],
+  "properties": {
+    "cairn_type": { "const": "cairn.edge.share.transfer" },
+    "version": { "const": "0.1" },
+    "event_time": { "type": "string" },
+    "direction": { "type": "string", "enum": ["send", "receive"] },
+    "peer": { "type": "string" },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "paths": { "type": "array", "items": { "type": "string" } },
+        "clipboard_text_sha256": { "type": "string" },
+        "bytes_sent": { "type": "integer" },
+        "bytes_received": { "type": "integer" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["tool", "tool_version", "discovery"],
+      "properties": {
+        "tool": { "const": "airshare" },
+        "tool_version": { "type": "string" },
+        "discovery": {
+          "type": "object",
+          "required": ["method"],
+          "properties": {
+            "method": { "type": "string", "enum": ["mdns"] },
+            "service": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

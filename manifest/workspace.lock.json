@@ -3,8 +3,19 @@
     "name": "sociosphere",
     "version": "0.1"
   },
-  "generated_at": "2025-12-30T14:27:00Z",
+  "generated_at": "2026-04-06T00:00:00Z",
+  "_note": "Remote repos have null rev/tree_hash until 'runner fetch' is run against live GitHub refs. Local-path repos are resolved at build time.",
   "repos": [
+    {
+      "name": "workspace_inventory",
+      "role": "tool",
+      "url": "https://github.com/SocioProphet/workspace-inventory",
+      "ref": "main",
+      "rev": null,
+      "local_path": null,
+      "tree_hash": null,
+      "retrieved_at": null
+    },
     {
       "name": "prophet_cli",
       "role": "component",
@@ -58,8 +69,8 @@
     {
       "name": "human_digital_twin",
       "role": "component",
-      "url": null,
-      "ref": null,
+      "url": "https://github.com/SocioProphet/human-digital-twin",
+      "ref": "main",
       "rev": null,
       "local_path": "components/human_digital_twin",
       "tree_hash": null,
@@ -68,10 +79,100 @@
     {
       "name": "ontogenesis",
       "role": "component",
-      "url": null,
-      "ref": null,
+      "url": "https://github.com/SocioProphet/ontogenesis",
+      "ref": "main",
       "rev": null,
       "local_path": "components/ontogenesis",
+      "tree_hash": null,
+      "retrieved_at": null
+    },
+    {
+      "name": "tritrpc",
+      "role": "protocol",
+      "url": "https://github.com/SocioProphet/TriTRPC",
+      "ref": "main",
+      "rev": null,
+      "local_path": "third_party/tritrpc",
+      "tree_hash": null,
+      "retrieved_at": null
+    },
+    {
+      "name": "agentplane",
+      "role": "execution-plane",
+      "url": "https://github.com/SocioProphet/agentplane",
+      "ref": "main",
+      "rev": null,
+      "local_path": "components/agentplane",
+      "tree_hash": null,
+      "retrieved_at": null
+    },
+    {
+      "name": "semantic_serdes",
+      "role": "library",
+      "url": "https://github.com/SocioProphet/semantic-serdes",
+      "ref": "main",
+      "rev": null,
+      "local_path": "components/semantic_serdes",
+      "tree_hash": null,
+      "retrieved_at": null
+    },
+    {
+      "name": "cairnpath_mesh",
+      "role": "replay",
+      "url": "https://github.com/SocioProphet/cairnpath-mesh",
+      "ref": "main",
+      "rev": null,
+      "local_path": "components/cairnpath_mesh",
+      "tree_hash": null,
+      "retrieved_at": null
+    },
+    {
+      "name": "prophet_platform_standards",
+      "role": "standards",
+      "url": "https://github.com/SocioProphet/prophet-platform-standards",
+      "ref": "main",
+      "rev": null,
+      "local_path": "components/prophet_platform_standards",
+      "tree_hash": null,
+      "retrieved_at": null
+    },
+    {
+      "name": "socioprophet_standards_storage",
+      "role": "standards",
+      "url": "https://github.com/SocioProphet/socioprophet-standards-storage",
+      "ref": "main",
+      "rev": null,
+      "local_path": "components/socioprophet_standards_storage",
+      "tree_hash": null,
+      "retrieved_at": null
+    },
+    {
+      "name": "socioprophet_standards_knowledge",
+      "role": "standards",
+      "url": "https://github.com/SocioProphet/socioprophet-standards-knowledge",
+      "ref": "main",
+      "rev": null,
+      "local_path": "components/socioprophet_standards_knowledge",
+      "tree_hash": null,
+      "retrieved_at": null
+    },
+    {
+      "name": "gaia_world_model",
+      "role": "ontology",
+      "url": "https://github.com/SocioProphet/gaia-world-model",
+      "ref": "main",
+      "rev": null,
+      "local_path": "components/gaia_world_model",
+      "tree_hash": null,
+      "retrieved_at": null
+    },
+    {
+      "name": "slash_topics",
+      "role": "topic-pack",
+      "url": "https://github.com/SocioProphet/slash-topics",
+      "ref": "main",
+      "rev": null,
+      "local_path": "components/slash_topics",
       "tree_hash": null,
       "retrieved_at": null
     },
@@ -92,6 +193,16 @@
       "ref": null,
       "rev": null,
       "local_path": "adapters/configs",
+      "tree_hash": null,
+      "retrieved_at": null
+    },
+    {
+      "name": "mcp_a2a_zero_trust",
+      "role": "security",
+      "url": "https://github.com/SocioProphet/mcp-a2a-zero-trust",
+      "ref": "main",
+      "rev": null,
+      "local_path": "components/mcp_a2a_zero_trust",
       "tree_hash": null,
       "retrieved_at": null
     },
