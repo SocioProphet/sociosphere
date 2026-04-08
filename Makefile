@@ -33,3 +33,21 @@ validate: validate-standards
 validate-standards:
 	@ok=1; if [ -f tools/validate_adaptation_program.py ]; then python3 tools/validate_adaptation_program.py standards/examples/adaptation/program.example.v1.json || ok=0; else echo "ERR: tools/validate_adaptation_program.py missing"; ok=0; fi; if [ -f standards/qes/tools/validate_qes_contracts.py ]; then python3 standards/qes/tools/validate_qes_contracts.py || ok=0; else echo "WARN: standards/qes/tools/validate_qes_contracts.py missing (skipping)"; fi; test $$ok -eq 1
 
+# --- workspace runner targets ---
+.PHONY: workspace-list lock-verify lock-update inventory topology-check
+
+workspace-list:
+	python3 tools/runner/runner.py list
+
+lock-verify:
+	python3 tools/runner/runner.py lock-verify
+
+lock-update:
+	python3 tools/runner/runner.py lock-update
+
+inventory:
+	python3 tools/runner/runner.py inventory
+
+topology-check:
+	python3 tools/check_topology.py
+# --- end workspace runner targets ---
