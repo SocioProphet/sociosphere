@@ -1,29 +1,32 @@
 # Integration Status
 
-This file is the **single current-state ledger** for cross-repo integration
-facts that were previously repeated in multiple sections.
+This file is the canonical current-state ledger for cross-repo integration
+facts that were previously repeated in multiple places.
 
-## TritRPC integration (current)
+## Current state
 
+### TritRPC
 - Canonical upstream: `https://github.com/SocioProphet/TriTRPC`
-- Workspace entry: `manifest/workspace.toml` repo `tritrpc`
+- Workspace declaration: `manifest/workspace.toml` repo `tritrpc`
 - Materialization path: `third_party/tritrpc`
-- Dependency status: active workspace dependency
+- Status: active workspace dependency
 
-## Trit-to-Trust integration (current)
+### Trit-to-Trust
+- Status: removed as an independent workspace dependency
+- Notes/content: folded into TritRPC docs during de-commingling
 
-- Workspace dependency status: **removed**
-- Notes and related content were folded into TritRPC documentation.
+## Resolved migration timeline
 
-## Historical sequence (resolved)
-
-1. TritRPC + Trit-to-Trust were initially tracked together.
-2. Both were temporarily pinned during migration.
-3. Workspace was de-commingled to keep TritRPC as the only active dependency.
-4. Trit-to-Trust was retired from workspace dependency lists.
+| Stage | Snapshot |
+|---|---|
+| Initial coupling | `tritrpc` + `trit-to-trust` tracked together |
+| First pinning pass | both pinned at `v0.1.0` |
+| Second pinning pass | `tritrpc v0.1.1 @ 6091e55`, `trit-to-trust v0.1.1 @ 68186ab` |
+| De-commingled state | TritRPC retained, Trit-to-Trust removed from workspace deps |
+| Current steady state | TritRPC remains as standalone core dependency |
 
 ## Interpretation rule
 
-If any other document references older Trit-to-Trust workspace dependencies,
-treat that as historical context only. Current behavior is defined by
-`manifest/workspace.toml` and the lock file.
+If another document references Trit-to-Trust as an active workspace dependency,
+treat that content as historical context. Current behavior is defined by
+`manifest/workspace.toml` + `manifest/workspace.lock.json`.

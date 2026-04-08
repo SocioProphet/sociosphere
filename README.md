@@ -1,8 +1,10 @@
 # sociosphere
 
-Sociosphere is the **workspace controller** for the SocioProphet ecosystem.
-It is the meta-repository that defines reproducible multi-repo assembly via a
-canonical manifest + lock, plus validation and orchestration tooling.
+Platform meta-workspace controller for the SocioProphet ecosystem.
+
+Sociosphere owns the canonical workspace manifest + lock, runner semantics,
+protocol fixtures, and deterministic multi-repo materialization for platform
+build and validation lanes.
 
 ## Canonical scope
 
@@ -12,20 +14,61 @@ Sociosphere is responsible for:
 - Pinning exact revisions in `manifest/workspace.lock.json`.
 - Materializing and validating the workspace with `tools/runner/runner.py`.
 - Enforcing topology and dependency-direction policies via `tools/check_topology.py`.
-- Maintaining cross-repo governance/registry data in `registry/` and `governance/`.
+- Maintaining cross-repo governance and registry metadata in `registry/` + `governance/`.
 
-Sociosphere is **not** the place for product feature implementation inside
+Sociosphere is **not** the place for feature implementation inside downstream
 component repositories.
 
 ## Canonical entry points
 
 - Documentation index: `docs/README.md`
 - Architecture baseline: `docs/architecture/overview.md`
-- Scope and backlog: `docs/SCOPE_PURPOSE_STATUS_BACKLOG.md`
-- Integration status ledger: `docs/INTEGRATION_STATUS.md`
-- Governance ownership map: `governance/CANONICAL_SOURCES.yaml`
+- Scope/current state/backlog: `docs/SCOPE_PURPOSE_STATUS_BACKLOG.md`
+- Integration ledger: `docs/INTEGRATION_STATUS.md`
+- Namespace ownership map: `governance/CANONICAL_SOURCES.yaml`
 
-## Quickstart
+## Repository intelligence assets
+
+### Registry layer
+
+| File | Description |
+|---|---|
+| `registry/canonical-repos.yaml` | Canonical repo inventory and metadata |
+| `registry/repository-ontology.yaml` | Semantic identity, roles, and topic bindings |
+| `registry/dependency-graph.yaml` | Dependency edges and impact reasoning |
+| `registry/change-propagation-rules.yaml` | Change cascade and notification rules |
+| `registry/devops-automation.yaml` | CI/CD automation policies |
+| `registry/deduplication-map.yaml` | Duplicate consolidation tracker |
+
+### Engine layer
+
+| Module | Description |
+|---|---|
+| `engines/ontology_engine.py` | Controlled vocabulary and topic extraction |
+| `engines/propagation_engine.py` | Cascading update computation |
+| `engines/devops_orchestrator.py` | Build/test/deploy orchestration |
+| `engines/metrics_collector.py` | Runtime and coverage metrics |
+
+### CLI tools
+
+```bash
+# Registry and ontology maintenance
+python cli/rebuild-registry.py
+python cli/analyze-ontology.py [repo-name ...]
+python cli/validate-deps.py
+
+# Success and dedup reporting
+python cli/measure-success.py
+python cli/dedup-report.py
+```
+
+### Webhook entrypoint
+
+```bash
+WEBHOOK_SECRET=<shared-secret> python webhooks/github_handler.py --port 8080
+```
+
+## Quickstart (workspace runner)
 
 ```bash
 python3 tools/runner/runner.py list
@@ -36,9 +79,8 @@ python3 tools/runner/runner.py run test --all
 
 ## Documentation de-duplication policy
 
-To avoid conflicting documentation, this repository follows these rules:
+To avoid conflicting documentation:
 
-1. **One canonical source per topic** (linked above).
-2. Historical branch/PR narratives remain archival only and must not define
-   current operational requirements.
-3. When a document conflicts with canonical files, canonical files win.
+1. Keep exactly **one canonical source per active topic**.
+2. Keep historical branch/PR narratives for provenance, but mark them archival.
+3. If docs disagree, canonical current-state docs win over archival summaries.
