@@ -21,6 +21,7 @@ ui-check: ui-preflight ui-build
 ui-dev: ui-preflight
 	cd $(UI_DIR) && npm run dev
 # --- end ui-workbench targets ---
+
 # --- standards validation targets ---
 .PHONY: validate validate-standards
 
@@ -71,8 +72,26 @@ compliance-summary:
 merge-order:
 	python3 engines/propagation_engine.py merge-order
 
+# --- workspace runner targets ---
+.PHONY: workspace-list lock-verify lock-update inventory topology-check
+
+workspace-list:
+	python3 tools/runner/runner.py list
+
+lock-verify:
+	python3 tools/runner/runner.py lock-verify
+
+lock-update:
+	python3 tools/runner/runner.py lock-update
+
+inventory:
+	python3 tools/runner/runner.py inventory
+
+topology-check:
+	python3 tools/check_topology.py
+
 # --- full workspace check (run in CI) ---
 .PHONY: workspace-check
 
-workspace-check: validate registry-validate compliance-check
+workspace-check: validate registry-validate compliance-check lock-verify topology-check
 	@echo "OK: workspace-check passed"

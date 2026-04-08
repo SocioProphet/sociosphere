@@ -6,6 +6,18 @@ version = "0.1"
 # and remote repos (url + ref/rev). The lock file resolves remote inputs.
 # Registry of all 53 ecosystem repos: registry/canonical-repos.yaml
 # Merge order for open PRs: governance/MERGE-ORDER.md
+# Fields:
+#   name          – stable identifier
+#   role          – component | adapter | tool | protocol | execution-plane |
+#                   library | ontology | topic-pack | security | standards |
+#                   replay | docs
+#   url           – canonical GitHub HTTPS URL
+#   ref           – branch or tag to track
+#   rev           – exact commit SHA (overrides ref; pinned in lock)
+#   local_path    – path inside this workspace after materialization
+#   license_hint  – non-authoritative; used by supply-chain policy checks
+#   entry         – optional runtime metadata (kind, module, etc.)
+#   required_capabilities – adapter-only capability declarations
 
 # ── Control-plane tools ──────────────────────────────────────────────────────
 
@@ -14,6 +26,7 @@ name = "workspace_inventory"
 role = "tool"
 url = "https://github.com/SocioProphet/workspace-inventory"
 ref = "main"
+license_hint = "MIT"
 
 # ── Components (materialized locally) ────────────────────────────────────────
 
@@ -21,26 +34,29 @@ ref = "main"
 name = "prophet_cli"
 role = "component"
 local_path = "components/prophet_cli"
-url = "https://github.com/SocioProphet/prophet_cli"
+url = "https://github.com/SocioProphet/prophet-platform"
 ref = "main"
+license_hint = "MIT"
 entry = { kind = "go", module = "./" }
 
 [[repos]]
 name = "sourceos_a2a_mcp_bootstrap"
 role = "component"
 local_path = "components/sourceos_a2a_mcp_bootstrap"
-url = "https://github.com/SocioProphet/sourceos_a2a_mcp_bootstrap"
+url = "https://github.com/SocioProphet/sourceos-a2a-mcp-bootstrap"
 ref = "main"
+license_hint = "MIT"
 
 [[repos]]
-name = "socioprophet-web"
+name = "socioprophet_web"
 role = "component"
 local_path = "components/socioprophet-web"
-url = "https://github.com/SocioProphet/socioprophet-web"
+url = "https://github.com/SocioProphet/socioprophet"
 ref = "main"
+license_hint = "MIT"
 
 [[repos]]
-name = "dev-api"
+name = "dev_api"
 role = "component"
 local_path = "components/dev-api"
 url = "https://github.com/SocioProphet/dev-api"
@@ -59,6 +75,7 @@ role = "component"
 local_path = "components/human_digital_twin"
 url = "https://github.com/SocioProphet/human-digital-twin"
 ref = "main"
+license_hint = "MIT"
 
 [[repos]]
 name = "ontogenesis"
@@ -66,6 +83,7 @@ role = "component"
 local_path = "components/ontogenesis"
 url = "https://github.com/SocioProphet/ontogenesis"
 ref = "main"
+license_hint = "MIT"
 
 # ── Protocol & transport ──────────────────────────────────────────────────────
 
@@ -75,6 +93,8 @@ role = "protocol"
 url = "https://github.com/SocioProphet/TriTRPC"
 ref = "main"
 local_path = "third_party/tritrpc"
+license_hint = "MIT"
+# rev is pinned in the lock; do NOT float on main for production
 
 [[repos]]
 name = "agentplane"
@@ -82,6 +102,7 @@ role = "execution-plane"
 url = "https://github.com/SocioProphet/agentplane"
 ref = "main"
 local_path = "components/agentplane"
+license_hint = "MIT"
 
 [[repos]]
 name = "semantic_serdes"
@@ -128,6 +149,7 @@ role = "ontology"
 url = "https://github.com/SocioProphet/gaia-world-model"
 ref = "main"
 local_path = "components/gaia_world_model"
+license_hint = "MIT"
 
 [[repos]]
 name = "slash_topics"
@@ -135,6 +157,7 @@ role = "topic-pack"
 url = "https://github.com/SocioProphet/slash-topics"
 ref = "main"
 local_path = "components/slash_topics"
+license_hint = "MIT"
 
 # ── Adapters ──────────────────────────────────────────────────────────────────
 
@@ -162,6 +185,34 @@ role = "security"
 url = "https://github.com/SocioProphet/mcp-a2a-zero-trust"
 ref = "main"
 local_path = "components/mcp_a2a_zero_trust"
+license_hint = "MIT"
+
+[[repos]]
+name = "new_hope"
+role = "component"
+url = "https://github.com/SocioProphet/new-hope"
+ref = "main"
+local_path = "components/new-hope"
+license_hint = "MIT"
+
+# ── Governance ────────────────────────────────────────────────────────────────
+
+[[repos]]
+name = "delivery_excellence"
+role = "docs"
+url = "https://github.com/SocioProphet/delivery-excellence"
+ref = "main"
+local_path = "docs/delivery-excellence"
+license_hint = "MIT"
+
+[[repos]]
+name = "delivery_excellence_automation"
+role = "adapter"
+url = "https://github.com/SocioProphet/delivery-excellence-automation"
+ref = "main"
+local_path = "adapters/delivery-excellence-automation"
+license_hint = "MIT"
+required_capabilities = ["rbac", "ci_validation", "routing"]
 
 # ── Docs ──────────────────────────────────────────────────────────────────────
 
@@ -171,3 +222,11 @@ role = "docs"
 local_path = "components/socioprophet_integration"
 url = "https://github.com/SocioProphet/socioprophet_integration"
 ref = "main"
+
+[[repos]]
+name = "socioprophet_docs"
+role = "docs"
+url = "https://github.com/SocioProphet/socioprophet-docs"
+ref = "main"
+local_path = "docs/socioprophet-docs"
+license_hint = "MIT"

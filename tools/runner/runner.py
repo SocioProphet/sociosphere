@@ -4,6 +4,15 @@
 Canonical workspace runner for manifest+lock orchestration.
 
 Commands:
+  - list:          show manifest repos + whether materialized
+  - fetch:         materialize missing repos (git clone) and checkout lock rev
+  - lock-verify:   verify role validity plus manifest/lock/drift state
+  - lock-update:   update lock revisions from currently-materialized repos
+  - inventory:     print repo / revision / license supply-chain report
+  - protocol:test: execute protocol compatibility surface (fixture stub until vectors land)
+  - run:           run a task (build/test/lint/etc.) across selected repos and emit structured artifacts
+
+Stdlib-only: no Python deps.
   - list:           show manifest repos + whether materialized
   - fetch:          materialize missing repos (git clone) and checkout lock rev
   - lock-verify:    verify role validity plus manifest/lock/drift state
@@ -74,6 +83,7 @@ class Repo:
     url: str | None = None
     ref: str | None = None
     rev: str | None = None
+    license_hint: str | None = None
 
 
 def now_iso() -> str:
@@ -116,6 +126,7 @@ def load_manifest() -> list[Repo]:
                 url=r.get("url"),
                 ref=r.get("ref"),
                 rev=r.get("rev"),
+                license_hint=r.get("license_hint"),
             )
         )
     return repos
@@ -350,6 +361,97 @@ def cmd_lock_verify(args: argparse.Namespace) -> int:
     else:
         print(json.dumps(payload, indent=2, sort_keys=True))
     return 0 if result == "pass" else 2
+
+
+def cmd_lock_update(args: argparse.Namespace) -> int:
+    """Update the lock file with HEAD revisions from materialized repos.
+
+    For each manifest repo that has a URL:
+    - If the repo is materialized as a git checkout, capture its HEAD and write to lock.
+    - If not materialized, emit a warning (run fetch first).
+    """
+    repos = load_manifest()
+    lock = load_lock()
+
+    if not lock:
+        lock = {"workspace": {"name": "sociosphere", "version": "0.1"}, "repos": []}
+
+    lock_index: dict[str, Any] = {r["name"]: r for r in lock.get("repos", [])}
+    now = now_iso()
+    updated = 0
+
+    for r in repos:
+        if not r.url:
+            continue
+
+        if r.local_path is None or not r.local_path.exists() or not repo_is_git(r.local_path):
+            print(f"SKIP {r.name}: not materialized (run fetch first)", file=sys.stderr)
+            continue
+
+        head = repo_head_rev(r.local_path)
+        if not head:
+            print(f"SKIP {r.name}: can't read HEAD", file=sys.stderr)
+            continue
+
+        lr = lock_index.get(r.name)
+        if lr is None:
+            entry: dict[str, Any] = {
+                "name": r.name,
+                "role": r.role,
+                "url": r.url,
+                "ref": r.ref,
+                "rev": head,
+                "local_path": str(r.local_path.relative_to(ROOT)) if r.local_path else None,
+                "tree_hash": None,
+                "retrieved_at": now,
+            }
+            lock.setdefault("repos", []).append(entry)
+            lock_index[r.name] = entry
+        else:
+            lr["rev"] = head
+            lr["url"] = r.url
+            lr["retrieved_at"] = now
+
+        print(f"PINNED {r.name} @ {head}")
+        updated += 1
+
+    lock["generated_at"] = now
+    LOCK_PATH.write_text(json.dumps(lock, indent=2) + "\n", "utf-8")
+    print(f"lock-update: {updated} entries written to {LOCK_PATH}")
+    return 0
+
+
+def cmd_inventory(args: argparse.Namespace) -> int:
+    """Print a supply-chain inventory: name / role / rev / license / url."""
+    repos = load_manifest()
+    lock = load_lock()
+
+    records = []
+    for r in repos:
+        lrev = locked_rev(lock, r.name)
+        records.append(
+            {
+                "name": r.name,
+                "role": r.role,
+                "rev": lrev,
+                "license_hint": r.license_hint,
+                "url": r.url,
+                "local_path": str(r.local_path.relative_to(ROOT)) if r.local_path else None,
+                "materialized": r.local_path.exists() if r.local_path else False,
+            }
+        )
+
+    if getattr(args, "json", False):
+        print(json.dumps(records, indent=2))
+    else:
+        header = f"{'name':36s} {'role':14s} {'rev':10s} {'license':8s} url"
+        print(header)
+        print("-" * len(header))
+        for rec in records:
+            rev_short = (rec["rev"] or "-")[:9]
+            lic = rec["license_hint"] or "-"
+            print(f"{rec['name']:36s} {rec['role']:14s} {rev_short:10s} {lic:8s} {rec['url'] or '(local)'}")
+    return 0
 
 
 def cmd_protocol_test(args: argparse.Namespace) -> int:
@@ -653,6 +755,13 @@ def main() -> int:
     sp = sub.add_parser("lock-verify", help="Verify manifest/lock consistency and role validity")
     sp.add_argument("--json-out", help="Optional path to write a LockVerificationArtifact")
     sp.set_defaults(fn=cmd_lock_verify)
+
+    sp = sub.add_parser("lock-update", help="Update lock revisions from materialized repos (run fetch first)")
+    sp.set_defaults(fn=cmd_lock_update)
+
+    sp = sub.add_parser("inventory", help="Print supply-chain inventory (name/role/rev/license/url)")
+    sp.add_argument("--json", action="store_true", help="Emit JSON instead of a table")
+    sp.set_defaults(fn=cmd_inventory)
 
     sp = sub.add_parser("protocol:test", help="Run protocol fixture compatibility checks (stub surface)")
     sp.add_argument("--json-out", help="Optional path to write a ProtocolCompatibilityArtifact")
