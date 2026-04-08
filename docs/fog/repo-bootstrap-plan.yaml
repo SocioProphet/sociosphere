@@ -1,0 +1,18 @@
+phases:
+- name: Phase 1
+  goal: Stand up fog-pack-data and shared governance
+  repos:
+  - SocioProphet/fog-pack-data
+  - SocioProphet/sociosphere
+- name: Phase 2
+  goal: Create workflow, integration, and aiops pack scaffolds
+  repos:
+  - SocioProphet/fog-pack-business-automation
+  - SocioProphet/fog-pack-integration
+  - SocioProphet/fog-pack-aiops
+- name: Phase 3
+  goal: Reserve the remaining three packs after Pack 0/1 stabilize
+  repos:
+  - SocioProphet/fog-pack-applications
+  - SocioProphet/fog-pack-network-automation
+  - SocioProphet/fog-pack-security

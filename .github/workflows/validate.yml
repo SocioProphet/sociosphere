@@ -4,9 +4,14 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
 
@@ -31,8 +36,29 @@ jobs:
       - name: Runner lock-verify
         run: python3 tools/runner/runner.py lock-verify
 
+      - name: UI install
+        run: make ui-install
+
       - name: UI check
         run: make ui-check
 
       - name: Standards validation
         run: make validate-standards
+
+  registry:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Registry validate (ontology + cycles)
+        run: make registry-validate

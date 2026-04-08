@@ -4,56 +4,170 @@ version = "0.1"
 
 # NOTE: This manifest supports both local materialized repos (local_path)
 # and remote repos (url + ref/rev). The lock file resolves remote inputs.
+# Registry of all 53 ecosystem repos: registry/canonical-repos.yaml
+# Merge order for open PRs: governance/MERGE-ORDER.md
+
+# ── Control-plane tools ──────────────────────────────────────────────────────
+
+[[repos]]
+name = "workspace_inventory"
+role = "tool"
+url = "https://github.com/SocioProphet/workspace-inventory"
+ref = "main"
+
+# ── Components (materialized locally) ────────────────────────────────────────
 
 [[repos]]
 name = "prophet_cli"
 role = "component"
 local_path = "components/prophet_cli"
+url = "https://github.com/SocioProphet/prophet_cli"
+ref = "main"
 entry = { kind = "go", module = "./" }
 
 [[repos]]
 name = "sourceos_a2a_mcp_bootstrap"
 role = "component"
 local_path = "components/sourceos_a2a_mcp_bootstrap"
+url = "https://github.com/SocioProphet/sourceos_a2a_mcp_bootstrap"
+ref = "main"
 
 [[repos]]
 name = "socioprophet-web"
 role = "component"
 local_path = "components/socioprophet-web"
+url = "https://github.com/SocioProphet/socioprophet-web"
+ref = "main"
 
 [[repos]]
 name = "dev-api"
 role = "component"
 local_path = "components/dev-api"
+url = "https://github.com/SocioProphet/dev-api"
+ref = "main"
 
 [[repos]]
 name = "hdt_app"
 role = "component"
 local_path = "components/hdt_app"
+url = "https://github.com/SocioProphet/hdt_app"
+ref = "main"
 
 [[repos]]
 name = "human_digital_twin"
 role = "component"
 local_path = "components/human_digital_twin"
+url = "https://github.com/SocioProphet/human-digital-twin"
+ref = "main"
 
 [[repos]]
 name = "ontogenesis"
 role = "component"
 local_path = "components/ontogenesis"
+url = "https://github.com/SocioProphet/ontogenesis"
+ref = "main"
+
+# ── Protocol & transport ──────────────────────────────────────────────────────
+
+[[repos]]
+name = "tritrpc"
+role = "protocol"
+url = "https://github.com/SocioProphet/TriTRPC"
+ref = "main"
+local_path = "third_party/tritrpc"
+
+[[repos]]
+name = "agentplane"
+role = "execution-plane"
+url = "https://github.com/SocioProphet/agentplane"
+ref = "main"
+local_path = "components/agentplane"
+
+[[repos]]
+name = "semantic_serdes"
+role = "library"
+url = "https://github.com/SocioProphet/semantic-serdes"
+ref = "main"
+local_path = "components/semantic_serdes"
+
+[[repos]]
+name = "cairnpath_mesh"
+role = "replay"
+url = "https://github.com/SocioProphet/cairnpath-mesh"
+ref = "main"
+local_path = "components/cairnpath_mesh"
+
+# ── Standards & governance ────────────────────────────────────────────────────
+
+[[repos]]
+name = "prophet_platform_standards"
+role = "standards"
+url = "https://github.com/SocioProphet/prophet-platform-standards"
+ref = "main"
+local_path = "components/prophet_platform_standards"
+
+[[repos]]
+name = "socioprophet_standards_storage"
+role = "standards"
+url = "https://github.com/SocioProphet/socioprophet-standards-storage"
+ref = "main"
+local_path = "components/socioprophet_standards_storage"
+
+[[repos]]
+name = "socioprophet_standards_knowledge"
+role = "standards"
+url = "https://github.com/SocioProphet/socioprophet-standards-knowledge"
+ref = "main"
+local_path = "components/socioprophet_standards_knowledge"
+
+# ── Data plane ────────────────────────────────────────────────────────────────
+
+[[repos]]
+name = "gaia_world_model"
+role = "ontology"
+url = "https://github.com/SocioProphet/gaia-world-model"
+ref = "main"
+local_path = "components/gaia_world_model"
+
+[[repos]]
+name = "slash_topics"
+role = "topic-pack"
+url = "https://github.com/SocioProphet/slash-topics"
+ref = "main"
+local_path = "components/slash_topics"
+
+# ── Adapters ──────────────────────────────────────────────────────────────────
 
 [[repos]]
 name = "cc"
 role = "adapter"
 local_path = "adapters/cc"
+url = "https://github.com/SocioProphet/cc"
+ref = "main"
 required_capabilities = ["container_exec", "fs_ops", "deps_inventory"]
 
 [[repos]]
 name = "configs"
 role = "adapter"
 local_path = "adapters/configs"
+url = "https://github.com/SocioProphet/configs"
+ref = "main"
 required_capabilities = ["policy", "defaults"]
+
+# ── Identity & security ────────────────────────────────────────────────────────
+
+[[repos]]
+name = "mcp_a2a_zero_trust"
+role = "security"
+url = "https://github.com/SocioProphet/mcp-a2a-zero-trust"
+ref = "main"
+local_path = "components/mcp_a2a_zero_trust"
+
+# ── Docs ──────────────────────────────────────────────────────────────────────
 
 [[repos]]
 name = "socioprophet_integration"
 role = "docs"
 local_path = "components/socioprophet_integration"
+url = "https://github.com/SocioProphet/socioprophet_integration"
+ref = "main"
