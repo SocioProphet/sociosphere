@@ -1,14 +1,18 @@
 #!/usr/bin/env python3
-"""sociosphere runner (v0.1)
+"""sociosphere runner (v0.2)
 
-Bootstrap runner for our manifest+lock workspace.
+Workspace orchestration runner for the manifest+lock multi-repo workspace.
 
 Commands:
-  - list: show manifest repos + whether materialized
-  - fetch: materialize missing repos (git clone) and checkout lock rev
-  - run: run a task (build/test/lint/etc.) across selected components
+  list            Show manifest repos and local materialisation status
+  fetch           Clone missing repos and checkout locked revisions
+  run             Run a task (build/test/lint/…) across selected repos
+  lock-verify     Verify materialised git repos match their locked revisions (P0)
+  check-manifest  Validate manifest role/path naming conventions (P1)
+  inventory       Emit a JSON inventory of all workspace repos (P2)
+  sbom            Emit a CycloneDX 1.4 JSON SBOM for the workspace (P2)
 
-Stdlib-only: no Python deps.
+Stdlib-only: no Python deps beyond Python 3.11+.
 """
 
 from __future__ import annotations
@@ -215,6 +219,202 @@ def cmd_run(args: argparse.Namespace) -> int:
     return rc
 
 
+# ---------------------------------------------------------------------------
+# Manifest convention enforcement
+# ---------------------------------------------------------------------------
+
+_ROLE_PATH_PREFIXES: dict[str, str] = {
+    "component": "components/",
+    "adapter": "adapters/",
+    "third_party": "third_party/",
+}
+
+
+def _check_manifest_conventions(repos: list[Repo]) -> list[str]:
+    """Return warning strings for role/path convention violations."""
+    warnings: list[str] = []
+    for r in repos:
+        expected = _ROLE_PATH_PREFIXES.get(r.role)
+        if expected is None:
+            continue
+        rel = str(r.local_path.relative_to(ROOT)).replace("\\", "/")
+        if not rel.startswith(expected):
+            warnings.append(
+                f"{r.name}: role={r.role} expects path prefix '{expected}', got '{rel}'"
+            )
+    return warnings
+
+
+def cmd_check_manifest(args: argparse.Namespace) -> int:
+    """Validate manifest role/path naming conventions."""
+    repos = load_manifest()
+    warnings = _check_manifest_conventions(repos)
+    if warnings:
+        for w in warnings:
+            print(f"WARN {w}", file=sys.stderr)
+        print(
+            f"WARN: {len(warnings)} convention violation(s) (not yet a hard failure; fix paths in manifest/workspace.toml)",
+            file=sys.stderr,
+        )
+    else:
+        print("OK: manifest role/path conventions validated")
+    return 0  # warn-only until all repos are migrated to canonical paths
+
+
+# ---------------------------------------------------------------------------
+# Lock verification (P0)
+# ---------------------------------------------------------------------------
+
+
+def cmd_lock_verify(args: argparse.Namespace) -> int:
+    """Verify that materialised git repos are at the revision recorded in the lock file."""
+    repos = load_manifest()
+    lock = load_lock()
+
+    checked = 0
+    drifts: list[str] = []
+
+    for r in repos:
+        lrev = locked_rev(lock, r.name)
+        if not lrev:
+            # Lock has no rev for this repo (lock-update not yet run); skip silently.
+            continue
+        if not r.local_path.exists():
+            # Not materialised locally; nothing to check.
+            continue
+
+        head = repo_head_rev(r.local_path)
+        if head is None:
+            continue
+
+        checked += 1
+        if head == lrev:
+            print(f"OK    {r.name}: @ {head[:12]}")
+        else:
+            msg = f"{r.name}: HEAD={head[:12]} lock={lrev[:12]}"
+            drifts.append(msg)
+            print(f"DRIFT {msg}", file=sys.stderr)
+
+    if not checked:
+        print("OK: no locked+materialised repos to verify (run 'runner fetch' after setting lock revs)")
+        return 0
+
+    if drifts:
+        print(
+            f"FAIL: {len(drifts)} lock drift(s) detected — run 'runner fetch' to restore locked revisions",
+            file=sys.stderr,
+        )
+        return 1
+
+    print(f"OK: {checked} repo(s) match lock file")
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# Inventory report (P2)
+# ---------------------------------------------------------------------------
+
+
+def cmd_inventory(args: argparse.Namespace) -> int:
+    """Emit a JSON inventory of all workspace repos (name, role, rev, materialisation status)."""
+    import datetime
+
+    repos = load_manifest()
+    lock = load_lock()
+    lock_map: dict[str, Any] = {r["name"]: r for r in lock.get("repos", [])}
+
+    components: list[dict[str, Any]] = []
+    for r in repos:
+        lr = lock_map.get(r.name, {})
+        entry: dict[str, Any] = {
+            "name": r.name,
+            "role": r.role,
+            "local_path": str(r.local_path.relative_to(ROOT)).replace("\\", "/"),
+            "url": r.url,
+            "rev": lr.get("rev"),
+            "tree_hash": lr.get("tree_hash"),
+            "retrieved_at": lr.get("retrieved_at"),
+            "materialized": r.local_path.exists(),
+        }
+        if r.local_path.exists():
+            head = repo_head_rev(r.local_path)
+            if head:
+                entry["head"] = head
+        components.append(entry)
+
+    report: dict[str, Any] = {
+        "generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),
+        "workspace": {"name": "sociosphere", "version": "0.1"},
+        "repos": components,
+    }
+
+    out: str = getattr(args, "output", "-")
+    if out == "-":
+        print(json.dumps(report, indent=2))
+    else:
+        Path(out).write_text(json.dumps(report, indent=2), encoding="utf-8")
+        print(f"OK: inventory written to {out}")
+    return 0
+
+
+# ---------------------------------------------------------------------------
+# SBOM generation (P2)
+# ---------------------------------------------------------------------------
+
+
+def cmd_sbom(args: argparse.Namespace) -> int:
+    """Emit a CycloneDX 1.4 JSON SBOM for the workspace."""
+    import datetime
+    import uuid
+
+    repos = load_manifest()
+    lock = load_lock()
+    lock_map: dict[str, Any] = {r["name"]: r for r in lock.get("repos", [])}
+
+    components: list[dict[str, Any]] = []
+    for r in repos:
+        lr = lock_map.get(r.name, {})
+        rev = lr.get("rev")
+        comp: dict[str, Any] = {
+            "type": "library",
+            "bom-ref": f"sociosphere:{r.name}",
+            "name": r.name,
+            "version": rev[:12] if rev else "unresolved",
+            "description": f"Workspace component; role={r.role}",
+            "externalReferences": [],
+        }
+        if r.url:
+            comp["externalReferences"].append({"type": "vcs", "url": r.url})
+        if rev:
+            comp["hashes"] = [{"alg": "SHA-1", "content": rev}]
+        components.append(comp)
+
+    sbom: dict[str, Any] = {
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.4",
+        "serialNumber": f"urn:uuid:{uuid.uuid4()}",
+        "version": 1,
+        "metadata": {
+            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),
+            "component": {
+                "type": "application",
+                "name": "sociosphere",
+                "version": "0.1",
+                "bom-ref": "sociosphere:workspace",
+            },
+        },
+        "components": components,
+    }
+
+    out: str = getattr(args, "output", "-")
+    if out == "-":
+        print(json.dumps(sbom, indent=2))
+    else:
+        Path(out).write_text(json.dumps(sbom, indent=2), encoding="utf-8")
+        print(f"OK: SBOM written to {out}")
+    return 0
+
+
 def main() -> int:
     p = argparse.ArgumentParser(prog="runner")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -226,11 +426,25 @@ def main() -> int:
     sp.set_defaults(fn=cmd_fetch)
 
     sp = sub.add_parser("run", help="Run a task across selected repos")
-    sp.add_argument("task", help="Task name (build/test/lint/fmt/...) ")
+    sp.add_argument("task", help="Task name (build/test/lint/fmt/...)")
     sp.add_argument("--all", action="store_true", help="Run against all repos with role=component")
     sp.add_argument("--only", action="append", help="Run only on named repo (repeatable)")
     sp.add_argument("--role", choices=["component", "adapter", "third_party", "tool"], help="Run on repos with this role")
     sp.set_defaults(fn=cmd_run)
+
+    sp = sub.add_parser("lock-verify", help="Verify materialised repos match lock file revisions (P0)")
+    sp.set_defaults(fn=cmd_lock_verify)
+
+    sp = sub.add_parser("check-manifest", help="Validate manifest role/path naming conventions (P1)")
+    sp.set_defaults(fn=cmd_check_manifest)
+
+    sp = sub.add_parser("inventory", help="Emit JSON inventory of workspace repos (P2)")
+    sp.add_argument("--output", default="-", metavar="FILE", help="Output file path (default: stdout)")
+    sp.set_defaults(fn=cmd_inventory)
+
+    sp = sub.add_parser("sbom", help="Emit CycloneDX 1.4 JSON SBOM for the workspace (P2)")
+    sp.add_argument("--output", default="-", metavar="FILE", help="Output file path (default: stdout)")
+    sp.set_defaults(fn=cmd_sbom)
 
     args = p.parse_args()
     return int(args.fn(args))
