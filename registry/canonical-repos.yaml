@@ -1157,9 +1157,9 @@ repositories:
     owners: [mdheller]
     topics: [demo, reference, onboarding]
 # canonical-repos.yaml — SocioProphet ecosystem canonical repository registry
-# Source of truth for all 53 curated repos in the SocioProphet multi-repo workspace.
+# Source of truth for all 55 curated repos in the SocioProphet multi-repo workspace.
 # Supersedes competing drafts from sociosphere PRs #20, #21, #23.
-# generated_at: 2026-04-06
+# generated_at: 2026-04-06 (updated 2026-04-08: +policy-fabric, +demo-repository)
 # schema_version: 1
 
 repos:
