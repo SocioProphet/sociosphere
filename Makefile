@@ -2,9 +2,6 @@ SHELL := /bin/bash
 
 UI_DIR := apps/ui-workbench
 
-.PHONY: ui-dev ui-build ui-check ui-install
-
-# (removed) @echo "OK: ui build passed"
 # --- ui-workbench targets ---
 
 .PHONY: ui-preflight ui-install ui-build ui-check ui-dev
@@ -79,5 +76,4 @@ merge-order:
 
 workspace-check: validate registry-validate compliance-check
 	@echo "OK: workspace-check passed"
-
 
