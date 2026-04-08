@@ -15,6 +15,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -22,10 +27,14 @@ jobs:
           cache: 'npm'
           cache-dependency-path: apps/ui-workbench/package-lock.json
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+      - name: Runner smoke test (list)
+        run: python3 tools/runner/runner.py list
+
+      - name: Runner check-manifest
+        run: python3 tools/runner/runner.py check-manifest
+
+      - name: Runner lock-verify
+        run: python3 tools/runner/runner.py lock-verify
 
       - name: Runner smoke test (list)
         run: python3 tools/runner/runner.py list

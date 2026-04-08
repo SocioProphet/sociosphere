@@ -21,3 +21,6 @@
 ## Standards
 - [QES (Quality Evidence Standard)](../standards/qes/README.md)
 - [Adaptation README](standards/adaptation/README.md)
+
+## Ecosystem intelligence
+- [Ecosystem index](ecosystem/README.md) — per-repo analysis (purpose, vocabulary, topics, dependency graph, change impact rules) for all 8 core SocioProphet repos
