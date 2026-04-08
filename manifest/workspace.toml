@@ -2,8 +2,17 @@
 name = "sociosphere"
 version = "0.1"
 
+[workspace.policy]
+policy_pack_ref = "protocol/agentic-workbench/v1/policy_packs/workspace-default.v0.1.json"
+policy_pack_hash = "sha256:5bf7c8abab452ccf16685af2780af25d0d85e9a09a7c4b9a31e548a9fc50296c"
+trust_profile_ref = "protocol/agentic-workbench/v1/trust_profiles/default.v0.1.json"
+ledger_mode = "required"
+attestation_required = true
+default_quorum_rule = "2of3-human"
+
 # NOTE: This manifest supports both local materialized repos (local_path)
 # and remote repos (url + ref/rev). The lock file resolves remote inputs.
+# Local development overrides should be expressed in manifest/overrides.toml.
 
 [[repos]]
 name = "prophet_cli"
@@ -57,3 +66,23 @@ required_capabilities = ["policy", "defaults"]
 name = "socioprophet_integration"
 role = "docs"
 local_path = "components/socioprophet_integration"
+
+[[repos]]
+name = "agentplane"
+role = "component"
+url = "https://github.com/SocioProphet/agentplane.git"
+ref = "main"
+local_path = "components/agentplane"
+trust_zone = "control"
+trust_profile_ref = "protocol/agentic-workbench/v1/trust_profiles/control-plane.v0.1.json"
+required_grants = ["agentplane.run:exec", "agentplane.replay:compute"]
+
+[[repos]]
+name = "mcp-a2a-zero-trust"
+role = "adapter"
+url = "https://github.com/SocioProphet/mcp-a2a-zero-trust.git"
+ref = "main"
+local_path = "adapters/mcp-a2a-zero-trust"
+required_capabilities = ["policy", "attestation", "grant", "ledger", "capability_registry"]
+trust_zone = "control"
+trust_profile_ref = "protocol/agentic-workbench/v1/trust_profiles/control-plane.v0.1.json"
