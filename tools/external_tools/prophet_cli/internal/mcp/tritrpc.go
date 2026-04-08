@@ -1,6 +1,6 @@
 
 package mcp
-import("crypto/hkdf";"encoding/binary";"encoding/json";"errors";"io";"net";"os";"sync";"golang.org/x/crypto/sha3";"golang.org/x/crypto/chacha20poly1305";"github.com/socioprophet/prophet/internal/util")
+import("crypto/hkdf";"crypto/rand";"encoding/binary";"encoding/json";"errors";"io";"net";"os";"sync";"golang.org/x/crypto/sha3";"golang.org/x/crypto/chacha20poly1305";"github.com/socioprophet/prophet/internal/util")
 type Server struct{ ID, Socket, Schema string }
 type Config struct{ Servers []Server `json:"servers"` }
 type Header struct{ Mode,SchemaId,ContextId,Tool,Method string; Nonce uint64 }
@@ -14,14 +14,17 @@ func Call(sock string, hdr Header, payload []byte)([]byte,error){
   hb,_ := json.Marshal(hdr)
   crc := util.CRC16CCITT(payload); body := append(payload, byte(crc>>8), byte(crc&0xff))
   key,err:=deriveKey(hb); if err!=nil { return nil, err }
-  aead,_ := chacha20poly1305.New(key); nonce := make([]byte, aead.NonceSize())
-  ct := aead.Seal(nil, nonce, body, hb)
+  aead,err := chacha20poly1305.New(key); if err!=nil { return nil, err }
+  nonce := make([]byte, aead.NonceSize()); if _,err := io.ReadFull(rand.Reader, nonce); err!=nil { return nil, err }
+  ct := aead.Seal(nil, nonce, body, hb); wire := append(nonce, ct...)
   conn,err := net.Dial("unix", sock); if err!=nil { return nil, err }; defer conn.Close()
-  var l [8]byte; binary.BigEndian.PutUint32(l[:4], uint32(len(hb))); binary.BigEndian.PutUint32(l[4:], uint32(len(ct)))
-  conn.Write(l[:]); conn.Write(hb); conn.Write(ct)
+  var l [8]byte; binary.BigEndian.PutUint32(l[:4], uint32(len(hb))); binary.BigEndian.PutUint32(l[4:], uint32(len(wire)))
+  conn.Write(l[:]); conn.Write(hb); conn.Write(wire)
   io.ReadFull(conn, l[:]); hl:=int(binary.BigEndian.Uint32(l[:4])); bl:=int(binary.BigEndian.Uint32(l[4:]))
-  rh:=make([]byte,hl); io.ReadFull(conn,rh); rc:=make([]byte,bl); io.ReadFull(conn,rc)
-  rkey,_ := deriveKey(rh); raead,_ := chacha20poly1305.New(rkey); plain,err := raead.Open(nil, nonce, rc, rh); if err!=nil { return nil, err }
+  rh:=make([]byte,hl); io.ReadFull(conn,rh); rb:=make([]byte,bl); io.ReadFull(conn,rb)
+  rkey,_ := deriveKey(rh); raead,err := chacha20poly1305.New(rkey); if err!=nil { return nil, err }
+  if len(rb)<raead.NonceSize() { return nil, errors.New("response too short for nonce") }
+  plain,err := raead.Open(nil, rb[:raead.NonceSize()], rb[raead.NonceSize():], rh); if err!=nil { return nil, err }
   if len(plain)<2 { return nil, errors.New("short body") }
   return plain[:len(plain)-2], nil
 }
