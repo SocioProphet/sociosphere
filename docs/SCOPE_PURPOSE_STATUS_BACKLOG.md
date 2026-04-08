@@ -16,12 +16,12 @@ Sociosphere is the workspace controller repo that keeps multi-repo development r
 - **CI implementations** owned by downstream repos (Sociosphere only provides the primitives and checks needed for workspace determinism).
 
 ## Current state (v0.2)
-- **Manifest is fully populated**: all 20 repos (components, adapters, governance, third-party, tools, docs) are declared in `manifest/workspace.toml` with canonical GitHub URLs, `ref`, and `license_hint` fields.
-- **Lock is live**: `manifest/workspace.lock.json` carries real commit SHAs for every remote-backed repo, generated 2026-04-08.
+- **Manifest tracks a growing workspace subset**: the currently enumerated set of repos (components, adapters, governance, third-party, tools, docs) are declared in `manifest/workspace.toml` with canonical GitHub URLs, `ref`, and `license_hint` fields. The manifest and lock are authoritative for repos currently under workspace control; the broader SocioProphet ecosystem exceeds the current manifest and is being progressively incorporated.
+- **Lock is live**: `manifest/workspace.lock.json` carries real commit SHAs for every remote-backed repo in the current workspace set, generated 2026-04-08.
 - **Runner extended to v0.2**: `tools/runner/runner.py` now implements `list`, `fetch`, `lock-verify`, `lock-update`, `inventory`, and `run`. Supports new roles (`governance`, `docs`).
 - **CI enforces workspace integrity**: `.github/workflows/validate.yml` runs `runner list`, `runner lock-verify`, `runner inventory`, and `check_topology.py` on every push and PR.
 - **Topology enforcement**: `tools/check_topology.py` enforces submodule-path rules, self-dependency prohibition, and third-party pinning. Runs in CI.
-- **Canonical ownership expanded**: `governance/CANONICAL_SOURCES.yaml` now maps all 20 manifest entries to their GitHub repos, with roles and descriptions.
+- **Canonical ownership expanded**: `governance/CANONICAL_SOURCES.yaml` maps the currently enumerated manifest entries to their GitHub repos, with roles and descriptions. The full ecosystem registry (which covers a broader set of repos beyond the current manifest) is tracked in `registry/canonical-repos.yaml`.
 - **Architecture docs filled**: `docs/architecture/overview.md` and `docs/architecture/validation-contract.md` are no longer stubs.
 - **CI runbook written**: `docs/runbooks/ci.md` covers all CI steps and how to fix common failures.
 - **ADR template standardised**: `docs/governance/adr/0000-template.md` follows a complete Status / Date / Context / Decision / Consequences / Alternatives structure.
@@ -49,8 +49,8 @@ Sociosphere treats the manifest as the source of truth for repo roles and relati
 This backlog is intentionally scoped to Sociosphere’s responsibilities. Each item should link to an issue/PR when created.
 
 ### P0 — Must-have to preserve determinism
-1. ✅ **Manifest/lock fully populated**
-   - All repos carry URLs and pinned revs. `lock-verify` passes cleanly.
+1. ✅ **Manifest/lock populated for current workspace set**
+   - All currently enumerated repos carry URLs and pinned revs. `lock-verify` passes cleanly. The broader SocioProphet ecosystem is being progressively added to the manifest.
 2. ✅ **Lock verification in CI**
    - `runner lock-verify` and `check_topology.py` run on every push/PR.
 3. ✅ **Version pin policy clarity**
