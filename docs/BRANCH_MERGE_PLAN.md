@@ -8,7 +8,7 @@
 ## Safe Consolidation Action Taken
 1. Verified all local branch refs and tags.
 2. Created `main` at the exact same commit as `work`.
-3. Confirmed both branches now point to commit `1f019f3`.
+3. Confirmed both branches now point to the same commit (short hash `1f019f3`).
 
 Because there was only one branch tip, no merge commit was required and no conflict risk existed.
 
@@ -24,7 +24,7 @@ When additional branches exist in the future:
 ## Suggested Command Sequence
 ```bash
 git checkout main
-git pull --ff-only
+# if a remote/upstream is configured, update main first (for example: git fetch origin && git merge --ff-only origin/main)
 git merge --no-ff <branch-1>
 # run checks
 git merge --no-ff <branch-2>
