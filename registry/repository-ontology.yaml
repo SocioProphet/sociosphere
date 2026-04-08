@@ -1,7 +1,7 @@
 # registry/repository-ontology.yaml
 # Semantic ontology for the SocioProphet repository ecosystem
 version: "1.0.0"
-updated_at: "2026-04-06"
+updated_at: "2026-04-08"
 
 namespace: "https://sociosphere.io/ontology/"
 
@@ -130,6 +130,131 @@ roles:
     description: "Read-only historical archive"
     responsibilities:
       - historical reference
+
+  workspace-controller:
+    iri: "https://sociosphere.io/ontology/role/workspace-controller"
+    description: "Workspace governance controller and orchestration root"
+    responsibilities: [workspace policy, orchestration, standards enforcement]
+
+  tool:
+    iri: "https://sociosphere.io/ontology/role/tool"
+    description: "Standalone utility package used by engineers or CI"
+    responsibilities: [automation, linting, developer workflows]
+
+  docs:
+    iri: "https://sociosphere.io/ontology/role/docs"
+    description: "Repository primarily dedicated to documentation artifacts"
+    responsibilities: [documentation maintenance, knowledge sharing, onboarding]
+
+  service:
+    iri: "https://sociosphere.io/ontology/role/service"
+    description: "Runtime service exposing APIs or event endpoints"
+    responsibilities: [runtime operations, API lifecycle, reliability]
+
+  api:
+    iri: "https://sociosphere.io/ontology/role/api"
+    description: "API-first repository defining or serving interfaces"
+    responsibilities: [interface definition, API governance, compatibility]
+
+  data:
+    iri: "https://sociosphere.io/ontology/role/data"
+    description: "Data-bearing repository with models, datasets, or curation assets"
+    responsibilities: [data stewardship, schema evolution, quality control]
+
+  ontology:
+    iri: "https://sociosphere.io/ontology/role/ontology"
+    description: "Domain ontology and semantic modeling repository"
+    responsibilities: [concept modeling, taxonomy management, semantic consistency]
+
+  knowledge-graph:
+    iri: "https://sociosphere.io/ontology/role/knowledge-graph"
+    description: "Knowledge graph structures and graph query assets"
+    responsibilities: [graph modeling, graph integrity, graph query enablement]
+
+  execution-plane:
+    iri: "https://sociosphere.io/ontology/role/execution-plane"
+    description: "Execution runtime plane for orchestrated task or agent workloads"
+    responsibilities: [workload scheduling, runtime coordination, execution guarantees]
+
+  replay:
+    iri: "https://sociosphere.io/ontology/role/replay"
+    description: "Replay/event reconstruction and deterministic trace tooling"
+    responsibilities: [event replay, trace reproducibility, incident reconstruction]
+
+  library:
+    iri: "https://sociosphere.io/ontology/role/library"
+    description: "Shared reusable library consumed across repositories"
+    responsibilities: [shared abstractions, versioning, backwards compatibility]
+
+  contract:
+    iri: "https://sociosphere.io/ontology/role/contract"
+    description: "Repository centered on one or more formal interface contracts"
+    responsibilities: [contract definition, compatibility guarantees, schema versioning]
+
+  contracts:
+    iri: "https://sociosphere.io/ontology/role/contracts"
+    description: "Repository containing collections of interoperable contracts"
+    responsibilities: [contract cataloging, contract governance, interoperability]
+
+  spec:
+    iri: "https://sociosphere.io/ontology/role/spec"
+    description: "Normative specifications and standards text"
+    responsibilities: [spec authoring, normative constraints, versioned guidance]
+
+  reference:
+    iri: "https://sociosphere.io/ontology/role/reference"
+    description: "Reference implementation or canonical design exemplar"
+    responsibilities: [reference behavior, canonical examples, baseline validation]
+
+  process:
+    iri: "https://sociosphere.io/ontology/role/process"
+    description: "Process and governance workflow repository"
+    responsibilities: [process definition, lifecycle governance, organizational controls]
+
+  product:
+    iri: "https://sociosphere.io/ontology/role/product"
+    description: "Product-facing application or experience layer"
+    responsibilities: [product delivery, user value, release quality]
+
+  intelligence:
+    iri: "https://sociosphere.io/ontology/role/intelligence"
+    description: "Inference, analytics, or intelligence workflow repository"
+    responsibilities: [model/inference workflows, analytics outputs, decision support]
+
+  research:
+    iri: "https://sociosphere.io/ontology/role/research"
+    description: "Exploratory research repository"
+    responsibilities: [experimentation, findings capture, prototype evaluation]
+
+  infra:
+    iri: "https://sociosphere.io/ontology/role/infra"
+    description: "Infrastructure shorthand role used in registry metadata"
+    responsibilities: [infrastructure operations, deployment assets, platform upkeep]
+
+  bootstrap:
+    iri: "https://sociosphere.io/ontology/role/bootstrap"
+    description: "Bootstrap and initialization repository"
+    responsibilities: [first-run setup, environment initialization, baseline provisioning]
+
+  bundle:
+    iri: "https://sociosphere.io/ontology/role/bundle"
+    description: "Bundled distribution or curated package set"
+    responsibilities: [artifact bundling, distribution packaging, release assembly]
+
+  client:
+    iri: "https://sociosphere.io/ontology/role/client"
+    description: "Client-side consumer implementation"
+    responsibilities: [client integration, consumption ergonomics, compatibility]
+
+  agent:
+    iri: "https://sociosphere.io/ontology/role/agent"
+    description: "Autonomous or semi-autonomous agent runtime/component"
+    responsibilities: [agent behavior, task execution, policy adherence]
+
+  topic-pack:
+    iri: "https://sociosphere.io/ontology/role/topic-pack"
+    description: "Topic-pack content and taxonomy package"
+    responsibilities: [topic curation, taxonomy packaging, semantic coverage]
 
 relationships:
   depends_on:
