@@ -1146,6 +1146,16 @@ repositories:
     visibility: public
     owners: [mdheller]
     topics: [llm-benchmark, reasoning, generation]
+
+  - name: demo-repository
+    org: SourceOS-Linux
+    layer: standards
+    purpose: "Demo repository for SourceOS-Linux — reference and onboarding examples"
+    language: unknown
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [demo, reference, onboarding]
 # canonical-repos.yaml — SocioProphet ecosystem canonical repository registry
 # Source of truth for all 53 curated repos in the SocioProphet multi-repo workspace.
 # Supersedes competing drafts from sociosphere PRs #20, #21, #23.
@@ -1642,10 +1652,28 @@ repos:
   - name: delivery-excellence-boards
     org: SocioProphet
     layer: governance
+    role: process
     purpose: "DelEx boards subsystem: project board and work-item tracking surface."
-    status: incubating
-    owners: []
-    notes: "newly added from snapshot; status tentative (incubating); awaiting: ontology extraction, dependency analysis"
+    language: Shell
+    status: active
+    priority: P3
+    tags: [boards, tracking, delivery, governance]
+    owners: [mdheller]
+    open_prs: 0
+    notes: "newly added from snapshot; awaiting: ontology extraction, dependency analysis"
+
+  - name: policy-fabric
+    org: SocioProphet
+    layer: governance
+    role: policy
+    purpose: "Policy fabric: unified policy authoring, validation, and enforcement across the SocioProphet stack."
+    language: null
+    status: active
+    priority: P1
+    tags: [policy, governance, enforcement, compliance]
+    owners: [mdheller]
+    open_prs: 0
+    notes: "newly added — identified from mdheller contribution activity (last 6 months)"
 
   # ── SourceOS / A2A Bootstrap ───────────────────────────────────────────────
 
@@ -1668,14 +1696,6 @@ repos:
     notes: "newly added from snapshot; status tentative (incubating); awaiting: ontology extraction, dependency analysis"
 
   # ── Knowledge / Semantic ──────────────────────────────────────────────────
-    role: process
-    purpose: "Project boards and tracking for delivery excellence."
-    language: Shell
-    status: active
-    priority: P3
-    tags: [boards, tracking, delivery]
-    owners: []
-    open_prs: 0
 
   - name: global-devsecops-intelligence
     org: SocioProphet
@@ -1754,10 +1774,15 @@ repos:
   - name: alexandrian-academy
     org: SocioProphet
     layer: research
-    purpose: "Purpose TBD — newly surfaced; likely a knowledge/learning platform surface."
+    role: research
+    purpose: "Alexandrian Academy knowledge curation and learning platform."
+    language: Python
     status: incubating
-    owners: []
-    notes: "newly added from snapshot; purpose unknown at time of addition; awaiting: full description, ontology extraction"
+    priority: P3
+    tags: [research, academy, knowledge, curation]
+    owners: [mdheller]
+    open_prs: 0
+    notes: "newly added from snapshot; awaiting: full description, ontology extraction"
 
   - name: regis-entity-graph
     org: SocioProphet
@@ -1782,18 +1807,15 @@ repos:
   - name: tritrpc-notes-archive
     org: SocioProphet
     layer: archive
+    role: archive
     purpose: "Archived notes for the TriTRPC protocol project — preserved as-is, no active development."
+    language: null
     status: archive
-    owners: []
-    notes: "newly added from snapshot; archived — preserve as-is; no further changes expected"
-    role: research
-    purpose: "Alexandrian Academy knowledge curation and learning."
-    language: Python
-    status: incubating
     priority: P3
-    tags: [research, academy, knowledge, curation]
+    tags: [archive, tritrpc, notes]
     owners: []
     open_prs: 0
+    notes: "newly added from snapshot; archived — preserve as-is; no further changes expected"
 
   - name: usol-space-library
     org: SocioProphet
