@@ -1,0 +1,34 @@
+apiVersion: fog.stack/v0alpha1
+kind: FogReleaseManifest
+metadata:
+  name: fog-stack-data-v0.1
+  profile: knowledge
+  releaseChannel: stable
+principles:
+  smallTeamFirst: true
+  antiBloat: true
+  protocolFirst:
+  - MCP
+  - A2A
+  - ACP
+  - HTTP/OpenAPI
+  - SQL
+  - S3
+  defaultWritePathMode: approve-gated
+bundledSurfaces:
+- Fog Base
+- Fog Lake
+- Fog Catalog
+- Fog Knowledge
+- Fog Trust
+externalPrerequisites:
+- kubernetes_cluster
+- external_object_storage_s3_compatible
+- maintained_ingress_or_gateway
+- external_dns_and_tls_authority
+- container_registry
+excludedByDefault:
+- Fog Content
+- Fog Master
+- full workflow / case automation
+- heavy notebook studio

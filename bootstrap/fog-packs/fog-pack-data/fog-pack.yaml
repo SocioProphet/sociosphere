@@ -1,0 +1,14 @@
+apiVersion: fog.socioprophet.io/v1alpha1
+kind: FogPack
+metadata:
+  name: fog-pack-data
+  organization: SocioProphet
+spec:
+  ibmAnalogue: Cloud Pak for Data
+  ownedSurfaces: Fog Base, Fog Lake, Fog Catalog, Fog Knowledge, Fog Trust
+  status: populate now
+  sharedFoundations:
+  - SocioProphet/sociosphere
+  - SocioProphet/TriTRPC
+  - SocioProphet/agentplane
+  - SocioProphet/socioprophet

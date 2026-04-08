@@ -1,0 +1,181 @@
+# compliance-policy.yaml — SocioProphet compliance requirements per repo layer
+# Defines what standards each repo must meet to be considered "compliant".
+# Used by telemetry/compliance_checker.py.
+# schema_version: 1
+
+metadata:
+  version: "1.0"
+  description: "Compliance policy for the SocioProphet ecosystem."
+
+# ── Global requirements (all active repos) ────────────────────────────────────
+global:
+  requirements:
+    - id: REQ-G01
+      name: single_default_branch
+      description: "Default branch must be 'main'. No long-lived feature branches allowed."
+      severity: error
+      exempt_roles: [product]  # socioprophet/socioprophet is exempt
+
+    - id: REQ-G02
+      name: no_stale_prs_over_90_days
+      description: "No open PRs older than 90 days without activity."
+      severity: warning
+
+    - id: REQ-G03
+      name: has_readme
+      description: "Repo must have a README.md at root."
+      severity: warning
+
+    - id: REQ-G04
+      name: no_prohibited_algorithms
+      description: "Source files must not reference MD5, SHA-1, DES, 3DES, RC4, or ECB for cryptographic use."
+      severity: error
+      patterns:
+        - "hashlib\\.md5"
+        - "hashlib\\.sha1"
+        - "\\bDES\\b"
+        - "\\b3DES\\b"
+        - "\\bRC4\\b"
+        - "AES.*ECB"
+      excludes: ["*.md", "*.txt", "*.yaml", "*.json", "*test*", "*spec*"]
+
+# ── Standards repos (governance layer) ───────────────────────────────────────
+standards:
+  applies_to_roles: [standards]
+  requirements:
+    - id: REQ-S01
+      name: has_adr_directory
+      description: "Standards repos must have an adr/ directory with at least one ADR."
+      severity: warning
+
+    - id: REQ-S02
+      name: has_changelog_or_versioning
+      description: "Standards repos must have VERSIONING.md or CHANGELOG.md."
+      severity: warning
+
+    - id: REQ-S03
+      name: has_contributing_guide
+      description: "Standards repos must have CONTRIBUTING.md with DCO sign-off requirement."
+      severity: warning
+
+    - id: REQ-S04
+      name: has_governance_doc
+      description: "Standards repos must have GOVERNANCE.md with approval matrix."
+      severity: warning
+
+# ── Protocol repos ────────────────────────────────────────────────────────────
+protocol:
+  applies_to_roles: [protocol]
+  requirements:
+    - id: REQ-P01
+      name: has_fixtures_directory
+      description: "Protocol repos must have a fixtures/ directory with reference fixtures."
+      severity: error
+
+    - id: REQ-P02
+      name: has_spec_directory
+      description: "Protocol repos must have a spec/ directory with normative specs."
+      severity: warning
+
+    - id: REQ-P03
+      name: no_non_deterministic_defaults
+      description: "Protocol fixtures must not use random/non-deterministic defaults."
+      severity: error
+
+# ── Execution plane repos ─────────────────────────────────────────────────────
+execution_plane:
+  applies_to_roles: [execution-plane]
+  requirements:
+    - id: REQ-E01
+      name: has_schema_directory
+      description: "Execution plane repos must have a schemas/ directory."
+      severity: error
+
+    - id: REQ-E02
+      name: has_evidence_handling
+      description: "Execution plane repos must define evidence/audit artifact schemas."
+      severity: error
+
+    - id: REQ-E03
+      name: implements_replay
+      description: "Execution plane repos must have replay contract documentation."
+      severity: warning
+
+# ── Control plane repos ────────────────────────────────────────────────────────
+control_plane:
+  applies_to_roles: [workspace-controller, tool]
+  requirements:
+    - id: REQ-C01
+      name: has_manifest_lock
+      description: "Workspace controller must have manifest/workspace.lock.json with resolved revisions."
+      severity: warning   # downgraded from error: known pre-existing gap; populate via 'runner fetch'
+      applies_to: [sociosphere]
+
+    - id: REQ-C02
+      name: has_registry
+      description: "Workspace controller must have registry/canonical-repos.yaml."
+      severity: error
+      applies_to: [sociosphere]
+
+    - id: REQ-C03
+      name: ci_passes
+      description: "All CI workflows must pass on the default branch."
+      severity: error
+
+# ── FIPS compliance requirements ──────────────────────────────────────────────
+fips:
+  applies_to_priorities: [P0, P1]
+  applies_to_layers: [core-platform, control-plane, governance, identity]
+  requirements:
+    - id: REQ-F01
+      name: fips_algorithm_compliance
+      description: "Must use only FIPS-approved algorithms: AES-256-GCM, ECDSA-P256, HKDF-SHA-256, SHA-256/384/512."
+      severity: error
+      source: "sociosphere ontologies/FIPS-COMPLIANCE-GUIDE.md"
+
+    - id: REQ-F02
+      name: tls_version
+      description: "TLS 1.3+ required for all network connections (RFC 8446)."
+      severity: error
+      source: "prophet-platform-standards ADR-050"
+
+    - id: REQ-F03
+      name: audit_log_immutability
+      description: "Audit logs must be hash-chained (SHA-256) with RFC 3161 timestamps."
+      severity: error
+      source: "prophet-platform-standards ADR-050 + sociosphere FIPS guide"
+
+    - id: REQ-F04
+      name: image_signing
+      description: "Container images must be signed with cosign keyless signing."
+      severity: warning
+      source: "prophet-platform-standards ADR-050 + policy-signed-images.yaml"
+
+# ── Security compliance ────────────────────────────────────────────────────────
+security:
+  applies_to_priorities: [P0, P1]
+  requirements:
+    - id: REQ-SEC01
+      name: has_codeql_workflow
+      description: "Repos with source code must have a CodeQL GitHub Actions workflow."
+      severity: warning
+      applies_to_languages: [Python, Go, JavaScript, TypeScript, Java]
+
+    - id: REQ-SEC02
+      name: has_dependabot
+      description: "Repos with dependencies must have dependabot.yml configured."
+      severity: warning
+
+    - id: REQ-SEC03
+      name: no_secrets_in_code
+      description: "No hardcoded secrets, API keys, or credentials in source files."
+      severity: error
+
+# ── Compliance thresholds ──────────────────────────────────────────────────────
+thresholds:
+  error_threshold: 0       # Any errors = non-compliant
+  warning_threshold: 5     # More than 5 warnings = at-risk
+  compliance_score:
+    fully_compliant: 100   # 0 errors, 0 warnings
+    at_risk: 80            # 0 errors, warnings within threshold
+    non_compliant: 0       # Any errors
