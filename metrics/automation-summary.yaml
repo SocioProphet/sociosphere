@@ -1,0 +1,40 @@
+# automation-summary.yaml
+# Human-readable automation effectiveness summary.
+# Auto-updated by: engines/metrics_collector.py
+# Last updated: 2026-04-06 (baseline — no runs yet)
+
+automation_summary:
+  baseline_date: "2026-04-06"
+  phase: "Phase 1 — Registry + Foundation"
+
+  registry:
+    status: "complete"
+    repos_documented: 53
+    ontologies_written: 12
+    dependencies_mapped: 14
+
+  propagation:
+    status: "ready — awaiting first webhook event"
+    runs_total: 0
+    runs_successful: 0
+    success_rate_pct: 0
+
+  devops:
+    status: "rules defined — awaiting first trigger"
+    runs_total: 0
+    runs_successful: 0
+    success_rate_pct: 0
+
+  deduplication:
+    status: "identified — consolidation in progress"
+    groups_total: 4
+    groups_resolved: 0
+    groups_in_progress: 2
+    completion_pct: 0
+
+  next_steps:
+    - "Deploy GitHub webhook to receive push events"
+    - "Run: python cli/rebuild-registry.py to verify registry completeness"
+    - "Run: python cli/analyze-ontology.py to update ontologies from live code"
+    - "Run: python cli/validate-deps.py to check dependency graph accuracy"
+    - "Monitor: python cli/measure-success.py after first propagation runs"

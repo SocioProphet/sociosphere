@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.local/sociosphere/schemas/events/workspace-events.schema.json",
+  "title": "SocioSphere Workspace Event",
+  "type": "object",
+  "required": [
+    "event_id",
+    "trace_id",
+    "span_id",
+    "event_type",
+    "ts",
+    "producer",
+    "payload"
+  ],
+  "properties": {
+    "event_id": { "type": "string" },
+    "trace_id": { "type": "string" },
+    "span_id": { "type": "string" },
+    "parent_span_id": { "type": "string" },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "workspace.resolved",
+        "workspace.locked",
+        "workspace.materialized"
+      ]
+    },
+    "ts": { "type": "string", "format": "date-time" },
+    "producer": { "type": "string", "const": "sociosphere" },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "workspace_manifest_id": { "type": "string" },
+        "workspace_lock_digest": { "type": "string" },
+        "benchmark_family": { "type": "string" },
+        "case_id": { "type": "string" },
+        "mission_weight": { "type": "number" },
+        "utility_rubric_version": { "type": "string" },
+        "latency_slo_ms": { "type": "number" },
+        "risk_class": { "type": "string" },
+        "materialization_root": { "type": "string" },
+        "component_count": { "type": "integer" }
+      },
+      "required": ["workspace_manifest_id"]
+    }
+  }
+}

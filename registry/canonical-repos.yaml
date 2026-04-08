@@ -1,0 +1,2086 @@
+# registry/canonical-repos.yaml
+# Canonical repository registry for the SocioProphet organization
+# 53 original repositories under management
+version: "1.0.0"
+organization: SocioProphet
+updated_at: "2026-04-06"
+
+repositories:
+  # ── Core workspace / orchestration ─────────────────────────────────────────
+  - id: sociosphere
+    name: sociosphere
+    url: https://github.com/SocioProphet/sociosphere
+    role: orchestrator
+    status: active
+    description: "Workspace controller, standards hub, and UI workbench"
+    primary_language: TypeScript
+    tags: [workspace, orchestrator, monorepo]
+
+  - id: source-os
+    name: source-os
+    url: https://github.com/SocioProphet/source-os
+    role: platform
+    status: active
+    description: "OS substrate and bootstrap layer"
+    primary_language: Shell
+    tags: [platform, os, substrate]
+
+  - id: socios
+    name: socios
+    url: https://github.com/SocioProphet/socios
+    role: legacy
+    status: archived
+    description: "Legacy macOS/VirtualBox installer (archived)"
+    primary_language: Shell
+    tags: [legacy, installer]
+
+  # ── Protocol and communication ──────────────────────────────────────────────
+  - id: tritrpc
+    name: tritrpc
+    url: https://github.com/SocioProphet/tritrpc
+    role: protocol
+    status: active
+    description: "TritRPC protocol spec + fixtures + reference implementations"
+    primary_language: Go
+    tags: [protocol, rpc, spec]
+
+  - id: tritrpc-notes-archive
+    name: tritrpc-notes-archive
+    url: https://github.com/SocioProphet/tritrpc-notes-archive
+    role: archive
+    status: archived
+    description: "Raw historical TritRPC drafts (RTF/HTML)"
+    primary_language: null
+    tags: [archive, notes]
+
+  - id: trit-to-trust
+    name: trit-to-trust
+    url: https://github.com/SocioProphet/trit-to-trust
+    role: adapter
+    status: active
+    description: "Trit-to-trust binding layer for zero-trust integration"
+    primary_language: Python
+    tags: [adapter, trust, security]
+
+  # ── Prophet platform ────────────────────────────────────────────────────────
+  - id: prophet-platform
+    name: prophet-platform
+    url: https://github.com/SocioProphet/prophet-platform
+    role: platform
+    status: active
+    description: "Core prophet platform services and APIs"
+    primary_language: Python
+    tags: [platform, api, services]
+
+  - id: prophet-cli
+    name: prophet-cli
+    url: https://github.com/SocioProphet/prophet-cli
+    role: tooling
+    status: active
+    description: "Prophet CLI tool for AI eval, serve, policy, and rollout"
+    primary_language: Python
+    tags: [cli, tooling, ai]
+
+  - id: prophet-ui
+    name: prophet-ui
+    url: https://github.com/SocioProphet/prophet-ui
+    role: frontend
+    status: active
+    description: "Prophet web UI and dashboard"
+    primary_language: TypeScript
+    tags: [ui, frontend, dashboard]
+
+  - id: prophet-sdk
+    name: prophet-sdk
+    url: https://github.com/SocioProphet/prophet-sdk
+    role: sdk
+    status: active
+    description: "Prophet SDK for third-party integrations"
+    primary_language: Python
+    tags: [sdk, integration]
+
+  # ── AI / ML ─────────────────────────────────────────────────────────────────
+  - id: prophet-ai-eval
+    name: prophet-ai-eval
+    url: https://github.com/SocioProphet/prophet-ai-eval
+    role: component
+    status: active
+    description: "AI model evaluation framework (Champion-Challenger)"
+    primary_language: Python
+    tags: [ai, eval, ml]
+
+  - id: semantic-search-bi
+    name: semantic-search-bi
+    url: https://github.com/SocioProphet/semantic-search-bi
+    role: component
+    status: active
+    description: "Semantic search with BI reporting capabilities"
+    primary_language: Python
+    tags: [search, semantic, bi]
+
+  - id: embeddings-service
+    name: embeddings-service
+    url: https://github.com/SocioProphet/embeddings-service
+    role: component
+    status: active
+    description: "HuggingFace embeddings microservice"
+    primary_language: Python
+    tags: [embeddings, ml, microservice]
+
+  - id: asr-service
+    name: asr-service
+    url: https://github.com/SocioProphet/asr-service
+    role: component
+    status: active
+    description: "Automatic speech recognition via Whisper"
+    primary_language: Python
+    tags: [asr, speech, ml]
+
+  - id: vision-classifier
+    name: vision-classifier
+    url: https://github.com/SocioProphet/vision-classifier
+    role: component
+    status: active
+    description: "Vision classification via ONNX runtime"
+    primary_language: Python
+    tags: [vision, classification, onnx, ml]
+
+  - id: cc-router
+    name: cc-router
+    url: https://github.com/SocioProphet/cc-router
+    role: component
+    status: active
+    description: "Champion-Challenger router (Ray Serve)"
+    primary_language: Python
+    tags: [router, ray, serve, ai]
+
+  # ── Security / Compliance ───────────────────────────────────────────────────
+  - id: fips-compliance
+    name: fips-compliance
+    url: https://github.com/SocioProphet/fips-compliance
+    role: compliance
+    status: active
+    description: "FIPS 140-2/140-3 compliance artifacts and checker"
+    primary_language: Python
+    tags: [fips, compliance, security]
+
+  - id: zero-trust-bindings
+    name: zero-trust-bindings
+    url: https://github.com/SocioProphet/zero-trust-bindings
+    role: security
+    status: active
+    description: "Zero-trust architecture bindings and policies"
+    primary_language: Python
+    tags: [security, zero-trust, policy]
+
+  - id: nist-800-53-controls
+    name: nist-800-53-controls
+    url: https://github.com/SocioProphet/nist-800-53-controls
+    role: compliance
+    status: active
+    description: "NIST 800-53 control implementations and validators"
+    primary_language: Python
+    tags: [nist, compliance, controls]
+
+  - id: crypto-carriers
+    name: crypto-carriers
+    url: https://github.com/SocioProphet/crypto-carriers
+    role: security
+    status: active
+    description: "COSE crypto carrier schemas and forensics pipeline"
+    primary_language: Python
+    tags: [crypto, cose, forensics]
+
+  # ── Data / Storage ──────────────────────────────────────────────────────────
+  - id: knowledge-graph
+    name: knowledge-graph
+    url: https://github.com/SocioProphet/knowledge-graph
+    role: component
+    status: active
+    description: "RDF/SPARQL knowledge graph service"
+    primary_language: Python
+    tags: [knowledge-graph, rdf, sparql]
+
+  - id: graph-explorer
+    name: graph-explorer
+    url: https://github.com/SocioProphet/graph-explorer
+    role: frontend
+    status: active
+    description: "Interactive graph explorer UI"
+    primary_language: TypeScript
+    tags: [graph, explorer, ui]
+
+  - id: data-pipeline
+    name: data-pipeline
+    url: https://github.com/SocioProphet/data-pipeline
+    role: component
+    status: active
+    description: "ETL/ELT data pipeline orchestration"
+    primary_language: Python
+    tags: [data, pipeline, etl]
+
+  - id: event-bus
+    name: event-bus
+    url: https://github.com/SocioProphet/event-bus
+    role: infrastructure
+    status: active
+    description: "Kafka-based event bus for workspace events"
+    primary_language: Python
+    tags: [events, kafka, messaging]
+
+  # ── Workspace / tooling ─────────────────────────────────────────────────────
+  - id: slash-topics
+    name: slash-topics
+    url: https://github.com/SocioProphet/slash-topics
+    role: component
+    status: active
+    description: "Topic taxonomy and slash-command routing"
+    primary_language: TypeScript
+    tags: [topics, taxonomy, routing]
+
+  - id: new-hope
+    name: new-hope
+    url: https://github.com/SocioProphet/new-hope
+    role: component
+    status: active
+    description: "New Hope runtime adapter layer"
+    primary_language: TypeScript
+    tags: [runtime, adapter]
+
+  - id: workspace-runner
+    name: workspace-runner
+    url: https://github.com/SocioProphet/workspace-runner
+    role: tooling
+    status: active
+    description: "Deterministic workspace runner for build/test tasks"
+    primary_language: Python
+    tags: [runner, tooling, build]
+
+
+  # ── Standards / Contracts ───────────────────────────────────────────────────
+  - id: adapter-contracts
+    name: adapter-contracts
+    url: https://github.com/SocioProphet/adapter-contracts
+    role: standards
+    status: active
+    description: "Adapter contract fixtures and compatibility tests"
+    primary_language: Python
+    tags: [contracts, adapters, fixtures]
+
+  - id: qes-contracts
+    name: qes-contracts
+    url: https://github.com/SocioProphet/qes-contracts
+    role: standards
+    status: active
+    description: "QES (Qualified Electronic Signature) contract specs"
+    primary_language: Python
+    tags: [qes, contracts, signatures]
+
+  - id: workspace-event-schema
+    name: workspace-event-schema
+    url: https://github.com/SocioProphet/workspace-event-schema
+    role: standards
+    status: active
+    description: "Workspace event schema definitions v0.1"
+    primary_language: Python
+    tags: [events, schema, standards]
+
+  - id: maipj-manifest
+    name: maipj-manifest
+    url: https://github.com/SocioProphet/maipj-manifest
+    role: standards
+    status: active
+    description: "MAIPJ live-receipt workspace manifest extensions"
+    primary_language: Python
+    tags: [maipj, manifest, live-receipt]
+
+  # ── UI / Frontend ───────────────────────────────────────────────────────────
+  - id: ui-workbench
+    name: ui-workbench
+    url: https://github.com/SocioProphet/ui-workbench
+    role: frontend
+    status: active
+    description: "Main Vue 3 + Vite UI workbench"
+    primary_language: TypeScript
+    tags: [ui, vue, vite, frontend]
+
+  - id: design-system
+    name: design-system
+    url: https://github.com/SocioProphet/design-system
+    role: frontend
+    status: active
+    description: "Shared design system and component library"
+    primary_language: TypeScript
+    tags: [design, components, ui]
+
+  - id: trust-registry-ui
+    name: trust-registry-ui
+    url: https://github.com/SocioProphet/trust-registry-ui
+    role: frontend
+    status: active
+    description: "Trust registry administration UI"
+    primary_language: TypeScript
+    tags: [trust, registry, ui]
+
+  - id: curation-ui
+    name: curation-ui
+    url: https://github.com/SocioProphet/curation-ui
+    role: frontend
+    status: active
+    description: "Content curation management UI"
+    primary_language: TypeScript
+    tags: [curation, ui, admin]
+
+  # ── Infrastructure / Deployment ─────────────────────────────────────────────
+  - id: k8s-manifests
+    name: k8s-manifests
+    url: https://github.com/SocioProphet/k8s-manifests
+    role: infrastructure
+    status: active
+    description: "Kubernetes manifests for all services"
+    primary_language: YAML
+    tags: [kubernetes, k8s, deployment]
+
+  - id: helm-charts
+    name: helm-charts
+    url: https://github.com/SocioProphet/helm-charts
+    role: infrastructure
+    status: active
+    description: "Helm charts for service deployment"
+    primary_language: YAML
+    tags: [helm, kubernetes, deployment]
+
+
+  # ── Identity / Trust ────────────────────────────────────────────────────────
+  - id: trust-registry
+    name: trust-registry
+    url: https://github.com/SocioProphet/trust-registry
+    role: component
+    status: active
+    description: "Decentralized trust registry service"
+    primary_language: Python
+    tags: [trust, registry, identity]
+
+  - id: did-resolver
+    name: did-resolver
+    url: https://github.com/SocioProphet/did-resolver
+    role: component
+    status: active
+    description: "DID (Decentralized Identifier) resolver"
+    primary_language: Python
+    tags: [did, identity, resolver]
+
+  - id: vc-issuer
+    name: vc-issuer
+    url: https://github.com/SocioProphet/vc-issuer
+    role: component
+    status: active
+    description: "Verifiable Credential issuer service"
+    primary_language: Python
+    tags: [vc, credentials, identity]
+
+  - id: vc-verifier
+    name: vc-verifier
+    url: https://github.com/SocioProphet/vc-verifier
+    role: component
+    status: active
+    description: "Verifiable Credential verifier service"
+    primary_language: Python
+    tags: [vc, credentials, verification]
+
+  # ── Connectors / Adapters ───────────────────────────────────────────────────
+  - id: connector-github
+    name: connector-github
+    url: https://github.com/SocioProphet/connector-github
+    role: adapter
+    status: active
+    description: "GitHub connector adapter"
+    primary_language: Python
+    tags: [connector, github, adapter]
+
+  - id: connector-gitlab
+    name: connector-gitlab
+    url: https://github.com/SocioProphet/connector-gitlab
+    role: adapter
+    status: active
+    description: "GitLab connector adapter"
+    primary_language: Python
+    tags: [connector, gitlab, adapter]
+
+  - id: connector-jira
+    name: connector-jira
+    url: https://github.com/SocioProphet/connector-jira
+    role: adapter
+    status: active
+    description: "Jira connector adapter"
+    primary_language: Python
+    tags: [connector, jira, adapter]
+
+  - id: connector-slack
+    name: connector-slack
+    url: https://github.com/SocioProphet/connector-slack
+    role: adapter
+    status: active
+    description: "Slack connector adapter"
+    primary_language: Python
+    tags: [connector, slack, adapter]
+
+  - id: connector-kafka
+    name: connector-kafka
+    url: https://github.com/SocioProphet/connector-kafka
+    role: adapter
+    status: active
+    description: "Kafka connector adapter"
+    primary_language: Python
+    tags: [connector, kafka, adapter]
+
+  # ── Documentation / Specs ───────────────────────────────────────────────────
+  - id: architecture-docs
+    name: architecture-docs
+    url: https://github.com/SocioProphet/architecture-docs
+    role: documentation
+    status: active
+    description: "Architecture decision records and system diagrams"
+    primary_language: Markdown
+    tags: [architecture, adr, documentation]
+
+  - id: api-specs
+    name: api-specs
+    url: https://github.com/SocioProphet/api-specs
+    role: documentation
+    status: active
+    description: "OpenAPI/AsyncAPI specifications for all services"
+    primary_language: YAML
+    tags: [api, openapi, specs]
+
+  - id: onboarding-docs
+    name: onboarding-docs
+    url: https://github.com/SocioProphet/onboarding-docs
+    role: documentation
+    status: active
+    description: "Developer onboarding and quickstart guides"
+    primary_language: Markdown
+    tags: [onboarding, documentation]
+
+  - id: runbooks
+    name: runbooks
+    url: https://github.com/SocioProphet/runbooks
+    role: documentation
+    status: active
+    description: "Operational runbooks and incident response playbooks"
+    primary_language: Markdown
+    tags: [runbooks, operations, documentation]
+
+  # ── Test / Quality ──────────────────────────────────────────────────────────
+  - id: integration-tests
+    name: integration-tests
+    url: https://github.com/SocioProphet/integration-tests
+    role: testing
+    status: active
+    description: "Cross-service integration test suite"
+    primary_language: Python
+    tags: [testing, integration, quality]
+
+  - id: e2e-tests
+    name: e2e-tests
+    url: https://github.com/SocioProphet/e2e-tests
+    role: testing
+    status: active
+    description: "End-to-end browser and API test suite"
+    primary_language: TypeScript
+    tags: [testing, e2e, playwright]
+
+  - id: load-tests
+    name: load-tests
+    url: https://github.com/SocioProphet/load-tests
+    role: testing
+    status: active
+    description: "Load and performance testing suite (k6)"
+    primary_language: JavaScript
+    tags: [testing, performance, load, k6]
+# sociosphere canonical repository registry
+# Single source of truth for all SocioProphet repositories.
+# Phase A: initial population — all entries marked for Phase B ontology extraction
+# and Phase C deduplication/consolidation.
+#
+# layer values:
+#   control-plane   – workspace orchestration, runner, CI/CD gating
+#   core-platform   – contracts, capabilities, shared libraries
+#   data-plane      – GAIA domain: ingest, catalog, query, storage
+#   governance      – delivery excellence, policy, compliance, ADRs
+#   identity        – identity primitives, entity graph
+#   research        – theoretical, experimental, benchmarking
+#   archive         – read-only preservation
+#
+# status values:
+#   active      – actively maintained and developed
+#   incubating  – early-stage or purpose not yet confirmed
+#   archive     – read-only, no further active development
+
+repos:
+
+  # ── Prophet Core Cluster ───────────────────────────────────────────────────
+
+  - name: prophet-core-ops-brief
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Auditable, provenance-first operational summary surface for prophet-core cluster."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; awaiting: ontology extraction, dependency analysis, potential consolidation into prophet-core"
+
+  - name: prophet-core-ledger
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Auditable, provenance-first ledger / append-only event log for prophet-core cluster."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; awaiting: ontology extraction, dependency analysis, potential consolidation into prophet-core"
+
+  - name: prophet-core-scaffolder
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Auditable, provenance-first scaffolding tooling for bootstrapping prophet-core components."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; awaiting: ontology extraction, dependency analysis, potential consolidation into prophet-core"
+
+  - name: prophet-core-libs
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Shared, auditable, provenance-first libraries for the prophet-core cluster."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; awaiting: ontology extraction, dependency analysis, potential consolidation into prophet-core"
+
+  - name: prophet-core-contracts
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Versioned capability/service contracts for the prophet-core cluster (open-only)."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; awaiting: ontology extraction, dependency analysis, potential consolidation into prophet-core"
+
+  # ── GAIA Domain / Data-Plane Cluster ──────────────────────────────────────
+
+  - name: prophet-core-infra
+    org: SocioProphet
+    layer: data-plane
+    purpose: "GAIA infrastructure layer: auditable, provenance-first compute/network primitives."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; GAIA cluster assignment tentative; awaiting: ontology extraction, dependency analysis"
+
+  - name: prophet-core-policy
+    org: SocioProphet
+    layer: data-plane
+    purpose: "GAIA policy enforcement layer: auditable rules and compliance gates."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; GAIA cluster assignment tentative; awaiting: ontology extraction, dependency analysis"
+
+  - name: prophet-core-query
+    org: SocioProphet
+    layer: data-plane
+    purpose: "GAIA query surface: auditable, provenance-first structured query interface."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; GAIA cluster assignment tentative; awaiting: ontology extraction, dependency analysis"
+
+  - name: prophet-core-catalog
+    org: SocioProphet
+    layer: data-plane
+    purpose: "GAIA data catalog: auditable, provenance-first asset discovery and registration."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; GAIA cluster assignment tentative; awaiting: ontology extraction, dependency analysis"
+
+  - name: prophet-core-ingest
+    org: SocioProphet
+    layer: data-plane
+    purpose: "GAIA ingest pipeline: auditable, provenance-first data intake and normalization."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; GAIA cluster assignment tentative; awaiting: ontology extraction, dependency analysis"
+
+  - name: prophet-domain-gaia-ontology
+    org: SocioProphet
+    layer: data-plane
+    purpose: "GAIA domain ontology: RDF/OWL ontology definitions for the auditable Earth digital twin."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; known active via commit history; awaiting: full ontology extraction, dependency analysis"
+
+  - name: prophet-domain-gaia-curation-vault
+    org: SocioProphet
+    layer: data-plane
+    purpose: "GAIA curation vault: provenance-pinned curated dataset storage and review surface."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; GAIA cluster assignment tentative; awaiting: ontology extraction, dependency analysis"
+
+  # ── Delivery Excellence (DelEx) Cluster ───────────────────────────────────
+
+  - name: delivery-excellence
+    org: SocioProphet
+    layer: governance
+    purpose: "DelEx governance hub: scope definition, ADRs, templates, KPIs/OKRs for delivery excellence."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; awaiting: ontology extraction, dependency analysis"
+# canonical-repos.yaml
+# Single source of truth for all SocioProphet repositories.
+# Auto-updated by: python cli/rebuild-registry.py
+# Last updated: 2026-04-06
+
+repositories:
+  # ── control-plane ────────────────────────────────────────────────────────
+  - name: sociosphere
+    org: SocioProphet
+    layer: control-plane
+    purpose: "Workspace controller + governance gates (composition + validation)"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [workspace-orchestration, governance-enforcement, policy-validation]
+
+  # ── core-platform ────────────────────────────────────────────────────────
+  - name: prophet-platform
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Core platform repo (contracts/capabilities/services) for SocioProphet"
+    language: Go
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [contract-specification, service-interface, capability-declaration]
+
+  - name: TriTRPC
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Deterministic, ternary-native RPC protocol with authenticated envelope framing"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [rpc-protocol, deterministic-transport, authenticated-framing]
+
+  # ── standards ────────────────────────────────────────────────────────────
+  - name: socioprophet-standards-storage
+    org: SocioProphet
+    layer: standards
+    purpose: "Standards and decision package for open, vendor-neutral incident intelligence"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [standards-authority, incident-intelligence, decision-packages]
+
+  - name: socioprophet-standards-knowledge
+    org: SocioProphet
+    layer: standards
+    purpose: "SocioProphet Knowledge Context standards (micro-publications, meriotopographics)"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [knowledge-context, micro-publications, tokenization]
+
+  # ── execution ────────────────────────────────────────────────────────────
+  - name: agentplane
+    org: SocioProphet
+    layer: execution
+    purpose: "Execution control plane (bundle→validate→run→evidence→replay) with governance"
+    language: Shell
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [execution-control, bundle-validation, evidence-replay]
+
+  - name: new-hope
+    org: SocioProphet
+    layer: execution
+    purpose: "Safe carrier ingest + membrane decisions for scoped social knowledge alignment"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [carrier-ingest, membrane-decisions, knowledge-alignment]
+
+  # ── agents ───────────────────────────────────────────────────────────────
+  - name: hyperswarm-agent-composable-cluster-scaleup
+    org: SocioProphet
+    layer: agents
+    purpose: "Reproducible, policy-forward wrapper pinning upstream scale-up primitives"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [agent-orchestration, cluster-scaling, hyperswarm]
+    notes: "Variant 1 of 3 — see deduplication-map.yaml"
+
+  - name: mcp-a2a-zero-trust
+    org: SocioProphet
+    layer: agents
+    purpose: "MCP agent-to-agent zero-trust communication framework"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [zero-trust, agent-to-agent, mcp-protocol]
+
+  # ── ontology ─────────────────────────────────────────────────────────────
+  - name: gaia-world-model
+    org: SocioProphet
+    layer: ontology
+    purpose: "Auditable Earth digital twin scaffolding: provenance-pinned ontologies"
+    language: Turtle
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [digital-twin, provenance-ontology, earth-model]
+
+  - name: ontogenesis
+    org: SocioProphet
+    layer: ontology
+    purpose: "Ontology generation and evolution tooling"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [ontology-generation, semantic-evolution, graph-reasoning]
+
+  - name: graphbrain-contract
+    org: SocioProphet
+    layer: ontology
+    purpose: "Graph-brain contract definitions for semantic reasoning"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [graph-contracts, semantic-reasoning, knowledge-graph]
+
+  # ── data-layer ───────────────────────────────────────────────────────────
+  - name: slash-topics
+    org: SocioProphet
+    layer: data-layer
+    purpose: "Governed topic packs + membrane outputs feeding embeddings and semantic BI"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [topic-governance, embeddings, semantic-bi]
+
+  - name: semantic-serdes
+    org: SocioProphet
+    layer: data-layer
+    purpose: "Semantic serialization/deserialization framework"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [serialization, semantic-encoding, data-interchange]
+
+  - name: systems-learning-loops
+    org: SocioProphet
+    layer: data-layer
+    purpose: "Systems-level learning loop infrastructure"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [learning-loops, feedback-systems, adaptive-control]
+
+  # ── identity ─────────────────────────────────────────────────────────────
+  - name: identity-is-prime-reference
+    org: SocioProphet
+    layer: identity
+    purpose: "Prime reference implementation for identity primitives"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [identity-primitives, authentication, zero-trust]
+
+  - name: cairnpath-mesh
+    org: SocioProphet
+    layer: identity
+    purpose: "Cairnpath mesh networking for distributed identity routing"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [mesh-networking, distributed-identity, routing]
+
+  # ── human-interface ──────────────────────────────────────────────────────
+  - name: human-digital-twin
+    org: SocioProphet
+    layer: human-interface
+    purpose: "Protocol + reference implementation for minimal reproducible human API surface"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [human-api, digital-twin, reproducible-interface]
+
+  - name: lampstand
+    org: SocioProphet
+    layer: human-interface
+    purpose: "Lampstand: human-readable output and display layer"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [display-layer, human-readable, output-formatting]
+
+  # ── atlas-bundles ────────────────────────────────────────────────────────
+  - name: atlas_master_bundle_autopilot_fullorchestration
+    org: SocioProphet
+    layer: atlas-bundles
+    purpose: "Atlas master bundle with full autopilot orchestration"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [autopilot, full-orchestration, atlas-bundle]
+
+  - name: atlas_master_bundle_complete
+    org: SocioProphet
+    layer: atlas-bundles
+    purpose: "Atlas master bundle — complete configuration"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [atlas-bundle, complete-config, workspace-bundle]
+
+  - name: atlas_os_service_full
+    org: SocioProphet
+    layer: atlas-bundles
+    purpose: "Atlas OS service — full service definition"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [os-service, atlas, service-definition]
+
+  # ── intelligence ─────────────────────────────────────────────────────────
+  - name: global-devsecops-intelligence
+    org: SocioProphet
+    layer: intelligence
+    purpose: "Global DevSecOps intelligence aggregation and analysis"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [devsecops, intelligence, security-analytics]
+
+  - name: socioprophet
+    org: SocioProphet
+    layer: intelligence
+    purpose: "Open collaborative socio-data-lytics platform"
+    language: HTML
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [collaborative-platform, social-analytics, data-lytics]
+
+  # ── infra ────────────────────────────────────────────────────────────────
+  - name: cloudshell-fog
+    org: SocioProphet
+    layer: infra
+    purpose: "Cloud shell fog layer for distributed workspace access"
+    language: Shell
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [cloud-shell, fog-computing, workspace-access]
+    notes: "Duplicate also exists in SociOS-Linux — see deduplication-map.yaml"
+
+  - name: speechlab
+    org: SocioProphet
+    layer: infra
+    purpose: "Speech processing lab tooling"
+    language: Makefile
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [speech-processing, audio-lab, asr]
+    notes: "Duplicate also exists in SociOS-Linux/SourceOS-Linux — see deduplication-map.yaml"
+
+  # ── private ──────────────────────────────────────────────────────────────
+  - name: prophet-cli
+    org: SocioProphet
+    layer: core-platform
+    purpose: "Command-line interface for the prophet platform"
+    language: unknown
+    status: active
+    visibility: private
+    owners: [mdheller]
+    topics: [cli, developer-tooling, prophet-platform]
+
+  - name: memory-mesh-upstream
+    org: SocioProphet
+    layer: agents
+    purpose: "Memory mesh upstream synchronization"
+    language: Python
+    status: active
+    visibility: private
+    owners: [mdheller]
+    topics: [memory-mesh, upstream-sync, agent-memory]
+
+  - name: sourceos-workspace
+    org: SocioProphet
+    layer: infra
+    purpose: "SourceOS workspace configuration"
+    language: Ruby
+    status: active
+    visibility: private
+    owners: [mdheller]
+    topics: [workspace-config, sourceos, ruby-tooling]
+
+  - name: Shining-Apple
+    org: SocioProphet
+    layer: unknown
+    purpose: "Unknown — private repository"
+    language: unknown
+    status: active
+    visibility: private
+    owners: [mdheller]
+    topics: []
+    notes: "To be classified"
+
+  # ── domain-models ────────────────────────────────────────────────────────
+  - name: prophet-domain-gaia-ontology
+    org: SocioProphet
+    layer: ontology
+    purpose: "Gaia domain ontology for the prophet platform"
+    language: unknown
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [domain-ontology, gaia, prophet-platform]
+
+  # ── SociOS-Linux repos ───────────────────────────────────────────────────
+  - name: agentos-starter
+    org: SociOS-Linux
+    layer: agents
+    purpose: "AgentOS starter kit"
+    language: unknown
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [agentos, starter-kit, agent-bootstrap]
+
+  - name: imagelab
+    org: SociOS-Linux
+    layer: infra
+    purpose: "Image processing laboratory tooling"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [image-processing, lab, computer-vision]
+
+  - name: workstation-contracts
+    org: SociOS-Linux
+    layer: standards
+    purpose: "Workstation/CI lane contract spec: versioned JSON Schema + validator + CI gate"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [workstation-contracts, ci-gate, json-schema]
+
+  - name: socios
+    org: SociOS-Linux
+    layer: core-platform
+    purpose: "Core socios platform"
+    language: unknown
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [socios, platform-core, collaborative]
+
+  - name: agentos-spine
+    org: SociOS-Linux
+    layer: agents
+    purpose: "AgentOS spine — core agent runtime spine"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [agentos, agent-runtime, spine]
+
+  - name: hyperswarm-agent-composable-cluster-scale-up
+    org: SociOS-Linux
+    layer: agents
+    purpose: "HyperSwarm agent composable cluster scale up"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [agent-orchestration, cluster-scaling, hyperswarm]
+    notes: "Variant 2 of 3 — see deduplication-map.yaml"
+
+  - name: socioslinux-web
+    org: SociOS-Linux
+    layer: human-interface
+    purpose: "Public web and docs surface for the Socios Linux stack"
+    language: Shell
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [public-web, documentation, socios-linux]
+
+  - name: speechlab
+    org: SociOS-Linux
+    layer: infra
+    purpose: "Speech lab (SociOS-Linux mirror)"
+    language: HTML
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [speech-processing, audio-lab, asr]
+    notes: "Duplicate of SocioProphet/speechlab — see deduplication-map.yaml"
+
+  - name: videolab
+    org: SociOS-Linux
+    layer: infra
+    purpose: "Video processing laboratory tooling"
+    language: Shell
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [video-processing, lab, media]
+
+  - name: ocrlab
+    org: SociOS-Linux
+    layer: infra
+    purpose: "OCR laboratory tooling"
+    language: Shell
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [ocr, image-processing, lab]
+
+  - name: SourceOS
+    org: SociOS-Linux
+    layer: core-platform
+    purpose: "SourceOS core platform"
+    language: Python
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [sourceos, platform, os-abstraction]
+
+  - name: cloudshell-fog
+    org: SociOS-Linux
+    layer: infra
+    purpose: "Cloud shell fog (SociOS-Linux mirror)"
+    language: Shell
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [cloud-shell, fog-computing, workspace-access]
+    notes: "Duplicate of SocioProphet/cloudshell-fog — see deduplication-map.yaml"
+
+  # ── SourceOS-Linux repos ─────────────────────────────────────────────────
+  - name: sourceos-spec
+    org: SourceOS-Linux
+    layer: standards
+    purpose: "SourceOS specification"
+    language: unknown
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [sourceos, specification, standards]
+
+  - name: openclaw
+    org: SourceOS-Linux
+    layer: human-interface
+    purpose: "Personal AI assistant — any OS, any platform"
+    language: TypeScript
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [ai-assistant, cross-platform, cli]
+
+  - name: dnote
+    org: SourceOS-Linux
+    layer: human-interface
+    purpose: "Simple command line notebook for programmers"
+    language: Go
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [notebook, cli, knowledge-management]
+
+  - name: nix-openclaw
+    org: SourceOS-Linux
+    layer: infra
+    purpose: "Packages clawdis for nix"
+    language: Nix
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [nix, packaging, openclaw]
+
+  - name: nocalhost
+    org: SourceOS-Linux
+    layer: infra
+    purpose: "Cloud native dev environment"
+    language: Go
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [cloud-native, dev-environment, kubernetes]
+
+  - name: LLM-RGB
+    org: SourceOS-Linux
+    layer: intelligence
+    purpose: "LLM reasoning and generation benchmark"
+    language: TypeScript
+    status: active
+    visibility: public
+    owners: [mdheller]
+    topics: [llm-benchmark, reasoning, generation]
+# canonical-repos.yaml — SocioProphet ecosystem canonical repository registry
+# Source of truth for all 53 curated repos in the SocioProphet multi-repo workspace.
+# Supersedes competing drafts from sociosphere PRs #20, #21, #23.
+# generated_at: 2026-04-06
+# schema_version: 1
+
+repos:
+
+  # ── Standards & Governance ────────────────────────────────────────────────
+  - name: prophet-platform-standards
+    org: SocioProphet
+    layer: governance
+    role: standards
+    purpose: "Normative platform standards: ADRs, Tekton/ArgoCD pipelines, DevSecOps/RBAC/Audit, OTEL, Kyverno policies."
+    language: YAML
+    status: active
+    priority: P0
+    tags: [standards, adr, ci-cd, fips, rbac, otel, kyverno]
+    owners: [mdheller]
+    open_prs: 1
+    notes: "PR#1 (draft) must merge first — foundational ADRs 040/050/060 block all downstream standards compliance."
+
+  - name: socioprophet-standards-storage
+    org: SocioProphet
+    layer: governance
+    role: standards
+    purpose: "Storage, data-layer, FIPS 140-2/140-3, P2P, orchestration, ML/AI, and agent-plane runtime standards."
+    language: Python
+    status: active
+    priority: P0
+    tags: [standards, fips, storage, ml, p2p, agent-plane]
+    owners: [mdheller]
+    open_prs: 18
+    notes: "18 open draft PRs — FIPS cluster (#14–#23) must be triaged and chained before merge. PR#13 (shared schemas) is prerequisite for slice work."
+
+  - name: socioprophet-standards-knowledge
+    org: SocioProphet
+    layer: governance
+    role: standards
+    purpose: "Knowledge context standards: micro-publications, meriotopographics, schema authority (Avro/JSON-LD/JSON Schema)."
+    language: Python
+    status: active
+    priority: P1
+    tags: [standards, knowledge, schema, avro, jsonld, jsonschema]
+    owners: [mdheller]
+    open_prs: 7
+    notes: "PRs #16–#21 (non-draft READMEs) are ready to merge immediately. PR#22 (AOKC taxonomy) is draft."
+
+  - name: sociosphere
+    org: SocioProphet
+    layer: control-plane
+    role: workspace-controller
+    purpose: "Workspace controller, manifest+lock, runner, registry, compliance tooling, and protocol fixtures."
+    language: Python
+    status: active
+    priority: P0
+    tags: [workspace, controller, manifest, registry, compliance, runner]
+    owners: [mdheller]
+    open_prs: 9
+    notes: "Central orchestration repo. PRs #20/#21/#23 conflict on registry/canonical-repos.yaml — superseded by this consolidated registry."
+
+  # ── Transport & Protocol ──────────────────────────────────────────────────
+  - name: TriTRPC
+    org: SocioProphet
+    layer: core-platform
+    role: protocol
+    purpose: "Deterministic, ternary-native RPC protocol with authenticated envelope framing and Rust/Go implementations."
+    language: Python
+    status: active
+    priority: P0
+    tags: [protocol, rpc, ternary, deterministic, fixtures, rust, go, avro, aead]
+    owners: [mdheller]
+    open_prs: 7
+    notes: "PR#18 has a write-probe artifact (.write_probe.txt) that must be removed before merge. PR#20 (local-hybrid slice) depends on agentplane#12."
+
+  - name: agentplane
+    org: SocioProphet
+    layer: core-platform
+    role: execution-plane
+    purpose: "Execution control plane: bundle→validate→run→evidence→replay with governance."
+    language: Shell
+    status: active
+    priority: P0
+    tags: [execution, bundle, evidence, replay, governance, slice]
+    owners: [mdheller]
+    open_prs: 2
+    notes: "PR#12 (local-hybrid slice layout) is prerequisite for TriTRPC#20."
+
+  - name: semantic-serdes
+    org: SocioProphet
+    layer: core-platform
+    role: library
+    purpose: "Semantic serialization/deserialization utilities."
+    language: Python
+    status: active
+    priority: P1
+    tags: [serialization, semantic, library]
+    owners: [mdheller]
+    open_prs: 1
+    notes: "PR#1 (promote 2026-03-25 winner) — review for canonical fit before merge."
+
+  - name: cairnpath-mesh
+    org: SocioProphet
+    layer: core-platform
+    role: replay
+    purpose: "Replayable decision checkpoints and materialization for twin economy reconciliation."
+    language: Python
+    status: active
+    priority: P1
+    tags: [replay, reconciliation, twin-economy, materialization]
+    owners: [mdheller]
+    open_prs: 1
+    notes: "PR#1 (twin economy Cairn reconciliation contract) targets non-main base — verify base branch before merge."
+
+  # ── Human Digital Twin ────────────────────────────────────────────────────
+  - name: human-digital-twin
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Minimal reproducible human API surface: evaluate/promote/export human-centric artifacts under zero-trust."
+    language: Python
+    status: active
+    priority: P1
+    tags: [hdt, human, zero-trust, policy, consent, evidence]
+    owners: [mdheller]
+    open_prs: 1
+    notes: "PR#4 (policy/approval events + consent receipt binding) is part of live-receipt path."
+
+  # ── GAIA Data-Plane ───────────────────────────────────────────────────────
+  - name: gaia-world-model
+    org: SocioProphet
+    layer: data-plane
+    role: ontology
+    purpose: "GAIA world model OWL/RDF ontology — semantic backbone for the GAIA data plane."
+    language: Turtle
+    status: active
+    priority: P1
+    tags: [gaia, ontology, rdf, owl, turtle, knowledge-graph]
+    owners: [mdheller]
+    open_prs: 0
+    notes: "5 open issues, 0 PRs — critical data-plane component without active PR work. Phase B gap."
+
+  - name: prophet-domain-gaia-ontology
+    org: SocioProphet
+    layer: data-plane
+    role: ontology
+    purpose: "Prophet-domain specific GAIA ontology extensions."
+    language: null
+    status: active
+    priority: P2
+    tags: [gaia, ontology, prophet-domain]
+    owners: []
+    open_prs: 0
+    notes: "Potential overlap with gaia-world-model — deduplication candidate (Phase C)."
+
+  - name: prophet-domain-gaia-curation-vault
+    org: SocioProphet
+    layer: data-plane
+    role: data
+    purpose: "Curated GAIA data vault."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [gaia, curation, vault, data]
+    owners: []
+    open_prs: 0
+    notes: "Incubating — needs scope definition."
+
+  - name: socius-kg
+    org: SocioProphet
+    layer: data-plane
+    role: knowledge-graph
+    purpose: "Socius knowledge graph."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [knowledge-graph, socius]
+    owners: []
+    open_prs: 0
+    notes: "1 open issue, 0 PRs."
+
+  - name: regis-entity-graph
+    org: SocioProphet
+    layer: data-plane
+    role: knowledge-graph
+    purpose: "Entity graph for Regis — structured entity relationships."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [entity-graph, regis, knowledge]
+    owners: []
+    open_prs: 0
+    notes: "1 open issue, 0 PRs."
+
+  - name: slash-topics
+    org: SocioProphet
+    layer: data-plane
+    role: topic-pack
+    purpose: "Governed topic packs and membrane outputs feeding embeddings and semantic BI."
+    language: Python
+    status: active
+    priority: P1
+    tags: [topics, semantic, embeddings, bi, receipt-path]
+    owners: [mdheller]
+    open_prs: 1
+    notes: "PR#14 (topic-pack provenance + receipt binding) is part of live-receipt path chain."
+
+  - name: graphbrain-contract
+    org: SocioProphet
+    layer: data-plane
+    role: contract
+    purpose: "GraphBrain integration contracts and binding specs."
+    language: Python
+    status: incubating
+    priority: P2
+    tags: [graphbrain, contract, binding]
+    owners: []
+    open_prs: 0
+
+  - name: ontogenesis
+    org: SocioProphet
+    layer: data-plane
+    role: component
+    purpose: "Ontology generation and management tooling."
+    language: Python
+    status: active
+    priority: P1
+    tags: [ontology, generation, tooling]
+    owners: [mdheller]
+    open_prs: 1
+    notes: "PR#1 (promote 2026-03-25 winner) — review for canonical fit."
+
+  # ── Prophet Core Platform ─────────────────────────────────────────────────
+  - name: prophet-platform
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Go-based Prophet platform core."
+    language: Go
+    status: active
+    priority: P1
+    tags: [prophet, platform, go]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-libs
+    org: SocioProphet
+    layer: core-platform
+    role: library
+    purpose: "Shared Prophet core libraries."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [prophet, core, library]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-contracts
+    org: SocioProphet
+    layer: core-platform
+    role: contracts
+    purpose: "Prophet core API contracts and interface definitions."
+    language: null
+    status: incubating
+    priority: P1
+    tags: [prophet, core, contracts, api]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-ledger
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Auditable, provenance-first ledger and append-only event log."
+    language: null
+    status: incubating
+    priority: P1
+    tags: [prophet, core, ledger, audit, provenance, event-log]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-ingest
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Prophet core data ingestion pipeline."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [prophet, core, ingest, pipeline]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-catalog
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Prophet core asset catalog."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [prophet, core, catalog, assets]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-query
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Prophet core query engine."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [prophet, core, query]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-policy
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Prophet core policy engine and enforcement."
+    language: null
+    status: incubating
+    priority: P1
+    tags: [prophet, core, policy, enforcement]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-infra
+    org: SocioProphet
+    layer: core-platform
+    role: infra
+    purpose: "Prophet core infrastructure definitions (K8s, Helm, Terraform)."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [prophet, core, infra, k8s, helm]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-scaffolder
+    org: SocioProphet
+    layer: core-platform
+    role: tool
+    purpose: "Prophet core repo scaffolding tool."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [prophet, core, scaffolding, tool]
+    owners: []
+    open_prs: 0
+
+  - name: prophet-core-ops-brief
+    org: SocioProphet
+    layer: core-platform
+    role: docs
+    purpose: "Prophet core operations briefings and runbooks."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [prophet, core, ops, runbooks]
+    owners: []
+    open_prs: 0
+
+  # ── Identity & Zero-Trust ─────────────────────────────────────────────────
+  - name: mcp-a2a-zero-trust
+    org: SocioProphet
+    layer: identity
+    role: security
+    purpose: "MCP agent-to-agent zero-trust communication and attestation."
+    language: Python
+    status: active
+    priority: P1
+    tags: [zero-trust, a2a, mcp, security, attestation, fips]
+    owners: [mdheller]
+    open_prs: 1
+    dedup_candidate: true
+    notes: "Overlap with sourceos-a2a-mcp-bootstrap — consolidation target (Phase C). PR#1 (issue standards DoD) from Jan 2026."
+
+  - name: identity-is-prime-reference
+    org: SocioProphet
+    layer: identity
+    role: reference
+    purpose: "Reference implementation for identity-is-prime principle."
+    language: Python
+    status: incubating
+    priority: P2
+    tags: [identity, reference, zero-trust]
+    owners: []
+    open_prs: 0
+
+  - name: ReputationVault
+    org: SocioProphet
+    layer: identity
+    role: component
+    purpose: "Reputation and trust vault for agent/entity reputation tracking."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [reputation, trust, vault, identity]
+    owners: []
+    open_prs: 0
+
+  # ── SourceOS Bootstrap ────────────────────────────────────────────────────
+  - name: sourceos-a2a-mcp-bootstrap
+    org: SocioProphet
+    layer: core-platform
+    role: bootstrap
+    purpose: "SourceOS agent-to-agent MCP bootstrap tooling."
+    language: Python
+    status: active
+    priority: P1
+    tags: [sourceos, a2a, mcp, bootstrap]
+    owners: []
+    dedup_candidate: true
+    open_prs: 0
+    notes: "Overlap with mcp-a2a-zero-trust — deduplication analysis needed (Phase C)."
+
+  - name: workspace-inventory
+    org: SocioProphet
+    layer: control-plane
+    role: tool
+    purpose: "Workspace inventory tooling for tracking materialized repos."
+    language: Python
+    status: active
+    priority: P1
+    tags: [workspace, inventory, tooling]
+    owners: []
+    open_prs: 0
+    notes: "In workspace manifest; 0 issues; critical for lock file resolution."
+
+  # ── Delivery Excellence ───────────────────────────────────────────────────
+  - name: delivery-excellence
+    org: SocioProphet
+    layer: governance
+    role: process
+    purpose: "Delivery excellence processes, standards, and practices."
+    language: null
+    status: active
+    priority: P2
+    tags: [delivery, excellence, process, governance]
+    owners: []
+    open_prs: 0
+
+  - name: delivery-excellence-automation
+    org: SocioProphet
+    layer: governance
+    purpose: "DelEx automation: RBAC policies, routing rules, CI validation gates."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; awaiting: ontology extraction, dependency analysis"
+    role: tool
+    purpose: "Automation tooling for delivery excellence processes."
+    language: Python
+    status: active
+    priority: P2
+    tags: [delivery, automation, tooling]
+    owners: []
+    open_prs: 0
+
+  - name: delivery-excellence-innersource
+    org: SocioProphet
+    layer: governance
+    purpose: "DelEx innersource subsystem: inner-source governance patterns and contribution tooling."
+    status: incubating
+    owners: []
+    notes: "newly added from snapshot; status tentative (incubating); awaiting: ontology extraction, dependency analysis"
+    role: process
+    purpose: "InnerSource delivery excellence standards and practices."
+    language: Shell
+    status: active
+    priority: P2
+    tags: [innersource, delivery, standards]
+    owners: []
+    open_prs: 0
+
+  - name: delivery-excellence-bounties
+    org: SocioProphet
+    layer: governance
+    purpose: "DelEx bounties subsystem: bounty/incentive management for open contributions."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; known active via commit history; awaiting: ontology extraction, dependency analysis"
+    role: process
+    purpose: "Bounty and incentive programs for delivery excellence."
+    language: Shell
+    status: active
+    priority: P3
+    tags: [bounties, incentives, delivery]
+    owners: []
+    open_prs: 0
+
+  - name: delivery-excellence-boards
+    org: SocioProphet
+    layer: governance
+    purpose: "DelEx boards subsystem: project board and work-item tracking surface."
+    status: incubating
+    owners: []
+    notes: "newly added from snapshot; status tentative (incubating); awaiting: ontology extraction, dependency analysis"
+
+  # ── SourceOS / A2A Bootstrap ───────────────────────────────────────────────
+
+  - name: sourceos-a2a-mcp-bootstrap
+    org: SocioProphet
+    layer: control-plane
+    purpose: "Bootstrap surface for SourceOS + A2A + MCP alignment: workspace init and protocol binding."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; referenced in workspace.toml as sourceos_a2a_mcp_bootstrap; awaiting: ontology extraction, dependency analysis"
+
+  # ── Workspace / Inventory ─────────────────────────────────────────────────
+
+  - name: workspace-inventory
+    org: SocioProphet
+    layer: control-plane
+    purpose: "Workspace catalog/index surface: enumerates and tracks all components in the sociosphere."
+    status: incubating
+    owners: []
+    notes: "newly added from snapshot; status tentative (incubating); awaiting: ontology extraction, dependency analysis"
+
+  # ── Knowledge / Semantic ──────────────────────────────────────────────────
+    role: process
+    purpose: "Project boards and tracking for delivery excellence."
+    language: Shell
+    status: active
+    priority: P3
+    tags: [boards, tracking, delivery]
+    owners: []
+    open_prs: 0
+
+  - name: global-devsecops-intelligence
+    org: SocioProphet
+    layer: governance
+    role: intelligence
+    purpose: "Global DevSecOps intelligence aggregation and analysis."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [devsecops, intelligence, security]
+    owners: []
+    open_prs: 0
+
+  # ── Atlas & Research ──────────────────────────────────────────────────────
+  - name: atlas_master_bundle_complete
+    org: SocioProphet
+    layer: research
+    role: bundle
+    purpose: "Complete Atlas master bundle for full orchestration."
+    language: Python
+    status: active
+    priority: P2
+    tags: [atlas, bundle, orchestration]
+    owners: []
+    open_prs: 0
+
+  - name: atlas_master_bundle_autopilot_fullorchestration
+    org: SocioProphet
+    layer: research
+    role: bundle
+    purpose: "Atlas master bundle with autopilot and full orchestration."
+    language: Python
+    status: active
+    priority: P2
+    tags: [atlas, bundle, autopilot, orchestration]
+    owners: []
+    open_prs: 0
+
+  - name: atlas_os_service_full
+    org: SocioProphet
+    layer: research
+    role: service
+    purpose: "Full Atlas OS service implementation."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [atlas, os, service]
+    owners: []
+    open_prs: 0
+
+  - name: Heller-Winters-Theorem
+    org: SocioProphet
+    layer: research
+    role: research
+    purpose: "Heller-Winters theorem research and implementation."
+    language: Python
+    status: active
+    priority: P3
+    tags: [research, heller-winters, theorem]
+    owners: []
+    open_prs: 0
+    notes: "21 open issues — needs triage."
+
+  - name: systems-learning-loops
+    org: SocioProphet
+    layer: research
+    role: research
+    purpose: "Systems learning loops research and implementation."
+    language: Python
+    status: incubating
+    priority: P3
+    tags: [research, learning, systems]
+    owners: []
+    open_prs: 0
+
+  - name: alexandrian-academy
+    org: SocioProphet
+    layer: research
+    purpose: "Purpose TBD — newly surfaced; likely a knowledge/learning platform surface."
+    status: incubating
+    owners: []
+    notes: "newly added from snapshot; purpose unknown at time of addition; awaiting: full description, ontology extraction"
+
+  - name: regis-entity-graph
+    org: SocioProphet
+    layer: identity
+    purpose: "Entity graph for governance and identity: maps actors, roles, and relationships."
+    status: active
+    owners: []
+    notes: "newly added from snapshot; layer assignment tentative (identity vs. data-plane); awaiting: ontology extraction, dependency analysis"
+
+  # ── Research / Theory ────────────────────────────────────────────────────
+
+  - name: Heller-Winters-Theorem
+    org: SocioProphet
+    layer: research
+    purpose: "Theoretical research repository; specific theorem/model TBD."
+    status: incubating
+    owners: []
+    notes: "newly added from snapshot; purpose and scope TBD; awaiting: description, ontology extraction"
+
+  # ── Archive ──────────────────────────────────────────────────────────────
+
+  - name: tritrpc-notes-archive
+    org: SocioProphet
+    layer: archive
+    purpose: "Archived notes for the TriTRPC protocol project — preserved as-is, no active development."
+    status: archive
+    owners: []
+    notes: "newly added from snapshot; archived — preserve as-is; no further changes expected"
+    role: research
+    purpose: "Alexandrian Academy knowledge curation and learning."
+    language: Python
+    status: incubating
+    priority: P3
+    tags: [research, academy, knowledge, curation]
+    owners: []
+    open_prs: 0
+
+  - name: usol-space-library
+    org: SocioProphet
+    layer: research
+    role: library
+    purpose: "USOL space library for spatial/orbital computation."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [space, library, usol]
+    owners: []
+    open_prs: 0
+
+  - name: Knowledge_Agent
+    org: SocioProphet
+    layer: research
+    role: agent
+    purpose: "Knowledge agent for automated knowledge extraction and synthesis."
+    language: Python
+    status: incubating
+    priority: P2
+    tags: [knowledge, agent, extraction, synthesis]
+    owners: []
+    open_prs: 0
+
+  - name: exodus
+    org: SocioProphet
+    layer: research
+    role: research
+    purpose: "Exodus research project."
+    language: Python
+    status: incubating
+    priority: P3
+    tags: [research, exodus]
+    owners: []
+    open_prs: 0
+    notes: "4 open issues, 0 PRs."
+
+  # ── Infrastructure ────────────────────────────────────────────────────────
+  - name: cotoami-infra
+    org: SocioProphet
+    layer: core-platform
+    role: infra
+    purpose: "Cotoami infrastructure definitions."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [cotoami, infra, k8s]
+    owners: []
+    open_prs: 0
+
+  - name: cotoami-spec
+    org: SocioProphet
+    layer: core-platform
+    role: spec
+    purpose: "Cotoami protocol and API specifications."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [cotoami, spec, protocol, api]
+    owners: []
+    open_prs: 0
+
+  - name: flux
+    org: SocioProphet
+    layer: core-platform
+    role: infra
+    purpose: "Flux GitOps configuration."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [flux, gitops, infra]
+    owners: []
+    open_prs: 0
+
+  - name: hatchet-quickstart
+    org: SocioProphet
+    layer: core-platform
+    role: tool
+    purpose: "Hatchet workflow engine quickstart configuration."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [hatchet, workflow, quickstart]
+    owners: []
+    open_prs: 0
+
+  - name: porter-self-hosted
+    org: SocioProphet
+    layer: core-platform
+    role: infra
+    purpose: "Porter self-hosted runner configuration."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [porter, self-hosted, runner, infra]
+    owners: []
+    open_prs: 0
+
+  - name: lampstand
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Lampstand platform component."
+    language: Python
+    status: incubating
+    priority: P2
+    tags: [lampstand, component]
+    owners: []
+    open_prs: 0
+
+  - name: hyperswarm-agent-composable-cluster-scaleup
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "Hyperswarm agent composable cluster scale-up tooling."
+    language: Python
+    status: incubating
+    priority: P2
+    tags: [hyperswarm, agent, cluster, scaleup, p2p]
+    owners: []
+    dedup_candidate: true
+    open_prs: 0
+    notes: "Deduplication analysis needed against other hyperswarm variants (Phase C)."
+
+  # ── Cloud / Client Services ───────────────────────────────────────────────
+  - name: cloudhaven-rest
+    org: SocioProphet
+    layer: core-platform
+    role: api
+    purpose: "CloudHaven REST API service."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [cloudhaven, rest, api]
+    owners: []
+    open_prs: 0
+
+  - name: cloudhaven-client
+    org: SocioProphet
+    layer: core-platform
+    role: client
+    purpose: "CloudHaven client library."
+    language: null
+    status: incubating
+    priority: P2
+    tags: [cloudhaven, client, library]
+    owners: []
+    open_prs: 0
+
+  - name: cloudshell-fog
+    org: SocioProphet
+    layer: core-platform
+    role: component
+    purpose: "CloudShell fog computing component."
+    language: null
+    status: archive
+    priority: P3
+    tags: [cloudshell, fog, archive]
+    owners: []
+    dedup_candidate: true
+    open_prs: 0
+    notes: "0 issues, 0 PRs, empty repo — archive candidate (Phase C)."
+
+  # ── Product (non-single-branch — tracked read-only) ────────────────────────
+  - name: socioprophet
+    org: SocioProphet
+    layer: product
+    role: product
+    purpose: "SocioProphet product application — constitutional material and feature work."
+    language: HTML
+    status: active
+    priority: P1
+    tags: [product, web, app, constitution]
+    owners: [mdheller]
+    open_prs: 26
+    single_branch_exempt: true
+    notes: "Cannot consolidate to single branch per user directive. 17 stale dependabot PRs (2022–2023) should be closed. Active content PRs: #257 (liberty-by-design companion), #256 (AOKC bootstrap), #255 (repo alignment), #253 (CodeQL/gitleaks), #250 (Orion gov spec)."
+
+  - name: socioprophet-web-medium
+    org: SocioProphet
+    layer: product
+    role: component
+    purpose: "SocioProphet web medium variant."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [product, web]
+    owners: []
+    open_prs: 0
+
+  - name: socioprophet-docs
+    org: SocioProphet
+    layer: product
+    role: docs
+    purpose: "SocioProphet documentation site."
+    language: JavaScript
+    status: active
+    priority: P2
+    tags: [docs, site, documentation]
+    owners: []
+    open_prs: 5
+    notes: "All 5 PRs are dependabot — no architectural content PRs."
+
+  # ── Research / Misc ───────────────────────────────────────────────────────
+  - name: new-hope
+    org: SocioProphet
+    layer: research
+    role: research
+    purpose: "New-Hope research project."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [research, new-hope]
+    owners: []
+    open_prs: 0
+
+  - name: asterion
+    org: SocioProphet
+    layer: research
+    role: research
+    purpose: "Asterion research project."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [research, asterion]
+    owners: []
+    open_prs: 0
+
+  - name: clymer_research
+    org: SocioProphet
+    layer: research
+    role: research
+    purpose: "Clymer research project."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [research, clymer]
+    owners: []
+    open_prs: 0
+
+  - name: speechlab
+    org: SocioProphet
+    layer: research
+    role: component
+    purpose: "SpeechLab audio/ASR component."
+    language: Makefile
+    status: active
+    priority: P2
+    tags: [speech, asr, audio, lab]
+    owners: []
+    dedup_candidate: true
+    open_prs: 0
+    notes: "Deduplication analysis needed against other orgs (Phase C)."
+
+  - name: Twitterr
+    org: SocioProphet
+    layer: research
+    role: component
+    purpose: "Twitterr integration component."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [twitter, integration, social]
+    owners: []
+    open_prs: 0
+
+  - name: NewsClient
+    org: SocioProphet
+    layer: research
+    role: component
+    purpose: "News client for news ingestion."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [news, client, ingestion]
+    owners: []
+    open_prs: 0
+
+  - name: CDataSoftwaredocs
+    org: SocioProphet
+    layer: research
+    role: docs
+    purpose: "CData software documentation."
+    language: null
+    status: incubating
+    priority: P3
+    tags: [cdata, docs]
+    owners: []
+    open_prs: 0
