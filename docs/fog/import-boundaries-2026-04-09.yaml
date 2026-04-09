@@ -1,0 +1,39 @@
+date: '2026-04-09'
+principle: consume shared foundations, do not absorb them
+boundaries:
+  fog-pack-data:
+    own:
+    - release contract
+    - release lock
+    - bill of materials
+    - install profiles
+    - lake/catalog/knowledge/trust composition
+    - pack-local manifests and overlays
+    - pack-local conformance and packaging
+    consume_from:
+    - SocioProphet/sociosphere
+    - SocioProphet/agentplane
+    - SocioProphet/TriTRPC
+    avoid_copying:
+    - workflow trust meta/control docs
+    - local-hybrid smoke/runner utilities
+    - runtime envelope canon
+    - receipt ownership canon
+    - durablegraph runtime ownership
+    - transport slice/method canon
+    - protocol fixture canon
+  fog-pack-business-automation:
+    consume_from:
+    - SocioProphet/agentplane
+    - SocioProphet/TriTRPC
+    - SocioProphet/sociosphere
+  fog-pack-integration:
+    consume_from:
+    - SocioProphet/TriTRPC
+    - SocioProphet/api-spec
+    - SocioProphet/servicebroker
+  fog-pack-aiops:
+    consume_from:
+    - SocioProphet/agentplane
+    - SocioProphet/sociosphere
+    - SocioProphet/prom-system
