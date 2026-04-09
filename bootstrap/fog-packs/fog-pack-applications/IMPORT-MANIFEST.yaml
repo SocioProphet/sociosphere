@@ -1,0 +1,30 @@
+source_repo: SocioProphet/sociosphere
+target_repo: SocioProphet/fog-pack-applications
+mode: scaffold-first-import
+principle: import pack-local applications artifacts only
+entries:
+- source: bootstrap/fog-packs/fog-pack-applications/UPSTREAM-BOUNDARIES.md
+  target: UPSTREAM-BOUNDARIES.md
+  class: boundary-note
+- source: bootstrap/fog-packs/fog-pack-applications/fog-pack.yaml
+  target: fog-pack.yaml
+  class: pack-identity
+- source: bootstrap/fog-packs/fog-pack-applications/README.md
+  target: README.md
+  class: pack-root
+references_only:
+- docs/fog/repo-topology.yaml
+- docs/fog/repo-governance.yaml
+- docs/fog/shared-foundations-map.yaml
+- docs/fog/upstream-delta-2026-04-09.md
+- docs/fog/import-boundaries-2026-04-09.yaml
+consume_from:
+- SocioProphet/socioprophet
+- SocioProphet/sociosphere
+- SocioProphet/agentplane
+- SocioProphet/TriTRPC
+forbid_copying:
+- shared outward product/docs/web canon
+- shared runtime canon
+- shared protocol canon
+- shared cross-pack governance canon
