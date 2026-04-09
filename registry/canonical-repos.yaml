@@ -566,7 +566,7 @@ repositories:
     url: https://github.com/SocioProphet/cloudshell-fog
     role: infrastructure
     status: active
-    description: "Fog-optimised cloud shell gateway that places browser terminals close to user data."
+    description: "Fog-optimized cloud shell gateway that places browser terminals close to user data."
     primary_language: Go
     tags: [fog, edge, terminal, gateway]
 
@@ -825,7 +825,7 @@ repos:
   - name: cloudshell-fog
     org: SocioProphet
     layer: core-platform
-    purpose: "Fog-optimised shell gateway that provides browser terminal access near user data."
+    purpose: "Fog-optimized shell gateway that provides browser terminal access near user data."
     status: active
     owners: []
     notes: "added for workspace coverage expansion; dedup/consolidation tracking already exists"
