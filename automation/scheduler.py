@@ -33,6 +33,7 @@ COST_REGISTRY_REBUILD = 200
 COST_DEEP_SCAN = 800
 COST_PROCESS_EVENT = 10
 COST_PROPAGATION = 50
+ON_DEMAND_DELAY_SECONDS = 1
 
 # Adaptive scheduling threshold
 BACKOFF_USAGE_THRESHOLD = 0.80
@@ -112,7 +113,7 @@ class RegistryScheduler:
         self._scheduler.add_job(
             self._run_propagation,
             "date",
-            run_date=datetime.now(timezone.utc) + timedelta(seconds=1),
+            run_date=datetime.now(timezone.utc) + timedelta(seconds=ON_DEMAND_DELAY_SECONDS),
             args=[{"repo": repo_full_name, "on_demand": True}],
             id=f"on_demand_{repo_full_name}_{int(time.time())}",
             misfire_grace_time=60,

@@ -34,7 +34,9 @@ def _normalize_repo_id(repo_id: str | None) -> str | None:
 
     Some registry files use mixed case or underscore variants for the same repo.
     Normalizing here keeps dependency and propagation lookups stable across those
-    schema variants without changing the on-disk source names.
+    schema variants without changing the on-disk source names. Examples:
+    ``TriTRPC`` becomes ``tritrpc`` and ``socioprophet_integration`` becomes
+    ``socioprophet-integration``.
     """
     if repo_id is None:
         return None

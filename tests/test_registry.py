@@ -144,6 +144,7 @@ class TestDependencyGraph:
     def test_sociosphere_depends_on_core_protocols(self):
         data = _load_yaml(self.FILE)
         deps = self._sociosphere_dependencies(data)
+        # Dependency IDs are normalized to lowercase in the current registry helpers.
         assert "tritrpc" in deps
 
 
