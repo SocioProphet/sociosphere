@@ -28,10 +28,6 @@ def default_workspace_root() -> Path:
     return repo_root().parent
 
 
-def load_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
-
-
 def run_python_json(script: Path, args: list[str]) -> dict[str, Any]:
     proc = subprocess.run(
         ["python3", str(script), *args],
