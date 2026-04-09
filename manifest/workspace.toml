@@ -629,6 +629,6 @@ ref = "main"
 
 [[repos]]
 name = "regis-entity-graph"
-role = "ontology"
+role = "component"
 url = "https://github.com/SocioProphet/regis-entity-graph"
 ref = "main"

@@ -1,6 +1,6 @@
 # registry/canonical-repos.yaml
 # Canonical repository registry for the SocioProphet organization
-# 65 repositories under management
+# 53 original repositories plus 12 added coverage repositories (65 total) under management
 version: "1.0.0"
 organization: SocioProphet
 updated_at: "2026-04-09"
@@ -600,7 +600,7 @@ repositories:
   - id: global-devsecops-intelligence
     name: global-devsecops-intelligence
     url: https://github.com/SocioProphet/global-devsecops-intelligence
-    role: compliance
+    role: security
     status: active
     description: "DevSecOps intelligence surface for global security and delivery insights."
     primary_language: null
@@ -636,7 +636,7 @@ repositories:
   - id: policy-fabric
     name: policy-fabric
     url: https://github.com/SocioProphet/policy-fabric
-    role: compliance
+    role: standards
     status: active
     description: "Policy-governed data protection control repo for authored policies, release packs, and validation evidence."
     primary_language: Python
