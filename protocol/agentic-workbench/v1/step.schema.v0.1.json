@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sourceos.local/schemas/agentic-workbench/v1/step.schema.v0.1.json",
+  "title": "StepSpec",
+  "type": "object",
+  "required": [
+    "stepId",
+    "name",
+    "transport",
+    "capabilityRef",
+    "effect"
+  ],
+  "properties": {
+    "stepId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "transport": {
+      "type": "string",
+      "enum": [
+        "mcp",
+        "a2a",
+        "openai",
+        "human",
+        "local"
+      ]
+    },
+    "capabilityRef": {
+      "type": "string",
+      "pattern": "^(capd://[a-z0-9._-]+|capd\\+sha256://[a-z0-9._-]+@[a-f0-9]{64})$"
+    },
+    "effect": {
+      "type": "string",
+      "enum": [
+        "read",
+        "write",
+        "compute",
+        "exec",
+        "egress"
+      ]
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "server": {
+          "type": "string"
+        },
+        "tool": {
+          "type": "string"
+        },
+        "agentId": {
+          "type": "string"
+        },
+        "skill": {
+          "type": "string"
+        },
+        "deploymentId": {
+          "type": "string"
+        },
+        "operation": {
+          "type": "string"
+        },
+        "executorRef": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "inputBindings": {
+      "type": "object"
+    },
+    "outputBindings": {
+      "type": "object"
+    },
+    "preconditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "postconditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "timeoutSec": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 86400
+    },
+    "retry": {
+      "type": "object",
+      "properties": {
+        "maxAttempts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 20
+        },
+        "backoffSec": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 3600
+        },
+        "idempotentRequired": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "approval": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "quorumRule": {
+          "type": "string"
+        },
+        "approverSetRef": {
+          "type": "string"
+        },
+        "escalationPolicyRef": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "placement": {
+      "type": "object",
+      "properties": {
+        "executorRef": {
+          "type": "string"
+        },
+        "side": {
+          "type": "string",
+          "enum": [
+            "edge",
+            "twin",
+            "either"
+          ]
+        },
+        "dataZone": {
+          "type": "string"
+        },
+        "residency": {
+          "type": "string"
+        },
+        "networkZone": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "observability": {
+      "type": "object",
+      "properties": {
+        "traceLevel": {
+          "type": "string",
+          "enum": [
+            "minimal",
+            "standard",
+            "full"
+          ]
+        },
+        "redactRulesRef": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "compensationRef": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}
