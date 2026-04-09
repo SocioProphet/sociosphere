@@ -84,7 +84,9 @@ class MetricsCollector:
 
     def load(self) -> None:
         if yaml is None:
-            raise RuntimeError("PyYAML is required for metrics collection")
+            raise RuntimeError(
+                "PyYAML is required for metrics collection. Install it with: pip install pyyaml"
+            )
         self._data["canonical-repos"] = _load_yaml(self._dir / "canonical-repos.yaml")
         self._data["repository-ontology"] = _load_yaml(self._dir / "repository-ontology.yaml")
         self._data["dependency-graph"] = _load_yaml(self._dir / "dependency-graph.yaml")

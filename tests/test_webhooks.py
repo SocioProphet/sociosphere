@@ -5,15 +5,10 @@ from __future__ import annotations
 import hashlib
 import hmac
 import json
-import sys
-from pathlib import Path
 
 import pytest
 
 from automation.webhooks import create_app, validate_signature
-
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
 
 
 class TestValidateSignature:

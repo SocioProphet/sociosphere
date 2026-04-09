@@ -12,7 +12,7 @@ Jobs
 import logging
 import os
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Callable, Optional
 
 logger = logging.getLogger(__name__)
@@ -111,6 +111,8 @@ class RegistryScheduler:
         """On-demand: schedule an immediate propagation for *repo_full_name*."""
         self._scheduler.add_job(
             self._run_propagation,
+            "date",
+            run_date=datetime.now(timezone.utc) + timedelta(seconds=1),
             args=[{"repo": repo_full_name, "on_demand": True}],
             id=f"on_demand_{repo_full_name}_{int(time.time())}",
             misfire_grace_time=60,

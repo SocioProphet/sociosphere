@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Validate dependency graph entries against the canonical registry."""
+"""Validate dependency graph entries against the canonical registry.
+
+Checks for unknown repositories referenced by the dependency graph and for
+direct dependency cycles. Returns a non-zero exit code when validation fails.
+"""
 
 from __future__ import annotations
 
