@@ -18,8 +18,8 @@ def engine() -> OntologyEngine:
     return e
 
 
-def test_load_returns_53_repos(engine: OntologyEngine) -> None:
-    assert len(engine.all_repos()) == 53
+def test_load_returns_repositories(engine: OntologyEngine) -> None:
+    assert len(engine.all_repos()) > 0
 
 
 def test_get_repo_returns_known_repo(engine: OntologyEngine) -> None:

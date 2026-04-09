@@ -1,28 +1,19 @@
-"""Tests for automation/webhooks.py."""
-"""
-tests/test_webhooks.py
+"""Unit tests for Flask and HTTP webhook handlers."""
 
-Unit tests for the GitHub webhook handler.
-"""
 from __future__ import annotations
 
 import hashlib
 import hmac
 import json
+
 import pytest
 
-from automation.webhooks import create_app, validate_signature, event_queue
+from automation.webhooks import create_app, validate_signature
 
-
-# ---------------------------------------------------------------------------
-# Signature validation
-# ---------------------------------------------------------------------------
 
 class TestValidateSignature:
     def _make_sig(self, payload: bytes, secret: str) -> str:
-        return "sha256=" + hmac.new(
-            secret.encode(), payload, hashlib.sha256
-        ).hexdigest()
+        return "sha256=" + hmac.new(secret.encode(), payload, hashlib.sha256).hexdigest()
 
     def test_valid_signature(self):
         payload = b'{"key": "value"}'
@@ -41,22 +32,18 @@ class TestValidateSignature:
         assert validate_signature(b"data", "", "secret") is False
 
 
-# ---------------------------------------------------------------------------
-# Webhook handler
-# ---------------------------------------------------------------------------
-
 @pytest.fixture
 def client():
     app = create_app(webhook_secret="test-secret")
     app.config["TESTING"] = True
-    with app.test_client() as c:
-        yield c
+    with app.test_client() as test_client:
+        yield test_client
+
 
 
 def _sig_for(payload: bytes, secret: str = "test-secret") -> str:
-    return "sha256=" + hmac.new(
-        secret.encode(), payload, hashlib.sha256
-    ).hexdigest()
+    return "sha256=" + hmac.new(secret.encode(), payload, hashlib.sha256).hexdigest()
+
 
 
 def _post_push(client, payload_dict: dict, secret: str = "test-secret"):
@@ -72,37 +59,33 @@ def _post_push(client, payload_dict: dict, secret: str = "test-secret"):
     )
 
 
-class TestHealthEndpoint:
+class TestFlaskWebhookHandler:
     def test_health_returns_ok(self, client):
-        resp = client.get("/health")
-        assert resp.status_code == 200
-        data = resp.get_json()
+        response = client.get("/health")
+        assert response.status_code == 200
+        data = response.get_json()
         assert data["status"] == "ok"
         assert "queue_depth" in data
 
-
-class TestMetricsEndpoint:
     def test_metrics_keys(self, client):
-        resp = client.get("/metrics")
-        assert resp.status_code == 200
-        data = resp.get_json()
+        response = client.get("/metrics")
+        assert response.status_code == 200
+        data = response.get_json()
         assert "webhooks_received" in data
         assert "webhooks_valid" in data
         assert "queue_depth" in data
 
-
-class TestWebhookEndpoint:
     def test_invalid_signature_returns_403(self, client):
-        resp = client.post(
+        response = client.post(
             "/webhook",
-            data=b'{}',
+            data=b"{}",
             content_type="application/json",
             headers={
                 "X-GitHub-Event": "push",
                 "X-Hub-Signature-256": "sha256=bad",
             },
         )
-        assert resp.status_code == 403
+        assert response.status_code == 403
 
     def test_push_to_main_is_queued(self, client):
         payload = {
@@ -110,10 +93,9 @@ class TestWebhookEndpoint:
             "repository": {"full_name": "owner/repo"},
             "commits": [],
         }
-        resp = _post_push(client, payload)
-        assert resp.status_code == 202
-        data = resp.get_json()
-        assert data["status"] == "queued"
+        response = _post_push(client, payload)
+        assert response.status_code == 202
+        assert response.get_json()["status"] == "queued"
 
     def test_push_to_non_main_is_ignored(self, client):
         payload = {
@@ -121,14 +103,13 @@ class TestWebhookEndpoint:
             "repository": {"full_name": "owner/repo"},
             "commits": [],
         }
-        resp = _post_push(client, payload)
-        assert resp.status_code == 200
-        data = resp.get_json()
-        assert data["status"] == "ignored"
+        response = _post_push(client, payload)
+        assert response.status_code == 200
+        assert response.get_json()["status"] == "ignored"
 
     def test_non_push_event_is_ignored(self, client):
         body = b'{"action": "opened"}'
-        resp = client.post(
+        response = client.post(
             "/webhook",
             data=body,
             content_type="application/json",
@@ -137,46 +118,35 @@ class TestWebhookEndpoint:
                 "X-Hub-Signature-256": _sig_for(body),
             },
         )
-        assert resp.status_code == 200
-        data = resp.get_json()
-        assert data["status"] == "ignored"
+        assert response.status_code == 200
+        assert response.get_json()["status"] == "ignored"
 
     def test_no_secret_configured_accepts_all(self):
-        """When no secret is configured, all requests are accepted."""
         app = create_app(webhook_secret="")
         app.config["TESTING"] = True
-        with app.test_client() as c:
+        with app.test_client() as test_client:
             payload = {
                 "ref": "refs/heads/main",
                 "repository": {"full_name": "owner/repo"},
                 "commits": [],
             }
             body = json.dumps(payload).encode()
-            resp = c.post(
+            response = test_client.post(
                 "/webhook",
                 data=body,
                 content_type="application/json",
                 headers={"X-GitHub-Event": "push"},
             )
-        assert resp.status_code == 202
-import sys
-from pathlib import Path
-
-import pytest
-
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
+        assert response.status_code == 202
 
 
-class TestWebhookHandler:
+class TestHttpWebhookHandler:
     def test_verify_signature_valid(self):
         from webhooks.github_handler import _verify_signature
 
         secret = "test-secret"
         payload = b'{"event": "push"}'
-        sig = "sha256=" + hmac.new(
-            secret.encode(), payload, hashlib.sha256
-        ).hexdigest()
+        sig = "sha256=" + hmac.new(secret.encode(), payload, hashlib.sha256).hexdigest()
         assert _verify_signature(payload, sig, secret) is True
 
     def test_verify_signature_invalid(self):
@@ -199,10 +169,7 @@ class TestWebhookHandler:
         monkeypatch.setattr(propagation_engine, "DEP_GRAPH_FILE", tmp_path / "d.yaml")
         monkeypatch.setattr(propagation_engine, "PROP_RULES_FILE", tmp_path / "r.yaml")
 
-        payload = {
-            "ref": "refs/heads/feature/xyz",
-            "repository": {"name": "myrepo"},
-        }
+        payload = {"ref": "refs/heads/feature/xyz", "repository": {"name": "myrepo"}}
         result = github_handler.handle_push_event(payload)
         assert result["status"] == "ignored"
 
@@ -216,10 +183,7 @@ class TestWebhookHandler:
         monkeypatch.setattr(propagation_engine, "DEP_GRAPH_FILE", tmp_path / "d.yaml")
         monkeypatch.setattr(propagation_engine, "PROP_RULES_FILE", tmp_path / "r.yaml")
 
-        payload = {
-            "ref": "refs/heads/main",
-            "repository": {"name": "sociosphere"},
-        }
+        payload = {"ref": "refs/heads/main", "repository": {"name": "sociosphere"}}
         result = github_handler.handle_push_event(payload)
         assert result["status"] == "ok"
 

@@ -20,6 +20,9 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Install Python dependencies
+        run: python -m pip install -r requirements-dev.txt
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -59,6 +62,9 @@ jobs:
 
       - name: Standards validation
         run: make validate-standards
+
+      - name: Python tests
+        run: pytest -q
 
   registry:
     runs-on: ubuntu-latest
