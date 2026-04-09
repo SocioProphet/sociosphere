@@ -15,20 +15,41 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: apps/ui-workbench/package-lock.json
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install Python deps
-        run: python3 -m pip install -r requirements-dev.txt
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: apps/ui-workbench/package-lock.json
+
+      - name: Runner smoke test (list)
+        run: python tools/runner/runner.py list
+
+      - name: Runner check-manifest
+        run: python tools/runner/runner.py check-manifest
+
+      - name: Runner lock-verify
+        run: python tools/runner/runner.py lock-verify
+
+      - name: Runner smoke test (list)
+        run: python tools/runner/runner.py list
+
+      - name: Lock verify
+        run: python tools/runner/runner.py lock-verify
+
+      - name: Inventory
+        run: python tools/runner/runner.py inventory
+
+      - name: Topology check
+        run: python tools/check_topology.py
+
+      - name: Repository hygiene check
+        run: bash tools/check_hygiene.sh
 
       - name: UI install
         run: make ui-install
@@ -56,4 +77,3 @@ jobs:
 
       - name: Registry validate (ontology + cycles)
         run: make registry-validate
-

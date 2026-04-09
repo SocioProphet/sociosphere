@@ -4,8 +4,23 @@ version = "0.1"
 
 # NOTE: This manifest supports both local materialized repos (local_path)
 # and remote repos (url + ref/rev). The lock file resolves remote inputs.
-# Registry of all 53 ecosystem repos: registry/canonical-repos.yaml
+# Canonical repo inventory: registry/canonical-repos.yaml (materialized entries + remote-only canonical mirrors live here)
 # Merge order for open PRs: governance/MERGE-ORDER.md
+# Controlled glossary: docs/GLOSSARY.md
+# Formal ontology (JSON-LD): ontologies/sociosphere.jsonld
+# Formal ontology (TTL/RDF): ontologies/sociosphere.ttl
+# Fields:
+#   name          – stable identifier
+#   role          – component | adapter | tool | protocol | execution-plane |
+#                   library | ontology | topic-pack | security | standards |
+#                   replay | docs
+#   url           – canonical GitHub HTTPS URL
+#   ref           – branch or tag to track
+#   rev           – exact commit SHA (overrides ref; pinned in lock)
+#   local_path    – path inside this workspace after materialization
+#   license_hint  – non-authoritative; used by supply-chain policy checks
+#   entry         – optional runtime metadata (kind, module, etc.)
+#   required_capabilities – adapter-only capability declarations
 
 # ── Control-plane tools ──────────────────────────────────────────────────────
 
@@ -14,6 +29,7 @@ name = "workspace_inventory"
 role = "tool"
 url = "https://github.com/SocioProphet/workspace-inventory"
 ref = "main"
+license_hint = "MIT"
 
 # ── Components (materialized locally) ────────────────────────────────────────
 
@@ -21,27 +37,40 @@ ref = "main"
 name = "prophet_cli"
 role = "component"
 local_path = "components/prophet_cli"
+url = "https://github.com/SocioProphet/prophet-cli"
+ref = "main"
+license_hint = "MIT"
 entry = { kind = "go", module = "./" }
 
 [[repos]]
 name = "sourceos_a2a_mcp_bootstrap"
 role = "component"
 local_path = "components/sourceos_a2a_mcp_bootstrap"
+url = "https://github.com/SocioProphet/sourceos-a2a-mcp-bootstrap"
+ref = "main"
+license_hint = "MIT"
 
 [[repos]]
-name = "socioprophet-web"
+name = "socioprophet_web"
 role = "component"
 local_path = "components/socioprophet-web"
+url = "https://github.com/SocioProphet/socioprophet"
+ref = "main"
+license_hint = "MIT"
 
 [[repos]]
-name = "dev-api"
+name = "dev_api"
 role = "component"
 local_path = "components/dev-api"
+url = "https://github.com/SocioProphet/dev-api"
+ref = "main"
 
 [[repos]]
 name = "hdt_app"
 role = "component"
 local_path = "components/hdt_app"
+url = "https://github.com/SocioProphet/hdt_app"
+ref = "main"
 
 [[repos]]
 name = "human_digital_twin"
@@ -49,6 +78,7 @@ role = "component"
 local_path = "components/human_digital_twin"
 url = "https://github.com/SocioProphet/human-digital-twin"
 ref = "main"
+license_hint = "MIT"
 
 [[repos]]
 name = "ontogenesis"
@@ -56,6 +86,7 @@ role = "component"
 local_path = "components/ontogenesis"
 url = "https://github.com/SocioProphet/ontogenesis"
 ref = "main"
+license_hint = "MIT"
 
 # ── Protocol & transport ──────────────────────────────────────────────────────
 
@@ -64,7 +95,9 @@ name = "tritrpc"
 role = "protocol"
 url = "https://github.com/SocioProphet/TriTRPC"
 ref = "main"
+rev = "efc114b0132b61472d3abb29007441597bca0cfc"  # pinned; bump via explicit commit with linked issue (see docs/NAMING_VERSIONING.md)
 local_path = "third_party/tritrpc"
+license_hint = "MIT"
 
 [[repos]]
 name = "agentplane"
@@ -72,6 +105,7 @@ role = "execution-plane"
 url = "https://github.com/SocioProphet/agentplane"
 ref = "main"
 local_path = "components/agentplane"
+license_hint = "MIT"
 
 [[repos]]
 name = "semantic_serdes"
@@ -118,6 +152,7 @@ role = "ontology"
 url = "https://github.com/SocioProphet/gaia-world-model"
 ref = "main"
 local_path = "components/gaia_world_model"
+license_hint = "MIT"
 
 [[repos]]
 name = "slash_topics"
@@ -125,6 +160,7 @@ role = "topic-pack"
 url = "https://github.com/SocioProphet/slash-topics"
 ref = "main"
 local_path = "components/slash_topics"
+license_hint = "MIT"
 
 # ── Adapters ──────────────────────────────────────────────────────────────────
 
@@ -132,12 +168,16 @@ local_path = "components/slash_topics"
 name = "cc"
 role = "adapter"
 local_path = "adapters/cc"
+url = "https://github.com/SocioProphet/cc"
+ref = "main"
 required_capabilities = ["container_exec", "fs_ops", "deps_inventory"]
 
 [[repos]]
 name = "configs"
 role = "adapter"
 local_path = "adapters/configs"
+url = "https://github.com/SocioProphet/configs"
+ref = "main"
 required_capabilities = ["policy", "defaults"]
 
 # ── Identity & security ────────────────────────────────────────────────────────
@@ -148,6 +188,34 @@ role = "security"
 url = "https://github.com/SocioProphet/mcp-a2a-zero-trust"
 ref = "main"
 local_path = "components/mcp_a2a_zero_trust"
+license_hint = "MIT"
+
+[[repos]]
+name = "new_hope"
+role = "component"
+url = "https://github.com/SocioProphet/new-hope"
+ref = "main"
+local_path = "components/new-hope"
+license_hint = "MIT"
+
+# ── Governance ────────────────────────────────────────────────────────────────
+
+[[repos]]
+name = "delivery_excellence"
+role = "docs"
+url = "https://github.com/SocioProphet/delivery-excellence"
+ref = "main"
+local_path = "docs/delivery-excellence"
+license_hint = "MIT"
+
+[[repos]]
+name = "delivery_excellence_automation"
+role = "adapter"
+url = "https://github.com/SocioProphet/delivery-excellence-automation"
+ref = "main"
+local_path = "adapters/delivery-excellence-automation"
+license_hint = "MIT"
+required_capabilities = ["rbac", "ci_validation", "routing"]
 
 # ── Docs ──────────────────────────────────────────────────────────────────────
 
@@ -155,4 +223,309 @@ local_path = "components/mcp_a2a_zero_trust"
 name = "socioprophet_integration"
 role = "docs"
 local_path = "components/socioprophet_integration"
+url = "https://github.com/SocioProphet/socioprophet_integration"
+ref = "main"
 
+[[repos]]
+name = "socioprophet_docs"
+role = "docs"
+url = "https://github.com/SocioProphet/socioprophet-docs"
+ref = "main"
+local_path = "docs/socioprophet-docs"
+license_hint = "MIT"
+
+# ── Remote-only canonical registry mirror ─────────────────────────────────────
+
+[[repos]]
+name = "sociosphere"
+role = "tool"
+url = "https://github.com/SocioProphet/sociosphere"
+ref = "main"
+
+[[repos]]
+name = "source-os"
+role = "component"
+url = "https://github.com/SocioProphet/source-os"
+ref = "main"
+
+[[repos]]
+name = "socios"
+role = "docs"
+url = "https://github.com/SocioProphet/socios"
+ref = "main"
+
+[[repos]]
+name = "tritrpc-notes-archive"
+role = "docs"
+url = "https://github.com/SocioProphet/tritrpc-notes-archive"
+ref = "main"
+
+[[repos]]
+name = "trit-to-trust"
+role = "adapter"
+url = "https://github.com/SocioProphet/trit-to-trust"
+ref = "main"
+
+[[repos]]
+name = "prophet-platform"
+role = "component"
+url = "https://github.com/SocioProphet/prophet-platform"
+ref = "main"
+
+[[repos]]
+name = "prophet-ui"
+role = "component"
+url = "https://github.com/SocioProphet/prophet-ui"
+ref = "main"
+
+[[repos]]
+name = "prophet-sdk"
+role = "library"
+url = "https://github.com/SocioProphet/prophet-sdk"
+ref = "main"
+
+[[repos]]
+name = "prophet-ai-eval"
+role = "component"
+url = "https://github.com/SocioProphet/prophet-ai-eval"
+ref = "main"
+
+[[repos]]
+name = "semantic-search-bi"
+role = "component"
+url = "https://github.com/SocioProphet/semantic-search-bi"
+ref = "main"
+
+[[repos]]
+name = "embeddings-service"
+role = "component"
+url = "https://github.com/SocioProphet/embeddings-service"
+ref = "main"
+
+[[repos]]
+name = "asr-service"
+role = "component"
+url = "https://github.com/SocioProphet/asr-service"
+ref = "main"
+
+[[repos]]
+name = "vision-classifier"
+role = "component"
+url = "https://github.com/SocioProphet/vision-classifier"
+ref = "main"
+
+[[repos]]
+name = "cc-router"
+role = "component"
+url = "https://github.com/SocioProphet/cc-router"
+ref = "main"
+
+[[repos]]
+name = "fips-compliance"
+role = "security"
+url = "https://github.com/SocioProphet/fips-compliance"
+ref = "main"
+
+[[repos]]
+name = "zero-trust-bindings"
+role = "security"
+url = "https://github.com/SocioProphet/zero-trust-bindings"
+ref = "main"
+
+[[repos]]
+name = "nist-800-53-controls"
+role = "security"
+url = "https://github.com/SocioProphet/nist-800-53-controls"
+ref = "main"
+
+[[repos]]
+name = "crypto-carriers"
+role = "security"
+url = "https://github.com/SocioProphet/crypto-carriers"
+ref = "main"
+
+[[repos]]
+name = "knowledge-graph"
+role = "component"
+url = "https://github.com/SocioProphet/knowledge-graph"
+ref = "main"
+
+[[repos]]
+name = "graph-explorer"
+role = "component"
+url = "https://github.com/SocioProphet/graph-explorer"
+ref = "main"
+
+[[repos]]
+name = "data-pipeline"
+role = "component"
+url = "https://github.com/SocioProphet/data-pipeline"
+ref = "main"
+
+[[repos]]
+name = "event-bus"
+role = "component"
+url = "https://github.com/SocioProphet/event-bus"
+ref = "main"
+
+[[repos]]
+name = "workspace-runner"
+role = "tool"
+url = "https://github.com/SocioProphet/workspace-runner"
+ref = "main"
+
+[[repos]]
+name = "adapter-contracts"
+role = "standards"
+url = "https://github.com/SocioProphet/adapter-contracts"
+ref = "main"
+
+[[repos]]
+name = "qes-contracts"
+role = "standards"
+url = "https://github.com/SocioProphet/qes-contracts"
+ref = "main"
+
+[[repos]]
+name = "workspace-event-schema"
+role = "standards"
+url = "https://github.com/SocioProphet/workspace-event-schema"
+ref = "main"
+
+[[repos]]
+name = "maipj-manifest"
+role = "standards"
+url = "https://github.com/SocioProphet/maipj-manifest"
+ref = "main"
+
+[[repos]]
+name = "ui-workbench"
+role = "component"
+url = "https://github.com/SocioProphet/ui-workbench"
+ref = "main"
+
+[[repos]]
+name = "design-system"
+role = "component"
+url = "https://github.com/SocioProphet/design-system"
+ref = "main"
+
+[[repos]]
+name = "trust-registry-ui"
+role = "component"
+url = "https://github.com/SocioProphet/trust-registry-ui"
+ref = "main"
+
+[[repos]]
+name = "curation-ui"
+role = "component"
+url = "https://github.com/SocioProphet/curation-ui"
+ref = "main"
+
+[[repos]]
+name = "k8s-manifests"
+role = "component"
+url = "https://github.com/SocioProphet/k8s-manifests"
+ref = "main"
+
+[[repos]]
+name = "helm-charts"
+role = "component"
+url = "https://github.com/SocioProphet/helm-charts"
+ref = "main"
+
+[[repos]]
+name = "trust-registry"
+role = "component"
+url = "https://github.com/SocioProphet/trust-registry"
+ref = "main"
+
+[[repos]]
+name = "did-resolver"
+role = "component"
+url = "https://github.com/SocioProphet/did-resolver"
+ref = "main"
+
+[[repos]]
+name = "vc-issuer"
+role = "component"
+url = "https://github.com/SocioProphet/vc-issuer"
+ref = "main"
+
+[[repos]]
+name = "vc-verifier"
+role = "component"
+url = "https://github.com/SocioProphet/vc-verifier"
+ref = "main"
+
+[[repos]]
+name = "connector-github"
+role = "adapter"
+url = "https://github.com/SocioProphet/connector-github"
+ref = "main"
+
+[[repos]]
+name = "connector-gitlab"
+role = "adapter"
+url = "https://github.com/SocioProphet/connector-gitlab"
+ref = "main"
+
+[[repos]]
+name = "connector-jira"
+role = "adapter"
+url = "https://github.com/SocioProphet/connector-jira"
+ref = "main"
+
+[[repos]]
+name = "connector-slack"
+role = "adapter"
+url = "https://github.com/SocioProphet/connector-slack"
+ref = "main"
+
+[[repos]]
+name = "connector-kafka"
+role = "adapter"
+url = "https://github.com/SocioProphet/connector-kafka"
+ref = "main"
+
+[[repos]]
+name = "architecture-docs"
+role = "docs"
+url = "https://github.com/SocioProphet/architecture-docs"
+ref = "main"
+
+[[repos]]
+name = "api-specs"
+role = "docs"
+url = "https://github.com/SocioProphet/api-specs"
+ref = "main"
+
+[[repos]]
+name = "onboarding-docs"
+role = "docs"
+url = "https://github.com/SocioProphet/onboarding-docs"
+ref = "main"
+
+[[repos]]
+name = "runbooks"
+role = "docs"
+url = "https://github.com/SocioProphet/runbooks"
+ref = "main"
+
+[[repos]]
+name = "integration-tests"
+role = "tool"
+url = "https://github.com/SocioProphet/integration-tests"
+ref = "main"
+
+[[repos]]
+name = "e2e-tests"
+role = "tool"
+url = "https://github.com/SocioProphet/e2e-tests"
+ref = "main"
+
+[[repos]]
+name = "load-tests"
+role = "tool"
+url = "https://github.com/SocioProphet/load-tests"
+ref = "main"

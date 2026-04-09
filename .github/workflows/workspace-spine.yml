@@ -18,17 +18,21 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Python deps
-        run: python3 -m pip install -r requirements-dev.txt
 
       - name: Workspace inventory
-        run: python3 tools/runner/runner.v0.2.py list --json-out artifacts/workspace-ci/workspace-inventory.json
+        run: python tools/runner/runner.py list --json-out artifacts/workspace-ci/workspace-inventory.json
 
       - name: Lock verification
-        run: python3 tools/runner/runner.v0.2.py lock-verify --json-out artifacts/workspace-ci/lock-verification.json
+        run: python tools/runner/runner.py lock-verify --json-out artifacts/workspace-ci/lock-verification.json
 
       - name: Protocol compatibility surface
-        run: python3 tools/runner/runner.v0.2.py protocol:test --json-out artifacts/workspace-ci/protocol-compatibility.json
+        run: python tools/runner/runner.py protocol:test --json-out artifacts/workspace-ci/protocol-compatibility.json
+
+      - name: Topology enforcement
+        run: python tools/runner/runner.py list --json-out artifacts/workspace-ci/workspace-topology.json
+
+      - name: Staged runner lock verification
+        run: python tools/runner/runner.v0.2.py lock-verify --json-out artifacts/workspace-ci/lock-verification-v0.2.json
 
       - name: Standards validation
         run: make validate-standards
