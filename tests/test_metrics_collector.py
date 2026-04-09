@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
-import pytest
 from pathlib import Path
+
+import pytest
+import yaml
 
 from engines.metrics_collector import MetricsCollector
 
@@ -18,9 +20,18 @@ def collector() -> MetricsCollector:
     return c
 
 
-def test_repo_health_total_is_53(collector: MetricsCollector) -> None:
+@pytest.fixture
+def expected_repo_count(collector: MetricsCollector) -> int:
+    data = yaml.safe_load((REGISTRY_DIR / "canonical-repos.yaml").read_text(encoding="utf-8"))
+    return len(data["repositories"])
+
+
+def test_repo_health_matches_current_registry_size(
+    collector: MetricsCollector,
+    expected_repo_count: int,
+) -> None:
     health = collector.repo_health()
-    assert health["total"] == 53
+    assert health["total"] == expected_repo_count
 
 
 def test_repo_health_has_active_and_archived(collector: MetricsCollector) -> None:
@@ -29,16 +40,22 @@ def test_repo_health_has_active_and_archived(collector: MetricsCollector) -> Non
     assert "archived" in health["by_status"]
 
 
-def test_role_distribution_nonempty(collector: MetricsCollector) -> None:
+def test_role_distribution_nonempty(
+    collector: MetricsCollector,
+    expected_repo_count: int,
+) -> None:
     dist = collector.role_distribution()
     assert len(dist) > 0
-    assert sum(dist.values()) == 53
+    assert sum(dist.values()) == expected_repo_count
 
 
-def test_language_distribution_nonempty(collector: MetricsCollector) -> None:
+def test_language_distribution_nonempty(
+    collector: MetricsCollector,
+    expected_repo_count: int,
+) -> None:
     dist = collector.language_distribution()
     assert len(dist) > 0
-    assert sum(dist.values()) == 53
+    assert sum(dist.values()) == expected_repo_count
 
 
 def test_dependency_stats_has_expected_keys(collector: MetricsCollector) -> None:

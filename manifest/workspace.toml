@@ -234,6 +234,8 @@ required_capabilities = ["rbac", "ci_validation", "routing"]
 name = "socioprophet_integration"
 role = "docs"
 local_path = "components/socioprophet_integration"
+url = "https://github.com/SocioProphet/socioprophet_integration"
+ref = "main"
 
 [[repos]]
 name = "agentplane"
@@ -254,8 +256,6 @@ local_path = "adapters/mcp-a2a-zero-trust"
 required_capabilities = ["policy", "attestation", "grant", "ledger", "capability_registry"]
 trust_zone = "control"
 trust_profile_ref = "protocol/agentic-workbench/v1/trust_profiles/control-plane.v0.1.json"
-url = "https://github.com/SocioProphet/socioprophet_integration"
-ref = "main"
 
 [[repos]]
 name = "socioprophet_docs"

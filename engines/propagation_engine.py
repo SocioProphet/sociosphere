@@ -29,6 +29,12 @@ def _load_yaml(path: Path) -> dict[str, Any]:
     return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
 
 
+def _normalize_repo_id(repo_id: str | None) -> str | None:
+    if repo_id is None:
+        return None
+    return str(repo_id).strip().replace("_", "-").lower()
+
+
 def get_dependents(repo_name: str, dep_graph: dict[str, Any]) -> list[str]:
     """Return dependent repos from webhook-style dependency graph payload."""
     entry = dep_graph.get("dependencies", {}).get(repo_name, {})
@@ -108,20 +114,127 @@ class PropagationEngine:
 
     def load(self) -> None:
         dep_raw = _load_yaml(self._dir / "dependency-graph.yaml")
-        self._edges = dep_raw.get("edges", [])
-        for edge in self._edges:
-            src = edge["from"]
-            dst = edge["to"]
-            self._adjacency[src].append(dst)
-            self._reverse_adjacency[dst].append(src)
+        self._edges = []
+
+        def add_edge(src: str | None, dst: str | None, edge_type: str = "depends_on") -> None:
+            normalized_src = _normalize_repo_id(src)
+            normalized_dst = _normalize_repo_id(dst)
+            if not normalized_src or not normalized_dst:
+                return
+            if normalized_dst not in self._adjacency[normalized_src]:
+                self._adjacency[normalized_src].append(normalized_dst)
+            if normalized_src not in self._reverse_adjacency[normalized_dst]:
+                self._reverse_adjacency[normalized_dst].append(normalized_src)
+            self._edges.append({"from": normalized_src, "to": normalized_dst, "type": edge_type})
+
+        for edge in dep_raw.get("edges", []):
+            if not isinstance(edge, dict):
+                continue
+            add_edge(edge.get("from"), edge.get("to"), str(edge.get("type", "depends_on")))
+
+        for repo_name, entry in dep_raw.get("dependencies", {}).items():
+            normalized_repo = _normalize_repo_id(repo_name)
+            if not normalized_repo or not isinstance(entry, dict):
+                continue
+            for dep in entry.get("depends_on", []):
+                dep_name = dep.get("name") if isinstance(dep, dict) else dep
+                dep_type = dep.get("type", "depends_on") if isinstance(dep, dict) else "depends_on"
+                add_edge(normalized_repo, dep_name, str(dep_type))
+            for dependent in entry.get("dependents", []):
+                dependent_name = dependent.get("name") if isinstance(dependent, dict) else dependent
+                dep_type = dependent.get("type", "dependent") if isinstance(dependent, dict) else "dependent"
+                add_edge(dependent_name, normalized_repo, str(dep_type))
 
         for level_str, repos in dep_raw.get("dependency_levels", {}).items():
             level = -1 if level_str == "archived" else int(level_str)
             for repo_id in repos:
-                self._dep_levels[repo_id] = level
+                normalized_repo = _normalize_repo_id(repo_id)
+                if normalized_repo:
+                    self._dep_levels[normalized_repo] = level
 
         rules_raw = _load_yaml(self._dir / "change-propagation-rules.yaml")
-        self._rules = rules_raw.get("rules", [])
+        normalized_rules: list[dict[str, Any]] = []
+        for rule in rules_raw.get("rules", []):
+            if not isinstance(rule, dict):
+                continue
+            trigger_repo = rule.get("trigger", {}).get("repo")
+            if trigger_repo is None:
+                trigger_repo = rule.get("trigger_repo")
+            normalized_trigger = _normalize_repo_id(trigger_repo)
+            if not normalized_trigger:
+                continue
+
+            propagate_to = rule.get("propagate_to")
+            if propagate_to is None:
+                propagate_to = []
+                for cascade in rule.get("cascades", []):
+                    if not isinstance(cascade, dict):
+                        continue
+                    target = _normalize_repo_id(cascade.get("target"))
+                    if not target:
+                        continue
+                    propagate_to.append(
+                        {
+                            "repo": target,
+                            "action": cascade.get("action", "notify"),
+                            "message": cascade.get("reason", ""),
+                            "auto_pr": cascade.get("auto_pr", False),
+                            "pr_title": cascade.get("pr_title", ""),
+                        }
+                    )
+            else:
+                normalized_targets: list[dict[str, Any]] = []
+                for target in propagate_to:
+                    if not isinstance(target, dict):
+                        continue
+                    repo = _normalize_repo_id(target.get("repo"))
+                    if not repo:
+                        continue
+                    normalized_target = dict(target)
+                    normalized_target["repo"] = repo
+                    normalized_targets.append(normalized_target)
+                propagate_to = normalized_targets
+
+            normalized_rules.append(
+                {
+                    **rule,
+                    "trigger": {"repo": normalized_trigger},
+                    "propagate_to": propagate_to,
+                }
+            )
+
+        for repo_name, rule in rules_raw.get("propagation_rules", {}).items():
+            if not isinstance(rule, dict):
+                continue
+            trigger_repo = _normalize_repo_id(repo_name)
+            on_main_merge = rule.get("on_main_merge", {})
+            if not trigger_repo or not isinstance(on_main_merge, dict):
+                continue
+            propagate_to = []
+            for action in on_main_merge.get("automation", []):
+                if not isinstance(action, dict):
+                    continue
+                for target in action.get("targets", []):
+                    normalized_target = _normalize_repo_id(target)
+                    if normalized_target:
+                        propagate_to.append(
+                            {
+                                "repo": normalized_target,
+                                "action": action.get("type", "notify"),
+                                "message": on_main_merge.get("trigger", ""),
+                                "auto_pr": False,
+                                "pr_title": "",
+                            }
+                        )
+            normalized_rules.append(
+                {
+                    "id": f"legacy-{trigger_repo}",
+                    "trigger": {"repo": trigger_repo},
+                    "propagate_to": propagate_to,
+                    "max_cascade_depth": on_main_merge.get("max_cascade_depth"),
+                }
+            )
+        self._rules = normalized_rules
         self._loaded = True
 
     def _ensure_loaded(self) -> None:
@@ -130,20 +243,21 @@ class PropagationEngine:
 
     def dependencies_of(self, repo_id: str) -> list[str]:
         self._ensure_loaded()
-        return list(self._adjacency.get(repo_id, []))
+        return list(self._adjacency.get(_normalize_repo_id(repo_id) or repo_id, []))
 
     def dependents_of(self, repo_id: str) -> list[str]:
         self._ensure_loaded()
-        return list(self._reverse_adjacency.get(repo_id, []))
+        return list(self._reverse_adjacency.get(_normalize_repo_id(repo_id) or repo_id, []))
 
     def dependency_level(self, repo_id: str) -> int | None:
         self._ensure_loaded()
-        return self._dep_levels.get(repo_id)
+        return self._dep_levels.get(_normalize_repo_id(repo_id) or repo_id)
 
     def get_rule(self, repo_id: str) -> dict[str, Any] | None:
         self._ensure_loaded()
+        normalized_repo = _normalize_repo_id(repo_id)
         for rule in self._rules:
-            if rule.get("trigger", {}).get("repo") == repo_id:
+            if rule.get("trigger", {}).get("repo") == normalized_repo:
                 return rule
         return None
 
@@ -161,6 +275,7 @@ class PropagationEngine:
 
     def compute_cascade(self, changed_repo: str, max_depth: int = 3) -> list[dict[str, Any]]:
         self._ensure_loaded()
+        changed_repo = _normalize_repo_id(changed_repo) or changed_repo
         results: list[dict[str, Any]] = []
         visited: set[str] = {changed_repo}
         queue: deque[tuple[str, int, str]] = deque()
