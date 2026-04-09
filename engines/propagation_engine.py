@@ -30,6 +30,12 @@ def _load_yaml(path: Path) -> dict[str, Any]:
 
 
 def _normalize_repo_id(repo_id: str | None) -> str | None:
+    """Normalize registry identifiers for cross-file lookups.
+
+    Some registry files use mixed case or underscore variants for the same repo.
+    Normalizing here keeps dependency and propagation lookups stable across those
+    schema variants without changing the on-disk source names.
+    """
     if repo_id is None:
         return None
     return str(repo_id).strip().replace("_", "-").lower()

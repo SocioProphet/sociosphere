@@ -6,7 +6,6 @@ Unit tests for registry YAML files and the registry CLI tools.
 from __future__ import annotations
 
 import sys
-import tomllib
 from pathlib import Path
 
 import pytest
@@ -87,6 +86,8 @@ class TestWorkspaceManifest:
     FILE = ROOT / "manifest" / "workspace.toml"
 
     def test_manifest_is_valid_toml(self):
+        import tomllib
+
         data = tomllib.loads(self.FILE.read_text(encoding="utf-8"))
         repos = data.get("repos", [])
         assert repos
