@@ -6,6 +6,9 @@ version = "0.1"
 # and remote repos (url + ref/rev). The lock file resolves remote inputs.
 # Canonical repo inventory: registry/canonical-repos.yaml (materialized entries + remote-only canonical mirrors live here)
 # Merge order for open PRs: governance/MERGE-ORDER.md
+# Controlled glossary: docs/GLOSSARY.md
+# Formal ontology (JSON-LD): ontologies/sociosphere.jsonld
+# Formal ontology (TTL/RDF): ontologies/sociosphere.ttl
 # Fields:
 #   name          – stable identifier
 #   role          – component | adapter | tool | protocol | execution-plane |
@@ -92,9 +95,9 @@ name = "tritrpc"
 role = "protocol"
 url = "https://github.com/SocioProphet/TriTRPC"
 ref = "main"
+rev = "efc114b0132b61472d3abb29007441597bca0cfc"  # pinned; bump via explicit commit with linked issue (see docs/NAMING_VERSIONING.md)
 local_path = "third_party/tritrpc"
 license_hint = "MIT"
-# rev is pinned in the lock; do NOT float on main for production
 
 [[repos]]
 name = "agentplane"

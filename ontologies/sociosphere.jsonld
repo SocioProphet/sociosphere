@@ -1,0 +1,194 @@
+{
+  "@context": {
+    "@vocab": "https://sociosphere.io/ontology/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "schema": "https://schema.org/",
+    "ss": "https://sociosphere.io/ontology/",
+    "id": "@id",
+    "type": "@type",
+    "label": "rdfs:label",
+    "comment": "rdfs:comment",
+    "seeAlso": "rdfs:seeAlso",
+    "name": "schema:name",
+    "url": "schema:url",
+    "role": "ss:role",
+    "org": "ss:org",
+    "techStack": "ss:techStack",
+    "license": "schema:license",
+    "upstreamContract": "ss:upstreamContract",
+    "downstreamContract": "ss:downstreamContract",
+    "pinnedRev": "ss:pinnedRev",
+    "glossaryRef": "ss:glossaryRef",
+    "governanceStatus": "ss:governanceStatus"
+  },
+  "@graph": [
+    {
+      "id": "ss:Ontology",
+      "type": "owl:Ontology",
+      "label": "SocioProphet Workspace Ontology",
+      "comment": "Formal ontology describing all repos, roles, contracts, and governance relationships in the SocioProphet ecosystem.",
+      "seeAlso": "https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md"
+    },
+    {
+      "id": "ss:RepoRole",
+      "type": "rdfs:Class",
+      "label": "Repo Role",
+      "comment": "The categorical role of a repository within the workspace. See docs/GLOSSARY.md for definitions."
+    },
+    {
+      "id": "ss:role/component",
+      "type": "ss:RepoRole",
+      "label": "component",
+      "comment": "A self-contained service or application providing a discrete feature or capability.",
+      "glossaryRef": "https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#component"
+    },
+    {
+      "id": "ss:role/adapter",
+      "type": "ss:RepoRole",
+      "label": "adapter",
+      "comment": "A boundary-translation layer bridging two systems or protocols.",
+      "glossaryRef": "https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#adapter"
+    },
+    {
+      "id": "ss:role/tool",
+      "type": "ss:RepoRole",
+      "label": "tool",
+      "comment": "A utility or automation script consumed by the workspace controller.",
+      "glossaryRef": "https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#tool"
+    },
+    {
+      "id": "ss:role/protocol",
+      "type": "ss:RepoRole",
+      "label": "protocol",
+      "comment": "A formal wire-format specification and/or reference implementation.",
+      "glossaryRef": "https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#protocol"
+    },
+    {
+      "id": "ss:role/execution-plane",
+      "type": "ss:RepoRole",
+      "label": "execution-plane",
+      "comment": "A runtime environment or agent orchestrator that hosts and schedules components.",
+      "glossaryRef": "https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#execution-plane"
+    },
+    {
+      "id": "ss:role/library",
+      "type": "ss:RepoRole",
+      "label": "library",
+      "comment": "A reusable code module with a stable API, consumed as a dependency.",
+      "glossaryRef": "https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#library"
+    },
+    {
+      "id": "ss:role/ontology",
+      "type": "ss:RepoRole",
+      "label": "ontology",
+      "comment": "A structured vocabulary and knowledge graph.",
+      "glossaryRef": "https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#ontology"
+    },
+    {
+      "id": "ss:role/topic-pack",
+      "type": "ss:RepoRole",
+      "label": "topic-pack",
+      "comment": "A curated collection of topics used for routing, classification, and discovery.",
+      "glossaryRef": "https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#topic-pack"
+    },
+    {
+      "id": "ss:role/security",
+      "type": "ss:RepoRole",
+      "label": "security",
+      "comment": "A module enforcing identity, access control, zero-trust, or cryptographic guarantees.",
+      "glossaryRef": "https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#security"
+    },
+    {
+      "id": "ss:role/standards",
+      "type": "ss:RepoRole",
+      "label": "standards",
+      "comment": "A normative specification document or schema governing interoperability.",
+      "glossaryRef": "https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#standards"
+    },
+    {
+      "id": "ss:role/replay",
+      "type": "ss:RepoRole",
+      "label": "replay",
+      "comment": "A module that records, replays, or audits interactions.",
+      "glossaryRef": "https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#replay"
+    },
+    {
+      "id": "ss:role/docs",
+      "type": "ss:RepoRole",
+      "label": "docs",
+      "comment": "Documentation-only content with no runtime artifact.",
+      "glossaryRef": "https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#docs"
+    },
+    {
+      "id": "ss:repo/sociosphere",
+      "type": "ss:Repository",
+      "name": "sociosphere",
+      "label": "sociosphere",
+      "org": "SocioProphet",
+      "url": "https://github.com/SocioProphet/sociosphere",
+      "role": "ss:role/component",
+      "techStack": ["Python", "TypeScript", "TOML", "JSON", "YAML"],
+      "license": "MIT",
+      "comment": "Platform meta-workspace controller. Owns canonical workspace manifest, lock, runner semantics, and multi-repo materialization.",
+      "downstreamContract": "Workspace materialization API, topology enforcement, registry/governance metadata.",
+      "upstreamContract": "Consumes tritrpc protocol spec via submodule pin.",
+      "governanceStatus": "active"
+    },
+    {
+      "id": "ss:repo/tritrpc",
+      "type": "ss:Repository",
+      "name": "tritrpc",
+      "label": "tritrpc",
+      "org": "SocioProphet",
+      "url": "https://github.com/SocioProphet/TriTRPC",
+      "role": "ss:role/protocol",
+      "techStack": ["Go", "Rust", "Python"],
+      "license": "MIT",
+      "comment": "TriTRPC protocol spec, fixtures, and reference implementations. Three-valued (trit) RPC trust-encoding protocol.",
+      "downstreamContract": "Wire format spec, trit encoding rules, reference test vectors.",
+      "upstreamContract": "None — must not depend on sociosphere.",
+      "pinnedRev": "efc114b0132b61472d3abb29007441597bca0cfc",
+      "governanceStatus": "active",
+      "seeAlso": "https://github.com/SocioProphet/sociosphere/blob/main/docs/notes/trit-to-trust.md"
+    },
+    {
+      "id": "ss:repo/agentplane",
+      "type": "ss:Repository",
+      "name": "agentplane",
+      "label": "agentplane",
+      "org": "SocioProphet",
+      "url": "https://github.com/SocioProphet/agentplane",
+      "role": "ss:role/execution-plane",
+      "license": "MIT",
+      "comment": "Runtime environment and agent orchestrator for SocioProphet agent workloads.",
+      "governanceStatus": "active"
+    },
+    {
+      "id": "ss:repo/gaia_world_model",
+      "type": "ss:Repository",
+      "name": "gaia_world_model",
+      "label": "gaia-world-model",
+      "org": "SocioProphet",
+      "url": "https://github.com/SocioProphet/gaia-world-model",
+      "role": "ss:role/ontology",
+      "license": "MIT",
+      "comment": "Structured vocabulary and world-model knowledge graph for the SocioProphet ecosystem.",
+      "governanceStatus": "active"
+    },
+    {
+      "id": "ss:repo/mcp_a2a_zero_trust",
+      "type": "ss:Repository",
+      "name": "mcp_a2a_zero_trust",
+      "label": "mcp-a2a-zero-trust",
+      "org": "SocioProphet",
+      "url": "https://github.com/SocioProphet/mcp-a2a-zero-trust",
+      "role": "ss:role/security",
+      "license": "MIT",
+      "comment": "Zero-trust identity and access-control enforcement for agent-to-agent (A2A) and MCP communications.",
+      "governanceStatus": "active"
+    }
+  ]
+}

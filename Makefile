@@ -90,8 +90,17 @@ inventory:
 topology-check:
 	python3 tools/check_topology.py
 
+# --- hygiene targets ---
+.PHONY: hygiene-check
+
+hygiene-check:
+	@echo "==> Running repository hygiene checks..."
+	bash tools/check_hygiene.sh
+	@echo "OK: hygiene-check passed"
+
+
 # --- full workspace check (run in CI) ---
 .PHONY: workspace-check
 
-workspace-check: validate registry-validate compliance-check lock-verify topology-check
+workspace-check: validate registry-validate compliance-check lock-verify topology-check hygiene-check
 	@echo "OK: workspace-check passed"

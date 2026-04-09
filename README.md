@@ -6,6 +6,11 @@ Sociosphere owns the canonical workspace manifest + lock, runner semantics,
 protocol fixtures, and deterministic multi-repo materialization for platform
 build and validation lanes.
 
+## Governance references
+
+- [Repository topology and dependency rules](docs/TOPOLOGY.md) — canonical source for repo roles, directionality, and the submodule update playbook.
+- [Naming and versioning policy](docs/NAMING_VERSIONING.md) — single source of truth for repo naming, SemVer discipline, and submodule pin-bump rules.
+
 ## Canonical scope
 
 Sociosphere is responsible for:
