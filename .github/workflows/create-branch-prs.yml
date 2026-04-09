@@ -1,0 +1,153 @@
+name: Create Branch PRs
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (print commands without creating PRs)"
+        required: false
+        default: "false"
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+jobs:
+  create-prs:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create PR 1 — workflow-trust/pr1-agentic-workbench-v1
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          TITLE="feat: agentic workbench v1 — workflow kernel, protocol router, workspace policy"
+          BODY=$(cat <<'EOF'
+          ## Summary
+
+          Establishes the foundational agentic workbench v1 infrastructure: workflow kernel design,
+          updated protocol router, and workspace policy configuration.
+
+          ## Changes
+
+          - **`docs/WORKFLOW_KERNEL_v0.1.md`** — New design note defining workflow-kernel objects and
+            the controller/runtime ownership split for trusted execution. Documents ownership boundaries
+            between `sociosphere`, `mcp-a2a-zero-trust`, and `agentplane`.
+          - **`manifest/workspace.toml`** — Adds workspace policy block (`policy_pack_ref`,
+            `trust_profile_ref`, `ledger_mode = "required"`, `attestation_required = true`,
+            `default_quorum_rule = "2of3-human"`). Adds `agentplane` and `mcp-a2a-zero-trust` repos.
+          - **`protocol/protocol.md`** — Updates the protocol router for agentic workbench v1.
+          EOF
+          )
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "DRY RUN: gh pr create --base main --head workflow-trust/pr1-agentic-workbench-v1 --title \"$TITLE\""
+          else
+            gh pr create \
+              --base main \
+              --head workflow-trust/pr1-agentic-workbench-v1 \
+              --title "$TITLE" \
+              --body "$BODY" || echo "PR may already exist or branch has no new commits"
+          fi
+
+      - name: Create PR 2 — seed-local-hybrid-smoke-v0
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          TITLE="feat: add local hybrid smoke runner"
+          BODY=$(cat <<'EOF'
+          ## Summary
+
+          Adds a standalone local hybrid smoke test runner script.
+
+          ## Changes
+
+          - **`tools/smoke/run_local_hybrid_smoke.py`** — New Python script (103 lines) providing
+            a local hybrid smoke test runner for the sociosphere stack.
+          EOF
+          )
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "DRY RUN: gh pr create --base main --head seed-local-hybrid-smoke-v0 --title \"$TITLE\""
+          else
+            gh pr create \
+              --base main \
+              --head seed-local-hybrid-smoke-v0 \
+              --title "$TITLE" \
+              --body "$BODY" || echo "PR may already exist or branch has no new commits"
+          fi
+
+      - name: Create PR 3 — wip/ui-inventory-2026-01-09
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          TITLE="feat: UI inventory, standards framework, schemas, pipelines, and conformance tooling (Jan 2026)"
+          BODY=$(cat <<'EOF'
+          ## Summary
+
+          Large feature branch (76 files, +3031/-19) adding UI inventory, standards framework,
+          schemas, finance/ops pipelines, DeLeX GTM intelligence program, and conformance tooling.
+
+          ## Changes
+
+          - **Standards** — Finance (COA, posting templates, statement lines), Ops metrics (registry,
+            linkage, cadence), UI component inventory, Events catalog, Build-plane & TriRPC conformance docs
+          - **Schemas** — JSON schemas for finance, ops metrics, UI components/views/ontology, TriRPC
+            Avro, DeLeX GTM Intelligence
+          - **Pipelines** — Finance SQL (balance sheet, income statement, cash flow), Ops SQL metrics
+            (13 files)
+          - **Programs** — `programs/delex/gtm-intelligence/` taxonomy, metrics, monitoring
+          - **Tools** — Schema validation, finance/standards validators, UI inventory validator,
+            metrics spec checker, schema fingerprinting, TriRPC conformance harness, Makefile targets
+          - **CI** — `.github/workflows/standards-validate.yml`, Makefile additions
+          - **Docs** — Standards index, morloc/schema-distribution/trirpc docs, UI interface inventory
+          - **Governance** — `ontology_repos.txt`
+
+          > ⚠️ Large PR — recommend careful review before merging.
+          EOF
+          )
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "DRY RUN: gh pr create --base main --head wip/ui-inventory-2026-01-09 --title \"$TITLE\""
+          else
+            gh pr create \
+              --base main \
+              --head wip/ui-inventory-2026-01-09 \
+              --title "$TITLE" \
+              --body "$BODY" || echo "PR may already exist or branch has no new commits"
+          fi
+
+      - name: Create PR 4 — codex/evaluate-and-plan-branch-integration
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          TITLE="docs: branch integration plan, audit tooling, and merge governance artifacts"
+          BODY=$(cat <<'EOF'
+          ## Summary
+
+          Adds branch integration planning documents, merge governance artifacts, and an audit tool.
+
+          ## Changes
+
+          - **`docs/branch-integration-plan.md`** — Integration plan document (generated)
+          - **`governance/merge-execution-log.md`** — Merge execution log
+          - **`governance/merge-wave-plan.md`** — Merge wave plan
+          - **`tools/branch_integration_audit.py`** — Python script (363 lines) for auditing branches
+            and generating merge wave artifacts
+          - **`workbench/backlog/branch-catalog.tsv`** — Branch catalog
+          EOF
+          )
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "DRY RUN: gh pr create --base main --head codex/evaluate-and-plan-branch-integration --title \"$TITLE\""
+          else
+            gh pr create \
+              --base main \
+              --head codex/evaluate-and-plan-branch-integration \
+              --title "$TITLE" \
+              --body "$BODY" || echo "PR may already exist or branch has no new commits"
+          fi

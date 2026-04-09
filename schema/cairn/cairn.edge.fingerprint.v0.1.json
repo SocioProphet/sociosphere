@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "cairn.edge.fingerprint@0.1",
+  "type": "object",
+  "required": ["cairn_type", "version", "event_time", "input", "results", "evidence"],
+  "properties": {
+    "cairn_type": { "const": "cairn.edge.fingerprint" },
+    "version": { "const": "0.1" },
+    "event_time": { "type": "string", "description": "RFC3339 timestamp" },
+    "input": {
+      "type": "object",
+      "required": ["targets"],
+      "properties": { "targets": { "type": "array", "items": { "type": "string" } } }
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["target", "resolved_ips", "detections"],
+        "properties": {
+          "target": { "type": "string" },
+          "resolved_ips": { "type": "array", "items": { "type": "string" } },
+          "detections": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["kind", "provider"],
+              "properties": {
+                "kind": { "type": "string", "enum": ["cdn", "cloud", "waf"] },
+                "provider": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["tool", "tool_version", "sources_hash"],
+      "properties": {
+        "tool": { "const": "cdncheck" },
+        "tool_version": { "type": "string" },
+        "sources_hash": { "type": "string", "description": "Hash of provider index/sources_data.json when available." }
+      }
+    }
+  }
+}
