@@ -1,26 +1,21 @@
 #!/usr/bin/env python3
-"""sociosphere runner (v0.2)
+"""sociosphere runner (v0.3)
 
 Canonical workspace runner for manifest+lock orchestration.
 
 Commands:
-  - list:          show manifest repos + whether materialized
-  - fetch:         materialize missing repos (git clone) and checkout lock rev
-  - lock-verify:   verify role validity plus manifest/lock/drift state
-  - lock-update:   update lock revisions from currently-materialized repos
-  - inventory:     print repo / revision / license supply-chain report
-  - protocol:test: execute protocol compatibility surface (fixture stub until vectors land)
-  - run:           run a task (build/test/lint/etc.) across selected repos and emit structured artifacts
-
-Stdlib-only: no Python deps.
-  - list:           show manifest repos + whether materialized
-  - fetch:          materialize missing repos (git clone) and checkout lock rev
-  - lock-verify:    verify role validity plus manifest/lock/drift state
-  - protocol:test:  execute protocol compatibility surface (fixture stub until vectors land)
-  - run:            run a task (build/test/lint/etc.) across selected repos and emit structured artifacts
-  - check-manifest: validate manifest role/path naming conventions
-  - inventory:      emit a JSON inventory of all workspace repos
-  - sbom:           emit a CycloneDX 1.4 JSON SBOM for the workspace
+  - list:            show manifest repos + whether materialized
+  - fetch:           materialize missing repos (git clone) and checkout lock rev
+  - lock-verify:     verify role validity plus manifest/lock/drift state
+  - lock-update:     update lock revisions from currently-materialized repos
+  - inventory:       print repo / revision / license supply-chain report
+  - protocol:test:   execute protocol compatibility surface (fixture stub until vectors land)
+  - validate-policy: validate workspace policy refs and hashes
+  - validate-trust:  validate trust repo presence and trust metadata
+  - trust-report:    emit a structured trust report for the workspace
+  - run:             run a task (build/test/lint/etc.) across selected repos and emit structured artifacts
+  - check-manifest:  validate manifest role/path naming conventions
+  - sbom:            emit a CycloneDX 1.4 JSON SBOM for the workspace
 
 Stdlib-only: no Python deps beyond Python 3.11+.
 """
@@ -44,8 +39,10 @@ except ModuleNotFoundError:  # pragma: no cover
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_PATH = ROOT / "manifest" / "workspace.toml"
+OVERRIDES_PATH = ROOT / "manifest" / "overrides.toml"
 LOCK_PATH = ROOT / "manifest" / "workspace.lock.json"
 ARTIFACTS_ROOT = ROOT / "artifacts" / "workspace"
+
 VALID_ROLES = {
     "adapter",
     "component",
@@ -74,6 +71,9 @@ TOPOLOGY_PREFIXES = {
     "component": ("components/",),
 }
 
+SHA256_RE_PREFIX = "sha256:"
+TRUST_REPO_NAMES = {"agentplane", "mcp-a2a-zero-trust", "mcp_a2a_zero_trust"}
+
 
 @dataclass(frozen=True)
 class Repo:
@@ -84,6 +84,10 @@ class Repo:
     ref: str | None = None
     rev: str | None = None
     license_hint: str | None = None
+    required_capabilities: list[str] | None = None
+    trust_zone: str | None = None
+    trust_profile_ref: str | None = None
+    required_grants: list[str] | None = None
 
 
 def now_iso() -> str:
@@ -95,7 +99,7 @@ def sha256_path(path: Path) -> str:
     with path.open("rb") as f:
         for chunk in iter(lambda: f.read(65536), b""):
             h.update(chunk)
-    return h.hexdigest()
+    return SHA256_RE_PREFIX + h.hexdigest()
 
 
 def _run(cmd: list[str], cwd: Path | None = None, check: bool = True, capture: bool = False) -> subprocess.CompletedProcess:
@@ -112,8 +116,55 @@ def _capture(cmd: list[str], cwd: Path | None = None) -> str:
     return subprocess.check_output(cmd, cwd=str(cwd) if cwd else None, text=True).strip()
 
 
-def load_manifest() -> list[Repo]:
-    data = tomllib.loads(MANIFEST_PATH.read_text("utf-8"))
+def load_manifest_raw() -> dict[str, Any]:
+    return tomllib.loads(MANIFEST_PATH.read_text("utf-8"))
+
+
+def load_overrides_raw() -> dict[str, Any]:
+    if not OVERRIDES_PATH.exists():
+        return {}
+    return tomllib.loads(OVERRIDES_PATH.read_text("utf-8"))
+
+
+def merge_manifest_and_overrides(base: dict[str, Any], overrides: dict[str, Any]) -> dict[str, Any]:
+    """Merge overrides onto base.
+
+    - workspace.* keys are shallow-merged.
+    - workspace.policy is shallow-merged.
+    - repos are merged by name.
+
+    overrides.toml is optional and should be gitignored.
+    """
+    if not overrides:
+        return base
+
+    merged: dict[str, Any] = {k: v for k, v in base.items()}
+
+    merged_workspace = dict(base.get("workspace", {}))
+    merged_workspace.update(overrides.get("workspace", {}))
+    if "policy" in base.get("workspace", {}) or "policy" in overrides.get("workspace", {}):
+        policy = dict(base.get("workspace", {}).get("policy", {}))
+        policy.update(overrides.get("workspace", {}).get("policy", {}))
+        merged_workspace["policy"] = policy
+    if merged_workspace:
+        merged["workspace"] = merged_workspace
+
+    by_name: dict[str, dict[str, Any]] = {}
+    for r in base.get("repos", []):
+        by_name[r["name"]] = dict(r)
+    for r in overrides.get("repos", []):
+        name = r["name"]
+        current = dict(by_name.get(name, {"name": name}))
+        current.update(r)
+        by_name[name] = current
+    merged["repos"] = list(by_name.values())
+    return merged
+
+
+def load_workspace_and_repos() -> tuple[dict[str, Any], list[Repo]]:
+    data = merge_manifest_and_overrides(load_manifest_raw(), load_overrides_raw())
+    workspace = data.get("workspace", {})
+
     repos: list[Repo] = []
     for r in data.get("repos", []):
         lp_raw = r.get("local_path")
@@ -127,9 +178,13 @@ def load_manifest() -> list[Repo]:
                 ref=r.get("ref"),
                 rev=r.get("rev"),
                 license_hint=r.get("license_hint"),
+                required_capabilities=r.get("required_capabilities"),
+                trust_zone=r.get("trust_zone"),
+                trust_profile_ref=r.get("trust_profile_ref"),
+                required_grants=r.get("required_grants"),
             )
         )
-    return repos
+    return workspace, repos
 
 
 def load_lock() -> dict[str, Any]:
@@ -225,17 +280,189 @@ def inventory_payload(repos: list[Repo], lock: dict[str, Any]) -> dict[str, Any]
         )
     return {
         "kind": "WorkspaceInventoryArtifact",
-        "workspace": {"name": "sociosphere", "version": "0.2"},
+        "workspace": {"name": "sociosphere", "version": "0.3"},
         "generatedAt": now_iso(),
         "manifestDigest": sha256_path(MANIFEST_PATH),
         "lockDigest": sha256_path(LOCK_PATH) if LOCK_PATH.exists() else "",
-        "runnerVersion": "0.2",
+        "runnerVersion": "0.3",
         "repos": rows,
     }
 
 
+def detect_duplicate_repo_names(repos: Iterable[Repo]) -> list[str]:
+    seen: dict[str, int] = {}
+    for r in repos:
+        seen[r.name] = seen.get(r.name, 0) + 1
+    return sorted([name for name, count in seen.items() if count > 1])
+
+
+def detect_duplicate_repo_urls(repos: Iterable[Repo]) -> list[str]:
+    seen: dict[str, list[str]] = {}
+    for r in repos:
+        if r.url:
+            seen.setdefault(r.url, []).append(r.name)
+    out: list[str] = []
+    for url, names in seen.items():
+        if len(names) > 1:
+            out.append(f"{url} -> {', '.join(sorted(names))}")
+    return sorted(out)
+
+
+def validate_workspace_policy(workspace: dict[str, Any]) -> tuple[list[str], list[str]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+    policy = workspace.get("policy")
+    if not policy:
+        errors.append("missing [workspace.policy] block")
+        return errors, warnings
+
+    pack_ref = policy.get("policy_pack_ref")
+    if not pack_ref:
+        errors.append("workspace.policy.policy_pack_ref missing")
+    else:
+        pack_path = ROOT / pack_ref
+        if not pack_path.exists():
+            errors.append(f"policy pack ref missing: {pack_ref}")
+        else:
+            expect = policy.get("policy_pack_hash")
+            actual = sha256_path(pack_path)
+            if not expect:
+                warnings.append("workspace.policy.policy_pack_hash missing")
+            elif expect != actual:
+                errors.append(f"policy pack hash mismatch: expected {expect}, got {actual}")
+
+    trust_ref = policy.get("trust_profile_ref")
+    if not trust_ref:
+        errors.append("workspace.policy.trust_profile_ref missing")
+    else:
+        trust_path = ROOT / trust_ref
+        if not trust_path.exists():
+            errors.append(f"trust profile ref missing: {trust_ref}")
+
+    if policy.get("ledger_mode") not in {"required", "best_effort", "off", None}:
+        errors.append("workspace.policy.ledger_mode invalid")
+    if not policy.get("default_quorum_rule"):
+        warnings.append("workspace.policy.default_quorum_rule missing")
+    return errors, warnings
+
+
+def validate_trust_workspace(workspace: dict[str, Any], repos: list[Repo]) -> tuple[list[str], list[str]]:
+    errors: list[str] = []
+    warnings: list[str] = []
+
+    policy_errors, policy_warnings = validate_workspace_policy(workspace)
+    errors.extend(policy_errors)
+    warnings.extend(policy_warnings)
+
+    names = {r.name for r in repos}
+    if "agentplane" not in names:
+        errors.append("required trust repo missing: agentplane")
+    if not (names & {"mcp-a2a-zero-trust", "mcp_a2a_zero_trust"}):
+        errors.append("required trust repo missing: mcp-a2a-zero-trust")
+
+    for r in repos:
+        if r.trust_zone == "control" and not r.trust_profile_ref:
+            errors.append(f"{r.name}: trust_zone=control requires trust_profile_ref")
+        if r.trust_profile_ref:
+            p = ROOT / r.trust_profile_ref
+            if not p.exists():
+                errors.append(f"{r.name}: trust profile ref missing: {r.trust_profile_ref}")
+
+    duplicate_names = detect_duplicate_repo_names(repos)
+    duplicate_urls = detect_duplicate_repo_urls(repos)
+    if duplicate_names:
+        warnings.append("duplicate repo names: " + ", ".join(duplicate_names))
+    if duplicate_urls:
+        warnings.extend([f"duplicate repo urls: {row}" for row in duplicate_urls])
+
+    return errors, warnings
+
+
+def trust_report_payload(workspace: dict[str, Any], repos: list[Repo]) -> dict[str, Any]:
+    policy_errors, policy_warnings = validate_workspace_policy(workspace)
+    trust_errors, trust_warnings = validate_trust_workspace(workspace, repos)
+
+    trust_repos = [
+        {
+            "name": r.name,
+            "role": r.role,
+            "localPath": str(r.local_path.relative_to(ROOT)) if r.local_path else None,
+            "url": r.url,
+            "trustZone": r.trust_zone,
+            "trustProfileRef": r.trust_profile_ref,
+            "requiredGrants": r.required_grants or [],
+            "requiredCapabilities": r.required_capabilities or [],
+        }
+        for r in repos
+        if r.name in TRUST_REPO_NAMES or r.trust_zone == "control" or r.trust_profile_ref
+    ]
+
+    return {
+        "kind": "TrustReportArtifact",
+        "generatedAt": now_iso(),
+        "workspace": {
+            "name": workspace.get("name", "sociosphere"),
+            "version": workspace.get("version", "0.3"),
+            "policy": workspace.get("policy", {}),
+        },
+        "result": "pass" if not (policy_errors or trust_errors) else "fail",
+        "policyErrors": policy_errors,
+        "trustErrors": trust_errors,
+        "warnings": sorted(set(policy_warnings + trust_warnings)),
+        "trustRepos": trust_repos,
+    }
+
+
+def cmd_validate_policy(args: argparse.Namespace) -> int:
+    workspace, _ = load_workspace_and_repos()
+    errors, warnings = validate_workspace_policy(workspace)
+    payload = {
+        "kind": "PolicyValidationArtifact",
+        "generatedAt": now_iso(),
+        "result": "pass" if not errors else "fail",
+        "errors": errors,
+        "warnings": warnings,
+    }
+    if args.json_out:
+        write_json(Path(args.json_out), payload)
+        print(f"[validate-policy] wrote {args.json_out}")
+    else:
+        print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0 if not errors else 2
+
+
+def cmd_validate_trust(args: argparse.Namespace) -> int:
+    workspace, repos = load_workspace_and_repos()
+    errors, warnings = validate_trust_workspace(workspace, repos)
+    payload = {
+        "kind": "TrustValidationArtifact",
+        "generatedAt": now_iso(),
+        "result": "pass" if not errors else "fail",
+        "errors": errors,
+        "warnings": warnings,
+    }
+    if args.json_out:
+        write_json(Path(args.json_out), payload)
+        print(f"[validate-trust] wrote {args.json_out}")
+    else:
+        print(json.dumps(payload, indent=2, sort_keys=True))
+    return 0 if not errors else 2
+
+
+def cmd_trust_report(args: argparse.Namespace) -> int:
+    workspace, repos = load_workspace_and_repos()
+    payload = trust_report_payload(workspace, repos)
+    out = getattr(args, "output", "-")
+    if out == "-":
+        print(json.dumps(payload, indent=2, sort_keys=True))
+    else:
+        write_json(Path(out), payload)
+        print(f"[trust-report] wrote {out}")
+    return 0
+
+
 def cmd_list(args: argparse.Namespace) -> int:
-    repos = load_manifest()
+    _, repos = load_workspace_and_repos()
     lock = load_lock()
     errs = role_errors(repos) + topology_errors(repos)
 
@@ -246,7 +473,7 @@ def cmd_list(args: argparse.Namespace) -> int:
         drift = ""
         if lrev and head and head != lrev:
             drift = " (LOCK DRIFT)"
-        print(f"- {r.name:28s} role={r.role:10s} status={status:7s} head={head or '-'} lock={lrev or '-'}{drift}")
+        print(f"- {r.name:28s} role={r.role:14s} status={status:7s} head={head or '-'} lock={lrev or '-'}{drift}")
 
     if args.json_out:
         payload = inventory_payload(repos, lock)
@@ -263,7 +490,7 @@ def cmd_list(args: argparse.Namespace) -> int:
 
 
 def cmd_fetch(args: argparse.Namespace) -> int:
-    repos = load_manifest()
+    _, repos = load_workspace_and_repos()
     lock = load_lock()
     errs = role_errors(repos) + topology_errors(repos)
     if errs:
@@ -331,7 +558,7 @@ def iter_targets(repos: Iterable[Repo], only: list[str] | None, role: str | None
 
 
 def cmd_lock_verify(args: argparse.Namespace) -> int:
-    repos = load_manifest()
+    _, repos = load_workspace_and_repos()
     lock = load_lock()
     msgs = role_errors(repos) + topology_errors(repos)
     unresolved: list[str] = []
@@ -364,13 +591,7 @@ def cmd_lock_verify(args: argparse.Namespace) -> int:
 
 
 def cmd_lock_update(args: argparse.Namespace) -> int:
-    """Update the lock file with HEAD revisions from materialized repos.
-
-    For each manifest repo that has a URL:
-    - If the repo is materialized as a git checkout, capture its HEAD and write to lock.
-    - If not materialized, emit a warning (run fetch first).
-    """
-    repos = load_manifest()
+    _, repos = load_workspace_and_repos()
     lock = load_lock()
 
     if not lock:
@@ -422,8 +643,7 @@ def cmd_lock_update(args: argparse.Namespace) -> int:
 
 
 def cmd_inventory(args: argparse.Namespace) -> int:
-    """Print a supply-chain inventory: name / role / rev / license / url."""
-    repos = load_manifest()
+    _, repos = load_workspace_and_repos()
     lock = load_lock()
 
     records = []
@@ -477,11 +697,70 @@ def cmd_protocol_test(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_sbom(args: argparse.Namespace) -> int:
+    import uuid
+
+    _, repos = load_workspace_and_repos()
+    lock = load_lock()
+    lock_map: dict[str, Any] = {r["name"]: r for r in lock.get("repos", [])}
+
+    components: list[dict[str, Any]] = []
+    for r in repos:
+        lr = lock_map.get(r.name, {})
+        rev = lr.get("rev")
+        comp: dict[str, Any] = {
+            "type": "library",
+            "bom-ref": f"sociosphere:{r.name}",
+            "name": r.name,
+            "version": rev[:12] if rev else "unresolved",
+            "description": f"Workspace component; role={r.role}",
+            "externalReferences": [],
+        }
+        if r.url:
+            comp["externalReferences"].append({"type": "vcs", "url": r.url})
+        if rev:
+            comp["hashes"] = [{"alg": "SHA-1", "content": rev}]
+        components.append(comp)
+
+    sbom: dict[str, Any] = {
+        "bomFormat": "CycloneDX",
+        "specVersion": "1.4",
+        "serialNumber": f"urn:uuid:{uuid.uuid4()}",
+        "version": 1,
+        "metadata": {
+            "timestamp": dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z"),
+            "component": {
+                "type": "application",
+                "name": "sociosphere",
+                "version": "0.1",
+                "bom-ref": "sociosphere:workspace",
+            },
+        },
+        "components": components,
+    }
+
+    out: str = getattr(args, "output", "-")
+    if out == "-":
+        print(json.dumps(sbom, indent=2))
+    else:
+        Path(out).write_text(json.dumps(sbom, indent=2), encoding="utf-8")
+        print(f"OK: SBOM written to {out}")
+    return 0
+
+
 def cmd_run(args: argparse.Namespace) -> int:
-    repos = load_manifest()
+    workspace, repos = load_workspace_and_repos()
+
     errs = role_errors(repos)
     if errs:
         for e in errs:
+            print(f"ERROR: {e}", file=sys.stderr)
+        return 2
+
+    policy_errors, _ = validate_workspace_policy(workspace)
+    trust_errors, _ = validate_trust_workspace(workspace, repos)
+    if policy_errors or trust_errors:
+        for e in policy_errors + trust_errors:
             print(f"ERROR: {e}", file=sys.stderr)
         return 2
 
@@ -591,153 +870,32 @@ def cmd_run(args: argparse.Namespace) -> int:
     return rc
 
 
-# ---------------------------------------------------------------------------
-# Manifest convention enforcement
-# ---------------------------------------------------------------------------
-
-_ROLE_PATH_PREFIXES: dict[str, str] = {
-    "component": "components/",
-    "adapter": "adapters/",
-    "third_party": "third_party/",
-}
-
-
-def _check_manifest_conventions(repos: list[Repo]) -> list[str]:
-    """Return warning strings for role/path convention violations."""
+def cmd_check_manifest(args: argparse.Namespace) -> int:
+    _, repos = load_workspace_and_repos()
     warnings: list[str] = []
+
+    role_path_prefixes: dict[str, str] = {
+        "component": "components/",
+        "adapter": "adapters/",
+        "third_party": "third_party/",
+    }
+
     for r in repos:
         if r.local_path is None:
             continue
-        expected = _ROLE_PATH_PREFIXES.get(r.role)
+        expected = role_path_prefixes.get(r.role)
         if expected is None:
             continue
         rel = str(r.local_path.relative_to(ROOT)).replace("\\", "/")
         if not rel.startswith(expected):
-            warnings.append(
-                f"{r.name}: role={r.role} expects path prefix '{expected}', got '{rel}'"
-            )
-    return warnings
+            warnings.append(f"{r.name}: role={r.role} expects path prefix '{expected}', got '{rel}'")
 
-
-def cmd_check_manifest(args: argparse.Namespace) -> int:
-    """Validate manifest role/path naming conventions."""
-    repos = load_manifest()
-    warnings = _check_manifest_conventions(repos)
     if warnings:
         for w in warnings:
             print(f"WARN {w}", file=sys.stderr)
-        print(
-            f"WARN: {len(warnings)} convention violation(s) (not yet a hard failure; fix paths in manifest/workspace.toml)",
-            file=sys.stderr,
-        )
+        print(f"WARN: {len(warnings)} convention violation(s)", file=sys.stderr)
     else:
         print("OK: manifest role/path conventions validated")
-    return 0  # warn-only until all repos are migrated to canonical paths
-
-
-# ---------------------------------------------------------------------------
-# Inventory report (P2)
-# ---------------------------------------------------------------------------
-
-
-def cmd_inventory(args: argparse.Namespace) -> int:
-    """Emit a JSON inventory of all workspace repos (name, role, rev, materialisation status)."""
-    import datetime
-
-    repos = load_manifest()
-    lock = load_lock()
-    lock_map: dict[str, Any] = {r["name"]: r for r in lock.get("repos", [])}
-
-    components: list[dict[str, Any]] = []
-    for r in repos:
-        lr = lock_map.get(r.name, {})
-        rel_path = str(r.local_path.relative_to(ROOT)).replace("\\", "/") if r.local_path else None
-        entry: dict[str, Any] = {
-            "name": r.name,
-            "role": r.role,
-            "local_path": rel_path,
-            "url": r.url,
-            "rev": lr.get("rev"),
-            "tree_hash": lr.get("tree_hash"),
-            "retrieved_at": lr.get("retrieved_at"),
-            "materialized": r.local_path is not None and r.local_path.exists(),
-        }
-        if r.local_path is not None and r.local_path.exists():
-            head = repo_head_rev(r.local_path)
-            if head:
-                entry["head"] = head
-        components.append(entry)
-
-    report: dict[str, Any] = {
-        "generated_at": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),
-        "workspace": {"name": "sociosphere", "version": "0.1"},
-        "repos": components,
-    }
-
-    out: str = getattr(args, "output", "-")
-    if out == "-":
-        print(json.dumps(report, indent=2))
-    else:
-        Path(out).write_text(json.dumps(report, indent=2), encoding="utf-8")
-        print(f"OK: inventory written to {out}")
-    return 0
-
-
-# ---------------------------------------------------------------------------
-# SBOM generation (P2)
-# ---------------------------------------------------------------------------
-
-
-def cmd_sbom(args: argparse.Namespace) -> int:
-    """Emit a CycloneDX 1.4 JSON SBOM for the workspace."""
-    import datetime
-    import uuid
-
-    repos = load_manifest()
-    lock = load_lock()
-    lock_map: dict[str, Any] = {r["name"]: r for r in lock.get("repos", [])}
-
-    components: list[dict[str, Any]] = []
-    for r in repos:
-        lr = lock_map.get(r.name, {})
-        rev = lr.get("rev")
-        comp: dict[str, Any] = {
-            "type": "library",
-            "bom-ref": f"sociosphere:{r.name}",
-            "name": r.name,
-            "version": rev[:12] if rev else "unresolved",
-            "description": f"Workspace component; role={r.role}",
-            "externalReferences": [],
-        }
-        if r.url:
-            comp["externalReferences"].append({"type": "vcs", "url": r.url})
-        if rev:
-            comp["hashes"] = [{"alg": "SHA-1", "content": rev}]
-        components.append(comp)
-
-    sbom: dict[str, Any] = {
-        "bomFormat": "CycloneDX",
-        "specVersion": "1.4",
-        "serialNumber": f"urn:uuid:{uuid.uuid4()}",
-        "version": 1,
-        "metadata": {
-            "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00", "Z"),
-            "component": {
-                "type": "application",
-                "name": "sociosphere",
-                "version": "0.1",
-                "bom-ref": "sociosphere:workspace",
-            },
-        },
-        "components": components,
-    }
-
-    out: str = getattr(args, "output", "-")
-    if out == "-":
-        print(json.dumps(sbom, indent=2))
-    else:
-        Path(out).write_text(json.dumps(sbom, indent=2), encoding="utf-8")
-        print(f"OK: SBOM written to {out}")
     return 0
 
 
@@ -768,6 +926,18 @@ def main() -> int:
     sp.add_argument("--json-out", help="Optional path to write a ProtocolCompatibilityArtifact")
     sp.set_defaults(fn=cmd_protocol_test)
 
+    sp = sub.add_parser("validate-policy", help="Validate workspace policy refs and hashes")
+    sp.add_argument("--json-out", help="Optional path to write a PolicyValidationArtifact")
+    sp.set_defaults(fn=cmd_validate_policy)
+
+    sp = sub.add_parser("validate-trust", help="Validate trust repo presence and trust metadata")
+    sp.add_argument("--json-out", help="Optional path to write a TrustValidationArtifact")
+    sp.set_defaults(fn=cmd_validate_trust)
+
+    sp = sub.add_parser("trust-report", help="Emit a structured trust report for the workspace")
+    sp.add_argument("--output", default="-", metavar="FILE", help="Output file path (default: stdout)")
+    sp.set_defaults(fn=cmd_trust_report)
+
     sp = sub.add_parser("run", help="Run a task across selected repos")
     sp.add_argument("task", help="Task name (build/test/lint/fmt/...)")
     sp.add_argument("--all", action="store_true", help="Run against all repos with role=component")
@@ -776,10 +946,10 @@ def main() -> int:
     sp.add_argument("--artifact-dir", default="auto", help="Artifact output directory (default: auto under artifacts/workspace)")
     sp.set_defaults(fn=cmd_run)
 
-    sp = sub.add_parser("check-manifest", help="Validate manifest role/path naming conventions (P1)")
+    sp = sub.add_parser("check-manifest", help="Validate manifest role/path naming conventions")
     sp.set_defaults(fn=cmd_check_manifest)
 
-    sp = sub.add_parser("sbom", help="Emit CycloneDX 1.4 JSON SBOM for the workspace (P2)")
+    sp = sub.add_parser("sbom", help="Emit CycloneDX 1.4 JSON SBOM for the workspace")
     sp.add_argument("--output", default="-", metavar="FILE", help="Output file path (default: stdout)")
     sp.set_defaults(fn=cmd_sbom)
 

@@ -79,8 +79,32 @@ WEBHOOK_SECRET=<shared-secret> python webhooks/github_handler.py --port 8080
 python3 tools/runner/runner.py list
 python3 tools/runner/runner.py fetch
 python3 tools/runner/runner.py lock-verify
+python3 tools/runner/runner.py validate-policy
+python3 tools/runner/runner.py validate-trust
+python3 tools/runner/runner.py trust-report
 python3 tools/runner/runner.py run test --all
 ```
+
+## Local overrides
+
+The runner supports `manifest/overrides.toml` for local development overrides.
+The file is optional and should remain gitignored.
+
+A minimal example:
+
+```toml
+[[repos]]
+name = "agentplane"
+local_path = "components/agentplane-local"
+
+[[repos]]
+name = "mcp-a2a-zero-trust"
+local_path = "components/mcp_a2a_zero_trust_local"
+```
+
+At runtime, `runner.py` merges override repo entries by `name` on top of the canonical
+workspace manifest. Source fields like `local_path`, `url`, `ref`, and `rev` may be
+overridden locally without editing the committed manifest.
 
 ## Documentation de-duplication policy
 
