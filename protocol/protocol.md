@@ -19,10 +19,8 @@ Fixture vectors under `protocol/agentic-workbench/v1/fixtures/` are the canonica
 
 ## Runner integration
 
-The workspace controller exposes preflight gates:
+The workspace controller relies on runner-supported workflows for workspace operations.
 
-- `runner validate-policy`
-- `runner validate-trust`
-- `runner trust-report`
+Policy and trust integrity checks remain workspace-level concerns, but they are not currently exposed here as dedicated `runner validate-policy`, `runner validate-trust`, or `runner trust-report` subcommands.
 
-These commands are the workspace-level policy and trust integrity checks.
+Keep this document aligned with the commands actually implemented by `tools/runner/runner.py`.
