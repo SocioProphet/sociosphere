@@ -80,8 +80,8 @@ def main() -> int:
             "capabilityInstanceId": dispatch["capabilityInstanceId"],
             "input": dispatch["input"],
             "executionPolicy": {
-                "sideEffectsAllowed": false,
-                "networkEgressAllowed": false
+                "sideEffectsAllowed": False,
+                "networkEgressAllowed": False
             }
         }
         worker_request_path = tmp / "worker-request.json"
