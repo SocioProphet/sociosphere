@@ -26,6 +26,7 @@
 - [Glossary](GLOSSARY.md) — controlled vocabulary for all workspace concepts
 - [Topology](TOPOLOGY.md) — repo roles, dependency directionality, submodule update playbook
 - [Naming & versioning policy](NAMING_VERSIONING.md) — repo naming, SemVer, pin-bump rules
+- [Workspace / OS / agent boundary](WORKSPACE_OS_AGENT_BOUNDARY.md) — explicit split between product doctrine and cross-repo orchestration doctrine
 
 ## Ecosystem intelligence
 - [Ecosystem index](ecosystem/README.md) — per-repo analysis (purpose, vocabulary, topics, dependency graph, change impact rules) for all 8 core SocioProphet repos
