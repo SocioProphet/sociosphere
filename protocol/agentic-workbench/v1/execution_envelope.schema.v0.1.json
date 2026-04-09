@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sourceos.local/schemas/agentic-workbench/v1/execution_envelope.schema.v0.1.json",
+  "title": "ExecutionEnvelope",
+  "type": "object",
+  "required": [
+    "envelopeId",
+    "runId",
+    "stepId",
+    "subject",
+    "inputDigest"
+  ],
+  "properties": {
+    "envelopeId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "runId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stepId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subject": {
+      "type": "object",
+      "required": [
+        "spiffeId",
+        "aumDigest"
+      ],
+      "properties": {
+        "spiffeId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "aumDigest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "sessionId": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "attestationBundleRef": {
+      "type": "string"
+    },
+    "policyDecisionRef": {
+      "type": "string"
+    },
+    "grantRef": {
+      "type": "string"
+    },
+    "quorumProofRef": {
+      "type": "string"
+    },
+    "constraintsSnapshot": {
+      "type": "object"
+    },
+    "secretRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "inputRefs": {
+      "type": "array",
+      "items": {
+        "$ref": "https://sourceos.local/schemas/agentic-workbench/v1/artifact_ref.schema.v0.1.json"
+      }
+    },
+    "inputDigest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "transportContext": {
+      "type": "object",
+      "properties": {
+        "transport": {
+          "type": "string",
+          "enum": [
+            "mcp",
+            "a2a",
+            "openai",
+            "human",
+            "local"
+          ]
+        },
+        "target": {
+          "type": "object"
+        },
+        "bundleRef": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sourceos.local/schemas/agentic-workbench/v1/artifact_ref.schema.v0.1.json",
+  "title": "ArtifactRef",
+  "type": "object",
+  "required": [
+    "artifactId",
+    "kind",
+    "uri",
+    "digest",
+    "mediaType"
+  ],
+  "properties": {
+    "artifactId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "input",
+        "output",
+        "evidence",
+        "approval",
+        "replay",
+        "bundle",
+        "trace",
+        "log"
+      ]
+    },
+    "uri": {
+      "type": "string",
+      "minLength": 1
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "mediaType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schemaRef": {
+      "type": "string"
+    },
+    "redactionStatus": {
+      "type": "string",
+      "enum": [
+        "none",
+        "partial",
+        "full"
+      ]
+    },
+    "retentionPolicyRef": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

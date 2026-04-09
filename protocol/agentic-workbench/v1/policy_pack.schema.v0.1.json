@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sourceos.local/schemas/agentic-workbench/v1/policy_pack.schema.v0.1.json",
+  "title": "PolicyPack",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "enum": [
+        "agentic-workbench.socios@1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "PolicyPack"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "spec": {
+      "type": "object",
+      "required": [
+        "defaults",
+        "transportPolicy",
+        "effects",
+        "approvalRules"
+      ],
+      "properties": {
+        "defaults": {
+          "type": "object",
+          "properties": {
+            "lane": {
+              "type": "string",
+              "enum": [
+                "dev",
+                "staging",
+                "prod"
+              ]
+            },
+            "ledgerMode": {
+              "type": "string",
+              "enum": [
+                "required",
+                "best_effort",
+                "off"
+              ]
+            },
+            "attestationRequired": {
+              "type": "boolean"
+            },
+            "retryMax": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            },
+            "timeoutSec": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 86400
+            }
+          },
+          "additionalProperties": false
+        },
+        "transportPolicy": {
+          "type": "object",
+          "properties": {
+            "allowedTransports": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "mcp",
+                  "a2a",
+                  "openai",
+                  "human",
+                  "local"
+                ]
+              }
+            },
+            "disallowedTransports": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "mcp",
+                  "a2a",
+                  "openai",
+                  "human",
+                  "local"
+                ]
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "effects": {
+          "type": "object",
+          "properties": {
+            "requireGrantFor": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "read",
+                  "write",
+                  "compute",
+                  "exec",
+                  "egress"
+                ]
+              }
+            },
+            "humanGateFor": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "read",
+                  "write",
+                  "compute",
+                  "exec",
+                  "egress"
+                ]
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "approvalRules": {
+          "type": "object",
+          "properties": {
+            "low": {
+              "type": "string"
+            },
+            "medium": {
+              "type": "string"
+            },
+            "high": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "constraints": {
+          "type": "object",
+          "properties": {
+            "bytesMaxDefault": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "ratePerMinDefault": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "allowDomainsDefault": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
