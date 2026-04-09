@@ -28,6 +28,9 @@ coverage/
 .env
 .env.*
 
+# Local workspace overrides
+manifest/overrides.toml
+
 # Runtime metrics / logs (generated at runtime — not committed)
 metrics/*.jsonl
 metrics/registry-metrics.json
