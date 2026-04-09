@@ -1,0 +1,45 @@
+name: workspace-spine
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  spine:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+
+      - name: Workspace inventory
+        run: python tools/runner/runner.py list --json-out artifacts/workspace-ci/workspace-inventory.json
+
+      - name: Lock verification
+        run: python tools/runner/runner.py lock-verify --json-out artifacts/workspace-ci/lock-verification.json
+
+      - name: Protocol compatibility surface
+        run: python tools/runner/runner.py protocol:test --json-out artifacts/workspace-ci/protocol-compatibility.json
+
+      - name: Topology enforcement
+        run: python tools/runner/runner.py list --json-out artifacts/workspace-ci/workspace-topology.json
+
+      - name: Staged runner lock verification
+        run: python tools/runner/runner.v0.2.py lock-verify --json-out artifacts/workspace-ci/lock-verification-v0.2.json
+
+      - name: Standards validation
+        run: make validate-standards
+
+      - name: Upload workspace artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: workspace-spine-artifacts
+          path: artifacts/workspace-ci/

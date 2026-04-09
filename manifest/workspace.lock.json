@@ -3,43 +3,54 @@
     "name": "sociosphere",
     "version": "0.1"
   },
-  "generated_at": "2025-12-30T14:27:00Z",
+  "generated_at": "2026-04-08T16:43:25Z",
+  "_note": "Revisions pinned from live GitHub HEAD SHAs on 2026-04-08. Re-run `runner lock-update` after `runner fetch` to refresh.",
   "repos": [
+    {
+      "name": "workspace_inventory",
+      "role": "tool",
+      "url": "https://github.com/SocioProphet/workspace-inventory",
+      "ref": "main",
+      "rev": "31a8042ac0ac6ec4202458a65b5978066336d947",
+      "local_path": null,
+      "tree_hash": null,
+      "retrieved_at": "2026-04-08T16:43:25Z"
+    },
     {
       "name": "prophet_cli",
       "role": "component",
-      "url": null,
-      "ref": null,
-      "rev": null,
+      "url": "https://github.com/SocioProphet/prophet-platform",
+      "ref": "main",
+      "rev": "dcf102c92997e2414deaebd4310e40fcaf2a2506",
       "local_path": "components/prophet_cli",
       "tree_hash": null,
-      "retrieved_at": null
+      "retrieved_at": "2026-04-08T16:43:25Z"
     },
     {
       "name": "sourceos_a2a_mcp_bootstrap",
       "role": "component",
-      "url": null,
-      "ref": null,
-      "rev": null,
+      "url": "https://github.com/SocioProphet/sourceos-a2a-mcp-bootstrap",
+      "ref": "main",
+      "rev": "50427d7463e7dee81b19e118b5b041874bb8e0b3",
       "local_path": "components/sourceos_a2a_mcp_bootstrap",
       "tree_hash": null,
-      "retrieved_at": null
+      "retrieved_at": "2026-04-08T16:43:25Z"
     },
     {
-      "name": "socioprophet-web",
+      "name": "socioprophet_web",
       "role": "component",
-      "url": null,
-      "ref": null,
-      "rev": null,
+      "url": "https://github.com/SocioProphet/socioprophet",
+      "ref": "main",
+      "rev": "04614b5fe876999abeb1e92348d47e453f981537",
       "local_path": "components/socioprophet-web",
       "tree_hash": null,
-      "retrieved_at": null
+      "retrieved_at": "2026-04-08T16:43:25Z"
     },
     {
-      "name": "dev-api",
+      "name": "dev_api",
       "role": "component",
-      "url": null,
-      "ref": null,
+      "url": "https://github.com/SocioProphet/dev-api",
+      "ref": "main",
       "rev": null,
       "local_path": "components/dev-api",
       "tree_hash": null,
@@ -48,8 +59,8 @@
     {
       "name": "hdt_app",
       "role": "component",
-      "url": null,
-      "ref": null,
+      "url": "https://github.com/SocioProphet/hdt_app",
+      "ref": "main",
       "rev": null,
       "local_path": "components/hdt_app",
       "tree_hash": null,
@@ -58,28 +69,118 @@
     {
       "name": "human_digital_twin",
       "role": "component",
-      "url": null,
-      "ref": null,
-      "rev": null,
+      "url": "https://github.com/SocioProphet/human-digital-twin",
+      "ref": "main",
+      "rev": "faee188fbf0e9d853e5c41fe2c06f81dfbf67974",
       "local_path": "components/human_digital_twin",
       "tree_hash": null,
-      "retrieved_at": null
+      "retrieved_at": "2026-04-08T16:43:25Z"
     },
     {
       "name": "ontogenesis",
       "role": "component",
-      "url": null,
-      "ref": null,
-      "rev": null,
+      "url": "https://github.com/SocioProphet/ontogenesis",
+      "ref": "main",
+      "rev": "0a3f7b402d1af21d6699d3fe6a6e657b9882e5af",
       "local_path": "components/ontogenesis",
+      "tree_hash": null,
+      "retrieved_at": "2026-04-08T16:43:25Z"
+    },
+    {
+      "name": "tritrpc",
+      "role": "protocol",
+      "url": "https://github.com/SocioProphet/TriTRPC",
+      "ref": "main",
+      "rev": "efc114b0132b61472d3abb29007441597bca0cfc",
+      "local_path": "third_party/tritrpc",
+      "tree_hash": null,
+      "retrieved_at": "2026-04-08T16:43:25Z"
+    },
+    {
+      "name": "agentplane",
+      "role": "execution-plane",
+      "url": "https://github.com/SocioProphet/agentplane",
+      "ref": "main",
+      "rev": "3c973ab8feb9eb1a2d913b66135e32dd60125b92",
+      "local_path": "components/agentplane",
+      "tree_hash": null,
+      "retrieved_at": "2026-04-08T16:43:25Z"
+    },
+    {
+      "name": "semantic_serdes",
+      "role": "library",
+      "url": "https://github.com/SocioProphet/semantic-serdes",
+      "ref": "main",
+      "rev": null,
+      "local_path": "components/semantic_serdes",
       "tree_hash": null,
       "retrieved_at": null
     },
     {
+      "name": "cairnpath_mesh",
+      "role": "replay",
+      "url": "https://github.com/SocioProphet/cairnpath-mesh",
+      "ref": "main",
+      "rev": null,
+      "local_path": "components/cairnpath_mesh",
+      "tree_hash": null,
+      "retrieved_at": null
+    },
+    {
+      "name": "prophet_platform_standards",
+      "role": "standards",
+      "url": "https://github.com/SocioProphet/prophet-platform-standards",
+      "ref": "main",
+      "rev": null,
+      "local_path": "components/prophet_platform_standards",
+      "tree_hash": null,
+      "retrieved_at": null
+    },
+    {
+      "name": "socioprophet_standards_storage",
+      "role": "standards",
+      "url": "https://github.com/SocioProphet/socioprophet-standards-storage",
+      "ref": "main",
+      "rev": null,
+      "local_path": "components/socioprophet_standards_storage",
+      "tree_hash": null,
+      "retrieved_at": null
+    },
+    {
+      "name": "socioprophet_standards_knowledge",
+      "role": "standards",
+      "url": "https://github.com/SocioProphet/socioprophet-standards-knowledge",
+      "ref": "main",
+      "rev": null,
+      "local_path": "components/socioprophet_standards_knowledge",
+      "tree_hash": null,
+      "retrieved_at": null
+    },
+    {
+      "name": "gaia_world_model",
+      "role": "ontology",
+      "url": "https://github.com/SocioProphet/gaia-world-model",
+      "ref": "main",
+      "rev": "01c3a526a6cad8dab6bc45448f38e65d094186b2",
+      "local_path": "components/gaia_world_model",
+      "tree_hash": null,
+      "retrieved_at": "2026-04-08T16:43:25Z"
+    },
+    {
+      "name": "slash_topics",
+      "role": "topic-pack",
+      "url": "https://github.com/SocioProphet/slash-topics",
+      "ref": "main",
+      "rev": "614e0cbcc83d7a4d9b8cf8317946c016d471dbfa",
+      "local_path": "components/slash_topics",
+      "tree_hash": null,
+      "retrieved_at": "2026-04-08T16:43:25Z"
+    },
+    {
       "name": "cc",
       "role": "adapter",
-      "url": null,
-      "ref": null,
+      "url": "https://github.com/SocioProphet/cc",
+      "ref": "main",
       "rev": null,
       "local_path": "adapters/cc",
       "tree_hash": null,
@@ -88,22 +189,72 @@
     {
       "name": "configs",
       "role": "adapter",
-      "url": null,
-      "ref": null,
+      "url": "https://github.com/SocioProphet/configs",
+      "ref": "main",
       "rev": null,
       "local_path": "adapters/configs",
       "tree_hash": null,
       "retrieved_at": null
     },
     {
+      "name": "mcp_a2a_zero_trust",
+      "role": "security",
+      "url": "https://github.com/SocioProphet/mcp-a2a-zero-trust",
+      "ref": "main",
+      "rev": "71f6812d75db3c6c329b90138c89bb16c50d4546",
+      "local_path": "components/mcp_a2a_zero_trust",
+      "tree_hash": null,
+      "retrieved_at": "2026-04-08T16:43:25Z"
+    },
+    {
+      "name": "new_hope",
+      "role": "component",
+      "url": "https://github.com/SocioProphet/new-hope",
+      "ref": "main",
+      "rev": "0eb36beeccba427b0746f129cb99bc71b7cbf0a5",
+      "local_path": "components/new-hope",
+      "tree_hash": null,
+      "retrieved_at": "2026-04-08T16:43:25Z"
+    },
+    {
+      "name": "delivery_excellence",
+      "role": "docs",
+      "url": "https://github.com/SocioProphet/delivery-excellence",
+      "ref": "main",
+      "rev": "6a274663cbfbc51e40fb327c7e4bfeac59e1c7f4",
+      "local_path": "docs/delivery-excellence",
+      "tree_hash": null,
+      "retrieved_at": "2026-04-08T16:43:25Z"
+    },
+    {
+      "name": "delivery_excellence_automation",
+      "role": "adapter",
+      "url": "https://github.com/SocioProphet/delivery-excellence-automation",
+      "ref": "main",
+      "rev": "cdd968be7b3ed517816690b3b2fa09419e1d233c",
+      "local_path": "adapters/delivery-excellence-automation",
+      "tree_hash": null,
+      "retrieved_at": "2026-04-08T16:43:25Z"
+    },
+    {
       "name": "socioprophet_integration",
       "role": "docs",
-      "url": null,
-      "ref": null,
+      "url": "https://github.com/SocioProphet/socioprophet_integration",
+      "ref": "main",
       "rev": null,
       "local_path": "components/socioprophet_integration",
       "tree_hash": null,
       "retrieved_at": null
+    },
+    {
+      "name": "socioprophet_docs",
+      "role": "docs",
+      "url": "https://github.com/SocioProphet/socioprophet-docs",
+      "ref": "main",
+      "rev": "3d7da6d2468b51d2f06804055220670ead063f1b",
+      "local_path": "docs/socioprophet-docs",
+      "tree_hash": null,
+      "retrieved_at": "2026-04-08T16:43:25Z"
     }
   ]
 }

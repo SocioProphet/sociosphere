@@ -1,0 +1,43 @@
+pack_repos:
+- repo: SocioProphet/fog-pack-data
+  short: fog-pack-data
+  ibm: Cloud Pak for Data
+  surfaces: Fog Base, Fog Lake, Fog Catalog, Fog Knowledge, Fog Trust
+  priority: 1
+  status: populate now
+- repo: SocioProphet/fog-pack-business-automation
+  short: fog-pack-business-automation
+  ibm: Cloud Pak for Business Automation
+  surfaces: Fog Flow workflows, approvals, case, decisioning, doc actions
+  priority: 2
+  status: scaffold
+- repo: SocioProphet/fog-pack-integration
+  short: fog-pack-integration
+  ibm: Cloud Pak for Integration
+  surfaces: Fog Flow connectors, APIs, events, bridges
+  priority: 2
+  status: scaffold
+- repo: SocioProphet/fog-pack-aiops
+  short: fog-pack-aiops
+  ibm: Cloud Pak for AIOps
+  surfaces: Fog Observe, incident ops, runbooks, telemetry graph
+  priority: 3
+  status: scaffold
+- repo: SocioProphet/fog-pack-applications
+  short: fog-pack-applications
+  ibm: Cloud Pak for Applications
+  surfaces: Applications, starter portals, search UI
+  priority: 4
+  status: scaffold
+- repo: SocioProphet/fog-pack-network-automation
+  short: fog-pack-network-automation
+  ibm: Cloud Pak for Network Automation
+  surfaces: topology, intents, edge/network control
+  priority: 5
+  status: scaffold
+- repo: SocioProphet/fog-pack-security
+  short: fog-pack-security
+  ibm: Cloud Pak for Security
+  surfaces: detections, response, evidence, break-glass
+  priority: 5
+  status: scaffold

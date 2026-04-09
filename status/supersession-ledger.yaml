@@ -1,0 +1,195 @@
+# supersession-ledger.yaml — mapping of superseded PR intent to retained artifacts
+# Updated: 2026-04-06
+# schema_version: 1
+
+superseded_prs:
+  - repo: sociosphere
+    pr: 20
+    title: "Add Repository Intelligence & DevOps Orchestration System"
+    intent_mapping:
+      - intent: "Canonical repository intelligence coverage for ecosystem repos"
+        preserved_in:
+          - registry/canonical-repos.yaml
+          - registry/dependency-graph.yaml
+        status: preserved
+      - intent: "Operational and compliance orchestration visibility"
+        preserved_in:
+          - telemetry/compliance-policy.yaml
+          - telemetry/compliance_checker.py
+          - status/pr-register.yaml
+        status: preserved
+      - intent: "Execution governance signalization"
+        preserved_in:
+          - governance/MERGE-ORDER.md
+          - status/ecosystem-status.yaml
+        status: preserved
+
+  - repo: sociosphere
+    pr: 21
+    title: "Phase A — add 23 SocioProphet repos to sociosphere registry"
+    intent_mapping:
+      - intent: "Phase A registry population"
+        preserved_in:
+          - registry/canonical-repos.yaml
+        status: preserved
+      - intent: "Cross-repo dependency awareness"
+        preserved_in:
+          - registry/dependency-graph.yaml
+        status: preserved
+      - intent: "Scaffold for ongoing status tracking"
+        preserved_in:
+          - status/ecosystem-status.yaml
+          - status/pr-register.yaml
+        status: preserved
+
+  - repo: sociosphere
+    pr: 23
+    title: "Phase A — registry foundation for SocioProphet multi-repo ecosystem"
+    intent_mapping:
+      - intent: "Foundational multi-repo registry"
+        preserved_in:
+          - registry/canonical-repos.yaml
+          - registry/repository-ontology.yaml
+        status: preserved
+      - intent: "Workflow-safe merge sequencing"
+        preserved_in:
+          - governance/MERGE-ORDER.md
+        status: preserved
+      - intent: "Operationalization via tooling"
+        preserved_in:
+          - engines/status_reporter.py
+          - telemetry/compliance_checker.py
+        status: preserved
+
+open_gaps: []
+# supersession-ledger.yaml — Intent traceability for superseded sociosphere PRs
+# Snapshot date: 2026-04-06
+# Purpose: Ensure no intent is lost when superseded PRs are closed.
+# schema_version: 1
+
+metadata:
+  generated_on: "2026-04-06"
+  repository: sociosphere
+  superseded_prs: [20, 21, 23]
+  closure_gate: "Ledger completion is mandatory before closing any superseded PR."
+
+closure_requirements:
+  required_for_pr_close: true
+  checklist:
+    - "All major intent statements are enumerated from title/body."
+    - "Each intent statement is mapped to a concrete destination in this repository."
+    - "All unmatched intent is marked as gap with explicit follow-up owner and action."
+    - "Cross-reference exists in governance/MERGE-ORDER.md under Wave 2 closeout."
+
+superseded_prs:
+  - pr: 20
+    title: "Add Repository Intelligence & DevOps Orchestration System"
+    intent_statements:
+      - id: PR20-I1
+        statement: "Establish repository intelligence as a canonical inventory for the multi-repo workspace."
+        mapping:
+          status: matched
+          destinations:
+            - file: registry/canonical-repos.yaml
+              section: repos
+            - file: registry/repository-ontology.yaml
+              section: ontology
+            - file: status/ecosystem-status.yaml
+              section: summary
+      - id: PR20-I2
+        statement: "Provide dependency-aware orchestration for coordinated merges and execution order."
+        mapping:
+          status: matched
+          destinations:
+            - file: registry/dependency-graph.yaml
+              section: edges
+            - file: governance/MERGE-ORDER.md
+              section: "Wave 1-6 sequencing"
+      - id: PR20-I3
+        statement: "Add compliance-oriented validation to operationalize repository governance."
+        mapping:
+          status: matched
+          destinations:
+            - file: telemetry/compliance-policy.yaml
+              section: "global, layer policies, and thresholds"
+            - file: telemetry/compliance_checker.py
+              section: "policy evaluation and reporting"
+
+  - pr: 21
+    title: "Phase A — add 23 SocioProphet repos to sociosphere registry"
+    intent_statements:
+      - id: PR21-I1
+        statement: "Seed Phase A registry baseline for SocioProphet repositories."
+        mapping:
+          status: matched
+          destinations:
+            - file: registry/canonical-repos.yaml
+              section: repos
+            - file: status/ecosystem-status.yaml
+              section: inventory
+      - id: PR21-I2
+        statement: "Classify repositories by role/layer for governance and planning."
+        mapping:
+          status: matched
+          destinations:
+            - file: registry/canonical-repos.yaml
+              section: "repo layer/role fields"
+            - file: registry/repository-ontology.yaml
+              section: role_taxonomy
+      - id: PR21-I3
+        statement: "Advance from partial list to complete, deduplicated canonical set."
+        mapping:
+          status: matched
+          destinations:
+            - file: registry/canonical-repos.yaml
+              section: repos
+            - file: registry/deduplication-map.yaml
+              section: deduplication_rules
+
+  - pr: 23
+    title: "Phase A — registry foundation for SocioProphet multi-repo ecosystem"
+    intent_statements:
+      - id: PR23-I1
+        statement: "Establish registry foundation as source-of-truth for workspace orchestration."
+        mapping:
+          status: matched
+          destinations:
+            - file: registry/canonical-repos.yaml
+              section: repos
+            - file: governance/CANONICAL_SOURCES.yaml
+              section: canonical_documents
+      - id: PR23-I2
+        statement: "Track PR lifecycle and supersession explicitly to support deterministic merge governance."
+        mapping:
+          status: matched
+          destinations:
+            - file: status/pr-register.yaml
+              section: superseded_by_this_branch
+            - file: governance/MERGE-ORDER.md
+              section: "Wave 2 closeout"
+      - id: PR23-I3
+        statement: "Include status and compliance tooling as part of Phase A operational baseline."
+        mapping:
+          status: matched
+          destinations:
+            - file: status/ecosystem-status.yaml
+              section: status_layers
+            - file: telemetry/compliance-policy.yaml
+              section: control_plane
+            - file: telemetry/compliance_checker.py
+              section: "compliance checks"
+      - id: PR23-I4
+        statement: "Define explicit closure protocol so superseded PRs are closed only after traceability is complete."
+        mapping:
+          status: gap
+          destinations: []
+        gap:
+          rationale: "Prior merge-order note says to close superseded PRs, but did not require completed intent ledger as a hard gate."
+          follow_up_actions:
+            - id: GAP-23-1
+              action: "Maintain this ledger as required artifact and block superseded PR closure until checklist is satisfied."
+              owner: "sociosphere maintainers"
+              tracking_location:
+                file: governance/MERGE-ORDER.md
+                section: "Wave 2 closeout"
+              due: "before superseded PRs #20/#21/#23 are closed"

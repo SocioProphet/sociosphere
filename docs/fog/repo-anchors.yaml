@@ -1,0 +1,33 @@
+verified_existing_repos:
+- repo: SocioProphet/sociosphere
+  role: shared distro/meta-workspace
+  use_as: meta repo, installer, release orchestration
+  evidence: GitHub connector search/list in this turn
+- repo: SocioProphet/TriTRPC
+  role: shared protocol/control-wire
+  use_as: protocol/spec repo shared by all Fog packs
+  evidence: GitHub connector search in this turn
+- repo: SocioProphet/agentplane
+  role: shared agent control plane
+  use_as: agent runtime/control plane shared by Data, Automation, AIOps
+  evidence: GitHub connector search in this turn
+- repo: SocioProphet/socioprophet
+  role: docs and product/web surface
+  use_as: shared docs, portal, product surface
+  evidence: GitHub connector list in this turn
+- repo: SocioProphet/gaia-world-model
+  role: knowledge/model asset
+  use_as: optional seed input for Fog Knowledge/Data
+  evidence: GitHub connector list in this turn
+- repo: SocioProphet/prom-system
+  role: ops/telemetry anchor
+  use_as: seed for Fog AIOps
+  evidence: GitHub connector list in this turn
+- repo: SocioProphet/api-spec
+  role: API contract anchor
+  use_as: seed for Fog Integration contracts
+  evidence: GitHub connector list in this turn
+- repo: SocioProphet/servicebroker
+  role: service contract anchor
+  use_as: seed for Fog Integration broker surfaces
+  evidence: GitHub connector list in this turn

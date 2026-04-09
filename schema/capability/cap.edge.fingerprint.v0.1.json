@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "cap.edge.fingerprint@0.1",
+  "type": "object",
+  "required": ["capability", "version", "inputs", "outputs"],
+  "properties": {
+    "capability": { "const": "cap.edge.fingerprint" },
+    "version": { "const": "0.1" },
+    "inputs": {
+      "type": "object",
+      "required": ["targets"],
+      "properties": {
+        "targets": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "description": "List of IPs or DNS names."
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["any", "cdn", "cloud", "waf"],
+          "default": "any"
+        },
+        "output": {
+          "type": "string",
+          "enum": ["jsonl"],
+          "default": "jsonl"
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "required": ["jsonl_record_schema"],
+      "properties": {
+        "jsonl_record_schema": { "type": "string" }
+      }
+    }
+  }
+}

@@ -1,0 +1,57 @@
+name: compliance
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  registry-validate:
+    name: Registry validation
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Validate registry ontology (roles + layers)
+        run: python3 engines/ontology_engine.py validate
+
+      - name: Check dependency graph for cycles
+        run: python3 engines/propagation_engine.py cycles
+
+      - name: Print ecosystem status dashboard
+        run: python3 engines/status_reporter.py dashboard
+
+  compliance-check:
+    name: Compliance check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Run compliance checker
+        run: python3 telemetry/compliance_checker.py check
+        continue-on-error: true  # warn but don't block until policy is fully adopted
+
+      - name: Compliance summary (JSON)
+        run: python3 telemetry/compliance_checker.py summary --format json
