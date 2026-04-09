@@ -58,10 +58,10 @@ No side-effecting step may cross a trust boundary without:
 ## Capability identity
 
 Capabilities are named using the CapD namespace already present in the workspace:
-- `capd://caps.semantic.search_bi`
-- `capd://caps.bus.tritrpc`
-- `capd://caps.membrane.policy`
-- `capd://caps.audit.appendonly`
+- `caps.semantic.search_bi`
+- `caps.bus.tritrpc`
+- `caps.membrane.policy`
+- `caps.audit.appendonly`
 
 A digest-bound form may be used where immutable pinning is required.
 
