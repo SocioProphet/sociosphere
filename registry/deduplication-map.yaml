@@ -144,83 +144,83 @@ deduplication:
     potential_overlaps: [prophet-platform]
     namespace_conflicts: "prophet-core-* namespace may overlap with prophet-platform; needs Phase C review"
     consolidation_candidate: true
-    consolidation_target: null
-    archive_candidate: false
-    notes: "Phase A marker — Phase C will evaluate prophet-core-* vs. prophet-platform consolidation"
+    consolidation_target: prophet-platform
+    archive_candidate: true
+    notes: "README-only stub; consolidate into prophet-platform/docs and archive the standalone repo."
 
   prophet-core-ledger:
     potential_overlaps: [prophet-platform, TriTRPC]
     namespace_conflicts: "prophet-core-* namespace may overlap with prophet-platform"
     consolidation_candidate: true
-    consolidation_target: null
-    archive_candidate: false
-    notes: "Phase A marker — potential overlap with event/audit primitives in TriTRPC or prophet-platform"
+    consolidation_target: prophet-platform
+    archive_candidate: true
+    notes: "README-only stub; consolidate into prophet-platform/contracts (or a nearby ledger package) and archive the standalone repo."
 
   prophet-core-scaffolder:
     potential_overlaps: [prophet-platform, sourceos-a2a-mcp-bootstrap]
     namespace_conflicts: "prophet-core-* namespace may overlap with prophet-platform"
     consolidation_candidate: true
-    consolidation_target: null
-    archive_candidate: false
-    notes: "Phase A marker — scaffolding may overlap with bootstrap surfaces"
+    consolidation_target: prophet-platform
+    archive_candidate: true
+    notes: "README-only stub; consolidate into prophet-platform/tools and archive the standalone repo."
 
   prophet-core-libs:
     potential_overlaps: [prophet-platform]
     namespace_conflicts: "prophet-core-* namespace may overlap with prophet-platform"
     consolidation_candidate: true
-    consolidation_target: null
-    archive_candidate: false
-    notes: "Phase A marker — shared libs likely candidates for consolidation into prophet-platform"
+    consolidation_target: prophet-platform
+    archive_candidate: true
+    notes: "README-only stub; consolidate into prophet-platform/libs and archive the standalone repo."
 
   prophet-core-contracts:
-    potential_overlaps: [prophet-platform, graphbrain-contract]
-    namespace_conflicts: "prophet-core-* namespace may overlap with prophet-platform; 'contracts' pattern also in graphbrain-contract"
+    potential_overlaps: [gaia-world-model, graphbrain-contract]
+    namespace_conflicts: "README labels this as GAIA contracts, so the prophet-core-* namespace is misleading."
     consolidation_candidate: true
-    consolidation_target: null
-    archive_candidate: false
-    notes: "Phase A marker — Phase C will evaluate consolidation with prophet-platform contracts layer"
+    consolidation_target: gaia-world-model
+    archive_candidate: true
+    notes: "README-only stub labeled GAIA; consolidate into gaia-world-model/contracts and archive the standalone repo."
 
   # ── GAIA Domain / Data-Plane Cluster ─────────────────────────────────────
 
   prophet-core-infra:
-    potential_overlaps: [agentplane, prophet-platform]
-    namespace_conflicts: "prophet-core-* namespace may overlap with prophet-platform; infra may overlap with agentplane"
+    potential_overlaps: [agentplane, gaia-world-model]
+    namespace_conflicts: "README labels this as GAIA infra, so the prophet-core-* namespace is misleading."
     consolidation_candidate: true
-    consolidation_target: null
-    archive_candidate: false
-    notes: "Phase A marker — Phase C will evaluate GAIA infra vs. agentplane overlap"
+    consolidation_target: gaia-world-model
+    archive_candidate: true
+    notes: "README-only stub labeled GAIA; consolidate into gaia-world-model/infra and archive the standalone repo."
 
   prophet-core-policy:
-    potential_overlaps: [delivery-excellence-automation, socioprophet-standards-storage]
-    namespace_conflicts: "policy enforcement may overlap with delivery-excellence-automation or standards-storage"
+    potential_overlaps: [gaia-world-model, socioprophet-standards-storage]
+    namespace_conflicts: "README labels this as GAIA policy, so the prophet-core-* namespace is misleading."
     consolidation_candidate: true
-    consolidation_target: null
-    archive_candidate: false
-    notes: "Phase A marker — Phase C will evaluate policy layer consolidation"
+    consolidation_target: gaia-world-model
+    archive_candidate: true
+    notes: "README-only stub labeled GAIA; consolidate into gaia-world-model/policy and archive the standalone repo."
 
   prophet-core-query:
     potential_overlaps: [gaia-world-model, prophet-domain-gaia-ontology]
     namespace_conflicts: "query surface likely tied to gaia-world-model ontology"
-    consolidation_candidate: false
-    consolidation_target: null
-    archive_candidate: false
-    notes: "Phase A marker — distinct from ontology; unlikely to consolidate but dependencies need mapping"
+    consolidation_candidate: true
+    consolidation_target: gaia-world-model
+    archive_candidate: true
+    notes: "README-only stub labeled GAIA; consolidate into gaia-world-model/query and archive the standalone repo."
 
   prophet-core-catalog:
     potential_overlaps: [workspace-inventory, prophet-domain-gaia-curation-vault]
     namespace_conflicts: "catalog vs. inventory vs. curation-vault — potential overlap in asset registration"
     consolidation_candidate: true
-    consolidation_target: null
-    archive_candidate: false
-    notes: "Phase A marker — Phase C will evaluate catalog/inventory/curation overlap"
+    consolidation_target: gaia-world-model
+    archive_candidate: true
+    notes: "README-only stub labeled GAIA; consolidate into gaia-world-model/catalog and archive the standalone repo."
 
   prophet-core-ingest:
     potential_overlaps: [agentplane, new-hope]
     namespace_conflicts: "ingest pipeline may overlap with agentplane execution surface or new-hope carrier ingest"
     consolidation_candidate: true
-    consolidation_target: null
-    archive_candidate: false
-    notes: "Phase A marker — Phase C will evaluate ingest vs. agentplane/new-hope"
+    consolidation_target: gaia-world-model
+    archive_candidate: true
+    notes: "README-only stub labeled GAIA; consolidate into gaia-world-model/ingest and archive the standalone repo."
 
   prophet-domain-gaia-ontology:
     potential_overlaps: [gaia-world-model, ontogenesis]

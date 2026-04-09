@@ -40,15 +40,15 @@ namespaces:
 
   # Prophet core cluster
   prophet/platform: { canonical_repo: prophet-platform }
-  prophet/libs: { canonical_repo: prophet-core-libs }
-  prophet/contracts: { canonical_repo: prophet-core-contracts }
-  prophet/ledger: { canonical_repo: prophet-core-ledger }
-  prophet/ingest: { canonical_repo: prophet-core-ingest }
-  prophet/catalog: { canonical_repo: prophet-core-catalog }
-  prophet/query: { canonical_repo: prophet-core-query }
-  prophet/policy: { canonical_repo: prophet-core-policy }
-  prophet/infra: { canonical_repo: prophet-core-infra }
-  prophet/scaffolder: { canonical_repo: prophet-core-scaffolder }
+  prophet/libs: { canonical_repo: prophet-platform, consolidation_note: "collapse prophet-core-libs into prophet-platform/libs" }
+  prophet/contracts: { canonical_repo: gaia-world-model, consolidation_note: "collapse prophet-core-contracts into gaia-world-model/contracts" }
+  prophet/ledger: { canonical_repo: prophet-platform, consolidation_note: "collapse prophet-core-ledger into prophet-platform/contracts" }
+  prophet/ingest: { canonical_repo: gaia-world-model, consolidation_note: "collapse prophet-core-ingest into gaia-world-model/ingest" }
+  prophet/catalog: { canonical_repo: gaia-world-model, consolidation_note: "collapse prophet-core-catalog into gaia-world-model/catalog" }
+  prophet/query: { canonical_repo: gaia-world-model, consolidation_note: "collapse prophet-core-query into gaia-world-model/query" }
+  prophet/policy: { canonical_repo: gaia-world-model, consolidation_note: "collapse prophet-core-policy into gaia-world-model/policy" }
+  prophet/infra: { canonical_repo: gaia-world-model, consolidation_note: "collapse prophet-core-infra into gaia-world-model/infra" }
+  prophet/scaffolder: { canonical_repo: prophet-platform, consolidation_note: "collapse prophet-core-scaffolder into prophet-platform/tools" }
 
   # Identity & security
   identity/zero-trust: { canonical_repo: mcp-a2a-zero-trust }

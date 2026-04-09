@@ -19,12 +19,12 @@
     {
       "name": "prophet_cli",
       "role": "component",
-      "url": "https://github.com/SocioProphet/prophet-platform",
+      "url": "https://github.com/SocioProphet/prophet-cli",
       "ref": "main",
-      "rev": "dcf102c92997e2414deaebd4310e40fcaf2a2506",
+      "rev": "e335a2bf67d8f79e551ec4cf58364a486b47f2d8",
       "local_path": "components/prophet_cli",
       "tree_hash": null,
-      "retrieved_at": "2026-04-08T16:43:25Z"
+      "retrieved_at": "2026-04-09T04:23:58Z"
     },
     {
       "name": "sourceos_a2a_mcp_bootstrap",
