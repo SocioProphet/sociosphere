@@ -11,6 +11,11 @@ namespaces:
   workspace/registry: { canonical_repo: sociosphere }
   workspace/compliance: { canonical_repo: sociosphere }
 
+  # Agentic workbench / workflow kernel
+  protocol/agentic-workbench/v1: { canonical_repo: sociosphere }
+  protocol/agentic-workbench/v1/trust_profiles: { canonical_repo: sociosphere }
+  protocol/agentic-workbench/v1/policy_packs: { canonical_repo: sociosphere }
+
   # Standards
   standards/platform: { canonical_repo: prophet-platform-standards }
   standards/storage: { canonical_repo: socioprophet-standards-storage }
