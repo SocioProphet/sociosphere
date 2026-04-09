@@ -1,0 +1,55 @@
+{
+  "apiVersion": "agentic-workbench.socios@1",
+  "kind": "TrustProfile",
+  "metadata": {
+    "name": "default",
+    "version": "0.1",
+    "description": "Workspace-default trust posture for ordinary orchestrated steps."
+  },
+  "spec": {
+    "attestation": {
+      "subjectRequired": true,
+      "executorRequired": false,
+      "requireAumDigest": true,
+      "acceptedEvidence": [
+        "tpm",
+        "cosign"
+      ]
+    },
+    "grants": {
+      "requiredEffects": [
+        "write",
+        "exec",
+        "egress"
+      ],
+      "ttlSecMax": 900,
+      "requirePolicyHash": true
+    },
+    "approvals": {
+      "dangerClassesRequiringQuorum": [
+        "HIGH"
+      ],
+      "defaultRule": "2of3-human",
+      "allowServiceOnlyForLow": false
+    },
+    "ledger": {
+      "mode": "required",
+      "redactionProfileRef": "repo://mcp-a2a-zero-trust/redaction/default",
+      "redactByDefault": false
+    },
+    "network": {
+      "requireEgressGrant": true,
+      "defaultAllowDomains": []
+    },
+    "constraints": {
+      "pathsAllowDefault": [],
+      "pathsDenyDefault": [],
+      "bytesMaxDefault": 0,
+      "ratePerMinDefault": 0
+    },
+    "enforcement": {
+      "failClosed": true,
+      "requireSignedLedgerEvents": true
+    }
+  }
+}

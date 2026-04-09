@@ -1,0 +1,63 @@
+{
+  "apiVersion": "agentic-workbench.socios@1",
+  "kind": "Workflow",
+  "metadata": {
+    "name": "human-gated-exec-smoke",
+    "version": "0.1",
+    "createdAt": "2026-04-02T00:00:00Z"
+  },
+  "spec": {
+    "input": {
+      "schemaRef": "inline://none"
+    },
+    "output": {
+      "schemaRef": "inline://exec-result"
+    },
+    "defaults": {
+      "timeoutSec": 120,
+      "retryMax": 0,
+      "retryBackoffSec": 0,
+      "cacheMode": "off",
+      "ledgerMode": "required",
+      "humanGateRequired": true,
+      "lane": "dev"
+    },
+    "policy": {
+      "policyPackRef": "protocol/agentic-workbench/v1/policy_packs/human-gated-exec.v0.1.json",
+      "policyPackHash": "sha256:9a11ee40ab7e45a96c8c7f3977e17c80e0187e80c8754c2f4d62556ecd25d425",
+      "trustProfileRef": "protocol/agentic-workbench/v1/trust_profiles/human-gated-exec.v0.1.json",
+      "defaultQuorumRule": "2of3-human",
+      "attestationRequired": true,
+      "ledgerMode": "required"
+    },
+    "steps": [
+      {
+        "stepId": "dangerous-exec",
+        "name": "dangerous exec requiring quorum",
+        "transport": "local",
+        "capabilityRef": "capd://caps.audit.appendonly",
+        "effect": "exec",
+        "target": {
+          "operation": "dangerous-run"
+        },
+        "placement": {
+          "side": "either"
+        },
+        "approval": {
+          "required": true,
+          "quorumRule": "2of3-human"
+        },
+        "observability": {
+          "traceLevel": "full"
+        }
+      }
+    ],
+    "edges": [],
+    "bundleProjection": {
+      "targetRepo": "agentplane",
+      "artifactOutDir": "artifacts/human-gated-exec-smoke",
+      "executorStrategy": "fixed",
+      "backendIntentDefault": "fleet"
+    }
+  }
+}

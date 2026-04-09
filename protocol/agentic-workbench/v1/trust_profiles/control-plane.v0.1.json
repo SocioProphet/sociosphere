@@ -1,0 +1,62 @@
+{
+  "apiVersion": "agentic-workbench.socios@1",
+  "kind": "TrustProfile",
+  "metadata": {
+    "name": "control-plane",
+    "version": "0.1",
+    "description": "Strict profile for agentplane, zero-trust services, and workspace control repos."
+  },
+  "spec": {
+    "attestation": {
+      "subjectRequired": true,
+      "executorRequired": true,
+      "requireAumDigest": true,
+      "acceptedEvidence": [
+        "tpm",
+        "cosign",
+        "fido2"
+      ]
+    },
+    "grants": {
+      "requiredEffects": [
+        "read",
+        "write",
+        "compute",
+        "exec",
+        "egress"
+      ],
+      "ttlSecMax": 300,
+      "requirePolicyHash": true
+    },
+    "approvals": {
+      "dangerClassesRequiringQuorum": [
+        "MEDIUM",
+        "HIGH"
+      ],
+      "defaultRule": "2of3-human",
+      "allowServiceOnlyForLow": false
+    },
+    "ledger": {
+      "mode": "required",
+      "redactionProfileRef": "repo://mcp-a2a-zero-trust/redaction/control-plane",
+      "redactByDefault": true
+    },
+    "network": {
+      "requireEgressGrant": true,
+      "defaultAllowDomains": []
+    },
+    "constraints": {
+      "pathsAllowDefault": [],
+      "pathsDenyDefault": [
+        "**/.git/**",
+        "**/.ssh/**"
+      ],
+      "bytesMaxDefault": 50000000,
+      "ratePerMinDefault": 6
+    },
+    "enforcement": {
+      "failClosed": true,
+      "requireSignedLedgerEvents": true
+    }
+  }
+}
