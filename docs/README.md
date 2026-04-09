@@ -22,6 +22,11 @@
 - [QES (Quality Evidence Standard)](../standards/qes/README.md)
 - [Adaptation README](standards/adaptation/README.md)
 
+## Governance
+- [Glossary](GLOSSARY.md) — controlled vocabulary for all workspace concepts
+- [Topology](TOPOLOGY.md) — repo roles, dependency directionality, submodule update playbook
+- [Naming & versioning policy](NAMING_VERSIONING.md) — repo naming, SemVer, pin-bump rules
+
 ## Ecosystem intelligence
 - [Ecosystem index](ecosystem/README.md) — per-repo analysis (purpose, vocabulary, topics, dependency graph, change impact rules) for all 8 core SocioProphet repos
 

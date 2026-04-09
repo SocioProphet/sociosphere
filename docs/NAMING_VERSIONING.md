@@ -23,3 +23,11 @@ We use Semantic Versioning tags: `vMAJOR.MINOR.PATCH`
 - `sociosphere` may depend on `tritrpc` (submodule pinned to a tag, or commit hash if necessary).
 - `tritrpc` must **not** depend on `sociosphere`.
 - Notes/ideation may live in `tritrpc/docs/` (curated) or in an archive repo (uncurated), but are not runtime deps.
+
+## 5) Submodule pin-bump rules
+- Every submodule pin bump is an **explicit commit** — never a silent file change.
+- Commit message format: `chore(workspace): bump <submodule> pin to <rev> (ref: #<issue>)`
+- The commit must reference the upstream release, tag, or rationale.
+- Pin bumps are reviewed in a PR; they are not self-merged.
+- After merging, CI `topology-check` must pass with `rev` populated in the lock file.
+- Follow the full procedure in [docs/TOPOLOGY.md § Submodule update playbook](TOPOLOGY.md).

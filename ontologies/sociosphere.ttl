@@ -1,0 +1,222 @@
+@prefix ss:     <https://sociosphere.io/ontology/> .
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:    <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix schema: <https://schema.org/> .
+
+# ── Ontology declaration ─────────────────────────────────────────────────────
+
+<https://sociosphere.io/ontology/>
+    a owl:Ontology ;
+    rdfs:label "SocioProphet Workspace Ontology" ;
+    rdfs:comment "Formal ontology describing repos, roles, contracts, and governance in the SocioProphet ecosystem." ;
+    rdfs:seeAlso <https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md> .
+
+# ── Classes ──────────────────────────────────────────────────────────────────
+
+ss:Repository
+    a rdfs:Class ;
+    rdfs:label "Repository" ;
+    rdfs:comment "A GitHub repository that is part of the SocioProphet workspace." .
+
+ss:RepoRole
+    a rdfs:Class ;
+    rdfs:label "Repo Role" ;
+    rdfs:comment "The categorical role of a repository. See docs/GLOSSARY.md for definitions." .
+
+# ── Properties ───────────────────────────────────────────────────────────────
+
+ss:role
+    a rdf:Property ;
+    rdfs:label "role" ;
+    rdfs:domain ss:Repository ;
+    rdfs:range  ss:RepoRole ;
+    rdfs:comment "The role of this repository in the workspace." .
+
+ss:org
+    a rdf:Property ;
+    rdfs:label "org" ;
+    rdfs:domain ss:Repository ;
+    rdfs:range  xsd:string ;
+    rdfs:comment "GitHub organization owning this repository." .
+
+ss:techStack
+    a rdf:Property ;
+    rdfs:label "techStack" ;
+    rdfs:domain ss:Repository ;
+    rdfs:range  xsd:string ;
+    rdfs:comment "Primary languages and technologies used in this repository." .
+
+ss:upstreamContract
+    a rdf:Property ;
+    rdfs:label "upstreamContract" ;
+    rdfs:domain ss:Repository ;
+    rdfs:range  xsd:string ;
+    rdfs:comment "The interface this repository consumes from upstream dependencies." .
+
+ss:downstreamContract
+    a rdf:Property ;
+    rdfs:label "downstreamContract" ;
+    rdfs:domain ss:Repository ;
+    rdfs:range  xsd:string ;
+    rdfs:comment "The interface this repository publishes for downstream consumers." .
+
+ss:pinnedRev
+    a rdf:Property ;
+    rdfs:label "pinnedRev" ;
+    rdfs:domain ss:Repository ;
+    rdfs:range  xsd:string ;
+    rdfs:comment "The exact Git commit SHA to which this dependency is pinned in the workspace lock." .
+
+ss:glossaryRef
+    a rdf:Property ;
+    rdfs:label "glossaryRef" ;
+    rdfs:range  xsd:anyURI ;
+    rdfs:comment "Link to the glossary definition for this term or concept." .
+
+ss:governanceStatus
+    a rdf:Property ;
+    rdfs:label "governanceStatus" ;
+    rdfs:domain ss:Repository ;
+    rdfs:range  xsd:string ;
+    rdfs:comment "Current governance state: active | deprecated | archived | stub." .
+
+# ── Repo role individuals ─────────────────────────────────────────────────────
+
+ss:role/component
+    a ss:RepoRole ;
+    rdfs:label "component" ;
+    rdfs:comment "A self-contained service or application providing a discrete feature or capability." ;
+    ss:glossaryRef <https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#component> .
+
+ss:role/adapter
+    a ss:RepoRole ;
+    rdfs:label "adapter" ;
+    rdfs:comment "A boundary-translation layer bridging two systems or protocols." ;
+    ss:glossaryRef <https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#adapter> .
+
+ss:role/tool
+    a ss:RepoRole ;
+    rdfs:label "tool" ;
+    rdfs:comment "A utility or automation script consumed by the workspace controller." ;
+    ss:glossaryRef <https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#tool> .
+
+ss:role/protocol
+    a ss:RepoRole ;
+    rdfs:label "protocol" ;
+    rdfs:comment "A formal wire-format specification and/or reference implementation." ;
+    ss:glossaryRef <https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#protocol> .
+
+ss:role/execution-plane
+    a ss:RepoRole ;
+    rdfs:label "execution-plane" ;
+    rdfs:comment "A runtime environment or agent orchestrator that hosts and schedules components." ;
+    ss:glossaryRef <https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#execution-plane> .
+
+ss:role/library
+    a ss:RepoRole ;
+    rdfs:label "library" ;
+    rdfs:comment "A reusable code module with a stable API, consumed as a dependency." ;
+    ss:glossaryRef <https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#library> .
+
+ss:role/ontology
+    a ss:RepoRole ;
+    rdfs:label "ontology" ;
+    rdfs:comment "A structured vocabulary and knowledge graph." ;
+    ss:glossaryRef <https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#ontology> .
+
+ss:role/topic-pack
+    a ss:RepoRole ;
+    rdfs:label "topic-pack" ;
+    rdfs:comment "A curated collection of topics used for routing, classification, and discovery." ;
+    ss:glossaryRef <https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#topic-pack> .
+
+ss:role/security
+    a ss:RepoRole ;
+    rdfs:label "security" ;
+    rdfs:comment "A module enforcing identity, access control, zero-trust, or cryptographic guarantees." ;
+    ss:glossaryRef <https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#security> .
+
+ss:role/standards
+    a ss:RepoRole ;
+    rdfs:label "standards" ;
+    rdfs:comment "A normative specification document or schema governing interoperability." ;
+    ss:glossaryRef <https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#standards> .
+
+ss:role/replay
+    a ss:RepoRole ;
+    rdfs:label "replay" ;
+    rdfs:comment "A module that records, replays, or audits interactions." ;
+    ss:glossaryRef <https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#replay> .
+
+ss:role/docs
+    a ss:RepoRole ;
+    rdfs:label "docs" ;
+    rdfs:comment "Documentation-only content with no runtime artifact." ;
+    ss:glossaryRef <https://github.com/SocioProphet/sociosphere/blob/main/docs/GLOSSARY.md#docs> .
+
+# ── Repository nodes ─────────────────────────────────────────────────────────
+
+ss:repo/sociosphere
+    a ss:Repository ;
+    rdfs:label "sociosphere" ;
+    schema:name "sociosphere" ;
+    schema:url <https://github.com/SocioProphet/sociosphere> ;
+    ss:org "SocioProphet" ;
+    ss:role ss:role/component ;
+    ss:techStack "Python", "TypeScript", "TOML", "JSON", "YAML" ;
+    schema:license <https://opensource.org/licenses/MIT> ;
+    rdfs:comment "Platform meta-workspace controller. Owns manifest, lock, runner semantics, and multi-repo materialization." ;
+    ss:downstreamContract "Workspace materialization API, topology enforcement, registry/governance metadata." ;
+    ss:upstreamContract "Consumes tritrpc protocol spec via submodule pin." ;
+    ss:governanceStatus "active" .
+
+ss:repo/tritrpc
+    a ss:Repository ;
+    rdfs:label "tritrpc" ;
+    schema:name "tritrpc" ;
+    schema:url <https://github.com/SocioProphet/TriTRPC> ;
+    ss:org "SocioProphet" ;
+    ss:role ss:role/protocol ;
+    ss:techStack "Go", "Rust", "Python" ;
+    schema:license <https://opensource.org/licenses/MIT> ;
+    rdfs:comment "TriTRPC protocol spec, fixtures, and reference implementations. Three-valued (trit) RPC trust-encoding." ;
+    ss:downstreamContract "Wire format spec, trit encoding rules, reference test vectors." ;
+    ss:upstreamContract "None — must not depend on sociosphere." ;
+    ss:pinnedRev "efc114b0132b61472d3abb29007441597bca0cfc" ;
+    ss:governanceStatus "active" ;
+    rdfs:seeAlso <https://github.com/SocioProphet/sociosphere/blob/main/docs/notes/trit-to-trust.md> .
+
+ss:repo/agentplane
+    a ss:Repository ;
+    rdfs:label "agentplane" ;
+    schema:name "agentplane" ;
+    schema:url <https://github.com/SocioProphet/agentplane> ;
+    ss:org "SocioProphet" ;
+    ss:role ss:role/execution-plane ;
+    schema:license <https://opensource.org/licenses/MIT> ;
+    rdfs:comment "Runtime environment and agent orchestrator for SocioProphet workloads." ;
+    ss:governanceStatus "active" .
+
+ss:repo/gaia_world_model
+    a ss:Repository ;
+    rdfs:label "gaia-world-model" ;
+    schema:name "gaia_world_model" ;
+    schema:url <https://github.com/SocioProphet/gaia-world-model> ;
+    ss:org "SocioProphet" ;
+    ss:role ss:role/ontology ;
+    schema:license <https://opensource.org/licenses/MIT> ;
+    rdfs:comment "Structured vocabulary and world-model knowledge graph for the SocioProphet ecosystem." ;
+    ss:governanceStatus "active" .
+
+ss:repo/mcp_a2a_zero_trust
+    a ss:Repository ;
+    rdfs:label "mcp-a2a-zero-trust" ;
+    schema:name "mcp_a2a_zero_trust" ;
+    schema:url <https://github.com/SocioProphet/mcp-a2a-zero-trust> ;
+    ss:org "SocioProphet" ;
+    ss:role ss:role/security ;
+    schema:license <https://opensource.org/licenses/MIT> ;
+    rdfs:comment "Zero-trust identity and access-control enforcement for agent-to-agent and MCP communications." ;
+    ss:governanceStatus "active" .
