@@ -3,7 +3,59 @@
 # 53 original repositories under management
 version: "1.0.0"
 organization: SocioProphet
-updated_at: "2026-04-06"
+updated_at: "2026-04-09"
+
+consolidation_decisions:
+  prophet-core-libs:
+    status: deprecated
+    consolidate_into: prophet-platform
+    destination: libs/
+    rationale: "README-only stub; shared runtime bindings already fit the thin platform monorepo."
+  prophet-core-ledger:
+    status: deprecated
+    consolidate_into: prophet-platform
+    destination: contracts/
+    rationale: "README-only stub; audit and receipt surfaces belong with platform contracts and runtime services."
+  prophet-core-scaffolder:
+    status: deprecated
+    consolidate_into: prophet-platform
+    destination: tools/
+    rationale: "README-only stub; scaffolding belongs with platform validation and bootstrap tooling."
+  prophet-core-ops-brief:
+    status: deprecated
+    consolidate_into: prophet-platform
+    destination: docs/
+    rationale: "README-only stub; platform runbooks and operational briefs already belong under platform docs."
+  prophet-core-contracts:
+    status: deprecated
+    consolidate_into: gaia-world-model
+    destination: contracts/
+    rationale: "README identifies this as GAIA contracts, so it should live with the GAIA data-plane monorepo."
+  prophet-core-infra:
+    status: deprecated
+    consolidate_into: gaia-world-model
+    destination: infra/
+    rationale: "README identifies this as GAIA infra, so it should sit with GAIA deployment and topology assets."
+  prophet-core-catalog:
+    status: deprecated
+    consolidate_into: gaia-world-model
+    destination: catalog/
+    rationale: "README identifies this as GAIA catalog, which is part of the GAIA world-model surface."
+  prophet-core-policy:
+    status: deprecated
+    consolidate_into: gaia-world-model
+    destination: policy/
+    rationale: "README identifies this as GAIA policy, so governance logic should live with the GAIA domain model."
+  prophet-core-query:
+    status: deprecated
+    consolidate_into: gaia-world-model
+    destination: query/
+    rationale: "README identifies this as GAIA query, so the query surface should live with the GAIA data plane."
+  prophet-core-ingest:
+    status: deprecated
+    consolidate_into: gaia-world-model
+    destination: ingest/
+    rationale: "README identifies this as GAIA ingest, so ingestion should consolidate into the GAIA monorepo."
 
 repositories:
   # ── Core workspace / orchestration ─────────────────────────────────────────
