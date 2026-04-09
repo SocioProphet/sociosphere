@@ -34,10 +34,13 @@ if [[ ! -f "$LOCK" ]]; then
 else
     # Parse .gitmodules to get submodule names and paths
     if [[ -f "$ROOT/.gitmodules" ]]; then
+        # Use a variable for the regex pattern to avoid quoting issues
+        SM_HEADER_RE='^[[:space:]]*\[submodule "([^"]+)"\]'
+        SM_PATH_RE='^[[:space:]]*path[[:space:]]*=[[:space:]]*(.+)'
         while IFS= read -r line; do
-            if [[ "$line" =~ submodule\ \"(.+)\" ]]; then
+            if [[ "$line" =~ $SM_HEADER_RE ]]; then
                 SM_NAME="${BASH_REMATCH[1]}"
-            elif [[ "$line" =~ path\ =\ (.+) ]]; then
+            elif [[ "$line" =~ $SM_PATH_RE ]]; then
                 SM_PATH="${BASH_REMATCH[1]// /}"
                 # Check that this submodule path corresponds to a pinned entry in the lock
                 PINNED=$(python3 - "$LOCK" "$SM_PATH" <<'PYEOF'
