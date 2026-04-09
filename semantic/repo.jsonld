@@ -1,0 +1,29 @@
+{
+  "@context": "https://raw.githubusercontent.com/SourceOS-Linux/sourceos-spec/main/semantic/context.jsonld",
+  "@id": "urn:sourceos:repo:SocioProphet:sociosphere",
+  "@type": ["RepoDescriptor", "Repository"],
+  "name": "sociosphere",
+  "description": "Platform meta-workspace controller for the broader SocioProphet platform.",
+  "repositoryFullName": "SocioProphet/sociosphere",
+  "repoUrl": "https://github.com/SocioProphet/sociosphere",
+  "organization": "SocioProphet",
+  "defaultBranch": "main",
+  "semanticDescriptorVersion": "0.1.0",
+  "topologyRole": "rolePlatformWorkspaceController",
+  "connectsTo": [
+    "urn:sourceos:repo:SociOS-Linux:agentos-spine",
+    "urn:sourceos:repo:SourceOS-Linux:sourceos-spec",
+    "urn:sourceos:repo:SociOS-Linux:workstation-contracts",
+    "urn:sourceos:repo:SociOS-Linux:SourceOS",
+    "urn:sourceos:repo:SociOS-Linux:socios",
+    "urn:sourceos:repo:SocioProphet:socioprophet",
+    "urn:sourceos:repo:SociOS-Linux:socioslinux-web"
+  ],
+  "consumesVocabularyFrom": "urn:sourceos:repo:SourceOS-Linux:sourceos-spec",
+  "notThisRepo": [
+    "Linux image builder",
+    "immutable OS substrate",
+    "canonical typed-contract registry",
+    "public site"
+  ]
+}
