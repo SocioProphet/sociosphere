@@ -16,7 +16,7 @@ Sociosphere is the workspace controller repo that keeps multi-repo development r
 - **CI implementations** owned by downstream repos (Sociosphere only provides the primitives and checks needed for workspace determinism).
 
 ## Current state (v0.2)
-- **Manifest tracks the active workspace plus the canonical inventory mirror**: `manifest/workspace.toml` now carries the current materialized workspace entries plus remote-only entries for the clean 53-repo SocioProphet canonical registry. The manifest and lock remain authoritative for repos currently under workspace control, while the broader inventory is now visible to the workspace controller without forcing immediate materialization.
+- **Manifest tracks the active workspace plus the canonical inventory mirror**: `manifest/workspace.toml` now carries the current materialized workspace entries plus remote-only entries for the 65-repo SocioProphet canonical registry. The manifest and lock remain authoritative for repos currently under workspace control, while the broader inventory is now visible to the workspace controller without forcing immediate materialization.
 - **Lock is live**: `manifest/workspace.lock.json` carries real commit SHAs for every remote-backed repo in the current workspace set, generated 2026-04-08.
 - **Runner extended to v0.2**: `tools/runner/runner.py` now implements `list`, `fetch`, `lock-verify`, `lock-update`, `inventory`, and `run`. Supports new roles (`governance`, `docs`).
 - **CI enforces workspace integrity**: `.github/workflows/validate.yml` runs `runner list`, `runner lock-verify`, `runner inventory`, and `check_topology.py` on every push and PR.

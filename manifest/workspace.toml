@@ -560,3 +560,75 @@ name = "load-tests"
 role = "tool"
 url = "https://github.com/SocioProphet/load-tests"
 ref = "main"
+
+[[repos]]
+name = "alexandrian-academy"
+role = "component"
+url = "https://github.com/SocioProphet/alexandrian-academy"
+ref = "main"
+
+[[repos]]
+name = "cloudshell-fog"
+role = "component"
+url = "https://github.com/SocioProphet/cloudshell-fog"
+ref = "main"
+
+[[repos]]
+name = "delivery-excellence-boards"
+role = "tool"
+url = "https://github.com/SocioProphet/delivery-excellence-boards"
+ref = "main"
+
+[[repos]]
+name = "delivery-excellence-bounties"
+role = "tool"
+url = "https://github.com/SocioProphet/delivery-excellence-bounties"
+ref = "main"
+
+[[repos]]
+name = "delivery-excellence-innersource"
+role = "docs"
+url = "https://github.com/SocioProphet/delivery-excellence-innersource"
+ref = "main"
+
+[[repos]]
+name = "global-devsecops-intelligence"
+role = "security"
+url = "https://github.com/SocioProphet/global-devsecops-intelligence"
+ref = "main"
+
+[[repos]]
+name = "hyperswarm-agent-composable-cluster-scaleup"
+role = "component"
+url = "https://github.com/SocioProphet/hyperswarm-agent-composable-cluster-scaleup"
+ref = "main"
+
+[[repos]]
+name = "identity-is-prime-reference"
+role = "component"
+url = "https://github.com/SocioProphet/identity-is-prime-reference"
+ref = "main"
+
+[[repos]]
+name = "lampstand"
+role = "component"
+url = "https://github.com/SocioProphet/lampstand"
+ref = "main"
+
+[[repos]]
+name = "policy-fabric"
+role = "standards"
+url = "https://github.com/SocioProphet/policy-fabric"
+ref = "main"
+
+[[repos]]
+name = "exodus"
+role = "component"
+url = "https://github.com/SocioProphet/exodus"
+ref = "main"
+
+[[repos]]
+name = "regis-entity-graph"
+role = "ontology"
+url = "https://github.com/SocioProphet/regis-entity-graph"
+ref = "main"
