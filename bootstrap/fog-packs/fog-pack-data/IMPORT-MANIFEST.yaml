@@ -1,0 +1,43 @@
+source_repo: SocioProphet/sociosphere
+target_repo: SocioProphet/fog-pack-data
+mode: seed-first-import
+principle: import pack-local distro artifacts only
+entries:
+- source: bootstrap/fog-packs/fog-pack-data/README.md
+  target: README.md
+  class: pack-root
+- source: bootstrap/fog-packs/fog-pack-data/MIGRATION.md
+  target: MIGRATION.md
+  class: migration-note
+- source: bootstrap/fog-packs/fog-pack-data/UPSTREAM-BOUNDARIES.md
+  target: UPSTREAM-BOUNDARIES.md
+  class: boundary-note
+- source: bootstrap/fog-packs/fog-pack-data/fog-pack.yaml
+  target: fog-pack.yaml
+  class: pack-identity
+- source: bootstrap/fog-packs/fog-pack-data/specs/fog-stack-spec.yaml
+  target: specs/fog-stack-spec.yaml
+  class: pack-spec
+- source: bootstrap/fog-packs/fog-pack-data/release/knowledge/v0.1/manifest/fog-release-manifest.yaml
+  target: release/knowledge/v0.1/manifest/fog-release-manifest.yaml
+  class: release-manifest
+- source: bootstrap/fog-packs/fog-pack-data/release/knowledge/v0.1/pins/fog-release-lock.yaml
+  target: release/knowledge/v0.1/pins/fog-release-lock.yaml
+  class: release-lock
+references_only:
+- docs/fog/repo-topology.yaml
+- docs/fog/repo-governance.yaml
+- docs/fog/shared-foundations-map.yaml
+- docs/fog/upstream-delta-2026-04-09.md
+- docs/fog/import-boundaries-2026-04-09.yaml
+consume_from:
+- SocioProphet/sociosphere
+- SocioProphet/agentplane
+- SocioProphet/TriTRPC
+forbid_copying:
+- shared workflow/workspace control docs
+- runtime envelope canon
+- receipt canon
+- durablegraph runtime canon
+- transport method canon
+- protocol fixture canon
