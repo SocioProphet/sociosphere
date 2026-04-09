@@ -12,7 +12,9 @@ default_quorum_rule = "2of3-human"
 
 # NOTE: This manifest supports both local materialized repos (local_path)
 # and remote repos (url + ref/rev). The lock file resolves remote inputs.
-# Local development overrides should be expressed in manifest/overrides.toml.
+# Local development overrides should be expressed directly in this file by
+# updating each repo entry's source fields (for example, `local_path` for a
+# local checkout or `url` + `ref`/`rev` for a remote source).
 
 [[repos]]
 name = "prophet_cli"
