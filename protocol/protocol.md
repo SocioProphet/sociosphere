@@ -4,18 +4,17 @@ The workspace controller is the canonical home for shared protocol schemas, fixt
 
 ## Active protocol roots
 
-- `protocol/agentic-workbench/v0/` — legacy governed artifact lifecycle surface
-- `protocol/agentic-workbench/v1/` — active workflow-kernel, trust-profile, and policy-pack surface
+- `protocol/agentic-workbench/v0/` — active workflow-kernel, trust-profile, policy-pack, and governed artifact lifecycle surface
 
 ## Ownership boundaries
 
-- `sociosphere/protocol/agentic-workbench/v1/*` owns workflow orchestration objects and workspace-level trust profiles/policy packs.
+- `sociosphere/protocol/agentic-workbench/v0/*` owns workflow orchestration objects and workspace-level trust profiles/policy packs.
 - `mcp-a2a-zero-trust` owns canonical trust objects and the transport-facing capability registry.
 - `agentplane` owns static bundle execution contracts, runtime dispatch, receipts, and replay.
 
 ## Compatibility and fixtures
 
-Fixture vectors under `protocol/agentic-workbench/v1/fixtures/` are the canonical inputs for workflow-kernel contract tests and controller preflight validation.
+Fixture vectors under `protocol/agentic-workbench/v0/fixtures/` are the canonical inputs for workflow-kernel contract tests and controller preflight validation.
 
 ## Runner integration
 
