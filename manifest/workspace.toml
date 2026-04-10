@@ -12,9 +12,8 @@ default_quorum_rule = "2of3-human"
 
 # NOTE: This manifest supports both local materialized repos (local_path)
 # and remote repos (url + ref/rev). The lock file resolves remote inputs.
-# Local development overrides should be expressed directly in this file by
-# updating each repo entry's source fields (for example, `local_path` for a
-# local checkout or `url` + `ref`/`rev` for a remote source).
+# Local development overrides should be expressed in `manifest/overrides.toml`
+# where possible, rather than editing this committed manifest directly.
 # Canonical repo inventory: registry/canonical-repos.yaml (materialized entries + remote-only canonical mirrors live here)
 # Merge order for open PRs: governance/MERGE-ORDER.md
 # Controlled glossary: docs/GLOSSARY.md
@@ -31,7 +30,7 @@ default_quorum_rule = "2of3-human"
 #   local_path    – path inside this workspace after materialization
 #   license_hint  – non-authoritative; used by supply-chain policy checks
 #   entry         – optional runtime metadata (kind, module, etc.)
-#   required_capabilities – adapter-only capability declarations
+#   required_capabilities – optional capability declarations
 
 # ── Control-plane tools ──────────────────────────────────────────────────────
 
@@ -117,6 +116,9 @@ url = "https://github.com/SocioProphet/agentplane"
 ref = "main"
 local_path = "components/agentplane"
 license_hint = "MIT"
+trust_zone = "control"
+trust_profile_ref = "protocol/agentic-workbench/v1/trust_profiles/control-plane.v0.1.json"
+required_grants = ["agentplane.run:exec", "agentplane.replay:compute"]
 
 [[repos]]
 name = "semantic_serdes"
@@ -200,6 +202,9 @@ url = "https://github.com/SocioProphet/mcp-a2a-zero-trust"
 ref = "main"
 local_path = "components/mcp_a2a_zero_trust"
 license_hint = "MIT"
+trust_zone = "control"
+trust_profile_ref = "protocol/agentic-workbench/v1/trust_profiles/control-plane.v0.1.json"
+required_capabilities = ["policy", "attestation", "grant", "ledger", "capability_registry"]
 
 [[repos]]
 name = "new_hope"
@@ -236,26 +241,6 @@ role = "docs"
 local_path = "components/socioprophet_integration"
 url = "https://github.com/SocioProphet/socioprophet_integration"
 ref = "main"
-
-[[repos]]
-name = "agentplane"
-role = "component"
-url = "https://github.com/SocioProphet/agentplane.git"
-ref = "main"
-local_path = "components/agentplane"
-trust_zone = "control"
-trust_profile_ref = "protocol/agentic-workbench/v1/trust_profiles/control-plane.v0.1.json"
-required_grants = ["agentplane.run:exec", "agentplane.replay:compute"]
-
-[[repos]]
-name = "mcp-a2a-zero-trust"
-role = "adapter"
-url = "https://github.com/SocioProphet/mcp-a2a-zero-trust.git"
-ref = "main"
-local_path = "adapters/mcp-a2a-zero-trust"
-required_capabilities = ["policy", "attestation", "grant", "ledger", "capability_registry"]
-trust_zone = "control"
-trust_profile_ref = "protocol/agentic-workbench/v1/trust_profiles/control-plane.v0.1.json"
 
 [[repos]]
 name = "socioprophet_docs"
