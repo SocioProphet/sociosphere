@@ -1,0 +1,32 @@
+source_repo: SocioProphet/sociosphere
+target_repo: SocioProphet/fog-pack-security
+mode: scaffold-first-import
+principle: import pack-local security artifacts only
+entries:
+- source: bootstrap/fog-packs/fog-pack-security/UPSTREAM-BOUNDARIES.md
+  target: UPSTREAM-BOUNDARIES.md
+  class: boundary-note
+- source: bootstrap/fog-packs/fog-pack-security/fog-pack.yaml
+  target: fog-pack.yaml
+  class: pack-identity
+- source: bootstrap/fog-packs/fog-pack-security/README.md
+  target: README.md
+  class: pack-root
+references_only:
+- docs/fog/repo-topology.yaml
+- docs/fog/repo-governance.yaml
+- docs/fog/shared-foundations-map.yaml
+- docs/fog/upstream-delta-2026-04-09.md
+- docs/fog/import-boundaries-2026-04-09.yaml
+consume_from:
+- SocioProphet/sociosphere
+- SocioProphet/TriTRPC
+- SocioProphet/agentplane
+- SocioProphet/cert-operator
+- SocioProphet/hyper-secret-sharing
+forbid_copying:
+- shared cross-pack governance canon
+- shared protocol canon
+- shared runtime canon
+- generic cert/operator canon
+- generic secret-sharing/trust primitive canon
