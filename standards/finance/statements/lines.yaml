@@ -1,0 +1,30 @@
+version: 1
+
+# Canonical statement line IDs that other standards (including ops→finance linkage) may reference.
+# Keep these stable; changes require version bump + migration notes.
+
+income_statement:
+  - id: Revenue
+    label: Revenue
+  - id: COGS
+    label: Cost of Goods Sold / Cost of Services
+  - id: OperatingExpenses
+    label: Operating Expenses
+  - id: GrossProfit
+    label: Gross Profit
+  - id: NetIncome
+    label: Net Income
+
+balance_sheet:
+  - id: Cash
+    label: Cash and Cash Equivalents
+  - id: AccountsReceivable
+    label: Accounts Receivable
+  - id: DeferredRevenue
+    label: Deferred Revenue
+  - id: Equity
+    label: Equity
+
+cash_flow:
+  - id: OperatingCashFlow
+    label: Net Cash Provided by Operating Activities

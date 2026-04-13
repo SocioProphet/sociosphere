@@ -1,0 +1,139 @@
+version: 1
+privacy:
+  default_view: aggregate
+  audit_log: true
+  restricted_domains: [hr]
+
+metrics:
+  # WEEKLY
+  - metric_id: pod.scorecards
+    name: Pod Scorecards
+    cadence: weekly
+    owner: ops
+    privacy_domain: aggregate
+    classification: operating
+    definition_markdown: "Composite weekly health score per delivery pod: throughput, quality, risk, blockers, and customer impact."
+    formula_ref: pipelines/ops/sql/metrics/pod_scorecards.sql
+    effective_from: "2026-01-01"
+
+  - metric_id: stage_velocity
+    name: Stage Velocity
+    cadence: weekly
+    owner: gtm_ops
+    privacy_domain: aggregate
+    classification: operating
+    definition_markdown: "Median and P90 time-in-stage across GTM stages (lead→oppty→proposal→commit→close)."
+    formula_ref: pipelines/ops/sql/metrics/stage_velocity.sql
+    effective_from: "2026-01-01"
+
+  - metric_id: handoff.defects
+    name: Handoff Defects
+    cadence: weekly
+    owner: ops
+    privacy_domain: aggregate
+    classification: quality
+    definition_markdown: "Count and rate of defects attributable to cross-team handoffs: missing context, broken artifacts, rework triggers."
+    formula_ref: pipelines/ops/sql/metrics/handoff_defects.sql
+    effective_from: "2026-01-01"
+
+  - metric_id: coaching.cadence_aggregate
+    name: Coaching Cadence Aggregate
+    cadence: weekly
+    owner: enablement
+    privacy_domain: aggregate
+    classification: enablement
+    definition_markdown: "Aggregate coaching volume/coverage: sessions per rep/engineer, attendance, and follow-through completion rate."
+    formula_ref: pipelines/ops/sql/metrics/coaching_cadence_aggregate.sql
+    effective_from: "2026-01-01"
+
+  - metric_id: evidence_pack.compliance
+    name: Evidence Pack Compliance
+    cadence: weekly
+    owner: compliance
+    privacy_domain: aggregate
+    classification: control
+    definition_markdown: "Percent of deals/projects with complete evidence packs (approvals, scope, SoW, security review, delivery acceptance)."
+    formula_ref: pipelines/ops/sql/metrics/evidence_pack_compliance.sql
+    effective_from: "2026-01-01"
+
+  # MONTHLY
+  - metric_id: conversion.rates
+    name: Conversion Rates
+    cadence: monthly
+    owner: gtm_ops
+    privacy_domain: aggregate
+    classification: operating
+    definition_markdown: "Stage-to-stage conversion rates across GTM funnel; includes cohorting by segment/region/partner channel."
+    formula_ref: pipelines/ops/sql/metrics/conversion_rates.sql
+    effective_from: "2026-01-01"
+
+  - metric_id: partner.leverage
+    name: Partner Leverage
+    cadence: monthly
+    owner: alliances
+    privacy_domain: aggregate
+    classification: operating
+    definition_markdown: "Partner-sourced or partner-influenced revenue contribution and delivery leverage (services hours offset / acceleration)."
+    formula_ref: pipelines/ops/sql/metrics/partner_leverage.sql
+    effective_from: "2026-01-01"
+
+  - metric_id: referenceability.rate
+    name: Referenceability Rate
+    cadence: monthly
+    owner: customer_success
+    privacy_domain: aggregate
+    classification: customer
+    definition_markdown: "Percent of customers eligible and willing to be references (case study, call, logo), weighted by segment."
+    formula_ref: pipelines/ops/sql/metrics/referenceability_rate.sql
+    effective_from: "2026-01-01"
+
+  - metric_id: skills.coverage
+    name: Skills Coverage
+    cadence: monthly
+    owner: enablement
+    privacy_domain: hr
+    classification: enablement
+    definition_markdown: "Coverage of required skills per role against the operating model; includes certification/assessment thresholds."
+    formula_ref: pipelines/ops/sql/metrics/skills_coverage.sql
+    effective_from: "2026-01-01"
+
+  # QUARTERLY
+  - metric_id: okr.outcomes
+    name: OKR Outcomes
+    cadence: quarterly
+    owner: exec_ops
+    privacy_domain: aggregate
+    classification: operating
+    definition_markdown: "Outcome completion and impact scoring for OKRs; must tie to measurable business outcomes, not activity."
+    formula_ref: pipelines/ops/sql/metrics/okr_outcomes.sql
+    effective_from: "2026-01-01"
+
+  - metric_id: vertical.penetration
+    name: Vertical Penetration
+    cadence: quarterly
+    owner: gtm_strategy
+    privacy_domain: aggregate
+    classification: strategy
+    definition_markdown: "Market penetration by vertical: share of target accounts engaged/won and depth of solution footprint."
+    formula_ref: pipelines/ops/sql/metrics/vertical_penetration.sql
+    effective_from: "2026-01-01"
+
+  - metric_id: retention.expansion
+    name: Retention and Expansion
+    cadence: quarterly
+    owner: customer_success
+    privacy_domain: aggregate
+    classification: customer
+    definition_markdown: "Retention and expansion outcomes (GRR/NRR-style) by cohort; includes churn, downsell, upsell, expansion."
+    formula_ref: pipelines/ops/sql/metrics/retention_expansion.sql
+    effective_from: "2026-01-01"
+
+  - metric_id: regretted_attrition
+    name: Regretted Attrition
+    cadence: quarterly
+    owner: hr
+    privacy_domain: hr
+    classification: people
+    definition_markdown: "Attrition judged regretted (loss of critical talent) with role criticality weighting and replacement lag."
+    formula_ref: pipelines/ops/sql/metrics/regretted_attrition.sql
+    effective_from: "2026-01-01"

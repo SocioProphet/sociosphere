@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "finance-statement-lines.v1.schema.json",
+  "type": "object",
+  "required": ["version","income_statement","balance_sheet","cash_flow"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "income_statement": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/line" },
+      "minItems": 1
+    },
+    "balance_sheet": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/line" },
+      "minItems": 1
+    },
+    "cash_flow": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/line" },
+      "minItems": 1
+    }
+  },
+  "$defs": {
+    "line": {
+      "type": "object",
+      "required": ["id","label"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$" },
+        "label": { "type": "string", "minLength": 2 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

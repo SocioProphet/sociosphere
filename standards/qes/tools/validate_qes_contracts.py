@@ -1,61 +1,24 @@
 #!/usr/bin/env python3
 from __future__ import annotations
-import json
-import re
-import sys
 from pathlib import Path
+import json
+import sys
 
 try:
     import yaml  # type: ignore
 except Exception:
-    yaml = None
+    print("ERR: PyYAML not installed. Install with: python3 -m pip install pyyaml", file=sys.stderr)
+    raise
 
 ROOT = Path(__file__).resolve().parents[1]  # standards/qes
 CAT = ROOT / "schemas/topics/topic-catalog.v1.yaml"
-
-
-def _parse_topic_catalog_without_yaml(raw: str) -> list[dict[str, str]]:
-    """
-    Fallback parser for the limited structure of topic-catalog.v1.yaml.
-
-    This intentionally supports only the subset we validate here:
-    - topics:
-      - name: ...
-        schema: ...
-    """
-    topics: list[dict[str, str]] = []
-    current: dict[str, str] | None = None
-    for line in raw.splitlines():
-        stripped = line.strip()
-        if not stripped or stripped.startswith("#"):
-            continue
-        topic_start = re.match(r"-\s+name:\s*(.+)", stripped)
-        if topic_start:
-            if current:
-                topics.append(current)
-            current = {"name": topic_start.group(1).strip()}
-            continue
-        schema = re.match(r"schema:\s*(.+)", stripped)
-        if schema and current is not None:
-            current["schema"] = schema.group(1).strip()
-    if current:
-        topics.append(current)
-    return topics
 
 def main() -> int:
     if not CAT.exists():
         print(f"ERR: missing topic catalog: {CAT}", file=sys.stderr)
         return 2
-    raw_catalog = CAT.read_text()
-    if yaml is None:
-        print(
-            "WARN: PyYAML not installed; using fallback parser for topic-catalog.v1.yaml",
-            file=sys.stderr,
-        )
-        topics = _parse_topic_catalog_without_yaml(raw_catalog)
-    else:
-        doc = yaml.safe_load(raw_catalog)
-        topics = doc.get("topics", [])
+    doc = yaml.safe_load(CAT.read_text())
+    topics = doc.get("topics", [])
     errs = 0
     for t in topics:
         schema_rel = t.get("schema")
