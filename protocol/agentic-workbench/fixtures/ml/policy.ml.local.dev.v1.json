@@ -1,0 +1,36 @@
+{
+  "apiVersion": "agentic-workbench.socios@1",
+  "kind": "PolicyPack",
+  "metadata": {
+    "name": "policy-ml-local-dev",
+    "version": "v1",
+    "description": "Local governed ML development policy with explicit grants for mutating or networked actions."
+  },
+  "spec": {
+    "defaults": {
+      "lane": "dev",
+      "ledgerMode": "required",
+      "attestationRequired": true,
+      "retryMax": 1,
+      "timeoutSec": 3600
+    },
+    "transportPolicy": {
+      "allowedTransports": ["local", "human"],
+      "disallowedTransports": ["openai"]
+    },
+    "effects": {
+      "requireGrantFor": ["read", "write", "exec", "egress"],
+      "humanGateFor": ["exec", "egress"]
+    },
+    "approvalRules": {
+      "low": "service",
+      "medium": "human:1-of-1",
+      "high": "human:1-of-1"
+    },
+    "constraints": {
+      "bytesMaxDefault": 1073741824,
+      "ratePerMinDefault": 120,
+      "allowDomainsDefault": ["vault.internal", "ck.internal", "logs.internal"]
+    }
+  }
+}
