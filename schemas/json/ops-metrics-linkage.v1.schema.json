@@ -26,7 +26,9 @@
                 "pipeline_efficiency","cogs_leakage","opex_drag","delivery_margin","capacity",
                 "quality","churn_risk","retention","expansion","pricing_power",
                 "audit_readiness","dispute_reduction","execution_risk","investment_efficiency",
-                "sales_cycle_reduction","conversion_uplift","concentration_risk"
+                "sales_cycle_reduction","conversion_uplift","concentration_risk",
+                "predictability","productivity","delivery_quality","cac_efficiency",
+                "delivery_acceleration","strategy_execution","revenue_stability"
               ]
             }
           },
