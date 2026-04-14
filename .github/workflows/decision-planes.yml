@@ -17,6 +17,10 @@ on:
       - "scripts/validate_decision_planes.py"
       - ".github/workflows/decision-planes.yml"
 
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   validate-decision-planes:
     runs-on: ubuntu-latest
