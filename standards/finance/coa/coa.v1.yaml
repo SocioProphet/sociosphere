@@ -1,0 +1,60 @@
+version: 2
+
+accounts:
+  # Assets
+  - id: "1000"
+    name: Cash
+    type: asset
+    statement_line: Cash
+  - id: "1100"
+    name: Accounts Receivable
+    type: asset
+    statement_line: AccountsReceivable
+  - id: "1200"
+    name: Fixed Assets
+    type: asset
+    statement_line: null
+  - id: "1210"
+    name: Accumulated Depreciation (Contra-Asset)
+    type: asset
+    statement_line: null
+
+  # Liabilities
+  - id: "2000"
+    name: Deferred Revenue
+    type: liability
+    statement_line: DeferredRevenue
+  - id: "2100"
+    name: Accounts Payable / Accrued Liabilities
+    type: liability
+    statement_line: null
+
+  # Equity
+  - id: "3000"
+    name: Equity
+    type: equity
+    statement_line: Equity
+
+  # Revenue (and contra-revenue)
+  - id: "4000"
+    name: Revenue
+    type: revenue
+    statement_line: Revenue
+  - id: "4100"
+    name: Contra Revenue (Refunds/Returns/Allowances)
+    type: revenue
+    statement_line: Revenue
+
+  # Expenses
+  - id: "5000"
+    name: COGS / Cost of Services
+    type: expense
+    statement_line: COGS
+  - id: "6000"
+    name: Operating Expenses
+    type: expense
+    statement_line: OperatingExpenses
+  - id: "7100"
+    name: FX Gain/Loss (Net)
+    type: expense
+    statement_line: OperatingExpenses

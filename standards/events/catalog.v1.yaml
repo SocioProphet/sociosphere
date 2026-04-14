@@ -1,0 +1,68 @@
+version: 1
+
+domains:
+  - id: o2c
+    name: Order-to-Cash
+  - id: p2p
+    name: Procure-to-Pay
+  - id: r2r
+    name: Record-to-Report
+
+event_types:
+  # O2C
+  - event_type: order.created
+    domain: o2c
+    finance_impact: false
+    required_amount_refs: []
+  - event_type: invoice.issued
+    domain: o2c
+    finance_impact: true
+    required_amount_refs: ["invoice.subtotal"]
+  - event_type: delivery.completed
+    domain: o2c
+    finance_impact: true
+    required_amount_refs: ["delivery.value"]
+  - event_type: revenue.recognized
+    domain: o2c
+    finance_impact: true
+    required_amount_refs: ["revrec.value"]
+  - event_type: refund.issued
+    domain: o2c
+    finance_impact: true
+    required_amount_refs: ["refund.amount"]
+  - event_type: payment.settled
+    domain: o2c
+    finance_impact: true
+    required_amount_refs: ["payment.amount"]
+
+  # P2P
+  - event_type: vendor_invoice.approved
+    domain: p2p
+    finance_impact: true
+    required_amount_refs: ["vendor_invoice.amount"]
+  - event_type: vendor_payment.settled
+    domain: p2p
+    finance_impact: true
+    required_amount_refs: ["vendor_payment.amount"]
+
+  # R2R
+  - event_type: accrual.posted
+    domain: r2r
+    finance_impact: true
+    required_amount_refs: ["accrual.amount"]
+  - event_type: accrual.reversed
+    domain: r2r
+    finance_impact: true
+    required_amount_refs: ["accrual.amount"]
+  - event_type: allocation.posted
+    domain: r2r
+    finance_impact: true
+    required_amount_refs: ["allocation.amount"]
+  - event_type: depreciation.posted
+    domain: r2r
+    finance_impact: true
+    required_amount_refs: ["depr.amount"]
+  - event_type: fx.revalued
+    domain: r2r
+    finance_impact: true
+    required_amount_refs: ["fx.delta"]
