@@ -8,7 +8,7 @@ from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parents[1]
 
-METRIC_ID_RE = re.compile(r"^[a-z0-9]+(\.[a-z0-9_]+)*$")
+METRIC_ID_RE = re.compile(r"^[a-z0-9_]+(\.[a-z0-9_]+)*$")
 
 OPS_REG = ROOT / "standards/ops/metrics/registry.yaml"
 OPS_LINK = ROOT / "standards/ops/metrics/linkage.yaml"
