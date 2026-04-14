@@ -1,0 +1,280 @@
+{
+  "apiVersion": "agentic-workbench.socios@1",
+  "kind": "Workflow",
+  "metadata": {
+    "name": "ml-local-train",
+    "version": "v1",
+    "createdAt": "2026-04-13T00:00:00Z",
+    "labels": {
+      "domain": "ml",
+      "mode": "local",
+      "purpose": "training"
+    },
+    "source": {
+      "git": {
+        "repo": "SocioProphet/sociosphere",
+        "rev": "main",
+        "dirty": false
+      }
+    }
+  },
+  "spec": {
+    "input": {
+      "schemaRef": "https://sourceos.local/schemas/ml/v1/train_request.schema.json"
+    },
+    "output": {
+      "schemaRef": "https://sourceos.local/schemas/ml/v1/train_result.schema.json"
+    },
+    "defaults": {
+      "timeoutSec": 3600,
+      "retryMax": 1,
+      "retryBackoffSec": 30,
+      "cacheMode": "readwrite",
+      "ledgerMode": "required",
+      "humanGateRequired": false,
+      "lane": "dev"
+    },
+    "policy": {
+      "policyPackRef": "policy://ml.local.dev.v1",
+      "policyPackHash": "sha256:665e2cd09e0cbd0b59a0a2960b06e88ea48f4f706f68786b0470bf403799674d",
+      "trustProfileRef": "trust://ml.local.dev.v1",
+      "defaultQuorumRule": "human:1-of-1",
+      "attestationRequired": true,
+      "ledgerMode": "required"
+    },
+    "steps": [
+      {
+        "stepId": "resolve-dataset-snapshot",
+        "name": "Resolve training dataset snapshot",
+        "transport": "local",
+        "capabilityRef": "capd://caps.data.asset.resolve_snapshot.v1",
+        "effect": "read",
+        "target": {
+          "executorRef": "exec://control/local",
+          "operation": "resolve_snapshot"
+        },
+        "inputBindings": {
+          "datasetRef": "$.input.datasetRef"
+        },
+        "outputBindings": {
+          "datasetSnapshotRef": "$.steps.resolve-dataset-snapshot.output.snapshotRef"
+        },
+        "timeoutSec": 60,
+        "retry": {
+          "maxAttempts": 1,
+          "backoffSec": 5,
+          "idempotentRequired": true
+        },
+        "placement": {
+          "executorRef": "exec://control/local",
+          "side": "edge",
+          "dataZone": "local",
+          "residency": "workstation",
+          "networkZone": "offline"
+        },
+        "observability": {
+          "traceLevel": "standard",
+          "redactRulesRef": "redact://default.local.dev"
+        }
+      },
+      {
+        "stepId": "beam-transform-features",
+        "name": "Transform and materialize features",
+        "transport": "local",
+        "capabilityRef": "capd://caps.data.beam.transform.v1",
+        "effect": "compute",
+        "target": {
+          "executorRef": "exec://beam/local",
+          "operation": "transform_features"
+        },
+        "inputBindings": {
+          "datasetSnapshotRef": "$.steps.resolve-dataset-snapshot.output.snapshotRef",
+          "transformSpecRef": "$.input.transformSpecRef"
+        },
+        "outputBindings": {
+          "featureSetRef": "$.steps.beam-transform-features.output.featureSetRef",
+          "lineageRef": "$.steps.beam-transform-features.output.lineageRef"
+        },
+        "timeoutSec": 900,
+        "retry": {
+          "maxAttempts": 1,
+          "backoffSec": 10,
+          "idempotentRequired": true
+        },
+        "placement": {
+          "executorRef": "exec://beam/local",
+          "side": "edge",
+          "dataZone": "local",
+          "residency": "workstation",
+          "networkZone": "offline"
+        },
+        "observability": {
+          "traceLevel": "full",
+          "redactRulesRef": "redact://default.local.dev"
+        }
+      },
+      {
+        "stepId": "publish-feature-dataset",
+        "name": "Publish feature dataset artifact",
+        "transport": "local",
+        "capabilityRef": "capd://caps.data.asset.publish_dataset.v1",
+        "effect": "write",
+        "target": {
+          "executorRef": "exec://artifact-store/local",
+          "operation": "publish_dataset"
+        },
+        "inputBindings": {
+          "featureSetRef": "$.steps.beam-transform-features.output.featureSetRef",
+          "lineageRef": "$.steps.beam-transform-features.output.lineageRef"
+        },
+        "outputBindings": {
+          "publishedFeatureSetRef": "$.steps.publish-feature-dataset.output.artifactRef"
+        },
+        "timeoutSec": 120,
+        "retry": {
+          "maxAttempts": 1,
+          "backoffSec": 10,
+          "idempotentRequired": true
+        },
+        "placement": {
+          "executorRef": "exec://artifact-store/local",
+          "side": "edge",
+          "dataZone": "local-artifacts",
+          "residency": "workstation",
+          "networkZone": "offline"
+        },
+        "observability": {
+          "traceLevel": "standard",
+          "redactRulesRef": "redact://default.local.dev"
+        }
+      },
+      {
+        "stepId": "ray-train-model",
+        "name": "Train model with Ray",
+        "transport": "local",
+        "capabilityRef": "capd://caps.ml.ray.train.v1",
+        "effect": "compute",
+        "target": {
+          "executorRef": "exec://ray/local/devbox",
+          "operation": "train_model"
+        },
+        "inputBindings": {
+          "featureSetRef": "$.steps.publish-feature-dataset.output.artifactRef",
+          "modelSpecRef": "$.input.modelSpecRef",
+          "trainingParamsRef": "$.input.trainingParamsRef"
+        },
+        "outputBindings": {
+          "checkpointRef": "$.steps.ray-train-model.output.checkpointRef",
+          "metricsRef": "$.steps.ray-train-model.output.metricsRef",
+          "trainManifestRef": "$.steps.ray-train-model.output.trainManifestRef"
+        },
+        "timeoutSec": 1800,
+        "retry": {
+          "maxAttempts": 1,
+          "backoffSec": 30,
+          "idempotentRequired": false
+        },
+        "placement": {
+          "executorRef": "exec://ray/local/devbox",
+          "side": "edge",
+          "dataZone": "local",
+          "residency": "workstation",
+          "networkZone": "offline"
+        },
+        "observability": {
+          "traceLevel": "full",
+          "redactRulesRef": "redact://default.local.dev"
+        }
+      },
+      {
+        "stepId": "ray-validate-model",
+        "name": "Validate model outputs",
+        "transport": "local",
+        "capabilityRef": "capd://caps.ml.ray.validate.v1",
+        "effect": "compute",
+        "target": {
+          "executorRef": "exec://ray/local/devbox",
+          "operation": "validate_model"
+        },
+        "inputBindings": {
+          "checkpointRef": "$.steps.ray-train-model.output.checkpointRef",
+          "metricsRef": "$.steps.ray-train-model.output.metricsRef",
+          "validationSpecRef": "$.input.validationSpecRef"
+        },
+        "outputBindings": {
+          "modelArtifactRef": "$.steps.ray-validate-model.output.modelArtifactRef",
+          "validationReportRef": "$.steps.ray-validate-model.output.validationReportRef",
+          "sbomRef": "$.steps.ray-validate-model.output.sbomRef"
+        },
+        "timeoutSec": 600,
+        "retry": {
+          "maxAttempts": 1,
+          "backoffSec": 15,
+          "idempotentRequired": true
+        },
+        "placement": {
+          "executorRef": "exec://ray/local/devbox",
+          "side": "edge",
+          "dataZone": "local",
+          "residency": "workstation",
+          "networkZone": "offline"
+        },
+        "observability": {
+          "traceLevel": "full",
+          "redactRulesRef": "redact://default.local.dev"
+        }
+      },
+      {
+        "stepId": "publish-model-and-sbom",
+        "name": "Register model and SBOM in CK",
+        "transport": "local",
+        "capabilityRef": "capd://caps.ml.asset.publish_model.v1",
+        "effect": "write",
+        "target": {
+          "executorRef": "exec://ck/dev",
+          "operation": "register_model"
+        },
+        "inputBindings": {
+          "modelArtifactRef": "$.steps.ray-validate-model.output.modelArtifactRef",
+          "metricsRef": "$.steps.ray-train-model.output.metricsRef",
+          "validationReportRef": "$.steps.ray-validate-model.output.validationReportRef",
+          "sbomRef": "$.steps.ray-validate-model.output.sbomRef",
+          "dataSources": "$.steps.publish-feature-dataset.output.artifactRef"
+        },
+        "outputBindings": {
+          "registeredModelRef": "$.steps.publish-model-and-sbom.output.registeredModelRef"
+        },
+        "timeoutSec": 180,
+        "retry": {
+          "maxAttempts": 1,
+          "backoffSec": 15,
+          "idempotentRequired": true
+        },
+        "placement": {
+          "executorRef": "exec://ck/dev",
+          "side": "either",
+          "dataZone": "ck-dev",
+          "residency": "local-dev",
+          "networkZone": "trusted-egress"
+        },
+        "observability": {
+          "traceLevel": "standard",
+          "redactRulesRef": "redact://default.local.dev"
+        }
+      }
+    ],
+    "edges": [
+      { "fromStepId": "resolve-dataset-snapshot", "toStepId": "beam-transform-features", "onStatus": "success" },
+      { "fromStepId": "beam-transform-features", "toStepId": "publish-feature-dataset", "onStatus": "success" },
+      { "fromStepId": "publish-feature-dataset", "toStepId": "ray-train-model", "onStatus": "success" },
+      { "fromStepId": "ray-train-model", "toStepId": "ray-validate-model", "onStatus": "success" },
+      { "fromStepId": "ray-validate-model", "toStepId": "publish-model-and-sbom", "onStatus": "success" }
+    ],
+    "bundleProjection": {
+      "targetRepo": "agentplane",
+      "artifactOutDir": "./artifacts/ml-local-train",
+      "executorStrategy": "placement",
+      "backendIntentDefault": "lima-process"
+    }
+  }
+}
