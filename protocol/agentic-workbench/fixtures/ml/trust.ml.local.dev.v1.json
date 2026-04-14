@@ -1,0 +1,46 @@
+{
+  "apiVersion": "agentic-workbench.socios@1",
+  "kind": "TrustProfile",
+  "metadata": {
+    "name": "ml-local-dev",
+    "version": "v1",
+    "description": "Governed local ML development with required subject identity, fail-closed enforcement, and explicit egress grants."
+  },
+  "spec": {
+    "attestation": {
+      "subjectRequired": true,
+      "executorRequired": false,
+      "requireAumDigest": true,
+      "acceptedEvidence": ["tpm", "cosign"]
+    },
+    "grants": {
+      "requiredEffects": ["read", "write", "exec", "egress"],
+      "ttlSecMax": 3600,
+      "requirePolicyHash": true
+    },
+    "approvals": {
+      "dangerClassesRequiringQuorum": ["HIGH"],
+      "defaultRule": "human:1-of-1",
+      "allowServiceOnlyForLow": true
+    },
+    "ledger": {
+      "mode": "required",
+      "redactionProfileRef": "redact://default.local.dev",
+      "redactByDefault": false
+    },
+    "network": {
+      "requireEgressGrant": true,
+      "defaultAllowDomains": ["vault.internal", "ck.internal", "logs.internal"]
+    },
+    "constraints": {
+      "pathsAllowDefault": ["./artifacts", "./data", "./models"],
+      "pathsDenyDefault": ["/etc", "/root", "/var/lib/secrets"],
+      "bytesMaxDefault": 1073741824,
+      "ratePerMinDefault": 120
+    },
+    "enforcement": {
+      "failClosed": true,
+      "requireSignedLedgerEvents": true
+    }
+  }
+}
