@@ -1,0 +1,29 @@
+{
+  "title": "evidence-event.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "event_id",
+    "event_type",
+    "occurred_at",
+    "actor_ref",
+    "workspace_ref",
+    "policy_bundle_ref",
+    "correlation_id"
+  ],
+  "properties": {
+    "schema_version": { "const": "evidence-event.v1" },
+    "event_id": { "type": "string", "minLength": 1 },
+    "event_type": { "type": "string", "minLength": 1 },
+    "occurred_at": { "type": "string" },
+    "actor_ref": { "type": "string", "minLength": 1 },
+    "workspace_ref": { "type": "string", "minLength": 1 },
+    "dataset_ref": { "type": "string" },
+    "policy_bundle_ref": { "type": "string", "minLength": 1 },
+    "correlation_id": { "type": "string", "minLength": 1 },
+    "payload_ref": { "type": "string" },
+    "payload": { "type": ["object", "array", "string", "number", "boolean", "null"] },
+    "signature_ref": { "type": "string" }
+  },
+  "additionalProperties": false
+}
