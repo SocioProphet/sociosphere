@@ -1,0 +1,69 @@
+{
+  "title": "indexpack.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "indexpack_id",
+    "manifest_id",
+    "pipeline_version",
+    "created_at",
+    "chunk_sets",
+    "embedding_sets",
+    "keyword_index_refs",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": { "const": "indexpack.v1" },
+    "indexpack_id": { "type": "string", "minLength": 1 },
+    "manifest_id": { "type": "string", "minLength": 1 },
+    "pipeline_version": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string" },
+    "created_by": { "type": "string" },
+    "chunk_sets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["chunk_id", "object_id", "object_version", "text_hash"],
+        "properties": {
+          "chunk_id": { "type": "string", "minLength": 1 },
+          "object_id": { "type": "string", "minLength": 1 },
+          "object_version": { "type": "string", "minLength": 1 },
+          "byte_range": { "type": ["string", "object"] },
+          "text_hash": { "type": "string", "minLength": 1 },
+          "classification_tags": { "type": "array", "items": { "type": "string" }, "default": [] }
+        },
+        "additionalProperties": false
+      }
+    },
+    "embedding_sets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["embedding_id", "chunk_id", "model_id", "vector_dim", "storage_ref"],
+        "properties": {
+          "embedding_id": { "type": "string", "minLength": 1 },
+          "chunk_id": { "type": "string", "minLength": 1 },
+          "model_id": { "type": "string", "minLength": 1 },
+          "vector_dim": { "type": "integer", "minimum": 1 },
+          "storage_ref": { "type": "string", "minLength": 1 },
+          "redaction_profile": { "type": "string" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "keyword_index_refs": { "type": "array", "items": { "type": "string" } },
+    "provenance": {
+      "type": "object",
+      "required": ["manifest_id", "extraction_policy_version", "chunking_policy_version", "embedding_model_id"],
+      "properties": {
+        "manifest_id": { "type": "string", "minLength": 1 },
+        "extraction_policy_version": { "type": "string", "minLength": 1 },
+        "chunking_policy_version": { "type": "string", "minLength": 1 },
+        "embedding_model_id": { "type": "string", "minLength": 1 },
+        "indexing_runtime_id": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
