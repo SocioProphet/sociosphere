@@ -1,0 +1,15 @@
+apiVersion: fog.socioprophet.io/v1alpha1
+kind: FogPack
+metadata:
+  name: fog-pack-security
+  organization: SocioProphet
+spec:
+  ibmAnalogue: Cloud Pak for Security
+  ownedSurfaces: Fog detections/response/evidence/break-glass/identity-enforcement
+  status: scaffold-first import
+  sharedFoundations:
+  - SocioProphet/sociosphere
+  - SocioProphet/TriTRPC
+  - SocioProphet/agentplane
+  - SocioProphet/cert-operator
+  - SocioProphet/hyper-secret-sharing

@@ -1,0 +1,15 @@
+apiVersion: fog.socioprophet.io/v1alpha1
+kind: FogPack
+metadata:
+  name: fog-pack-network-automation
+  organization: SocioProphet
+spec:
+  ibmAnalogue: Cloud Pak for Network Automation
+  ownedSurfaces: Fog topology/intents/edge-sites/network-policies
+  status: scaffold-first import
+  sharedFoundations:
+  - SocioProphet/sociosphere
+  - SocioProphet/TriTRPC
+  - SocioProphet/agentplane
+  - SocioProphet/hybrid-cloud-plugin
+  - SocioProphet/cluster-registry

@@ -1,25 +1,31 @@
 # Automation & Integration Capture — 2026-04-15
 
-This note captures the current, robust posture for cross-org automation + integration, and snapshots **public** repositories updated in the last 30 days across:
+This note captures the current, robust posture for cross-org automation + integration, and snapshots **public** repositories that have been updated in the last 30 days across:
 
 - SocioProphet
 - SociOS-Linux
 - SourceOS-Linux
 
-Private repositories are intentionally omitted from this public document.
+Note: private repositories are intentionally omitted from this public document.
 
 ## Canonical decision (robust option)
 
 We use a 3-tier topology:
 
-1) Component repos are canonical (implementation source-of-truth)
+1) **Component repos are canonical** (implementation source-of-truth)
    - Examples: `SocioProphet/agentplane`, `SociOS-Linux/agentos-spine`, `SourceOS-Linux/sourceos-spec`, `SourceOS-Linux/openclaw`.
 
-2) Integration repo is canonical for workspace/locks, topology, registry metadata
+2) **Integration repo is canonical for workspace/locks, topology, registry metadata**
    - This repo: `SocioProphet/sociosphere`.
 
-3) Platform repo is canonical for the runnable product surface
+3) **Platform repo is canonical for the runnable product surface**
    - `SocioProphet/socioprophet` remains the main platform surface that unifies web + AgentOS + agentplane integration.
+
+### Why this is the most robust option
+
+- Prevents silent drift: component repos remain authoritative.
+- Integration is reproducible: sociosphere pins exact revisions via manifest + lock.
+- Product remains cohesive: socioprophet can vendor or reference pinned components, but must align to canonical SHAs.
 
 ## Public repositories updated in the last 30 days
 
@@ -93,9 +99,19 @@ We use a 3-tier topology:
 - openclaw
 - MMTEB-MCP
 
+## Where integration work goes
+
+- **SocioProphet/sociosphere**: canonical registry + manifest/lock + topology policy; should track the above repos and their roles.
+- **SocioProphet/socioprophet**: productized integration surface; must remain compatible with canonical component versions.
+- **SociOS-Linux/agentos-spine**: Linux-side integration spine; keep Linux substrate and interface/registry lanes aligned.
+- **SourceOS-Linux/sourceos-spec**: typed contracts + shared vocabulary; promote stable interfaces here once formalized.
+
 ## Immediate alignment tasks
 
-1) Refresh entries in `manifest/workspace.toml` + `manifest/workspace.lock.json` for active repos and their roles.
-2) Update `governance/CANONICAL_SOURCES.yaml` for AgentOS interfaces, agentplane bundle schema/validators, and registry allowlists.
-3) Track dedup for overlapping repo names across orgs (example: `cloudshell-fog`).
-4) If any repo vendors code from another, pin upstream SHA and fail CI on drift.
+1) Add/refresh entries in `manifest/workspace.toml` + `manifest/workspace.lock.json` for every active repo above.
+2) Update `governance/CANONICAL_SOURCES.yaml` to declare canonical sources for:
+   - AgentOS interfaces
+   - agentplane bundle schema + validators
+   - registry/policy allowlists
+3) Add a dedup entry for overlapping names across orgs (example: `cloudshell-fog`).
+4) If any repo vendors code from another, pin the upstream SHA and fail CI on drift.

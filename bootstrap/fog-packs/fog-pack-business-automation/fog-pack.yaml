@@ -1,0 +1,13 @@
+apiVersion: fog.socioprophet.io/v1alpha1
+kind: FogPack
+metadata:
+  name: fog-pack-business-automation
+  organization: SocioProphet
+spec:
+  ibmAnalogue: Cloud Pak for Business Automation
+  ownedSurfaces: Fog workflow, case, decisioning, HITL, approvals, document actions
+  status: scaffold-first import
+  sharedFoundations:
+  - SocioProphet/sociosphere
+  - SocioProphet/agentplane
+  - SocioProphet/TriTRPC

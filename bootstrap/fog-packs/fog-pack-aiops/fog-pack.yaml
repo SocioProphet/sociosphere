@@ -1,0 +1,14 @@
+apiVersion: fog.socioprophet.io/v1alpha1
+kind: FogPack
+metadata:
+  name: fog-pack-aiops
+  organization: SocioProphet
+spec:
+  ibmAnalogue: Cloud Pak for AIOps
+  ownedSurfaces: Fog Observe telemetry/incidents/alerts/runbooks/ops-graph
+  status: scaffold-first import
+  sharedFoundations:
+  - SocioProphet/sociosphere
+  - SocioProphet/agentplane
+  - SocioProphet/prom-system
+  - SocioProphet/TriTRPC

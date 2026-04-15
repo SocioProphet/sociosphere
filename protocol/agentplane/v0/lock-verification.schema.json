@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LockVerificationArtifact",
+  "type": "object",
+  "required": ["kind", "generatedAt", "result", "unresolvedRepos", "driftedRepos", "messages"],
+  "properties": {
+    "kind": { "const": "LockVerificationArtifact" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "result": { "type": "string", "enum": ["pass", "fail"] },
+    "unresolvedRepos": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "driftedRepos": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "messages": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

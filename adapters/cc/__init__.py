@@ -1,0 +1,1 @@
+"""CC adapter package."""

@@ -1,0 +1,14 @@
+apiVersion: fog.socioprophet.io/v1alpha1
+kind: FogPack
+metadata:
+  name: fog-pack-applications
+  organization: SocioProphet
+spec:
+  ibmAnalogue: Cloud Pak for Applications
+  ownedSurfaces: Fog applications starter portals/thin app surfaces/UI kits/examples
+  status: scaffold-first import
+  sharedFoundations:
+  - SocioProphet/socioprophet
+  - SocioProphet/sociosphere
+  - SocioProphet/agentplane
+  - SocioProphet/TriTRPC

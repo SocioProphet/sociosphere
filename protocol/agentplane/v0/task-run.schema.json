@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TaskRunArtifact",
+  "type": "object",
+  "required": ["kind", "generatedAt", "repo", "task", "contractType", "command", "startedAt", "finishedAt", "exitCode"],
+  "properties": {
+    "kind": { "const": "TaskRunArtifact" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "repo": {
+      "type": "object",
+      "required": ["name", "role"],
+      "properties": {
+        "name": { "type": "string" },
+        "role": { "type": "string" }
+      }
+    },
+    "task": { "type": "string" },
+    "contractType": { "type": "string", "enum": ["make", "just", "task", "script", "none"] },
+    "command": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "finishedAt": { "type": "string", "format": "date-time" },
+    "exitCode": { "type": "integer" },
+    "stdoutRef": { "type": ["string", "null"] },
+    "stderrRef": { "type": ["string", "null"] }
+  }
+}

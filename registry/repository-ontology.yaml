@@ -1,0 +1,1012 @@
+# registry/repository-ontology.yaml
+# Semantic ontology for the SocioProphet repository ecosystem
+version: "1.0.0"
+updated_at: "2026-04-08"
+
+namespace: "https://sociosphere.io/ontology/"
+
+roles:
+  orchestrator:
+    iri: "https://sociosphere.io/ontology/role/orchestrator"
+    description: "Top-level workspace coordination and standards enforcement"
+    responsibilities:
+      - manifest management
+      - dependency pinning
+      - CI orchestration
+      - standards validation
+
+  platform:
+    iri: "https://sociosphere.io/ontology/role/platform"
+    description: "Foundational runtime or operating layer"
+    responsibilities:
+      - runtime environment
+      - bootstrap
+      - system services
+
+  protocol:
+    iri: "https://sociosphere.io/ontology/role/protocol"
+    description: "Communication protocol specs and reference implementations"
+    responsibilities:
+      - spec authoring
+      - fixture provision
+      - compatibility surface
+
+  component:
+    iri: "https://sociosphere.io/ontology/role/component"
+    description: "Feature-bearing service or library"
+    responsibilities:
+      - feature implementation
+      - API exposure
+      - data ownership
+
+  adapter:
+    iri: "https://sociosphere.io/ontology/role/adapter"
+    description: "Boundary translation layer between two systems"
+    responsibilities:
+      - protocol translation
+      - data mapping
+      - connector logic
+
+  frontend:
+    iri: "https://sociosphere.io/ontology/role/frontend"
+    description: "User-facing web application or UI component"
+    responsibilities:
+      - user interaction
+      - state management
+      - API consumption
+
+  tooling:
+    iri: "https://sociosphere.io/ontology/role/tooling"
+    description: "Developer tooling, CLI, and automation scripts"
+    responsibilities:
+      - build automation
+      - developer experience
+      - scaffolding
+
+  infrastructure:
+    iri: "https://sociosphere.io/ontology/role/infrastructure"
+    description: "Deployment, networking, and platform infrastructure"
+    responsibilities:
+      - deployment manifests
+      - resource configuration
+      - networking
+
+  compliance:
+    iri: "https://sociosphere.io/ontology/role/compliance"
+    description: "Regulatory and standards compliance artifacts"
+    responsibilities:
+      - control validation
+      - audit evidence
+      - certification support
+
+  security:
+    iri: "https://sociosphere.io/ontology/role/security"
+    description: "Security policy, cryptography, and trust management"
+    responsibilities:
+      - policy enforcement
+      - key management
+      - threat modelling
+
+  standards:
+    iri: "https://sociosphere.io/ontology/role/standards"
+    description: "Shared contract and schema definitions"
+    responsibilities:
+      - schema authoring
+      - contract validation
+      - interoperability
+
+  sdk:
+    iri: "https://sociosphere.io/ontology/role/sdk"
+    description: "Developer SDK for external integrations"
+    responsibilities:
+      - API wrapping
+      - client generation
+      - documentation
+
+  documentation:
+    iri: "https://sociosphere.io/ontology/role/documentation"
+    description: "Human-readable documentation and guides"
+    responsibilities:
+      - technical writing
+      - runbooks
+      - architecture records
+
+  testing:
+    iri: "https://sociosphere.io/ontology/role/testing"
+    description: "Test suites for quality assurance"
+    responsibilities:
+      - test authoring
+      - test execution
+      - quality gates
+
+  legacy:
+    iri: "https://sociosphere.io/ontology/role/legacy"
+    description: "Deprecated or superseded repository"
+    responsibilities:
+      - historical reference
+
+  archive:
+    iri: "https://sociosphere.io/ontology/role/archive"
+    description: "Read-only historical archive"
+    responsibilities:
+      - historical reference
+
+  workspace-controller:
+    iri: "https://sociosphere.io/ontology/role/workspace-controller"
+    description: "Workspace governance controller and orchestration root"
+    responsibilities: [workspace policy, orchestration, standards enforcement]
+
+  tool:
+    iri: "https://sociosphere.io/ontology/role/tool"
+    description: "Standalone utility package used by engineers or CI"
+    responsibilities: [automation, linting, developer workflows]
+
+  docs:
+    iri: "https://sociosphere.io/ontology/role/docs"
+    description: "Repository primarily dedicated to documentation artifacts"
+    responsibilities: [documentation maintenance, knowledge sharing, onboarding]
+
+  service:
+    iri: "https://sociosphere.io/ontology/role/service"
+    description: "Runtime service exposing APIs or event endpoints"
+    responsibilities: [runtime operations, API lifecycle, reliability]
+
+  api:
+    iri: "https://sociosphere.io/ontology/role/api"
+    description: "API-first repository defining or serving interfaces"
+    responsibilities: [interface definition, API governance, compatibility]
+
+  data:
+    iri: "https://sociosphere.io/ontology/role/data"
+    description: "Data-bearing repository with models, datasets, or curation assets"
+    responsibilities: [data stewardship, schema evolution, quality control]
+
+  ontology:
+    iri: "https://sociosphere.io/ontology/role/ontology"
+    description: "Domain ontology and semantic modeling repository"
+    responsibilities: [concept modeling, taxonomy management, semantic consistency]
+
+  knowledge-graph:
+    iri: "https://sociosphere.io/ontology/role/knowledge-graph"
+    description: "Knowledge graph structures and graph query assets"
+    responsibilities: [graph modeling, graph integrity, graph query enablement]
+
+  execution-plane:
+    iri: "https://sociosphere.io/ontology/role/execution-plane"
+    description: "Execution runtime plane for orchestrated task or agent workloads"
+    responsibilities: [workload scheduling, runtime coordination, execution guarantees]
+
+  replay:
+    iri: "https://sociosphere.io/ontology/role/replay"
+    description: "Replay/event reconstruction and deterministic trace tooling"
+    responsibilities: [event replay, trace reproducibility, incident reconstruction]
+
+  library:
+    iri: "https://sociosphere.io/ontology/role/library"
+    description: "Shared reusable library consumed across repositories"
+    responsibilities: [shared abstractions, versioning, backwards compatibility]
+
+  contract:
+    iri: "https://sociosphere.io/ontology/role/contract"
+    description: "Repository centered on one or more formal interface contracts"
+    responsibilities: [contract definition, compatibility guarantees, schema versioning]
+
+  contracts:
+    iri: "https://sociosphere.io/ontology/role/contracts"
+    description: "Repository containing collections of interoperable contracts"
+    responsibilities: [contract cataloging, contract governance, interoperability]
+
+  spec:
+    iri: "https://sociosphere.io/ontology/role/spec"
+    description: "Normative specifications and standards text"
+    responsibilities: [spec authoring, normative constraints, versioned guidance]
+
+  reference:
+    iri: "https://sociosphere.io/ontology/role/reference"
+    description: "Reference implementation or canonical design exemplar"
+    responsibilities: [reference behavior, canonical examples, baseline validation]
+
+  process:
+    iri: "https://sociosphere.io/ontology/role/process"
+    description: "Process and governance workflow repository"
+    responsibilities: [process definition, lifecycle governance, organizational controls]
+
+  product:
+    iri: "https://sociosphere.io/ontology/role/product"
+    description: "Product-facing application or experience layer"
+    responsibilities: [product delivery, user value, release quality]
+
+  intelligence:
+    iri: "https://sociosphere.io/ontology/role/intelligence"
+    description: "Inference, analytics, or intelligence workflow repository"
+    responsibilities: [model/inference workflows, analytics outputs, decision support]
+
+  research:
+    iri: "https://sociosphere.io/ontology/role/research"
+    description: "Exploratory research repository"
+    responsibilities: [experimentation, findings capture, prototype evaluation]
+
+  infra:
+    iri: "https://sociosphere.io/ontology/role/infra"
+    description: "Infrastructure shorthand role used in registry metadata"
+    responsibilities: [infrastructure operations, deployment assets, platform upkeep]
+
+  bootstrap:
+    iri: "https://sociosphere.io/ontology/role/bootstrap"
+    description: "Bootstrap and initialization repository"
+    responsibilities: [first-run setup, environment initialization, baseline provisioning]
+
+  bundle:
+    iri: "https://sociosphere.io/ontology/role/bundle"
+    description: "Bundled distribution or curated package set"
+    responsibilities: [artifact bundling, distribution packaging, release assembly]
+
+  client:
+    iri: "https://sociosphere.io/ontology/role/client"
+    description: "Client-side consumer implementation"
+    responsibilities: [client integration, consumption ergonomics, compatibility]
+
+  agent:
+    iri: "https://sociosphere.io/ontology/role/agent"
+    description: "Autonomous or semi-autonomous agent runtime/component"
+    responsibilities: [agent behavior, task execution, policy adherence]
+
+  topic-pack:
+    iri: "https://sociosphere.io/ontology/role/topic-pack"
+    description: "Topic-pack content and taxonomy package"
+    responsibilities: [topic curation, taxonomy packaging, semantic coverage]
+
+relationships:
+  depends_on:
+    iri: "https://sociosphere.io/ontology/rel/depends_on"
+    description: "Runtime or build-time dependency"
+    inverse: required_by
+
+  extends:
+    iri: "https://sociosphere.io/ontology/rel/extends"
+    description: "Adds capability on top of a base repo"
+    inverse: extended_by
+
+  implements:
+    iri: "https://sociosphere.io/ontology/rel/implements"
+    description: "Implements a protocol or contract defined elsewhere"
+    inverse: implemented_by
+
+  consumes:
+    iri: "https://sociosphere.io/ontology/rel/consumes"
+    description: "Consumes an API or event stream"
+    inverse: consumed_by
+
+  produces:
+    iri: "https://sociosphere.io/ontology/rel/produces"
+    description: "Produces events or data consumed by others"
+    inverse: produced_by
+
+  supersedes:
+    iri: "https://sociosphere.io/ontology/rel/supersedes"
+    description: "Replaces a legacy or archived repository"
+    inverse: superseded_by
+
+  tested_by:
+    iri: "https://sociosphere.io/ontology/rel/tested_by"
+    description: "Has a dedicated test suite in another repo"
+    inverse: tests
+
+  documented_by:
+    iri: "https://sociosphere.io/ontology/rel/documented_by"
+    description: "Primary documentation lives in another repo"
+    inverse: documents
+
+  deployed_by:
+    iri: "https://sociosphere.io/ontology/rel/deployed_by"
+    description: "Deployment manifests are in another repo"
+    inverse: deploys
+
+tag_taxonomy:
+  domains:
+    - workspace
+    - platform
+    - ai
+    - ml
+    - security
+    - compliance
+    - identity
+    - data
+    - ui
+    - infrastructure
+    - tooling
+    - testing
+    - documentation
+    - protocol
+    - messaging
+    - api
+
+  cross_cutting:
+    - orchestrator
+    - monorepo
+    - microservice
+    - adapter
+    - connector
+    - sdk
+    - spec
+    - archive
+    - legacy
+
+language_categories:
+  compiled: [Go, Rust, C, C++]
+  interpreted: [Python, JavaScript, TypeScript, Shell]
+  declarative: [YAML, HCL, Markdown]
+  mixed: [TypeScript, Python]
+
+status_values:
+  active:
+    description: "Actively developed and maintained"
+    propagation_enabled: true
+  archived:
+    description: "Read-only; no new commits expected"
+    propagation_enabled: false
+  deprecated:
+    description: "Scheduled for removal; migration in progress"
+    propagation_enabled: false
+  experimental:
+    description: "Prototype; API/contract unstable"
+    propagation_enabled: true
+# sociosphere repository ontology registry
+# Phase A placeholders — controlled vocabulary and semantic bindings for the 23 new repos.
+# Phase B will replace these with LSA/LSI/LDA-extracted topics from actual code + docs.
+#
+# Schema per entry:
+#   controlled_vocabulary: [list of key terms]
+#   top_topics: [list of topic labels]
+#   semantic_bindings:
+#     - "part_of": [parent clusters]
+#     - "depends_on": [known hard dependencies]
+#     - "used_by": [known consumers]
+
+ontologies:
+
+  # ── Prophet Core Cluster ──────────────────────────────────────────────────
+
+  prophet-core-ops-brief:
+    controlled_vocabulary: [ops, brief, provenance, auditable, operational-summary, open-only]
+    top_topics: [operational-summary, provenance-tracking, audit-logging]
+    semantic_bindings:
+      part_of: [prophet-core]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-ledger:
+    controlled_vocabulary: [ledger, append-only, provenance, auditable, event-log, open-only]
+    top_topics: [event-ledger, provenance-chain, immutable-log]
+    semantic_bindings:
+      part_of: [prophet-core]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-scaffolder:
+    controlled_vocabulary: [scaffolding, bootstrap, templates, provenance, auditable, open-only]
+    top_topics: [project-scaffolding, template-generation, bootstrap]
+    semantic_bindings:
+      part_of: [prophet-core]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-libs:
+    controlled_vocabulary: [libraries, shared, provenance, auditable, utilities, open-only]
+    top_topics: [shared-libraries, utility-functions, core-primitives]
+    semantic_bindings:
+      part_of: [prophet-core]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-contracts:
+    controlled_vocabulary: [contracts, capabilities, services, versioned, provenance, auditable, open-only]
+    top_topics: [capability-contracts, service-definitions, api-surface]
+    semantic_bindings:
+      part_of: [prophet-core]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  # ── GAIA Domain / Data-Plane Cluster ─────────────────────────────────────
+
+  prophet-core-infra:
+    controlled_vocabulary: [infrastructure, compute, network, provenance, auditable, gaia]
+    top_topics: [infrastructure-management, compute-primitives, gaia-infra]
+    semantic_bindings:
+      part_of: [prophet-core, gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-policy:
+    controlled_vocabulary: [policy, compliance, rules, enforcement, provenance, auditable, gaia]
+    top_topics: [policy-enforcement, compliance-gates, rule-evaluation]
+    semantic_bindings:
+      part_of: [prophet-core, gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-query:
+    controlled_vocabulary: [query, structured-query, sparql, provenance, auditable, gaia]
+    top_topics: [structured-query, semantic-search, data-retrieval]
+    semantic_bindings:
+      part_of: [prophet-core, gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-catalog:
+    controlled_vocabulary: [catalog, asset-discovery, registration, provenance, auditable, gaia]
+    top_topics: [data-catalog, asset-registration, metadata-management]
+    semantic_bindings:
+      part_of: [prophet-core, gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-core-ingest:
+    controlled_vocabulary: [ingest, pipeline, normalization, provenance, auditable, gaia]
+    top_topics: [data-ingestion, pipeline-management, normalization]
+    semantic_bindings:
+      part_of: [prophet-core, gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  prophet-domain-gaia-ontology:
+    controlled_vocabulary: [ontology, rdf, owl, gaia, earth-digital-twin, provenance, auditable]
+    top_topics: [domain-ontology, rdf-turtle, semantic-web, earth-model]
+    semantic_bindings:
+      part_of: [gaia-domain]
+      depends_on: []
+      used_by: [prophet-core-query, prophet-core-catalog]
+    notes: "Phase A placeholder — known active; Phase B will extract from Turtle/OWL files"
+
+  prophet-domain-gaia-curation-vault:
+    controlled_vocabulary: [curation, vault, datasets, provenance, auditable, gaia]
+    top_topics: [data-curation, provenance-pinned-storage, review-workflow]
+    semantic_bindings:
+      part_of: [gaia-domain]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  # ── Delivery Excellence (DelEx) Cluster ──────────────────────────────────
+
+  delivery-excellence:
+    controlled_vocabulary: [governance, adr, templates, kpi, okr, scope, delivery-excellence]
+    top_topics: [delivery-governance, adr-management, kpi-tracking, template-library]
+    semantic_bindings:
+      part_of: [delex-cluster]
+      depends_on: []
+      used_by: [delivery-excellence-automation, delivery-excellence-innersource, delivery-excellence-bounties, delivery-excellence-boards]
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  delivery-excellence-automation:
+    controlled_vocabulary: [automation, rbac, routing, ci-validation, delivery-excellence]
+    top_topics: [rbac-automation, ci-gate-validation, routing-rules]
+    semantic_bindings:
+      part_of: [delex-cluster]
+      depends_on: [delivery-excellence]
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  delivery-excellence-innersource:
+    controlled_vocabulary: [innersource, contribution, governance, delivery-excellence]
+    top_topics: [innersource-patterns, contribution-guidelines, open-governance]
+    semantic_bindings:
+      part_of: [delex-cluster]
+      depends_on: [delivery-excellence]
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  delivery-excellence-bounties:
+    controlled_vocabulary: [bounties, incentives, contributions, delivery-excellence]
+    top_topics: [bounty-management, incentive-design, contributor-rewards]
+    semantic_bindings:
+      part_of: [delex-cluster]
+      depends_on: [delivery-excellence]
+      used_by: []
+    notes: "Phase A placeholder — known active via commit history; Phase B will extract from actual repo content"
+
+  delivery-excellence-boards:
+    controlled_vocabulary: [boards, project-management, work-items, delivery-excellence]
+    top_topics: [kanban-board, work-item-tracking, sprint-management]
+    semantic_bindings:
+      part_of: [delex-cluster]
+      depends_on: [delivery-excellence]
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  # ── SourceOS / A2A Bootstrap ──────────────────────────────────────────────
+
+  sourceos-a2a-mcp-bootstrap:
+    controlled_vocabulary: [sourceos, a2a, mcp, bootstrap, workspace, protocol-binding]
+    top_topics: [workspace-bootstrap, a2a-alignment, mcp-integration, protocol-surface]
+    semantic_bindings:
+      part_of: [sourceos-cluster]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — referenced in workspace.toml; Phase B will extract from actual repo content"
+
+  # ── Workspace / Inventory ─────────────────────────────────────────────────
+
+  workspace-inventory:
+    controlled_vocabulary: [workspace, catalog, inventory, index, component-registry]
+    top_topics: [workspace-cataloging, component-indexing, inventory-management]
+    semantic_bindings:
+      part_of: [sociosphere-control]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — Phase B will extract from actual repo content"
+
+  # ── Knowledge / Semantic ──────────────────────────────────────────────────
+
+  alexandrian-academy:
+    controlled_vocabulary: [knowledge, learning, academy, semantic, platform]
+    top_topics: [knowledge-platform, learning-surface, semantic-content]
+    semantic_bindings:
+      part_of: []
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — purpose TBD; vocabulary is speculative; Phase B will replace entirely"
+
+  regis-entity-graph:
+    controlled_vocabulary: [entity-graph, governance, identity, actors, roles, relationships]
+    top_topics: [entity-resolution, identity-graph, governance-mapping]
+    semantic_bindings:
+      part_of: [identity-cluster]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — layer assignment tentative; Phase B will extract from actual repo content"
+
+  # ── Research / Theory ────────────────────────────────────────────────────
+
+  Heller-Winters-Theorem:
+    controlled_vocabulary: [theorem, research, theory, formal-methods]
+    top_topics: [theoretical-research, formal-proof, mathematical-modeling]
+    semantic_bindings:
+      part_of: [research-cluster]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — purpose and scope TBD; Phase B will replace once description is confirmed"
+
+  # ── Archive ──────────────────────────────────────────────────────────────
+
+  tritrpc-notes-archive:
+    controlled_vocabulary: [tritrpc, rpc, notes, archive, ternary, deterministic]
+    top_topics: [rpc-protocol-notes, archive, ternary-rpc]
+    semantic_bindings:
+      part_of: [archive]
+      depends_on: []
+      used_by: []
+    notes: "Phase A placeholder — archived repo; ontology preserved as-is; no further extraction expected"
+# repository-ontology.yaml
+# Semantic identity of each repository: controlled vocabulary, topic models, and
+# semantic bindings to other repos.
+# Auto-updated by: python cli/analyze-ontology.py
+# Last updated: 2026-04-06
+
+ontologies:
+  # ── SocioProphet core repos ──────────────────────────────────────────────
+
+  sociosphere:
+    layer: control-plane
+    controlled_vocabulary:
+      - workspace
+      - governance
+      - composition
+      - validation
+      - gates
+      - manifest
+      - runner
+      - standards
+      - policy
+      - orchestration
+    top_topics:
+      - workspace-orchestration
+      - governance-enforcement
+      - policy-validation
+      - manifest-management
+      - standards-compliance
+    semantic_bindings:
+      controls:
+        - prophet-platform
+        - agentplane
+        - new-hope
+        - slash-topics
+      governed_by:
+        - socioprophet-standards-storage
+        - socioprophet-standards-knowledge
+      uses:
+        - TriTRPC
+        - ontogenesis
+    lsa_topics:
+      - topic: "workspace-control"
+        terms: [workspace, manifest, runner, component, lock, toml]
+      - topic: "governance-gates"
+        terms: [governance, validate, policy, standards, gate, fips]
+      - topic: "semantic-composition"
+        terms: [composition, semantic, ontology, graph, binding]
+
+  prophet-platform:
+    layer: core-platform
+    controlled_vocabulary:
+      - contract
+      - capability
+      - service
+      - interface
+      - protocol
+      - rpc
+      - transport
+      - envelope
+      - framing
+    top_topics:
+      - contract-specification
+      - service-interface
+      - capability-declaration
+      - rpc-transport
+      - protocol-framing
+    semantic_bindings:
+      used_by:
+        - sociosphere
+        - agentplane
+        - new-hope
+        - slash-topics
+      depends_on:
+        - TriTRPC
+        - socioprophet-standards-knowledge
+    lsa_topics:
+      - topic: "contract-layer"
+        terms: [contract, capability, service, interface, declare]
+      - topic: "transport"
+        terms: [rpc, transport, envelope, framing, protocol]
+      - topic: "platform-core"
+        terms: [platform, core, service, provider, consumer]
+
+  TriTRPC:
+    layer: core-platform
+    controlled_vocabulary:
+      - ternary
+      - rpc
+      - deterministic
+      - authenticated
+      - envelope
+      - framing
+      - fixture
+      - reference
+      - protocol
+    top_topics:
+      - rpc-protocol
+      - deterministic-transport
+      - authenticated-framing
+      - ternary-logic
+    semantic_bindings:
+      used_by:
+        - sociosphere
+        - prophet-platform
+        - agentplane
+    lsa_topics:
+      - topic: "ternary-rpc"
+        terms: [ternary, rpc, deterministic, logic, protocol]
+      - topic: "auth-framing"
+        terms: [authenticated, envelope, framing, signed, verified]
+
+  socioprophet-standards-storage:
+    layer: standards
+    controlled_vocabulary:
+      - standards
+      - decision
+      - incident
+      - intelligence
+      - vendor-neutral
+      - open
+      - governance
+      - policy
+      - compliance
+    top_topics:
+      - standards-authority
+      - incident-intelligence
+      - decision-packages
+      - governance-policy
+    semantic_bindings:
+      governs:
+        - sociosphere
+        - agentplane
+        - all-repos
+      referenced_by:
+        - socioprophet-standards-knowledge
+    lsa_topics:
+      - topic: "standards-governance"
+        terms: [standards, decision, governance, policy, authority]
+      - topic: "incident-intelligence"
+        terms: [incident, intelligence, alert, event, detection]
+
+  socioprophet-standards-knowledge:
+    layer: standards
+    controlled_vocabulary:
+      - knowledge
+      - context
+      - micro-publication
+      - meriotopographic
+      - masking
+      - tokenization
+      - indexing
+    top_topics:
+      - knowledge-context
+      - micro-publications
+      - tokenization
+      - semantic-indexing
+    semantic_bindings:
+      used_by:
+        - prophet-platform
+        - sociosphere
+        - new-hope
+      extends:
+        - socioprophet-standards-storage
+    lsa_topics:
+      - topic: "knowledge-standards"
+        terms: [knowledge, context, standard, publication, spec]
+      - topic: "data-masking"
+        terms: [masking, tokenization, indexing, privacy, transform]
+
+  agentplane:
+    layer: execution
+    controlled_vocabulary:
+      - bundle
+      - validate
+      - run
+      - evidence
+      - replay
+      - governance
+      - execution
+      - control-plane
+      - audit
+    top_topics:
+      - execution-control
+      - bundle-validation
+      - evidence-replay
+      - governance-enforcement
+    semantic_bindings:
+      governed_by:
+        - sociosphere
+        - socioprophet-standards-storage
+      uses:
+        - TriTRPC
+        - prophet-platform
+      runs:
+        - hyperswarm-agent-composable-cluster-scaleup
+        - new-hope
+    lsa_topics:
+      - topic: "execution-pipeline"
+        terms: [bundle, validate, run, execute, pipeline, step]
+      - topic: "evidence-audit"
+        terms: [evidence, replay, audit, provenance, record]
+
+  new-hope:
+    layer: execution
+    controlled_vocabulary:
+      - carrier
+      - ingest
+      - membrane
+      - decision
+      - scoped
+      - social
+      - knowledge
+      - alignment
+    top_topics:
+      - carrier-ingest
+      - membrane-decisions
+      - knowledge-alignment
+      - social-knowledge
+    semantic_bindings:
+      governed_by:
+        - sociosphere
+      uses:
+        - prophet-platform
+        - slash-topics
+        - socioprophet-standards-knowledge
+    lsa_topics:
+      - topic: "carrier-membrane"
+        terms: [carrier, ingest, membrane, decision, scope]
+      - topic: "knowledge-alignment"
+        terms: [knowledge, alignment, social, semantic, context]
+
+  hyperswarm-agent-composable-cluster-scaleup:
+    layer: agents
+    controlled_vocabulary:
+      - hyperswarm
+      - agent
+      - composable
+      - cluster
+      - scale-up
+      - policy
+      - primitive
+      - wrapper
+    top_topics:
+      - agent-orchestration
+      - cluster-scaling
+      - hyperswarm
+      - composable-agents
+    semantic_bindings:
+      runs_on:
+        - agentplane
+      depends_on:
+        - prophet-platform
+    lsa_topics:
+      - topic: "cluster-ops"
+        terms: [cluster, scale, replicate, node, swarm]
+      - topic: "agent-compose"
+        terms: [agent, compose, composable, orchestrate, policy]
+
+  slash-topics:
+    layer: data-layer
+    controlled_vocabulary:
+      - topic
+      - pack
+      - membrane
+      - embedding
+      - semantic
+      - bi
+      - governance
+      - output
+    top_topics:
+      - topic-governance
+      - embeddings
+      - semantic-bi
+      - membrane-output
+    semantic_bindings:
+      feeds:
+        - new-hope
+        - sociosphere
+      governed_by:
+        - socioprophet-standards-knowledge
+    lsa_topics:
+      - topic: "topic-packs"
+        terms: [topic, pack, governed, catalog, schema]
+      - topic: "semantic-output"
+        terms: [embedding, semantic, bi, output, membrane]
+
+  gaia-world-model:
+    layer: ontology
+    controlled_vocabulary:
+      - earth
+      - digital-twin
+      - provenance
+      - ontology
+      - auditable
+      - constrained
+      - actions
+      - scaffolding
+    top_topics:
+      - digital-twin
+      - provenance-ontology
+      - earth-model
+      - auditable-actions
+    semantic_bindings:
+      uses:
+        - ontogenesis
+        - graphbrain-contract
+      referenced_by:
+        - prophet-domain-gaia-ontology
+    lsa_topics:
+      - topic: "earth-twin"
+        terms: [earth, twin, world, model, digital, globe]
+      - topic: "provenance-audit"
+        terms: [provenance, audit, constrain, pin, trace]
+
+  ontogenesis:
+    layer: ontology
+    controlled_vocabulary:
+      - ontology
+      - generation
+      - evolution
+      - semantic
+      - graph
+      - reasoning
+      - emergence
+    top_topics:
+      - ontology-generation
+      - semantic-evolution
+      - graph-reasoning
+    semantic_bindings:
+      used_by:
+        - sociosphere
+        - gaia-world-model
+        - graphbrain-contract
+    lsa_topics:
+      - topic: "ontology-gen"
+        terms: [ontology, generate, evolve, schema, semantic]
+      - topic: "graph-reason"
+        terms: [graph, reason, infer, node, edge, traverse]
+
+  human-digital-twin:
+    layer: human-interface
+    controlled_vocabulary:
+      - human
+      - api
+      - digital-twin
+      - reproducible
+      - minimal
+      - protocol
+      - evaluate
+      - prompt
+    top_topics:
+      - human-api
+      - digital-twin
+      - reproducible-interface
+    semantic_bindings:
+      uses:
+        - prophet-platform
+        - identity-is-prime-reference
+    lsa_topics:
+      - topic: "human-api"
+        terms: [human, api, interface, evaluate, prompt, surface]
+      - topic: "twin-protocol"
+        terms: [twin, reproduce, minimal, protocol, digital]
+
+  mcp-a2a-zero-trust:
+    layer: agents
+    controlled_vocabulary:
+      - mcp
+      - agent
+      - zero-trust
+      - a2a
+      - secure
+      - communication
+      - attestation
+    top_topics:
+      - zero-trust
+      - agent-to-agent
+      - mcp-protocol
+    semantic_bindings:
+      uses:
+        - TriTRPC
+        - identity-is-prime-reference
+      governed_by:
+        - sociosphere
+    lsa_topics:
+      - topic: "zero-trust-comm"
+        terms: [zero, trust, secure, attest, verify, channel]
+      - topic: "agent-protocol"
+        terms: [agent, protocol, mcp, a2a, message, transport]
+# repository-ontology.yaml — SocioProphet workspace role/relationship ontology
+# Defines the controlled vocabulary, 16 roles, 8 relationship types, and semantic bindings.
+# schema_version: 1
+
+metadata:
+  base_iri: "https://sociosphere.socioprophet.io/ontology/"
+  version: "1.0"
+  description: "Role and relationship ontology for the SocioProphet multi-repo ecosystem."
+
+# ── Layers ────────────────────────────────────────────────────────────────────
+# Top-level architectural layers that repos belong to.
+layers:
+  - id: control-plane
+    label: "Control Plane"
+    description: "Workspace orchestration, manifest/lock, runner, registry, compliance."
+  - id: core-platform
+    label: "Core Platform"
+    description: "Core protocol, execution, identity, and infrastructure components."
+  - id: governance
+    label: "Governance"
+    description: "Standards, policies, ADRs, delivery processes, and compliance frameworks."
+  - id: data-plane
+    label: "Data Plane"
+    description: "Ontologies, knowledge graphs, topic packs, and semantic data stores."
+  - id: identity
+    label: "Identity"
+    description: "Zero-trust identity, attestation, reputation, and security components."
+  - id: product
+    label: "Product"
+    description: "User-facing product applications and documentation."
+  - id: research
+    label: "Research"
+    description: "Research projects, experiments, and exploratory work."
+

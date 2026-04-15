@@ -1,0 +1,46 @@
+{
+  "apiVersion": "agentic-workbench.socios@1",
+  "kind": "TrustProfile",
+  "metadata": {
+    "name": "ml-gcp-prod",
+    "version": "v1",
+    "description": "Production ML execution in remote fleet/cloud with subject and executor attestation, signed ledger events, and required grants for all mutating or remote actions."
+  },
+  "spec": {
+    "attestation": {
+      "subjectRequired": true,
+      "executorRequired": true,
+      "requireAumDigest": true,
+      "acceptedEvidence": ["tpm", "cosign", "fido2"]
+    },
+    "grants": {
+      "requiredEffects": ["read", "write", "compute", "exec", "egress"],
+      "ttlSecMax": 3600,
+      "requirePolicyHash": true
+    },
+    "approvals": {
+      "dangerClassesRequiringQuorum": ["MEDIUM", "HIGH"],
+      "defaultRule": "human:2-of-3",
+      "allowServiceOnlyForLow": false
+    },
+    "ledger": {
+      "mode": "required",
+      "redactionProfileRef": "redact://prod.default",
+      "redactByDefault": true
+    },
+    "network": {
+      "requireEgressGrant": true,
+      "defaultAllowDomains": ["vault.internal", "ck.internal", "logs.internal", "gcs.googleapis.com"]
+    },
+    "constraints": {
+      "pathsAllowDefault": [],
+      "pathsDenyDefault": ["/", "/root", "/var/lib/kubelet", "/var/run/secrets"],
+      "bytesMaxDefault": 10737418240,
+      "ratePerMinDefault": 600
+    },
+    "enforcement": {
+      "failClosed": true,
+      "requireSignedLedgerEvents": true
+    }
+  }
+}

@@ -1,0 +1,13 @@
+shared_foundations:
+- repo: SocioProphet/sociosphere
+  role: shared distro/meta-workspace and cross-pack governance
+  status: verified
+- repo: SocioProphet/TriTRPC
+  role: shared protocol/control wire
+  status: verified
+- repo: SocioProphet/agentplane
+  role: shared agent control plane
+  status: verified
+- repo: SocioProphet/socioprophet
+  role: shared docs/web/product surface
+  status: listed

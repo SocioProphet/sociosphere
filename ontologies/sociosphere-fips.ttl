@@ -1,0 +1,40 @@
+@prefix : <http://example.org/sociosphere#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+<http://example.org/sociosphere>
+    a owl:Ontology ;
+    rdfs:label "Sociosphere Ontology for FIPS Compliance" ;
+    rdfs:comment "An ontology for managing FIPS compliance, zero-trust bindings, and NIST 800-53 control mappings." .
+
+# Classes
+:ComplianceControl
+    a rdfs:Class ;
+    rdfs:label "Compliance Control" ;
+    rdfs:comment "A control representing compliance requirements." .
+
+:ZeroTrustBinding
+    a rdfs:Class ;
+    rdfs:label "Zero Trust Binding" ;
+    rdfs:comment "A binding representing zero-trust principles." .
+
+:NIST80053Control
+    a rdfs:Class ;
+    rdfs:label "NIST 800-53 Control" ;
+    rdfs:comment "A control mapping to NIST 800-53 standards." .
+
+# Example Properties
+:hasControl
+    a rdf:Property ;
+    rdfs:label "has Control" ;
+    rdfs:comment "Links a subject to a compliance control." ;
+    rdfs:domain :ComplianceControl ;
+    rdfs:range :NIST80053Control .
+
+:hasBinding
+    a rdf:Property ;
+    rdfs:label "has Binding" ;
+    rdfs:comment "Links a subject to a zero-trust binding." ;
+    rdfs:domain :ZeroTrustBinding ;
+    rdfs:range :ComplianceControl .

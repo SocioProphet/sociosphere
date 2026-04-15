@@ -1,0 +1,30 @@
+source_repo: SocioProphet/sociosphere
+target_repo: SocioProphet/fog-pack-business-automation
+mode: scaffold-first-import
+principle: import pack-local automation artifacts only
+entries:
+- source: bootstrap/fog-packs/fog-pack-business-automation/UPSTREAM-BOUNDARIES.md
+  target: UPSTREAM-BOUNDARIES.md
+  class: boundary-note
+- source: bootstrap/fog-packs/fog-pack-business-automation/fog-pack.yaml
+  target: fog-pack.yaml
+  class: pack-identity
+- source: bootstrap/fog-packs/fog-pack-business-automation/README.md
+  target: README.md
+  class: pack-root
+references_only:
+- docs/fog/repo-topology.yaml
+- docs/fog/repo-governance.yaml
+- docs/fog/shared-foundations-map.yaml
+- docs/fog/upstream-delta-2026-04-09.md
+- docs/fog/import-boundaries-2026-04-09.yaml
+consume_from:
+- SocioProphet/sociosphere
+- SocioProphet/agentplane
+- SocioProphet/TriTRPC
+forbid_copying:
+- shared runtime envelope canon
+- receipt canon
+- durablegraph runtime canon
+- shared protocol slice/method canon
+- shared workspace/workflow control canon

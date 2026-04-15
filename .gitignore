@@ -22,7 +22,15 @@ yarn-error.log*
 # Coverage / test artifacts
 coverage/
 *.lcov
+.pytest_cache/
 
 # Local env
 .env
 .env.*
+
+# Local workspace overrides
+manifest/overrides.toml
+
+# Runtime metrics / logs (generated at runtime — not committed)
+metrics/*.jsonl
+metrics/registry-metrics.json

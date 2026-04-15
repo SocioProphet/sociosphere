@@ -1,0 +1,36 @@
+{
+  "apiVersion": "agentic-workbench.socios@1",
+  "kind": "PolicyPack",
+  "metadata": {
+    "name": "policy-ml-gcp-prod",
+    "version": "v1",
+    "description": "Production ML execution policy for GCP/fleet-backed Ray and Beam execution."
+  },
+  "spec": {
+    "defaults": {
+      "lane": "prod",
+      "ledgerMode": "required",
+      "attestationRequired": true,
+      "retryMax": 2,
+      "timeoutSec": 7200
+    },
+    "transportPolicy": {
+      "allowedTransports": ["local", "human", "mcp", "a2a"],
+      "disallowedTransports": ["openai"]
+    },
+    "effects": {
+      "requireGrantFor": ["read", "write", "compute", "exec", "egress"],
+      "humanGateFor": ["exec", "egress"]
+    },
+    "approvalRules": {
+      "low": "service",
+      "medium": "human:1-of-2",
+      "high": "human:2-of-3"
+    },
+    "constraints": {
+      "bytesMaxDefault": 10737418240,
+      "ratePerMinDefault": 600,
+      "allowDomainsDefault": ["vault.internal", "ck.internal", "logs.internal", "gcs.googleapis.com"]
+    }
+  }
+}

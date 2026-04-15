@@ -1,0 +1,57 @@
+{
+  "apiVersion": "agentic-workbench.socios@1",
+  "kind": "TrustProfile",
+  "metadata": {
+    "name": "human-gated-exec",
+    "version": "0.1",
+    "description": "Profile for side-effecting exec/write/egress steps requiring human quorum."
+  },
+  "spec": {
+    "attestation": {
+      "subjectRequired": true,
+      "executorRequired": true,
+      "requireAumDigest": true,
+      "acceptedEvidence": [
+        "tpm",
+        "cosign",
+        "fido2"
+      ]
+    },
+    "grants": {
+      "requiredEffects": [
+        "write",
+        "exec",
+        "egress"
+      ],
+      "ttlSecMax": 300,
+      "requirePolicyHash": true
+    },
+    "approvals": {
+      "dangerClassesRequiringQuorum": [
+        "MEDIUM",
+        "HIGH"
+      ],
+      "defaultRule": "2of3-human",
+      "allowServiceOnlyForLow": false
+    },
+    "ledger": {
+      "mode": "required",
+      "redactionProfileRef": "repo://mcp-a2a-zero-trust/redaction/high-risk",
+      "redactByDefault": true
+    },
+    "network": {
+      "requireEgressGrant": true,
+      "defaultAllowDomains": []
+    },
+    "constraints": {
+      "pathsAllowDefault": [],
+      "pathsDenyDefault": [],
+      "bytesMaxDefault": 10000000,
+      "ratePerMinDefault": 3
+    },
+    "enforcement": {
+      "failClosed": true,
+      "requireSignedLedgerEvents": true
+    }
+  }
+}

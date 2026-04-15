@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sourceos.local/schemas/agentic-workbench/v1/workflow.schema.v0.1.json",
+  "title": "WorkflowSpec",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "enum": [
+        "agentic-workbench.socios@1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "Workflow"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "createdAt"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]{1,62}$"
+        },
+        "version": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "labels": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "git": {
+              "type": "object",
+              "properties": {
+                "repo": {
+                  "type": "string"
+                },
+                "rev": {
+                  "type": "string"
+                },
+                "dirty": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "spec": {
+      "type": "object",
+      "required": [
+        "input",
+        "output",
+        "defaults",
+        "policy",
+        "steps",
+        "edges"
+      ],
+      "properties": {
+        "input": {
+          "type": "object",
+          "required": [
+            "schemaRef"
+          ],
+          "properties": {
+            "schemaRef": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "output": {
+          "type": "object",
+          "required": [
+            "schemaRef"
+          ],
+          "properties": {
+            "schemaRef": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        "defaults": {
+          "type": "object",
+          "properties": {
+            "timeoutSec": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 86400
+            },
+            "retryMax": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 20
+            },
+            "retryBackoffSec": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 3600
+            },
+            "cacheMode": {
+              "type": "string",
+              "enum": [
+                "off",
+                "read",
+                "write",
+                "readwrite"
+              ]
+            },
+            "ledgerMode": {
+              "type": "string",
+              "enum": [
+                "required",
+                "best_effort",
+                "off"
+              ]
+            },
+            "humanGateRequired": {
+              "type": "boolean"
+            },
+            "lane": {
+              "type": "string",
+              "enum": [
+                "dev",
+                "staging",
+                "prod"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "policy": {
+          "type": "object",
+          "required": [
+            "policyPackRef",
+            "policyPackHash",
+            "trustProfileRef"
+          ],
+          "properties": {
+            "policyPackRef": {
+              "type": "string"
+            },
+            "policyPackHash": {
+              "type": "string",
+              "pattern": "^sha256:[a-f0-9]{64}$"
+            },
+            "trustProfileRef": {
+              "type": "string"
+            },
+            "defaultQuorumRule": {
+              "type": "string"
+            },
+            "attestationRequired": {
+              "type": "boolean",
+              "default": true
+            },
+            "ledgerMode": {
+              "type": "string",
+              "enum": [
+                "required",
+                "best_effort",
+                "off"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "https://sourceos.local/schemas/agentic-workbench/v1/step.schema.v0.1.json"
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "fromStepId",
+              "toStepId",
+              "onStatus"
+            ],
+            "properties": {
+              "fromStepId": {
+                "type": "string"
+              },
+              "toStepId": {
+                "type": "string"
+              },
+              "condition": {
+                "type": "string"
+              },
+              "onStatus": {
+                "type": "string",
+                "enum": [
+                  "success",
+                  "failure",
+                  "timeout",
+                  "manual",
+                  "always"
+                ]
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "bundleProjection": {
+          "type": "object",
+          "properties": {
+            "targetRepo": {
+              "type": "string",
+              "enum": [
+                "agentplane"
+              ]
+            },
+            "artifactOutDir": {
+              "type": "string"
+            },
+            "executorStrategy": {
+              "type": "string",
+              "enum": [
+                "fixed",
+                "placement",
+                "fleet-default"
+              ]
+            },
+            "backendIntentDefault": {
+              "type": "string",
+              "enum": [
+                "qemu",
+                "microvm",
+                "lima-process",
+                "fleet"
+              ]
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

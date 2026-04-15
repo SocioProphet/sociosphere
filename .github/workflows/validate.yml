@@ -4,21 +4,81 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   validate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: python -m pip install -r requirements-dev.txt
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
           cache-dependency-path: apps/ui-workbench/package-lock.json
+
+      - name: Runner smoke test (list)
+        run: python tools/runner/runner.py list
+
+      - name: Runner check-manifest
+        run: python tools/runner/runner.py check-manifest
+
+      - name: Runner lock-verify
+        run: python tools/runner/runner.py lock-verify
+
+      - name: Runner smoke test (list)
+        run: python tools/runner/runner.py list
+
+      - name: Lock verify
+        run: python tools/runner/runner.py lock-verify
+
+      - name: Inventory
+        run: python tools/runner/runner.py inventory
+
+      - name: Topology check
+        run: python tools/check_topology.py
+
+      - name: Repository hygiene check
+        run: bash tools/check_hygiene.sh
+      - name: UI install
+        run: make ui-install
 
       - name: UI check
         run: make ui-check
 
       - name: Standards validation
         run: make validate-standards
+
+      - name: Python tests
+        run: pytest -q
+
+  registry:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Registry validate (ontology + cycles)
+        run: make registry-validate

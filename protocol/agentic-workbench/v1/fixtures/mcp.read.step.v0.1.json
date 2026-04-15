@@ -1,0 +1,63 @@
+{
+  "apiVersion": "agentic-workbench.socios@1",
+  "kind": "Workflow",
+  "metadata": {
+    "name": "mcp-read-smoke",
+    "version": "0.1",
+    "createdAt": "2026-04-02T00:00:00Z"
+  },
+  "spec": {
+    "input": {
+      "schemaRef": "inline://none"
+    },
+    "output": {
+      "schemaRef": "inline://hash-result"
+    },
+    "defaults": {
+      "timeoutSec": 30,
+      "retryMax": 0,
+      "retryBackoffSec": 0,
+      "cacheMode": "off",
+      "ledgerMode": "required",
+      "humanGateRequired": false,
+      "lane": "dev"
+    },
+    "policy": {
+      "policyPackRef": "protocol/agentic-workbench/v1/policy_packs/workspace-default.v0.1.json",
+      "policyPackHash": "sha256:5bf7c8abab452ccf16685af2780af25d0d85e9a09a7c4b9a31e548a9fc50296c",
+      "trustProfileRef": "protocol/agentic-workbench/v1/trust_profiles/default.v0.1.json",
+      "defaultQuorumRule": "2of3-human",
+      "attestationRequired": true,
+      "ledgerMode": "required"
+    },
+    "steps": [
+      {
+        "stepId": "hash-readme",
+        "name": "hash a file using MCP read-only tool",
+        "transport": "mcp",
+        "capabilityRef": "capd://caps.semantic.search_bi",
+        "effect": "read",
+        "target": {
+          "server": "fs.introspect",
+          "tool": "hash"
+        },
+        "placement": {
+          "side": "either"
+        },
+        "approval": {
+          "required": false
+        },
+        "observability": {
+          "traceLevel": "standard"
+        }
+      }
+    ],
+    "edges": [],
+    "bundleProjection": {
+      "targetRepo": "agentplane",
+      "artifactOutDir": "artifacts/mcp-read-smoke",
+      "executorStrategy": "placement",
+      "backendIntentDefault": "fleet"
+    }
+  }
+}

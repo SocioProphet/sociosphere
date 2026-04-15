@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sourceos.local/schemas/agentic-workbench/v1/execution_record.schema.v0.1.json",
+  "title": "ExecutionRecord",
+  "type": "object",
+  "required": [
+    "recordId",
+    "runId",
+    "stepId",
+    "phase",
+    "ts",
+    "status",
+    "subject",
+    "payloadHash",
+    "recordHash"
+  ],
+  "properties": {
+    "recordId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "runId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stepId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "phase": {
+      "type": "string",
+      "enum": [
+        "validation",
+        "placement",
+        "grant",
+        "dispatch",
+        "result",
+        "compensation",
+        "replay"
+      ]
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subject": {
+      "type": "object",
+      "required": [
+        "spiffeId"
+      ],
+      "properties": {
+        "spiffeId": {
+          "type": "string"
+        },
+        "aumDigest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "payloadHash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "outputHash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "$ref": "https://sourceos.local/schemas/agentic-workbench/v1/artifact_ref.schema.v0.1.json"
+      }
+    },
+    "attestationBundleRef": {
+      "type": "string"
+    },
+    "policyDecisionRef": {
+      "type": "string"
+    },
+    "grantRef": {
+      "type": "string"
+    },
+    "ledgerEventRef": {
+      "type": "string"
+    },
+    "prevRecordHash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "recordHash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "signatures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "sig"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "service",
+              "human"
+            ]
+          },
+          "spiffeId": {
+            "type": "string"
+          },
+          "sig": {
+            "type": "string",
+            "minLength": 16
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

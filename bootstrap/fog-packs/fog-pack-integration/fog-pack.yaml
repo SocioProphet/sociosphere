@@ -1,0 +1,14 @@
+apiVersion: fog.socioprophet.io/v1alpha1
+kind: FogPack
+metadata:
+  name: fog-pack-integration
+  organization: SocioProphet
+spec:
+  ibmAnalogue: Cloud Pak for Integration
+  ownedSurfaces: Fog Flow connectors/APIs/events/CDC/transfers
+  status: scaffold-first import
+  sharedFoundations:
+  - SocioProphet/sociosphere
+  - SocioProphet/TriTRPC
+  - SocioProphet/api-spec
+  - SocioProphet/servicebroker

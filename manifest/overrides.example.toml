@@ -1,0 +1,10 @@
+# Example local overrides for sociosphere.
+# Copy to `manifest/overrides.toml` (gitignored) and edit paths/refs as needed.
+
+[[repos]]
+name = "agentplane"
+local_path = "components/agentplane-local"
+
+[[repos]]
+name = "mcp-a2a-zero-trust"
+local_path = "components/mcp_a2a_zero_trust_local"
