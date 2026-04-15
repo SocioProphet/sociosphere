@@ -1,0 +1,41 @@
+{
+  "title": "capability-grant.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "grant_id",
+    "principal",
+    "mount_ref",
+    "rights",
+    "network_profile",
+    "expires_at"
+  ],
+  "properties": {
+    "schema_version": { "const": "capability-grant.v1" },
+    "grant_id": { "type": "string", "minLength": 1 },
+    "principal": { "type": "string", "minLength": 1 },
+    "mount_ref": { "type": "string", "minLength": 1 },
+    "rights": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "minItems": 1
+    },
+    "network_profile": {
+      "enum": ["network.none", "network.lan", "network.tor", "network.wan.allowlist"]
+    },
+    "secret_scope_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "distribution_rights": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "issued_at": { "type": "string" },
+    "expires_at": { "type": "string", "minLength": 1 },
+    "issuer_ref": { "type": "string" }
+  },
+  "additionalProperties": false
+}
