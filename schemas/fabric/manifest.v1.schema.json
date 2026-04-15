@@ -1,0 +1,63 @@
+{
+  "title": "manifest.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "created_at",
+    "dataset_ref",
+    "mount_ref",
+    "policy_bundle_ref",
+    "entries",
+    "root_hash"
+  ],
+  "properties": {
+    "schema_version": { "const": "manifest.v1" },
+    "manifest_id": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string" },
+    "created_by": { "type": "string" },
+    "dataset_ref": { "type": "string", "minLength": 1 },
+    "mount_ref": { "type": "string", "minLength": 1 },
+    "policy_bundle_ref": { "type": "string", "minLength": 1 },
+    "root_hash": { "type": "string", "minLength": 1 },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "logical_path",
+          "path_mode",
+          "object_id",
+          "object_version",
+          "size_bytes",
+          "mtime",
+          "mime_type",
+          "tombstone"
+        ],
+        "properties": {
+          "logical_path": { "type": "string" },
+          "path_mode": { "enum": ["plaintext", "encrypted"] },
+          "object_id": { "type": "string", "minLength": 1 },
+          "object_version": { "type": "string", "minLength": 1 },
+          "size_bytes": { "type": "integer", "minimum": 0 },
+          "mtime": { "type": "string" },
+          "mime_type": { "type": "string" },
+          "connector_source_refs": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": []
+          },
+          "classification_tags": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": []
+          },
+          "acl_snapshot_ref": { "type": "string" },
+          "tombstone": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
