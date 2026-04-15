@@ -1,0 +1,46 @@
+# sociosphere workspace controller: cross-org canonical source registry
+# schema_version: 1
+# created_at: 2026-04-15
+#
+# Purpose:
+# - Record canonical repositories that live outside the SocioProphet org
+#   but are part of the wider SocioProphet/SociOS/SourceOS ecosystem.
+# - Keep this file additive so existing sociosphere tooling is not broken.
+
+external_repositories:
+  # SociOS-Linux
+  agentos-spine:
+    org: SociOS-Linux
+    repo: agentos-spine
+    url: https://github.com/SociOS-Linux/agentos-spine
+    role: linux-integration-spine
+
+  sourceos-substrate:
+    org: SociOS-Linux
+    repo: SourceOS
+    url: https://github.com/SociOS-Linux/SourceOS
+    role: immutable-os-substrate
+
+  # SourceOS-Linux
+  sourceos-spec:
+    org: SourceOS-Linux
+    repo: sourceos-spec
+    url: https://github.com/SourceOS-Linux/sourceos-spec
+    role: contracts-and-vocabulary
+
+  openclaw:
+    org: SourceOS-Linux
+    repo: openclaw
+    url: https://github.com/SourceOS-Linux/openclaw
+    role: deployment-and-control
+
+namespaces:
+  # Cross-org substrate & contracts
+  os/sourceos-substrate: { canonical_repo: sourceos-substrate }
+  os/agentos-spine: { canonical_repo: agentos-spine }
+  os/sourceos-spec: { canonical_repo: sourceos-spec }
+  os/openclaw: { canonical_repo: openclaw }
+
+deduplication:
+  cloudshell-fog:
+    note: "Name exists in multiple orgs; choose one canonical org and treat the other as an archived mirror."
