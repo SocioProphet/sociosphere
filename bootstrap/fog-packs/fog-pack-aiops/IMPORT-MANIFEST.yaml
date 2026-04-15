@@ -1,0 +1,32 @@
+source_repo: SocioProphet/sociosphere
+target_repo: SocioProphet/fog-pack-aiops
+mode: scaffold-first-import
+principle: import pack-local aiops artifacts only
+entries:
+- source: bootstrap/fog-packs/fog-pack-aiops/UPSTREAM-BOUNDARIES.md
+  target: UPSTREAM-BOUNDARIES.md
+  class: boundary-note
+- source: bootstrap/fog-packs/fog-pack-aiops/fog-pack.yaml
+  target: fog-pack.yaml
+  class: pack-identity
+- source: bootstrap/fog-packs/fog-pack-aiops/README.md
+  target: README.md
+  class: pack-root
+references_only:
+- docs/fog/repo-topology.yaml
+- docs/fog/repo-governance.yaml
+- docs/fog/shared-foundations-map.yaml
+- docs/fog/upstream-delta-2026-04-09.md
+- docs/fog/import-boundaries-2026-04-09.yaml
+consume_from:
+- SocioProphet/sociosphere
+- SocioProphet/agentplane
+- SocioProphet/prom-system
+- SocioProphet/TriTRPC
+forbid_copying:
+- shared runtime envelope canon
+- receipt canon
+- durablegraph runtime canon
+- shared workspace/workflow control canon
+- shared telemetry foundation canon
+- shared protocol slice/method canon

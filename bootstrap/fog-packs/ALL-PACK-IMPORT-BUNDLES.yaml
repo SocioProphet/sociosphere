@@ -1,0 +1,30 @@
+all_pack_import_bundles:
+- pack: fog-pack-data
+  state: seeded
+  bootstrap_root: bootstrap/fog-packs/fog-pack-data/
+  next_step: create target repo and replay IMPORT-MANIFEST
+- pack: fog-pack-integration
+  state: scaffolded
+  bootstrap_root: bootstrap/fog-packs/fog-pack-integration/
+  next_step: create target repo and replay IMPORT-MANIFEST
+- pack: fog-pack-business-automation
+  state: scaffolded
+  bootstrap_root: bootstrap/fog-packs/fog-pack-business-automation/
+  next_step: create target repo and replay IMPORT-MANIFEST
+- pack: fog-pack-aiops
+  state: scaffolded
+  bootstrap_root: bootstrap/fog-packs/fog-pack-aiops/
+  next_step: create target repo and replay IMPORT-MANIFEST
+- pack: fog-pack-applications
+  state: scaffolded
+  bootstrap_root: bootstrap/fog-packs/fog-pack-applications/
+  next_step: create target repo and replay IMPORT-MANIFEST
+- pack: fog-pack-network-automation
+  state: scaffolded
+  bootstrap_root: bootstrap/fog-packs/fog-pack-network-automation/
+  next_step: create target repo and replay IMPORT-MANIFEST
+- pack: fog-pack-security
+  state: scaffolded
+  bootstrap_root: bootstrap/fog-packs/fog-pack-security/
+  next_step: create target repo and replay IMPORT-MANIFEST
+principle: consume shared foundations, do not absorb them

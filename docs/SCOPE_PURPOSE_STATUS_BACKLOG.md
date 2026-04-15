@@ -15,12 +15,17 @@ Sociosphere is the workspace controller repo that keeps multi-repo development r
 - **Long-lived forks** of dependencies (we only pin versions and surface integration notes here).
 - **CI implementations** owned by downstream repos (Sociosphere only provides the primitives and checks needed for workspace determinism).
 
-## Current state (v0.1)
-- **Workspace controller is operational** with a canonical manifest and lock, plus the runner entry point in `tools/runner`.
-- **Protocol + fixtures exist** in `protocol/` as the shared compatibility surface.
-- **Integration status is tracked** in `docs/INTEGRATION_STATUS.md`, including TritRPC pinning.
-- **Execution priorities are documented** in `docs/Priorities_E.md` to keep the minimum spine visible.
-- **Repo role ontology is defined in spec** via manifest roles (component/adapter/third_party) and task contracts in `docs/Repo_Layout_Workspace_Composition_Spec_v0.1.md`.
+## Current state (v0.2)
+- **Manifest tracks the active workspace plus the canonical inventory mirror**: `manifest/workspace.toml` now carries the current materialized workspace entries plus remote-only entries for the 65-repo SocioProphet canonical registry. The manifest and lock remain authoritative for repos currently under workspace control, while the broader inventory is now visible to the workspace controller without forcing immediate materialization.
+- **Lock is live**: `manifest/workspace.lock.json` carries real commit SHAs for every remote-backed repo in the current workspace set, generated 2026-04-08.
+- **Runner extended to v0.2**: `tools/runner/runner.py` now implements `list`, `fetch`, `lock-verify`, `lock-update`, `inventory`, and `run`. Supports new roles (`governance`, `docs`).
+- **CI enforces workspace integrity**: `.github/workflows/validate.yml` runs `runner list`, `runner lock-verify`, `runner inventory`, and `check_topology.py` on every push and PR.
+- **Topology enforcement**: `tools/check_topology.py` enforces submodule-path rules, self-dependency prohibition, and third-party pinning. Runs in CI.
+- **Canonical ownership expanded**: `governance/CANONICAL_SOURCES.yaml` maps the currently enumerated manifest entries to their GitHub repos, with roles and descriptions. The full ecosystem registry (which covers a broader set of repos beyond the current manifest) is tracked in `registry/canonical-repos.yaml`.
+- **Architecture docs filled**: `docs/architecture/overview.md` and `docs/architecture/validation-contract.md` are no longer stubs.
+- **CI runbook written**: `docs/runbooks/ci.md` covers all CI steps and how to fix common failures.
+- **ADR template standardised**: `docs/governance/adr/0000-template.md` follows a complete Status / Date / Context / Decision / Consequences / Alternatives structure.
+- **Makefile extended**: `make lock-verify`, `make lock-update`, `make inventory`, `make topology-check` targets added.
 
 ## Ontology integration (broader repos)
 Sociosphere treats the manifest as the source of truth for repo roles and relationships. This section clarifies what is **functional today** versus what is **self-describing on paper** so the integration story stays explicit.
@@ -40,17 +45,18 @@ Sociosphere treats the manifest as the source of truth for repo roles and relati
 - **Reasoning is deterministic**: the lock file pins exact revisions so compatibility assertions (fixtures, task contracts) are evaluated against known inputs.
 - **Status is traceable**: updates to pins and integration notes are recorded in `docs/INTEGRATION_STATUS.md`.
 
-## Backlog (rolling, v0.1)
+## Backlog (rolling, v0.2)
 This backlog is intentionally scoped to Sociosphere’s responsibilities. Each item should link to an issue/PR when created.
 
 ### P0 — Must-have to preserve determinism
-1. **Manifest/lock verification in CI**
-   - Add a lock drift check for `manifest/workspace.lock.json`.
-   - Add a minimal runner smoke test (`list`, `fetch`, `run build --all`).
-2. **Version pin policy clarity**
-   - Document how to bump submodule pins and how to annotate compatibility in `docs/INTEGRATION_STATUS.md`.
+1. ✅ **Manifest/lock populated for current workspace set**
+   - All currently enumerated repos carry URLs and pinned revs. `lock-verify` passes cleanly. The broader SocioProphet ecosystem is being progressively added to the manifest.
+2. ✅ **Lock verification in CI**
+   - `runner lock-verify` and `check_topology.py` run on every push/PR.
+3. ✅ **Version pin policy clarity**
+   - `docs/NAMING_VERSIONING.md` documents bump process; `check_topology.py` enforces third-party pinning.
 
-### P1 — Standardize execution contracts
+### P1 — Standardise execution contracts
 1. **Task discovery normalization**
    - Define how `tools/runner` discovers tasks from Makefile/justfile/Taskfile/scripts.
    - Add fixture tasks under `protocol/fixtures` and wire to runner.
@@ -61,15 +67,19 @@ This backlog is intentionally scoped to Sociosphere’s responsibilities. Each i
    - Emit a structured report mapping repos to roles and capabilities.
 
 ### P2 — Supply-chain visibility
-1. **Inventory report**
-   - Generate a report of repos, revisions, and license hints.
+1. ✅ partial — `runner inventory` prints a text/JSON table; full SBOM not yet emitted.
 2. **SBOM stub**
-   - Start emitting CycloneDX JSON for build artifacts.
+   - Start emitting CycloneDX JSON from `runner inventory --json`.
+3. **Commit signature verification**
+   - Optional; add when GPG/SSH signing is enforced org-wide.
 
 ### P3 — Adapter portability
-1. **Contract tests**
+1. **Protocol fixtures**
+   - Move canonical JSON schemas + fixture vectors into `protocol/fixtures/`.
+   - Wire `runner run protocol:test` against at least one adapter.
+2. **Adapter contract tests**
    - Run adapter contract tests locally and in CI using the same fixtures.
-2. **macOS/Linux parity**
+3. **macOS/Linux parity**
    - Document portable adapter expectations and edge cases.
 
 ## How to keep this current

@@ -1,0 +1,48 @@
+{
+  "apiVersion": "agentic-workbench.socios@1",
+  "kind": "PolicyPack",
+  "metadata": {
+    "name": "workspace-default",
+    "version": "0.1",
+    "description": "Default workspace policy pack for low-to-moderate risk orchestrated work."
+  },
+  "spec": {
+    "defaults": {
+      "lane": "dev",
+      "ledgerMode": "required",
+      "attestationRequired": true,
+      "retryMax": 0,
+      "timeoutSec": 300
+    },
+    "transportPolicy": {
+      "allowedTransports": [
+        "mcp",
+        "a2a",
+        "openai",
+        "human",
+        "local"
+      ],
+      "disallowedTransports": []
+    },
+    "effects": {
+      "requireGrantFor": [
+        "write",
+        "exec",
+        "egress"
+      ],
+      "humanGateFor": [
+        "egress"
+      ]
+    },
+    "approvalRules": {
+      "low": "0of0",
+      "medium": "1of1-human",
+      "high": "2of3-human"
+    },
+    "constraints": {
+      "bytesMaxDefault": 0,
+      "ratePerMinDefault": 0,
+      "allowDomainsDefault": []
+    }
+  }
+}

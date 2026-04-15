@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sourceos.local/schemas/agentic-workbench/v1/workflow_run.schema.v0.1.json",
+  "title": "WorkflowRun",
+  "type": "object",
+  "required": [
+    "runId",
+    "workflowRef",
+    "workflowDigest",
+    "createdAt",
+    "status",
+    "inputDigest"
+  ],
+  "properties": {
+    "runId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workflowRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workflowDigest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "startedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "running",
+        "blocked",
+        "succeeded",
+        "failed",
+        "compensated",
+        "replayed"
+      ]
+    },
+    "caller": {
+      "type": "object",
+      "required": [
+        "spiffeId"
+      ],
+      "properties": {
+        "spiffeId": {
+          "type": "string"
+        },
+        "aumDigest": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "sessionId": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "inputRefs": {
+      "type": "array",
+      "items": {
+        "$ref": "https://sourceos.local/schemas/agentic-workbench/v1/artifact_ref.schema.v0.1.json"
+      }
+    },
+    "inputDigest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "activeStepId": {
+      "type": "string"
+    },
+    "ledgerHeadHash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "bundleRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "parentRunId": {
+      "type": "string"
+    },
+    "labels": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  },
+  "additionalProperties": false
+}

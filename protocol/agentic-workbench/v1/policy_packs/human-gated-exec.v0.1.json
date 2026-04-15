@@ -1,0 +1,51 @@
+{
+  "apiVersion": "agentic-workbench.socios@1",
+  "kind": "PolicyPack",
+  "metadata": {
+    "name": "human-gated-exec",
+    "version": "0.1",
+    "description": "Policy pack for dangerous exec/write/egress flows requiring explicit human quorum."
+  },
+  "spec": {
+    "defaults": {
+      "lane": "dev",
+      "ledgerMode": "required",
+      "attestationRequired": true,
+      "retryMax": 0,
+      "timeoutSec": 180
+    },
+    "transportPolicy": {
+      "allowedTransports": [
+        "human",
+        "local",
+        "mcp",
+        "a2a"
+      ],
+      "disallowedTransports": [
+        "openai"
+      ]
+    },
+    "effects": {
+      "requireGrantFor": [
+        "write",
+        "exec",
+        "egress"
+      ],
+      "humanGateFor": [
+        "write",
+        "exec",
+        "egress"
+      ]
+    },
+    "approvalRules": {
+      "low": "1of1-human",
+      "medium": "2of3-human",
+      "high": "2of3-human"
+    },
+    "constraints": {
+      "bytesMaxDefault": 10000000,
+      "ratePerMinDefault": 3,
+      "allowDomainsDefault": []
+    }
+  }
+}

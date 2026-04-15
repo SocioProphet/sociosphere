@@ -1,0 +1,52 @@
+{
+  "apiVersion": "agentic-workbench.socios@1",
+  "kind": "PolicyPack",
+  "metadata": {
+    "name": "control-plane",
+    "version": "0.1",
+    "description": "Strict policy pack for control-plane repos and enforcement services."
+  },
+  "spec": {
+    "defaults": {
+      "lane": "staging",
+      "ledgerMode": "required",
+      "attestationRequired": true,
+      "retryMax": 0,
+      "timeoutSec": 120
+    },
+    "transportPolicy": {
+      "allowedTransports": [
+        "mcp",
+        "a2a",
+        "human",
+        "local"
+      ],
+      "disallowedTransports": [
+        "openai"
+      ]
+    },
+    "effects": {
+      "requireGrantFor": [
+        "read",
+        "write",
+        "compute",
+        "exec",
+        "egress"
+      ],
+      "humanGateFor": [
+        "exec",
+        "egress"
+      ]
+    },
+    "approvalRules": {
+      "low": "1of1-human",
+      "medium": "2of3-human",
+      "high": "2of3-human"
+    },
+    "constraints": {
+      "bytesMaxDefault": 50000000,
+      "ratePerMinDefault": 6,
+      "allowDomainsDefault": []
+    }
+  }
+}

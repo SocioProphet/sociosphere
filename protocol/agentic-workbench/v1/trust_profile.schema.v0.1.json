@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sourceos.local/schemas/agentic-workbench/v1/trust_profile.schema.v0.1.json",
+  "title": "TrustProfile",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "metadata",
+    "spec"
+  ],
+  "properties": {
+    "apiVersion": {
+      "type": "string",
+      "enum": [
+        "agentic-workbench.socios@1"
+      ]
+    },
+    "kind": {
+      "type": "string",
+      "enum": [
+        "TrustProfile"
+      ]
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "spec": {
+      "type": "object",
+      "required": [
+        "attestation",
+        "grants",
+        "approvals",
+        "ledger",
+        "enforcement"
+      ],
+      "properties": {
+        "attestation": {
+          "type": "object",
+          "required": [
+            "subjectRequired",
+            "executorRequired",
+            "requireAumDigest"
+          ],
+          "properties": {
+            "subjectRequired": {
+              "type": "boolean"
+            },
+            "executorRequired": {
+              "type": "boolean"
+            },
+            "requireAumDigest": {
+              "type": "boolean"
+            },
+            "acceptedEvidence": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "tpm",
+                  "cosign",
+                  "fido2"
+                ]
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "grants": {
+          "type": "object",
+          "required": [
+            "requiredEffects",
+            "ttlSecMax",
+            "requirePolicyHash"
+          ],
+          "properties": {
+            "requiredEffects": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "read",
+                  "write",
+                  "compute",
+                  "exec",
+                  "egress"
+                ]
+              }
+            },
+            "ttlSecMax": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 86400
+            },
+            "requirePolicyHash": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "approvals": {
+          "type": "object",
+          "required": [
+            "dangerClassesRequiringQuorum",
+            "defaultRule"
+          ],
+          "properties": {
+            "dangerClassesRequiringQuorum": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "LOW",
+                  "MEDIUM",
+                  "HIGH"
+                ]
+              }
+            },
+            "defaultRule": {
+              "type": "string"
+            },
+            "allowServiceOnlyForLow": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "ledger": {
+          "type": "object",
+          "required": [
+            "mode"
+          ],
+          "properties": {
+            "mode": {
+              "type": "string",
+              "enum": [
+                "required",
+                "best_effort",
+                "off"
+              ]
+            },
+            "redactionProfileRef": {
+              "type": "string"
+            },
+            "redactByDefault": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "network": {
+          "type": "object",
+          "properties": {
+            "requireEgressGrant": {
+              "type": "boolean",
+              "default": true
+            },
+            "defaultAllowDomains": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "constraints": {
+          "type": "object",
+          "properties": {
+            "pathsAllowDefault": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "pathsDenyDefault": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "bytesMaxDefault": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "ratePerMinDefault": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false
+        },
+        "enforcement": {
+          "type": "object",
+          "required": [
+            "failClosed",
+            "requireSignedLedgerEvents"
+          ],
+          "properties": {
+            "failClosed": {
+              "type": "boolean"
+            },
+            "requireSignedLedgerEvents": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

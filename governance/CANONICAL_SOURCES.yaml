@@ -1,7 +1,89 @@
 # sociosphere workspace controller: canonical ownership registry
+# schema_version: 2 (extended 2026-04-06 to cover full 53-repo ecosystem)
+# Full registry: registry/canonical-repos.yaml
+# Merge order: governance/MERGE-ORDER.md
+# Compliance policy: telemetry/compliance-policy.yaml
+
 namespaces:
+  # Control plane
+  workspace-controller: { canonical_repo: sociosphere }
+  workspace/manifest: { canonical_repo: sociosphere }
+  workspace/registry: { canonical_repo: sociosphere }
+  workspace/compliance: { canonical_repo: sociosphere }
+
+  # Agentic workbench / workflow kernel
+  protocol/agentic-workbench/v1: { canonical_repo: sociosphere }
+  protocol/agentic-workbench/v1/trust_profiles: { canonical_repo: sociosphere }
+  protocol/agentic-workbench/v1/policy_packs: { canonical_repo: sociosphere }
+
+  # Standards
+  standards/platform: { canonical_repo: prophet-platform-standards }
+  standards/storage: { canonical_repo: socioprophet-standards-storage }
+  standards/market-data: { canonical_repo: prophet-platform-standards, upstream_standard: socioprophet-standards-storage, note: "runtime market-data profile authority; storage semantics remain upstream" }
+  standards/knowledge: { canonical_repo: socioprophet-standards-knowledge }
+
+  # Transport & protocol
+  protocol/tritrpc: { canonical_repo: TriTRPC }
+  protocol/execution: { canonical_repo: agentplane }
+  protocol/serdes: { canonical_repo: semantic-serdes }
+  protocol/replay: { canonical_repo: cairnpath-mesh }
+
+  # Human Digital Twin
+  hdt/core: { canonical_repo: human-digital-twin }
+
+  # GAIA data plane
+  data/gaia-world-model: { canonical_repo: gaia-world-model }
+  data/gaia-domain: { canonical_repo: prophet-domain-gaia-ontology }
+  data/gaia-vault: { canonical_repo: prophet-domain-gaia-curation-vault }
+  data/knowledge-graph: { canonical_repo: socius-kg }
+  data/entity-graph: { canonical_repo: regis-entity-graph }
+  data/ontogenesis: { canonical_repo: ontogenesis }
+  data/graphbrain: { canonical_repo: graphbrain-contract }
+
+  # Topic packs / semantic BI
   caps/slash-topics: { canonical_repo: slash-topics }
-  caps/new-hope: { canonical_repo: new-hope }
   caps/semantic-search-bi: { canonical_repo: prophet-platform }
+
+  # Prophet core cluster
+  prophet/platform: { canonical_repo: prophet-platform }
+  prophet/market-data: { canonical_repo: prophet-platform, note: "runtime adoption surface for market-data profile v0" }
+  prophet/libs: { canonical_repo: prophet-platform, consolidation_note: "collapse prophet-core-libs into prophet-platform/libs" }
+  prophet/contracts: { canonical_repo: gaia-world-model, consolidation_note: "collapse prophet-core-contracts into gaia-world-model/contracts" }
+  prophet/ledger: { canonical_repo: prophet-platform, consolidation_note: "collapse prophet-core-ledger into prophet-platform/contracts" }
+  prophet/ingest: { canonical_repo: gaia-world-model, consolidation_note: "collapse prophet-core-ingest into gaia-world-model/ingest" }
+  prophet/catalog: { canonical_repo: gaia-world-model, consolidation_note: "collapse prophet-core-catalog into gaia-world-model/catalog" }
+  prophet/query: { canonical_repo: gaia-world-model, consolidation_note: "collapse prophet-core-query into gaia-world-model/query" }
+  prophet/policy: { canonical_repo: gaia-world-model, consolidation_note: "collapse prophet-core-policy into gaia-world-model/policy" }
+  prophet/infra: { canonical_repo: gaia-world-model, consolidation_note: "collapse prophet-core-infra into gaia-world-model/infra" }
+  prophet/scaffolder: { canonical_repo: prophet-platform, consolidation_note: "collapse prophet-core-scaffolder into prophet-platform/tools" }
+
+  # Identity & security
+  identity/zero-trust: { canonical_repo: mcp-a2a-zero-trust }
+  identity/a2a-bootstrap: { canonical_repo: sourceos-a2a-mcp-bootstrap }
+  identity/reference: { canonical_repo: identity-is-prime-reference }
+  identity/reputation: { canonical_repo: ReputationVault }
+
+  # Delivery excellence
+  delivery/core: { canonical_repo: delivery-excellence }
+  delivery/automation: { canonical_repo: delivery-excellence-automation }
+  delivery/innersource: { canonical_repo: delivery-excellence-innersource }
+  delivery/bounties: { canonical_repo: delivery-excellence-bounties }
+  delivery/boards: { canonical_repo: delivery-excellence-boards }
+
+  # Research / misc
+  caps/new-hope: { canonical_repo: new-hope }
+  research/heller-winters: { canonical_repo: Heller-Winters-Theorem }
+  research/knowledge-agent: { canonical_repo: Knowledge_Agent }
+  research/speechlab: { canonical_repo: speechlab }
+
+  # Deduplication targets (to be resolved Phase C)
+  dedup/a2a-mcp: { canonical_repo: mcp-a2a-zero-trust, dedup_target: sourceos-a2a-mcp-bootstrap }
+  dedup/gaia-ontology: { canonical_repo: gaia-world-model, dedup_target: prophet-domain-gaia-ontology }
+  dedup/cloudshell: { canonical_repo: null, archive_candidate: cloudshell-fog }
+
 hygiene:
   forbid: [".DS_Store", "__MACOSX"]
+  default_branch: main
+  single_branch_policy: true
+  exempt_from_single_branch: [socioprophet]
+  stale_pr_threshold_days: 90
