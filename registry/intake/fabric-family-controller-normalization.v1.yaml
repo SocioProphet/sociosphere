@@ -1,0 +1,75 @@
+version: 1
+updated_at: 2026-04-15
+controller: sociosphere
+status: ready-for-tracked-file-application
+
+summary:
+  purpose: >-
+    Exact intended controller-layer additions for the fabric-family repos.
+    This file is additive and machine-readable so the remaining integration delta
+    is reduced to applying tracked-file edits in the canonical controller files.
+
+manifest_workspace_toml:
+  proposed_remote_repo_entries:
+    - name: tritfabric
+      role: component
+      url: https://github.com/SocioProphet/tritfabric
+      ref: main
+      local_path: null
+      note: >-
+        Register first as remote-only canonical repo; choose materialization lane
+        only after controller normalization and role review.
+
+    - name: prophet_platform_fabric_mlops_ts_suite
+      role: component
+      url: https://github.com/SocioProphet/prophet-platform-fabric-mlops-ts-suite
+      ref: main
+      local_path: null
+      note: >-
+        Register first as remote-only canonical repo; choose materialization lane
+        only after controller normalization and role review.
+
+canonical_sources_yaml:
+  proposed_namespace_additions:
+    - namespace: fabric/tritfabric
+      canonical_repo: tritfabric
+      note: consolidated fabric / bridge / runtime-and-governance working tree
+
+    - namespace: prophet/fabric/baseline
+      canonical_repo: prophet_platform_fabric_mlops_ts_suite
+      note: downstream deployment / fabric baseline lane
+
+    - namespace: prophet/mlops
+      canonical_repo: prophet_platform_fabric_mlops_ts_suite
+      note: deployment-oriented mlops lane
+
+    - namespace: prophet/time-series-suite
+      canonical_repo: prophet_platform_fabric_mlops_ts_suite
+      note: time-series suite lane
+
+registry_canonical_repos_yaml:
+  normalization_precondition:
+    - unify the file to one authoritative schema before adding new canonical entries
+  proposed_entries:
+    - id: tritfabric
+      name: tritfabric
+      url: https://github.com/SocioProphet/tritfabric
+      role: component
+      status: active
+      description: consolidated fabric / bridge / runtime-and-governance working tree
+      tags: [fabric, bridge, runtime, governance]
+
+    - id: prophet_platform_fabric_mlops_ts_suite
+      name: prophet-platform-fabric-mlops-ts-suite
+      url: https://github.com/SocioProphet/prophet-platform-fabric-mlops-ts-suite
+      role: component
+      status: active
+      description: downstream deployment / fabric baseline / mlops / time-series suite lane
+      tags: [fabric, mlops, time-series, deployment]
+
+external_repo_note:
+  repository_full_name: mdheller/profit-mpcc
+  current_status: external canonical drafting root
+  controller_action: >-
+    Do not add to workspace manifest or canonical sources until transfer readiness
+    criteria are met; keep tracked only in intake and relationship notes for now.
