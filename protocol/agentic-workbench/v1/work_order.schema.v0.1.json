@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sourceos.local/schemas/agentic-workbench/v1/work_order.schema.v0.1.json",
+  "title": "WorkOrder",
+  "description": "Operator-friendly projection of WorkflowRun. This schema is an alias surface and MUST NOT diverge semantically from WorkflowRun without an explicit upstream binding update.",
+  "allOf": [
+    {
+      "$ref": "https://sourceos.local/schemas/agentic-workbench/v1/workflow_run.schema.v0.1.json"
+    }
+  ]
+}
