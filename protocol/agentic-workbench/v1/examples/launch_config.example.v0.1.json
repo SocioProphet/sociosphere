@@ -1,0 +1,32 @@
+{
+  "launchId": "launch-demo-001",
+  "runId": "run-demo-001",
+  "executionEnvelopeRef": "bundle://execution-envelope-demo-001",
+  "runtimeProfileRef": "profile://runtime/local-python-fastapi",
+  "launchMode": "local",
+  "schedulerKind": "local",
+  "placementHints": {
+    "nodeClass": "developer-workstation",
+    "trustZone": "local"
+  },
+  "resourceHints": {
+    "cpu": "2",
+    "memory": "1Gi",
+    "gpu": 0
+  },
+  "env": [
+    {
+      "name": "PYTHONUNBUFFERED",
+      "value": "1"
+    },
+    {
+      "name": "WORKFLOW_POLICY_REF",
+      "valueRef": "policy://demo/local"
+    }
+  ],
+  "createdAt": "2026-04-16T05:31:00Z",
+  "labels": {
+    "lane": "demo",
+    "scheduler": "local"
+  }
+}
