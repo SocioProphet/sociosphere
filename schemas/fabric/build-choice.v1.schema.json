@@ -1,0 +1,32 @@
+{
+  "title": "build-choice.v1",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "build_choice_id",
+    "resolution_ref",
+    "created_at",
+    "target_system",
+    "executor_class",
+    "decision_status"
+  ],
+  "properties": {
+    "schema_version": { "const": "build-choice.v1" },
+    "build_choice_id": { "type": "string", "minLength": 1 },
+    "resolution_ref": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string" },
+    "target_system": { "type": "string", "minLength": 1 },
+    "executor_class": { "type": "string", "minLength": 1 },
+    "decision_status": {
+      "enum": ["planned", "materialized", "failed", "superseded"]
+    },
+    "toolchain_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "policy_bundle_ref": { "type": ["string", "null"] },
+    "notes": { "type": ["string", "null"] }
+  },
+  "additionalProperties": false
+}
