@@ -1,0 +1,116 @@
+version: 1
+last_checked_utc: "2026-04-16"
+scope: edge_capabilities
+owner_repo: SocioProphet/sociosphere
+notes:
+  - This file is a machine-readable upstream baseline for edge capability tracking.
+  - It records the canonical upstream repo, branch, checked head SHA, and intended disposition.
+  - Checked head SHA is not automatically a production pin; it is the observed upstream baseline at check time.
+
+upstreams:
+  cap.edge.share:
+    canonical_repo: KuroLabs/Airshare
+    canonical_url: https://github.com/KuroLabs/Airshare
+    default_branch: master
+    checked_head_sha: 92a144dbf7af2d2a5fbcfbfb3078f4c9ecf86c13
+    checked_head_url: https://github.com/KuroLabs/Airshare/commit/92a144dbf7af2d2a5fbcfbfb3078f4c9ecf86c13
+    packaging:
+      language: python
+      package_name: Airshare
+      console_entrypoint: airshare=airshare.cli:main
+      declared_version: "0.1.6"
+    disposition:
+      mode: wrap_or_hardened_fork
+      rationale: >-
+        Correct local-network UX and discovery model, but current upstream transport and
+        identity posture are insufficient for SourceOS trust requirements.
+    upstream_risks:
+      - python_3_12_build_breakage
+      - install_fragility
+      - no_builtin_password_or_authenticated_session_setup
+      - no_builtin_encrypted_transfer
+      - wrong_interface_selection_with_vpn_or_multi_nic_hosts
+      - insufficient_test_and_ci_depth
+      - temp_zip_behavior_for_large_directories
+    notable_issues:
+      - issue: 29
+        title: airshare 0.1.6 release failed to build with py3.12
+      - issue: 17
+        title: Add a password protection feature
+      - issue: 18
+        title: Encrypted File transfer
+      - issue: 22
+        title: If you have a VPN it uses that IP instead of the LAN IP
+      - issue: 19
+        title: Add tests for Airshare
+
+  cap.edge.fingerprint:
+    canonical_repo: projectdiscovery/cdncheck
+    canonical_url: https://github.com/projectdiscovery/cdncheck
+    default_branch: main
+    checked_head_sha: 68bfbae83a4aad30d9cbb17c30bb44c32e10affb
+    checked_head_url: https://github.com/projectdiscovery/cdncheck/commit/68bfbae83a4aad30d9cbb17c30bb44c32e10affb
+    packaging:
+      language: go
+      binary_name: cdncheck
+    disposition:
+      mode: direct_dependency_plus_wrapper
+      rationale: >-
+        Small, data-driven detector with a clean provider-index seam; suitable for direct
+        consumption behind sociosphere schemas and Cairn receipts.
+    upstream_risks:
+      - provider_feed_freshness_and_provenance
+      - need_for_deterministic_compiled_index_hashing
+    provider_source_of_truth:
+      file: cmd/generate-index/provider.yaml
+
+  memex.papers:
+    canonical_repo: marawangamal/papers
+    canonical_url: https://github.com/marawangamal/papers
+    default_branch: main
+    checked_head_sha: 1ae5061b7ec9d2ab7d0e37ad254ad435a58fc5ec
+    checked_head_url: https://github.com/marawangamal/papers/commit/1ae5061b7ec9d2ab7d0e37ad254ad435a58fc5ec
+    packaging:
+      language: typescript
+      frontend_stack:
+        - nextjs
+        - react
+        - mantine
+        - supabase
+    disposition:
+      mode: reference_implementation_only
+      rationale: >-
+        The reusable asset is the scraper and CSV ingest contract, not the hosted runtime stack.
+    upstream_risks:
+      - readme_schema_name_vs_title_mismatch
+      - supabase_centric_runtime_assumptions
+      - hosted_stack_not_aligned_with_default_sourceos_posture
+    ingest_contract:
+      files:
+        - venues.csv
+        - papers.csv
+      scraper_base: scripts/base.py
+
+  future.llm.train:
+    canonical_repo: ServiceNow/Fast-LLM
+    canonical_url: https://github.com/ServiceNow/Fast-LLM
+    default_branch: main
+    checked_head_sha: 7a7129d7775cea459cb19a48be0d831ccc7b4e7d
+    checked_head_url: https://github.com/ServiceNow/Fast-LLM/commit/7a7129d7775cea459cb19a48be0d831ccc7b4e7d
+    packaging:
+      language: python
+      runtime_domains:
+        - slurm
+        - kubernetes
+        - distributed_training
+    disposition:
+      mode: watchlist_later_lane
+      rationale: >-
+        Relevant and active for future distributed training, but not part of the immediate
+        edge-capability critical path.
+
+follow_up:
+  - choose_exact_production_pin_for_airshare_dev_lane
+  - record_provider_index_hash_for_cdncheck
+  - formalize_canonical_venues_and_papers_csv_schema
+  - add_upstream_drift_check_to_runner_or_ci
