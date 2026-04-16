@@ -283,6 +283,12 @@ url = "https://github.com/SociOS-Linux/socios-coreos-config"
 ref = "testing-devel"
 
 [[repos]]
+name = "sourceos-spec"
+role = "standards"
+url = "https://github.com/SourceOS-Linux/sourceos-spec"
+ref = "main"
+
+[[repos]]
 name = "socios"
 role = "docs"
 url = "https://github.com/SocioProphet/socios"
