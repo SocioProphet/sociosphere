@@ -1,0 +1,40 @@
+sources:
+  - key: openai
+    provider: OpenAI
+    mode: statuspage
+    status_history_url: https://status.openai.com/history
+    event_family: system_platform_disruption
+    affected_layer: model_provider
+    tags: [model-provider, statuspage]
+
+  - key: github
+    provider: GitHub
+    mode: statuspage
+    status_history_url: https://www.githubstatus.com/history
+    event_family: system_platform_disruption
+    affected_layer: control_plane
+    tags: [github, statuspage]
+
+  - key: npm
+    provider: npm
+    mode: statuspage
+    status_history_url: https://status.npmjs.org/history
+    event_family: supply_chain_upstream_failure
+    affected_layer: registry
+    tags: [npm, registry, statuspage]
+
+  - key: cloudflare
+    provider: Cloudflare
+    mode: statuspage
+    status_history_url: https://www.cloudflarestatus.com/history
+    event_family: system_platform_disruption
+    affected_layer: network
+    tags: [cloudflare, statuspage]
+
+  - key: aws
+    provider: AWS
+    mode: statuspage
+    status_history_url: https://health.aws.amazon.com/health/status
+    event_family: system_platform_disruption
+    affected_layer: control_plane
+    tags: [aws, statuspage]
