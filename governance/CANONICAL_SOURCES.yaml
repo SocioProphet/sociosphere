@@ -11,6 +11,13 @@ namespaces:
   workspace/registry: { canonical_repo: sociosphere }
   workspace/compliance: { canonical_repo: sociosphere }
 
+  # OS provisioning / bootstrap (Butane, Ignition, installers)
+  os/provisioning: { canonical_repo: socios-ignition, note: "Butane configs + Ignition outputs (SociOS-Linux/socios-ignition)" }
+  os/provisioning/butane: { canonical_repo: socios-ignition }
+  os/provisioning/ignition: { canonical_repo: socios-ignition }
+  os/installer/coreos-installer: { canonical_repo: socios-installer, note: "Mirror of coreos-installer (SociOS-Linux/socios-installer)" }
+  os/build/fedora-coreos-config: { canonical_repo: socios-coreos-config, note: "Mirror of fedora-coreos-config build manifests (SociOS-Linux/socios-coreos-config)" }
+
   # Agentic workbench / workflow kernel
   protocol/agentic-workbench/v1: { canonical_repo: sociosphere }
   protocol/agentic-workbench/v1/trust_profiles: { canonical_repo: sociosphere }
