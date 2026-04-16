@@ -1,0 +1,36 @@
+{
+  "profileArtifactId": "profile-demo-001",
+  "runId": "run-demo-001",
+  "executionRecordRef": "receipt://execution-record-demo-001",
+  "phase": "result",
+  "toolchain": {
+    "name": "perf",
+    "version": "6.8.0",
+    "adapterRef": "adapter://profile/perf-local"
+  },
+  "collectionMode": "sampling",
+  "samplePeriodMs": 10,
+  "inputDigest": "sha256:a9d7323b6b1d8e69a42f27cbcf23ba29e59760edc39dbcd96bd476201c96ab09",
+  "outputRefs": [
+    {
+      "artifactId": "artifact-profile-001",
+      "kind": "trace",
+      "uri": "file:///srv/fog/logs/demo/run-demo-001.perf.data",
+      "digest": "sha256:1d590151bf02098ef0fb6af4d94fa0191e2811e660455f4da3806b3b7ec5d93c",
+      "mediaType": "application/octet-stream",
+      "schemaRef": "schema://profile/perf/raw",
+      "redactionStatus": "none"
+    }
+  ],
+  "summary": {
+    "hotspots": [
+      "demo_step"
+    ],
+    "samples": 128
+  },
+  "createdAt": "2026-04-16T05:32:00Z",
+  "labels": {
+    "collector": "perf",
+    "mode": "sampling"
+  }
+}
