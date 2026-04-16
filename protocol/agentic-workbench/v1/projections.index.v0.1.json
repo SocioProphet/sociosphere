@@ -1,0 +1,24 @@
+{
+  "count": 3,
+  "items": [
+    {
+      "$id": "https://sourceos.local/schemas/agentic-workbench/v1/work_order.schema.v0.1.json",
+      "path": "protocol/agentic-workbench/v1/work_order.schema.v0.1.json",
+      "sha256": "sha256:070f6accc6d336dd442b5d73a8618411384843e5493f53c5d81dbd4e585f373b",
+      "title": "WorkOrder"
+    },
+    {
+      "$id": "https://sourceos.local/schemas/agentic-workbench/v1/launch_config.schema.v0.1.json",
+      "path": "protocol/agentic-workbench/v1/launch_config.schema.v0.1.json",
+      "sha256": "sha256:ed1b503fd46e3829d115191a088f20dbf16c027f7fbba2142c28ab6154882ac8",
+      "title": "LaunchConfig"
+    },
+    {
+      "$id": "https://sourceos.local/schemas/agentic-workbench/v1/profile_artifact.schema.v0.1.json",
+      "path": "protocol/agentic-workbench/v1/profile_artifact.schema.v0.1.json",
+      "sha256": "sha256:7cd0f4b41d3336875be4d20fd64fd516482809e3959ab4ee6dfb609c85cdbff4",
+      "title": "ProfileArtifact"
+    }
+  ],
+  "version": 1
+}
