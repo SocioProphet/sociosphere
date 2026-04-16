@@ -1,0 +1,66 @@
+version: 1
+updated_at: 2026-04-15
+controller: sociosphere
+status: pending-controller-normalization
+
+repos:
+  - id: tritfabric
+    repository_full_name: SocioProphet/tritfabric
+    role: consolidated_fabric_root
+    source_status: active
+    registration_status: docs-first-landed
+    required_controller_files:
+      - manifest/workspace.toml
+      - manifest/workspace.lock.json
+      - registry/canonical-repos.yaml
+      - governance/CANONICAL_SOURCES.yaml
+
+  - id: prophet_platform_fabric_mlops_ts_suite
+    repository_full_name: SocioProphet/prophet-platform-fabric-mlops-ts-suite
+    role: platform_fabric_mlops_ts_suite
+    source_status: active
+    registration_status: docs-first-landed
+    required_controller_files:
+      - manifest/workspace.toml
+      - manifest/workspace.lock.json
+      - registry/canonical-repos.yaml
+      - governance/CANONICAL_SOURCES.yaml
+
+  - id: profit_mpcc
+    repository_full_name: mdheller/profit-mpcc
+    role: external_canonical_drafting_root
+    source_status: active
+    registration_status: not_registered
+    note: >-
+      Public-by-design personal-origin canonical drafting repo. Not yet ready for
+      organizational transfer; tranche-by-tranche extraction remains the active path.
+
+relationships:
+  - from: mdheller/profit-mpcc
+    to: SocioProphet/tritfabric
+    relation: future-export
+    surfaces:
+      - docs/meta-agents.md
+
+  - from: mdheller/profit-mpcc
+    to: SocioProphet/prophet-platform-fabric-mlops-ts-suite
+    relation: downstream-domain-influence
+    surfaces:
+      - trading execution semantics
+      - time-series / market event family alignment
+
+  - from: mdheller/profit-mpcc
+    to: SocioProphet/agentplane
+    relation: future-export
+    surfaces:
+      - effect approval semantics
+      - trading tranche execution contracts
+
+  - from: mdheller/profit-mpcc
+    to: SocioProphet/cairnpath-mesh
+    relation: future-export
+    surfaces:
+      - branch identity
+      - overlap witness
+      - conflict object
+      - rewrite log
