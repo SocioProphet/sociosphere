@@ -9,6 +9,7 @@
 - [Agentic workbench protocol v0](../protocol/agentic-workbench/v0/README.md)
 - [UI workbench app README](../apps/ui-workbench/README.md)
 - [Overview](architecture/overview.md)
+- [Upstream bindings — edge capabilities](architecture/upstream-bindings-edge-capabilities.md)
 - [Validation contract](architecture/validation-contract.md)
 - [Standards: adaptation v1](architecture/standards-adaptation.md)
 - [UI workbench](architecture/ui-workbench.md)
@@ -30,6 +31,11 @@
 
 ## Ecosystem intelligence
 - [Ecosystem index](ecosystem/README.md) — per-repo analysis (purpose, vocabulary, topics, dependency graph, change impact rules) for all 8 core SocioProphet repos
+
+## Upstream tracking
+- [Upstream bindings — edge capabilities](architecture/upstream-bindings-edge-capabilities.md) — narrative binding/disposition doc for current edge-capability donor/dependency repos
+- `registry/upstream-bindings-edge-capabilities.yaml` — machine-readable upstream baseline map for tracked edge-capability repos
+- `tools/check_upstream_edge_capabilities.py` — drift check script for the recorded upstream baselines
 
 ## Canonical-document policy
 - **Current workspace behavior**: `../README.md`, `architecture/overview.md`, `SCOPE_PURPOSE_STATUS_BACKLOG.md`

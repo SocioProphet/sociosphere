@@ -28,6 +28,7 @@ component repositories.
 
 - Documentation index: `docs/README.md`
 - Architecture baseline: `docs/architecture/overview.md`
+- Upstream bindings (edge capabilities): `docs/architecture/upstream-bindings-edge-capabilities.md`
 - Scope/current state/backlog: `docs/SCOPE_PURPOSE_STATUS_BACKLOG.md`
 - Integration ledger: `docs/INTEGRATION_STATUS.md`
 - Namespace ownership map: `governance/CANONICAL_SOURCES.yaml`
@@ -44,6 +45,7 @@ component repositories.
 | `registry/change-propagation-rules.yaml` | Change cascade and notification rules |
 | `registry/devops-automation.yaml` | CI/CD automation policies |
 | `registry/deduplication-map.yaml` | Duplicate consolidation tracker |
+| `registry/upstream-bindings-edge-capabilities.yaml` | Machine-readable upstream baselines, dispositions, and tracked risk notes for edge-capability donor/dependency repos |
 
 ### Engine layer
 
@@ -61,6 +63,9 @@ component repositories.
 python cli/rebuild-registry.py
 python cli/analyze-ontology.py [repo-name ...]
 python cli/validate-deps.py
+
+# Upstream drift checks
+python3 tools/check_upstream_edge_capabilities.py
 
 # Success and dedup reporting
 python cli/measure-success.py
