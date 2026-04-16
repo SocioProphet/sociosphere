@@ -261,8 +261,26 @@ ref = "main"
 [[repos]]
 name = "source-os"
 role = "component"
-url = "https://github.com/SocioProphet/source-os"
+url = "https://github.com/SociOS-Linux/source-os"
 ref = "main"
+
+[[repos]]
+name = "socios-ignition"
+role = "tool"
+url = "https://github.com/SociOS-Linux/socios-ignition"
+ref = "main"
+
+[[repos]]
+name = "socios-installer"
+role = "tool"
+url = "https://github.com/SociOS-Linux/socios-installer"
+ref = "main"
+
+[[repos]]
+name = "socios-coreos-config"
+role = "tool"
+url = "https://github.com/SociOS-Linux/socios-coreos-config"
+ref = "testing-devel"
 
 [[repos]]
 name = "socios"
