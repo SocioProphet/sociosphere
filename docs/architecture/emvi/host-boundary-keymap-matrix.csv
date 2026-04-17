@@ -1,0 +1,14 @@
+domain,surface_or_key_family,default_policy,owner,emvi_role,replacement_allowed,notes
+host,OS launcher,PRESERVE_OR_OPTIN_REPLACE,host,overlay entry only,yes,Default keep native launcher; allow opt-in replacement with rollback
+host,app switching,PRESERVE,host,mirror only,no,Searchable mirror allowed; native chord remains canonical
+host,window cycling,PRESERVE,host,mirror only,no,"EMVI may expose window actions, not steal them"
+host,workspace/mission control,PRESERVE,host,mirror only,no,Preserve system navigation
+accessibility,screen reader / accessibility management,PRESERVE,host,none,no,Never steal
+terminal,emulator management chords,PRESERVE,terminal_emulator,mirror only,no,Tabs/windows/search/settings remain emulator-owned
+terminal,raw input,PRESERVE,pass_through,none,no,Printable input belongs to terminal/remote shell
+terminal,tmux prefix and copy-mode,PRESERVE,tmux,mirror only,no,Do not steal tmux leader or copy-mode table
+browser,browser chrome shortcuts,PRESERVE,browser_chrome,mirror only,no,Address bar/tab/search shortcuts remain browser-owned
+editor,insert-mode printable input,PRESERVE,editor,none,no,Do not hijack typing or formatting chords in insert/composer states
+shell,overlay summon,EMVI_OWNED_SHELL_STATE,shell,primary,yes,Only in shell-owned states after explicit summon
+shell,completion popup,TEMPORARY_LOCAL_OWNERSHIP,completion_surface,completion,not_applicable,Tab belongs to active completion surface first
+modal,confirmation dialog,TEMPORARY_LOCAL_OWNERSHIP,modal,review/confirm,not_applicable,Escape unwinds innermost transient state first
