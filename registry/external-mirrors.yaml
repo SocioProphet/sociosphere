@@ -16,8 +16,10 @@ mirrors:
       ref: main
       head_sha: 6e7b4de82668da1089e3c023473f254004656806
       checked_at: "2026-04-17"
-    mirror_head_sha: 34986e37838b09a4ff62dd0288bbc35672fb6b1e
-    drift: { status: behind, note: "issues disabled in mirror; track via sociosphere" }
+    mirror_head_sha: 66b82852108b6fcba0bf93bb78dd88e4ae1163d4
+    drift:
+      status: behind
+      note: "mirror contains local fog-entrypoint docs + profile placeholder; still needs upstream sync"
 
   - name: socios-coreos-config
     org: SociOS-Linux
@@ -25,7 +27,7 @@ mirrors:
     upstream:
       url: https://github.com/coreos/fedora-coreos-config
       ref: testing-devel
-      head_sha: 65cfd6e27621857a4ef165a2d70c7672bbff6643
+      head_sha: d927ac46001ae13047481aff07ddf5908fa84cfa
       checked_at: "2026-04-17"
     mirror_head_sha: 29b4e73139de6e0985ace0958f5f95e16a3c5835
     drift: { status: behind, note: "lockfile bumps are pipeline-generated; keep mirror current" }
