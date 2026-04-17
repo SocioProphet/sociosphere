@@ -4,7 +4,11 @@ import argparse
 import json
 from pathlib import Path
 
+from .connectors.drive import DriveExecutor
+from .connectors.hyper import HyperExecutor
+from .connectors.s3 import S3Executor
 from .events import EventSink
+from .integration_common import run_mount_and_connector_flow
 from .mount_agent import MountAgent, MountRequest
 from .retrieval_registry import RetrievalRegistry
 from .schema_refs import schema_paths
@@ -44,6 +48,28 @@ def cmd_register_demo(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_run_harness(args: argparse.Namespace) -> int:
+    mapping = {
+        "drive": (DriveExecutor, "drive", "ds/demo", "demo", 1024),
+        "s3": (S3Executor, "s3", "ds/demo-s3", "demo-s3", 2048),
+        "hyper": (HyperExecutor, "hyper", "ds/demo-hyper", "demo-hyper", 4096),
+    }
+    if args.connector not in mapping:
+        print(json.dumps({"error": f"unknown connector {args.connector!r}", "known": sorted(mapping)}))
+        return 2
+    executor_cls, connector_id, dataset_ref, mount_name, capacity_bytes = mapping[args.connector]
+    result = run_mount_and_connector_flow(
+        Path(args.root),
+        executor_cls=executor_cls,
+        connector_id=connector_id,
+        dataset_ref=dataset_ref,
+        mount_name=mount_name,
+        capacity_bytes=capacity_bytes,
+    )
+    print(json.dumps(result, indent=2))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="fabric")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -67,6 +93,11 @@ def build_parser() -> argparse.ArgumentParser:
     demo.add_argument("--principal", default="operator")
     demo.add_argument("--events-file", default="/tmp/fabric-events.ndjson")
     demo.set_defaults(func=cmd_register_demo)
+
+    harness = sub.add_parser("run-harness")
+    harness.add_argument("connector", choices=["drive", "s3", "hyper"])
+    harness.add_argument("--root", required=True)
+    harness.set_defaults(func=cmd_run_harness)
 
     return parser
 
