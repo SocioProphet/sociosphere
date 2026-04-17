@@ -28,6 +28,7 @@ namespaces:
   standards/storage: { canonical_repo: socioprophet-standards-storage }
   standards/market-data: { canonical_repo: prophet-platform-standards, upstream_standard: socioprophet-standards-storage, note: "runtime market-data profile authority; storage semantics remain upstream" }
   standards/knowledge: { canonical_repo: socioprophet-standards-knowledge }
+  standards/sourceos-spec: { canonical_repo: sourceos-spec, note: "Typed contracts spec (SourceOS-Linux/sourceos-spec)" }
 
   # Transport & protocol
   protocol/tritrpc: { canonical_repo: TriTRPC }
