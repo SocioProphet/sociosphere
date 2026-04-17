@@ -1,0 +1,28 @@
+# status/mirror-drift.yaml
+# Machine-readable snapshot of mirror drift state.
+# Source of truth: registry/external-mirrors.yaml
+
+version: "1.0.0"
+generated_at: "2026-04-17T23:35:00Z"
+
+mirrors:
+  - name: socios-installer
+    org: SociOS-Linux
+    url: https://github.com/SociOS-Linux/socios-installer
+    upstream_url: https://github.com/coreos/coreos-installer
+    upstream_ref: main
+    upstream_head_sha: 6e7b4de82668da1089e3c023473f254004656806
+    mirror_head_sha: 66b82852108b6fcba0bf93bb78dd88e4ae1163d4
+    drift_status: behind
+
+  - name: socios-coreos-config
+    org: SociOS-Linux
+    url: https://github.com/SociOS-Linux/socios-coreos-config
+    upstream_url: https://github.com/coreos/fedora-coreos-config
+    upstream_ref: testing-devel
+    upstream_head_sha: d927ac46001ae13047481aff07ddf5908fa84cfa
+    mirror_head_sha: 29b4e73139de6e0985ace0958f5f95e16a3c5835
+    drift_status: behind
+
+notes:
+  - "This file is currently updated manually. Follow-up: generate from registry/external-mirrors.yaml in CI."
