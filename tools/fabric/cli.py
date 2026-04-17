@@ -10,6 +10,7 @@ from .connectors.s3 import S3Executor
 from .events import EventSink
 from .integration_common import run_mount_and_connector_flow
 from .mount_agent import MountAgent, MountRequest
+from .reconcile_flow_harness import run_authority_transition_flow, run_tombstone_propagation_flow
 from .retrieval_registry import RetrievalRegistry
 from .schema_refs import schema_paths
 from .validator import validate_file
@@ -70,6 +71,28 @@ def cmd_run_harness(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_run_tombstone_flow(args: argparse.Namespace) -> int:
+    result = run_tombstone_propagation_flow(
+        Path(args.root),
+        signed_tombstone=args.signed_tombstone,
+        local_dirty=args.local_dirty,
+        authority_mode=args.authority_mode,
+    )
+    print(json.dumps(result, indent=2))
+    return 0
+
+
+def cmd_run_authority_flow(args: argparse.Namespace) -> int:
+    result = run_authority_transition_flow(
+        Path(args.root),
+        current_authority=args.current_authority,
+        requested_authority=args.requested_authority,
+        quorum_granted=args.quorum_granted,
+    )
+    print(json.dumps(result, indent=2))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="fabric")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -98,6 +121,20 @@ def build_parser() -> argparse.ArgumentParser:
     harness.add_argument("connector", choices=["drive", "s3", "hyper"])
     harness.add_argument("--root", required=True)
     harness.set_defaults(func=cmd_run_harness)
+
+    tombstone = sub.add_parser("run-tombstone-flow")
+    tombstone.add_argument("--root", required=True)
+    tombstone.add_argument("--signed-tombstone", action="store_true")
+    tombstone.add_argument("--local-dirty", action="store_true")
+    tombstone.add_argument("--authority-mode", default="local_first", choices=["local_first", "provider_first", "hybrid"])
+    tombstone.set_defaults(func=cmd_run_tombstone_flow)
+
+    authority = sub.add_parser("run-authority-flow")
+    authority.add_argument("--root", required=True)
+    authority.add_argument("--current-authority", required=True)
+    authority.add_argument("--requested-authority", required=True)
+    authority.add_argument("--quorum-granted", action="store_true")
+    authority.set_defaults(func=cmd_run_authority_flow)
 
     return parser
 
