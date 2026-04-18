@@ -85,3 +85,23 @@ def planner_outcome_from_runtime_surface(surface: VisibleRuntimeOutcome) -> Plan
         operator_action="none",
         message="Surface can be served normally.",
     )
+
+
+def planner_outcome_from_surface_dict(flow_name: str, surface: dict[str, Any]) -> PlannerVisibleOutcome:
+    runtime = VisibleRuntimeOutcome(
+        flow_name=flow_name,
+        surface_state=surface["surface_state"],
+        freshness_class=surface["freshness_class"],
+        authority_state=surface["authority_state"],
+        reconcile_state=surface["reconcile_state"],
+        operator_message=surface["operator_message"],
+        event_count=int(surface.get("event_count", 0)),
+    )
+    return planner_outcome_from_runtime_surface(runtime)
+
+
+def planner_outcomes_from_runtime_surface_matrix(surface_matrix: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
+    return {
+        name: planner_outcome_from_surface_dict(name, surface).to_dict()
+        for name, surface in surface_matrix.items()
+    }
