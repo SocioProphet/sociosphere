@@ -15,6 +15,7 @@ from .reconcile_flow_harness import run_authority_transition_flow, run_tombstone
 from .reconcile_matrix_harness import run_reconcile_matrix
 from .result_interface import interface_from_serving_decision, interfaces_from_serving_matrix
 from .result_plan import serving_decision_from_planner_outcome, serving_decisions_from_planner_matrix
+from .result_render import render_block_from_interface, render_blocks_from_interface_matrix
 from .result_surface import outcome_from_flow_result, outcomes_from_reconcile_matrix
 from .retrieval_registry import RetrievalRegistry
 from .schema_refs import schema_paths
@@ -279,6 +280,59 @@ def cmd_show_result_interface(args: argparse.Namespace) -> int:
     return 2
 
 
+def cmd_show_result_render(args: argparse.Namespace) -> int:
+    root = Path(args.root)
+    if args.kind == "stale_mirror":
+        flow = run_stale_mirror_flow(
+            root,
+            stale_generation_gap=args.stale_generation_gap,
+            policy_allow_stale=args.policy_allow_stale,
+            authority_mode=args.authority_mode,
+        )
+        surface = outcome_from_flow_result("stale_mirror", flow)
+        planner = planner_outcome_from_runtime_surface(surface)
+        decision = serving_decision_from_planner_outcome(planner)
+        interface = interface_from_serving_decision(decision)
+        print(json.dumps(render_block_from_interface(interface).to_dict(), indent=2))
+        return 0
+    if args.kind == "tombstone":
+        flow = run_tombstone_propagation_flow(
+            root,
+            signed_tombstone=args.signed_tombstone,
+            local_dirty=args.local_dirty,
+            authority_mode=args.authority_mode,
+        )
+        surface = outcome_from_flow_result("tombstone", flow)
+        planner = planner_outcome_from_runtime_surface(surface)
+        decision = serving_decision_from_planner_outcome(planner)
+        interface = interface_from_serving_decision(decision)
+        print(json.dumps(render_block_from_interface(interface).to_dict(), indent=2))
+        return 0
+    if args.kind == "authority_transition":
+        flow = run_authority_transition_flow(
+            root,
+            current_authority=args.current_authority,
+            requested_authority=args.requested_authority,
+            quorum_granted=args.quorum_granted,
+        )
+        surface = outcome_from_flow_result("authority_transition", flow)
+        planner = planner_outcome_from_runtime_surface(surface)
+        decision = serving_decision_from_planner_outcome(planner)
+        interface = interface_from_serving_decision(decision)
+        print(json.dumps(render_block_from_interface(interface).to_dict(), indent=2))
+        return 0
+    if args.kind == "reconcile_matrix":
+        matrix = run_reconcile_matrix(root)
+        surfaces = outcomes_from_reconcile_matrix(matrix)
+        planners = planner_outcomes_from_runtime_surface_matrix(surfaces)
+        decisions = serving_decisions_from_planner_matrix(planners)
+        interfaces = interfaces_from_serving_matrix(decisions)
+        print(json.dumps(render_blocks_from_interface_matrix(interfaces), indent=2))
+        return 0
+    print(json.dumps({"error": f"unknown result render kind {args.kind!r}"}))
+    return 2
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="fabric")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -380,6 +434,19 @@ def build_parser() -> argparse.ArgumentParser:
     result_interface.add_argument("--requested-authority", default="remote")
     result_interface.add_argument("--quorum-granted", action="store_true")
     result_interface.set_defaults(func=cmd_show_result_interface)
+
+    result_render = sub.add_parser("show-result-render")
+    result_render.add_argument("kind", choices=["stale_mirror", "tombstone", "authority_transition", "reconcile_matrix"])
+    result_render.add_argument("--root", required=True)
+    result_render.add_argument("--stale-generation-gap", type=int, default=3)
+    result_render.add_argument("--policy-allow-stale", action="store_true")
+    result_render.add_argument("--signed-tombstone", action="store_true")
+    result_render.add_argument("--local-dirty", action="store_true")
+    result_render.add_argument("--authority-mode", default="local_first", choices=["local_first", "provider_first", "hybrid"])
+    result_render.add_argument("--current-authority", default="local")
+    result_render.add_argument("--requested-authority", default="remote")
+    result_render.add_argument("--quorum-granted", action="store_true")
+    result_render.set_defaults(func=cmd_show_result_render)
 
     return parser
 
