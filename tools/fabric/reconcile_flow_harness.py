@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
@@ -10,6 +9,7 @@ from .integration_common import run_mount_and_connector_flow
 from .connectors.s3 import S3Executor
 from .connectors.hyper import HyperExecutor
 from .reconcile import decide_authority_transition, decide_tombstone_action
+from .result_labels import label_for_authority_transition, label_for_tombstone
 from .types import EvidenceEvent
 
 
@@ -46,6 +46,7 @@ def run_tombstone_propagation_flow(
         local_dirty=local_dirty,
         authority_mode=authority_mode,
     )
+    label = label_for_tombstone(decision)
     sink.emit(
         EvidenceEvent(
             event_id=_event_id("reconcile", "tombstone"),
@@ -58,6 +59,7 @@ def run_tombstone_propagation_flow(
             correlation_id="tombstone-flow",
             payload={
                 "decision": asdict(decision),
+                "result_label": label.to_dict(),
                 "signed_tombstone": signed_tombstone,
                 "local_dirty": local_dirty,
                 "authority_mode": authority_mode,
@@ -65,6 +67,7 @@ def run_tombstone_propagation_flow(
         )
     )
     result["reconcile_decision"] = asdict(decision)
+    result["result_label"] = label.to_dict()
     result["event_count"] = _load_event_count(events_path)
     return result
 
@@ -91,6 +94,7 @@ def run_authority_transition_flow(
         requested_authority=requested_authority,
         quorum_granted=quorum_granted,
     )
+    label = label_for_authority_transition(decision)
     sink.emit(
         EvidenceEvent(
             event_id=_event_id("reconcile", "authority"),
@@ -103,6 +107,7 @@ def run_authority_transition_flow(
             correlation_id="authority-flow",
             payload={
                 "decision": asdict(decision),
+                "result_label": label.to_dict(),
                 "current_authority": current_authority,
                 "requested_authority": requested_authority,
                 "quorum_granted": quorum_granted,
@@ -110,5 +115,6 @@ def run_authority_transition_flow(
         )
     )
     result["reconcile_decision"] = asdict(decision)
+    result["result_label"] = label.to_dict()
     result["event_count"] = _load_event_count(events_path)
     return result
