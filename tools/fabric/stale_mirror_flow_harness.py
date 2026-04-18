@@ -8,6 +8,7 @@ from .events import EventSink
 from .integration_common import run_mount_and_connector_flow
 from .connectors.s3 import S3Executor
 from .reconcile import decide_stale_mirror_action
+from .result_labels import label_for_stale_mirror
 from .types import EvidenceEvent
 
 
@@ -33,6 +34,7 @@ def run_stale_mirror_flow(
         policy_allow_stale=policy_allow_stale,
         authority_mode=authority_mode,
     )
+    label = label_for_stale_mirror(decision)
     sink.emit(
         EvidenceEvent(
             event_id="reconcile:stale-mirror",
@@ -45,6 +47,7 @@ def run_stale_mirror_flow(
             correlation_id="stale-mirror-flow",
             payload={
                 "decision": asdict(decision),
+                "result_label": label.to_dict(),
                 "stale_generation_gap": stale_generation_gap,
                 "policy_allow_stale": policy_allow_stale,
                 "authority_mode": authority_mode,
@@ -53,5 +56,6 @@ def run_stale_mirror_flow(
     )
     event_lines = events_path.read_text(encoding="utf-8").strip().splitlines()
     result["reconcile_decision"] = asdict(decision)
+    result["result_label"] = label.to_dict()
     result["event_count"] = len([line for line in event_lines if line])
     return result
