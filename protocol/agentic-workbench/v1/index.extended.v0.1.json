@@ -1,0 +1,79 @@
+{
+  "count": 12,
+  "items": [
+    {
+      "$id": "https://sourceos.local/schemas/agentic-workbench/v1/workflow.schema.v0.1.json",
+      "path": "protocol/agentic-workbench/v1/workflow.schema.v0.1.json",
+      "sha256": "sha256:4155eec85cee6ecacfe4fcfdc809a50673f8492f496942d4e26a6690b1a2376f",
+      "title": "WorkflowSpec"
+    },
+    {
+      "$id": "https://sourceos.local/schemas/agentic-workbench/v1/workflow_run.schema.v0.1.json",
+      "path": "protocol/agentic-workbench/v1/workflow_run.schema.v0.1.json",
+      "sha256": "sha256:48105e4038b1f3b5a0e749c09dd8bc2e90d963cd25d59ecbf911c5b04185adf0",
+      "title": "WorkflowRun"
+    },
+    {
+      "$id": "https://sourceos.local/schemas/agentic-workbench/v1/step.schema.v0.1.json",
+      "path": "protocol/agentic-workbench/v1/step.schema.v0.1.json",
+      "sha256": "sha256:25caf45ee9872517af58017bc99a924ca521ed1dbb216ef846fe37bb8361d72a",
+      "title": "StepSpec"
+    },
+    {
+      "$id": "https://sourceos.local/schemas/agentic-workbench/v1/artifact_ref.schema.v0.1.json",
+      "path": "protocol/agentic-workbench/v1/artifact_ref.schema.v0.1.json",
+      "sha256": "sha256:a421e284995109ffb066be8d16859d1ca6ba76bad8eeaf15c0f6f4e50e453f7a",
+      "title": "ArtifactRef"
+    },
+    {
+      "$id": "https://sourceos.local/schemas/agentic-workbench/v1/execution_envelope.schema.v0.1.json",
+      "path": "protocol/agentic-workbench/v1/execution_envelope.schema.v0.1.json",
+      "sha256": "sha256:1560d94e165c1d1be94008f32ca8a4bc0a453539a90e9cae029991965dce105d",
+      "title": "ExecutionEnvelope"
+    },
+    {
+      "$id": "https://sourceos.local/schemas/agentic-workbench/v1/execution_record.schema.v0.1.json",
+      "path": "protocol/agentic-workbench/v1/execution_record.schema.v0.1.json",
+      "sha256": "sha256:39cc236e3608a907ff54987209db23524aff1f9a39e13ec9835f7513c21f590b",
+      "title": "ExecutionRecord"
+    },
+    {
+      "$id": "https://sourceos.local/schemas/agentic-workbench/v1/approval_request.schema.v0.1.json",
+      "path": "protocol/agentic-workbench/v1/approval_request.schema.v0.1.json",
+      "sha256": "sha256:e292d71396982fbfba605120519a77070bc8614b426b2b3eecba0a3ccefd3591",
+      "title": "ApprovalRequest"
+    },
+    {
+      "$id": "https://sourceos.local/schemas/agentic-workbench/v1/trust_profile.schema.v0.1.json",
+      "path": "protocol/agentic-workbench/v1/trust_profile.schema.v0.1.json",
+      "sha256": "sha256:2f97e3c00d6999f949eac0fd665a645944e0fb105d612a494e240e5b2eebbaef",
+      "title": "TrustProfile"
+    },
+    {
+      "$id": "https://sourceos.local/schemas/agentic-workbench/v1/policy_pack.schema.v0.1.json",
+      "path": "protocol/agentic-workbench/v1/policy_pack.schema.v0.1.json",
+      "sha256": "sha256:a9ff3664d4b0a238e9aa7cfcecad86780a4db305151bc72ddb14f75aaa65815a",
+      "title": "PolicyPack"
+    },
+    {
+      "$id": "https://sourceos.local/schemas/agentic-workbench/v1/work_order.schema.v0.1.json",
+      "path": "protocol/agentic-workbench/v1/work_order.schema.v0.1.json",
+      "sha256": "sha256:070f6accc6d336dd442b5d73a8618411384843e5493f53c5d81dbd4e585f373b",
+      "title": "WorkOrder"
+    },
+    {
+      "$id": "https://sourceos.local/schemas/agentic-workbench/v1/launch_config.schema.v0.1.json",
+      "path": "protocol/agentic-workbench/v1/launch_config.schema.v0.1.json",
+      "sha256": "sha256:ed1b503fd46e3829d115191a088f20dbf16c027f7fbba2142c28ab6154882ac8",
+      "title": "LaunchConfig"
+    },
+    {
+      "$id": "https://sourceos.local/schemas/agentic-workbench/v1/profile_artifact.schema.v0.1.json",
+      "path": "protocol/agentic-workbench/v1/profile_artifact.schema.v0.1.json",
+      "sha256": "sha256:7cd0f4b41d3336875be4d20fd64fd516482809e3959ab4ee6dfb609c85cdbff4",
+      "title": "ProfileArtifact"
+    }
+  ],
+  "version": 1,
+  "notes": "Extended aggregate index that includes the original v1 workbench schema set plus later projection/extension schemas when the primary index cannot be patched in place."
+}
