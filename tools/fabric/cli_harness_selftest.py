@@ -9,23 +9,14 @@ from .cli import cmd_run_harness
 
 
 class CliHarnessSmokeTest(unittest.TestCase):
-    def test_run_harness_drive(self) -> None:
+    def test_run_harness_for_drive_s3_and_hyper(self) -> None:
+        connectors = ["drive", "s3", "hyper"]
         with tempfile.TemporaryDirectory() as tmpdir:
-            rc = cmd_run_harness(argparse.Namespace(connector="drive", root=tmpdir))
-            self.assertEqual(rc, 0)
-            self.assertTrue((Path(tmpdir) / "events.ndjson").exists())
-
-    def test_run_harness_s3(self) -> None:
-        with tempfile.TemporaryDirectory() as tmpdir:
-            rc = cmd_run_harness(argparse.Namespace(connector="s3", root=tmpdir))
-            self.assertEqual(rc, 0)
-            self.assertTrue((Path(tmpdir) / "events.ndjson").exists())
-
-    def test_run_harness_hyper(self) -> None:
-        with tempfile.TemporaryDirectory() as tmpdir:
-            rc = cmd_run_harness(argparse.Namespace(connector="hyper", root=tmpdir))
-            self.assertEqual(rc, 0)
-            self.assertTrue((Path(tmpdir) / "events.ndjson").exists())
+            for idx, connector in enumerate(connectors):
+                root = Path(tmpdir) / f"case-{idx}"
+                rc = cmd_run_harness(argparse.Namespace(connector=connector, root=str(root)))
+                self.assertEqual(rc, 0)
+                self.assertTrue((root / "events.ndjson").exists())
 
 
 if __name__ == "__main__":
