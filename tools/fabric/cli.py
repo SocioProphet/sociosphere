@@ -10,6 +10,7 @@ from .connectors.s3 import S3Executor
 from .events import EventSink
 from .integration_common import run_mount_and_connector_flow
 from .mount_agent import MountAgent, MountRequest
+from .planner_surface import planner_outcome_from_runtime_surface, planner_outcomes_from_runtime_surface_matrix
 from .reconcile_flow_harness import run_authority_transition_flow, run_tombstone_propagation_flow
 from .reconcile_matrix_harness import run_reconcile_matrix
 from .result_surface import outcome_from_flow_result, outcomes_from_reconcile_matrix
@@ -141,6 +142,47 @@ def cmd_show_surface(args: argparse.Namespace) -> int:
     return 2
 
 
+def cmd_show_planner_surface(args: argparse.Namespace) -> int:
+    root = Path(args.root)
+    if args.kind == "stale_mirror":
+        flow = run_stale_mirror_flow(
+            root,
+            stale_generation_gap=args.stale_generation_gap,
+            policy_allow_stale=args.policy_allow_stale,
+            authority_mode=args.authority_mode,
+        )
+        surface = outcome_from_flow_result("stale_mirror", flow)
+        print(json.dumps(planner_outcome_from_runtime_surface(surface).to_dict(), indent=2))
+        return 0
+    if args.kind == "tombstone":
+        flow = run_tombstone_propagation_flow(
+            root,
+            signed_tombstone=args.signed_tombstone,
+            local_dirty=args.local_dirty,
+            authority_mode=args.authority_mode,
+        )
+        surface = outcome_from_flow_result("tombstone", flow)
+        print(json.dumps(planner_outcome_from_runtime_surface(surface).to_dict(), indent=2))
+        return 0
+    if args.kind == "authority_transition":
+        flow = run_authority_transition_flow(
+            root,
+            current_authority=args.current_authority,
+            requested_authority=args.requested_authority,
+            quorum_granted=args.quorum_granted,
+        )
+        surface = outcome_from_flow_result("authority_transition", flow)
+        print(json.dumps(planner_outcome_from_runtime_surface(surface).to_dict(), indent=2))
+        return 0
+    if args.kind == "reconcile_matrix":
+        matrix = run_reconcile_matrix(root)
+        surfaces = outcomes_from_reconcile_matrix(matrix)
+        print(json.dumps(planner_outcomes_from_runtime_surface_matrix(surfaces), indent=2))
+        return 0
+    print(json.dumps({"error": f"unknown planner surface kind {args.kind!r}"}))
+    return 2
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="fabric")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -203,6 +245,19 @@ def build_parser() -> argparse.ArgumentParser:
     surface.add_argument("--requested-authority", default="remote")
     surface.add_argument("--quorum-granted", action="store_true")
     surface.set_defaults(func=cmd_show_surface)
+
+    planner = sub.add_parser("show-planner-surface")
+    planner.add_argument("kind", choices=["stale_mirror", "tombstone", "authority_transition", "reconcile_matrix"])
+    planner.add_argument("--root", required=True)
+    planner.add_argument("--stale-generation-gap", type=int, default=3)
+    planner.add_argument("--policy-allow-stale", action="store_true")
+    planner.add_argument("--signed-tombstone", action="store_true")
+    planner.add_argument("--local-dirty", action="store_true")
+    planner.add_argument("--authority-mode", default="local_first", choices=["local_first", "provider_first", "hybrid"])
+    planner.add_argument("--current-authority", default="local")
+    planner.add_argument("--requested-authority", default="remote")
+    planner.add_argument("--quorum-granted", action="store_true")
+    planner.set_defaults(func=cmd_show_planner_surface)
 
     return parser
 
