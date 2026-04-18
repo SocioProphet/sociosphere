@@ -360,7 +360,7 @@ def build_parser() -> argparse.ArgumentParser:
     demo.add_argument("--policy-bundle-ref", default="policy/default")
     demo.add_argument("--principal", default="operator")
     demo.add_argument("--events-file", default="/tmp/fabric-events.ndjson")
-    demo.set_defaults(func=cmd_registerDemo)
+    demo.set_defaults(func=cmd_register_demo)
 
     harness = sub.add_parser("run-harness")
     harness.add_argument("connector", choices=["drive", "s3", "hyper"])
@@ -386,7 +386,7 @@ def build_parser() -> argparse.ArgumentParser:
     stale.add_argument("--stale-generation-gap", type=int, required=True)
     stale.add_argument("--policy-allow-stale", action="store_true")
     stale.add_argument("--authority-mode", default="local_first", choices=["local_first", "provider_first", "hybrid"])
-    stale.set_defaults(func=cmd_run_stale_mirrorFlow)
+    stale.set_defaults(func=cmd_run_stale_mirror_flow)
 
     surface = sub.add_parser("show-surface")
     surface.add_argument("kind", choices=["stale_mirror", "tombstone", "authority_transition", "reconcile_matrix"])
