@@ -3,8 +3,8 @@
     "name": "sociosphere",
     "version": "0.1"
   },
-  "generated_at": "2026-04-08T16:43:25Z",
-  "_note": "Revisions pinned from live GitHub HEAD SHAs on 2026-04-08. Re-run `runner lock-update` after `runner fetch` to refresh.",
+  "generated_at": "2026-04-17T23:48:14Z",
+  "_note": "Revisions pinned from live GitHub HEAD SHAs on 2026-04-17. Re-run `runner lock-update` after `runner fetch` to refresh.",
   "repos": [
     {
       "name": "workspace_inventory",
@@ -111,50 +111,50 @@
       "role": "library",
       "url": "https://github.com/SocioProphet/semantic-serdes",
       "ref": "main",
-      "rev": null,
+      "rev": "97bb405e9780320b04b6d046475ed468b49b3c50",
       "local_path": "components/semantic_serdes",
       "tree_hash": null,
-      "retrieved_at": null
+      "retrieved_at": "2026-04-17T23:48:14Z"
     },
     {
       "name": "cairnpath_mesh",
       "role": "replay",
       "url": "https://github.com/SocioProphet/cairnpath-mesh",
       "ref": "main",
-      "rev": null,
+      "rev": "37b612d54ab50c64e29c8904f672ba3c999bb469",
       "local_path": "components/cairnpath_mesh",
       "tree_hash": null,
-      "retrieved_at": null
+      "retrieved_at": "2026-04-17T23:48:14Z"
     },
     {
       "name": "prophet_platform_standards",
       "role": "standards",
       "url": "https://github.com/SocioProphet/prophet-platform-standards",
       "ref": "main",
-      "rev": null,
+      "rev": "ac7a477a9751533ef9d410925c04d59c39693401",
       "local_path": "components/prophet_platform_standards",
       "tree_hash": null,
-      "retrieved_at": null
+      "retrieved_at": "2026-04-17T23:48:14Z"
     },
     {
       "name": "socioprophet_standards_storage",
       "role": "standards",
       "url": "https://github.com/SocioProphet/socioprophet-standards-storage",
       "ref": "main",
-      "rev": null,
+      "rev": "03b785789d424bbccb148adea56e65c6c16a60a2",
       "local_path": "components/socioprophet_standards_storage",
       "tree_hash": null,
-      "retrieved_at": null
+      "retrieved_at": "2026-04-17T23:48:14Z"
     },
     {
       "name": "socioprophet_standards_knowledge",
       "role": "standards",
       "url": "https://github.com/SocioProphet/socioprophet-standards-knowledge",
       "ref": "main",
-      "rev": null,
+      "rev": "0b4dfde600611b64470170cc9aec269176209e24",
       "local_path": "components/socioprophet_standards_knowledge",
       "tree_hash": null,
-      "retrieved_at": null
+      "retrieved_at": "2026-04-17T23:48:14Z"
     },
     {
       "name": "gaia_world_model",
@@ -181,10 +181,10 @@
       "role": "adapter",
       "url": "https://github.com/SocioProphet/cc",
       "ref": "main",
-      "rev": null,
+      "rev": "31b82de869772438147eb793be8cf5144dc400d8",
       "local_path": "adapters/cc",
       "tree_hash": null,
-      "retrieved_at": null
+      "retrieved_at": "2026-04-17T23:48:14Z"
     },
     {
       "name": "configs",
@@ -255,6 +255,46 @@
       "local_path": "docs/socioprophet-docs",
       "tree_hash": null,
       "retrieved_at": "2026-04-08T16:43:25Z"
+    },
+    {
+      "name": "socios-ignition",
+      "role": "tool",
+      "url": "https://github.com/SociOS-Linux/socios-ignition",
+      "ref": "main",
+      "rev": "87b35f3e9727103b807e4ebffa56441e19591a07",
+      "local_path": null,
+      "tree_hash": null,
+      "retrieved_at": "2026-04-17T23:48:14Z"
+    },
+    {
+      "name": "socios-installer",
+      "role": "tool",
+      "url": "https://github.com/SociOS-Linux/socios-installer",
+      "ref": "main",
+      "rev": "66b82852108b6fcba0bf93bb78dd88e4ae1163d4",
+      "local_path": null,
+      "tree_hash": null,
+      "retrieved_at": "2026-04-17T23:48:14Z"
+    },
+    {
+      "name": "socios-coreos-config",
+      "role": "tool",
+      "url": "https://github.com/SociOS-Linux/socios-coreos-config",
+      "ref": "testing-devel",
+      "rev": "29b4e73139de6e0985ace0958f5f95e16a3c5835",
+      "local_path": null,
+      "tree_hash": null,
+      "retrieved_at": "2026-04-17T23:48:14Z"
+    },
+    {
+      "name": "sourceos-spec",
+      "role": "standards",
+      "url": "https://github.com/SourceOS-Linux/sourceos-spec",
+      "ref": "main",
+      "rev": "685b7d98a0808456a3b27267f4affa2ab88ea3ac",
+      "local_path": null,
+      "tree_hash": null,
+      "retrieved_at": "2026-04-17T23:48:14Z"
     }
   ]
 }
