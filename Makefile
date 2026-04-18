@@ -32,13 +32,18 @@ validate-standards:
 	@ok=1; if [ -f tools/validate_adaptation_program.py ]; then python3 tools/validate_adaptation_program.py standards/examples/adaptation/program.example.v1.json || ok=0; else echo "ERR: tools/validate_adaptation_program.py missing"; ok=0; fi; if [ -f standards/qes/tools/validate_qes_contracts.py ]; then python3 standards/qes/tools/validate_qes_contracts.py || ok=0; else echo "WARN: standards/qes/tools/validate_qes_contracts.py missing (skipping)"; fi; test $$ok -eq 1
 
 # --- registry targets ---
-.PHONY: registry-validate ontology-validate dep-cycles
+.PHONY: registry-validate ontology-validate dep-cycles mirror-drift-check
+
+mirror-drift-check:
+	python3 engines/mirror_drift_engine.py check
 
 registry-validate:
 	@echo "==> Validating registry ontology roles and layers..."
 	python3 engines/ontology_engine.py validate
 	@echo "==> Checking dependency graph for cycles..."
 	python3 engines/propagation_engine.py cycles
+	@echo "==> Validating mirror drift status..."
+	python3 engines/mirror_drift_engine.py check
 	@echo "OK: registry-validate passed"
 
 ontology-validate: registry-validate
