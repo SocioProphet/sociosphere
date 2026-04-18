@@ -13,6 +13,7 @@ from .mount_agent import MountAgent, MountRequest
 from .reconcile_flow_harness import run_authority_transition_flow, run_tombstone_propagation_flow
 from .retrieval_registry import RetrievalRegistry
 from .schema_refs import schema_paths
+from .stale_mirror_flow_harness import run_stale_mirror_flow
 from .validator import validate_file
 
 
@@ -93,6 +94,17 @@ def cmd_run_authority_flow(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_run_stale_mirror_flow(args: argparse.Namespace) -> int:
+    result = run_stale_mirror_flow(
+        Path(args.root),
+        stale_generation_gap=args.stale_generation_gap,
+        policy_allow_stale=args.policy_allow_stale,
+        authority_mode=args.authority_mode,
+    )
+    print(json.dumps(result, indent=2))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="fabric")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -135,6 +147,13 @@ def build_parser() -> argparse.ArgumentParser:
     authority.add_argument("--requested-authority", required=True)
     authority.add_argument("--quorum-granted", action="store_true")
     authority.set_defaults(func=cmd_run_authority_flow)
+
+    stale = sub.add_parser("run-stale-mirror-flow")
+    stale.add_argument("--root", required=True)
+    stale.add_argument("--stale-generation-gap", type=int, required=True)
+    stale.add_argument("--policy-allow-stale", action="store_true")
+    stale.add_argument("--authority-mode", default="local_first", choices=["local_first", "provider_first", "hybrid"])
+    stale.set_defaults(func=cmd_run_stale_mirror_flow)
 
     return parser
 
