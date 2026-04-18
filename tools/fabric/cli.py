@@ -253,7 +253,7 @@ def cmd_show_result_interface(args: argparse.Namespace) -> int:
             local_dirty=args.local_dirty,
             authority_mode=args.authority_mode,
         )
-        surface = outcome_fromFlow_result("tombstone", flow)
+        surface = outcome_from_flow_result("tombstone", flow)
         planner = planner_outcome_from_runtime_surface(surface)
         decision = serving_decision_from_planner_outcome(planner)
         print(json.dumps(interface_from_serving_decision(decision).to_dict(), indent=2))
@@ -360,7 +360,7 @@ def build_parser() -> argparse.ArgumentParser:
     demo.add_argument("--policy-bundle-ref", default="policy/default")
     demo.add_argument("--principal", default="operator")
     demo.add_argument("--events-file", default="/tmp/fabric-events.ndjson")
-    demo.set_defaults(func=cmd_register_demo)
+    demo.set_defaults(func=cmd_registerDemo)
 
     harness = sub.add_parser("run-harness")
     harness.add_argument("connector", choices=["drive", "s3", "hyper"])
@@ -386,7 +386,7 @@ def build_parser() -> argparse.ArgumentParser:
     stale.add_argument("--stale-generation-gap", type=int, required=True)
     stale.add_argument("--policy-allow-stale", action="store_true")
     stale.add_argument("--authority-mode", default="local_first", choices=["local_first", "provider_first", "hybrid"])
-    stale.set_defaults(func=cmd_run_stale_mirror_flow)
+    stale.set_defaults(func=cmd_run_stale_mirrorFlow)
 
     surface = sub.add_parser("show-surface")
     surface.add_argument("kind", choices=["stale_mirror", "tombstone", "authority_transition", "reconcile_matrix"])
