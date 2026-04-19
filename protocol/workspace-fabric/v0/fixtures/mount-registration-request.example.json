@@ -1,0 +1,68 @@
+{
+  "api_version": "sourceos.fabric.mount/v0.1",
+  "kind": "MountRegistrationRequest",
+  "workspace": {
+    "cell": "cell-alpha",
+    "id": "ws-research",
+    "principal": "operator.local"
+  },
+  "mount": {
+    "id": "topo-main",
+    "backend": "topolvm",
+    "resolved_handle": "/var/lib/sourceos/workspaces/ws-research",
+    "authority_mode": "local_first",
+    "durability_class": "local_persistent",
+    "replay_mode": "append_only_evidence",
+    "visibility_default": "private"
+  },
+  "datasets": [
+    {
+      "id": "ds-notes",
+      "role": "primary",
+      "indexes": [
+        {
+          "id": "idx-notes-xapian",
+          "engine": "xapian",
+          "mode": "authoritative_local"
+        },
+        {
+          "id": "idx-notes-vec",
+          "engine": "tantivy",
+          "mode": "derived_cache"
+        }
+      ]
+    }
+  ],
+  "adapters": [
+    {
+      "kind": "hypercore",
+      "role": "topic_distribution",
+      "topics": ["notes.events", "notes.snapshots"]
+    },
+    {
+      "kind": "s3",
+      "role": "object_snapshot_replica",
+      "bucket": "ws-research-snapshots"
+    },
+    {
+      "kind": "drive",
+      "role": "compatibility_mirror",
+      "folder_id": "drive-folder-123"
+    },
+    {
+      "kind": "rsync",
+      "role": "bulk_sync",
+      "endpoint": "rsync://backup/ws-research"
+    }
+  ],
+  "policy": {
+    "bundle": "policy/default",
+    "quorum_profile": "local-owner-plus-1",
+    "require_signed_tombstones": true,
+    "stale_mirror_policy": "metadata_only"
+  },
+  "lease_request": {
+    "ttl": "24h",
+    "renewable": true
+  }
+}
