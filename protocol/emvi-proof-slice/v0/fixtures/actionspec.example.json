@@ -1,0 +1,22 @@
+{
+  "id": "act_0001",
+  "intent": ">capture current into collection:research",
+  "action_class": "Capture",
+  "targets": [
+    {
+      "id": "page_current",
+      "kind": "page"
+    },
+    {
+      "id": "collection_research",
+      "kind": "collection"
+    }
+  ],
+  "service_families": ["ui_runtime", "collection", "ledger"],
+  "placement": "host",
+  "preview_required": false,
+  "confirmation_required": false,
+  "rollback_expected": false,
+  "policy_status": "allowed",
+  "provenance_sink": "ledger"
+}
