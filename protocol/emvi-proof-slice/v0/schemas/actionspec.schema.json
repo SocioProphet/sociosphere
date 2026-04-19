@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sociosphere.io/protocol/emvi-proof-slice/v0/schemas/actionspec.schema.json",
+  "title": "EMVI Proof Slice ActionSpec",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "intent",
+    "action_class",
+    "targets",
+    "service_families",
+    "placement",
+    "preview_required",
+    "confirmation_required",
+    "rollback_expected",
+    "policy_status",
+    "provenance_sink"
+  ],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "intent": {"type": "string", "minLength": 1},
+    "action_class": {
+      "type": "string",
+      "enum": [
+        "Observe",
+        "Capture",
+        "Draft",
+        "ReversibleWrite",
+        "IrreversibleWrite",
+        "PrivilegedExecute",
+        "DelegatedProposal",
+        "DelegatedExecute"
+      ]
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "kind": {"type": "string", "minLength": 1},
+          "locator": {"type": ["string", "null"]},
+          "anchor": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "service_families": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "user",
+          "planner",
+          "policy",
+          "graph",
+          "knowledge",
+          "search",
+          "shell",
+          "network",
+          "ui_runtime",
+          "collection",
+          "ledger",
+          "placement"
+        ]
+      }
+    },
+    "placement": {
+      "type": "string",
+      "enum": ["host", "LMS", "fog", "cloud-twin"]
+    },
+    "preview_required": {"type": "boolean"},
+    "confirmation_required": {"type": "boolean"},
+    "rollback_expected": {"type": "boolean"},
+    "policy_status": {
+      "type": "string",
+      "enum": ["pending", "allowed", "denied", "confirmation_required"]
+    },
+    "provenance_sink": {
+      "type": "string",
+      "enum": ["ledger", "provenance-log", "ledger+provenance-log"]
+    },
+    "correlation_id": {"type": "string"},
+    "notes": {"type": "string"}
+  }
+}
