@@ -1,0 +1,35 @@
+{
+  "api_version": "sourceos.fabric.mount/v0.1",
+  "kind": "MountRegistrationLease",
+  "status": "active",
+  "lease": {
+    "id": "lease-01JABCXYZ",
+    "issued_at": "2026-04-18T23:00:00Z",
+    "expires_at": "2026-04-19T23:00:00Z",
+    "renewable": true
+  },
+  "workspace": {
+    "cell": "cell-alpha",
+    "id": "ws-research"
+  },
+  "mount": {
+    "id": "topo-main",
+    "authority_mode": "local_first",
+    "backend": "topolvm",
+    "status": "active"
+  },
+  "approved": {
+    "datasets": ["ds-notes"],
+    "indexes": ["idx-notes-xapian", "idx-notes-vec"],
+    "adapters": [
+      "hypercore:topic_distribution",
+      "s3:object_snapshot_replica",
+      "drive:compatibility_mirror",
+      "rsync:bulk_sync"
+    ]
+  },
+  "evidence": {
+    "stream": "/cells/cell-alpha/evidence/mount-registration",
+    "correlation_id": "reg-topo-main-20260418-001"
+  }
+}
