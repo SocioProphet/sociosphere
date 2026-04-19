@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sociosphere.io/protocol/emvi-proof-slice/v0/schemas/event-envelope.schema.json",
+  "title": "EMVI Proof Slice Event Envelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "event_type",
+    "timestamp",
+    "correlation_id",
+    "actor",
+    "target_ids",
+    "service_family",
+    "status",
+    "placement"
+  ],
+  "properties": {
+    "event_id": {"type": "string"},
+    "event_type": {"type": "string"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "correlation_id": {"type": "string"},
+    "actor": {"type": "string"},
+    "action_spec_id": {"type": "string"},
+    "target_ids": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "service_family": {"type": "string"},
+    "status": {"type": "string"},
+    "placement": {"type": "string"},
+    "notes": {"type": "string"}
+  }
+}
