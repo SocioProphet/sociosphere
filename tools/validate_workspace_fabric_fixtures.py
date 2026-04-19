@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 WF = ROOT / "protocol" / "workspace-fabric" / "v0"
@@ -12,10 +11,18 @@ FIX = WF / "fixtures"
 REQUEST = FIX / "mount-registration-request.example.json"
 LEASE = FIX / "mount-registration-lease.example.json"
 EVENT = FIX / "evidence-event.example.json"
+RENEWAL = FIX / "lease-renewal-request.example.json"
+REVOCATION = FIX / "lease-revocation-request.example.json"
+AUTH_REQ = FIX / "authority-transition-request.example.json"
+AUTH_DEC = FIX / "authority-transition-decision.example.json"
 
 REQ_SCHEMA = WF / "mount-registration-request.schema.json"
 LEASE_SCHEMA = WF / "mount-registration-lease.schema.json"
 EVENT_SCHEMA = WF / "evidence-event.schema.json"
+RENEWAL_SCHEMA = WF / "lease-renewal-request.schema.json"
+REVOCATION_SCHEMA = WF / "lease-revocation-request.schema.json"
+AUTH_REQ_SCHEMA = WF / "authority-transition-request.schema.json"
+AUTH_DEC_SCHEMA = WF / "authority-transition-decision.schema.json"
 
 
 def load(path: Path) -> dict:
@@ -29,20 +36,49 @@ def require_keys(obj: dict, keys: list[str], label: str) -> None:
 
 
 def main() -> int:
-    for path in [REQUEST, LEASE, EVENT, REQ_SCHEMA, LEASE_SCHEMA, EVENT_SCHEMA]:
+    required_paths = [
+        REQUEST,
+        LEASE,
+        EVENT,
+        RENEWAL,
+        REVOCATION,
+        AUTH_REQ,
+        AUTH_DEC,
+        REQ_SCHEMA,
+        LEASE_SCHEMA,
+        EVENT_SCHEMA,
+        RENEWAL_SCHEMA,
+        REVOCATION_SCHEMA,
+        AUTH_REQ_SCHEMA,
+        AUTH_DEC_SCHEMA,
+    ]
+    for path in required_paths:
         if not path.exists():
             raise SystemExit(f"missing required file: {path}")
 
     req = load(REQUEST)
     lease = load(LEASE)
     event = load(EVENT)
+    renewal = load(RENEWAL)
+    revocation = load(REVOCATION)
+    auth_req = load(AUTH_REQ)
+    auth_dec = load(AUTH_DEC)
+
     req_schema = load(REQ_SCHEMA)
     lease_schema = load(LEASE_SCHEMA)
     event_schema = load(EVENT_SCHEMA)
+    renewal_schema = load(RENEWAL_SCHEMA)
+    revocation_schema = load(REVOCATION_SCHEMA)
+    auth_req_schema = load(AUTH_REQ_SCHEMA)
+    auth_dec_schema = load(AUTH_DEC_SCHEMA)
 
     require_keys(req, req_schema["required"], "request fixture")
     require_keys(lease, lease_schema["required"], "lease fixture")
     require_keys(event, event_schema["required"], "event fixture")
+    require_keys(renewal, renewal_schema["required"], "renewal fixture")
+    require_keys(revocation, revocation_schema["required"], "revocation fixture")
+    require_keys(auth_req, auth_req_schema["required"], "authority request fixture")
+    require_keys(auth_dec, auth_dec_schema["required"], "authority decision fixture")
 
     require_keys(req["workspace"], ["cell", "id", "principal"], "request.workspace")
     require_keys(req["mount"], ["id", "backend", "authority_mode"], "request.mount")
@@ -71,6 +107,31 @@ def main() -> int:
     lease_adapter_roles = set(lease["approved"]["adapters"])
     if not lease_adapter_roles.issubset(request_adapter_roles):
         raise SystemExit("lease adapter approvals are not a subset of request adapters")
+
+    for name, obj in [("renewal", renewal), ("revocation", revocation), ("authority request", auth_req), ("authority decision", auth_dec)]:
+        if obj["workspace_ref"] != req["workspace"]["id"]:
+            raise SystemExit(f"{name} workspace_ref does not match request workspace id")
+        if obj["mount_ref"] != req["mount"]["id"]:
+            raise SystemExit(f"{name} mount_ref does not match request mount id")
+
+    if renewal["lease_id"] != lease["lease"]["id"]:
+        raise SystemExit("renewal lease_id does not match lease fixture")
+    if revocation["lease_id"] != lease["lease"]["id"]:
+        raise SystemExit("revocation lease_id does not match lease fixture")
+
+    if auth_req["current_authority"] != req["mount"]["authority_mode"]:
+        raise SystemExit("authority request current_authority does not match request authority mode")
+    if auth_req["requested_authority"] == auth_req["current_authority"]:
+        raise SystemExit("authority request requested_authority must differ from current_authority in this fixture")
+    if auth_dec["current_authority"] != auth_req["current_authority"]:
+        raise SystemExit("authority decision current_authority does not match authority request")
+    if auth_dec["correlation_id"] != auth_req["correlation_id"]:
+        raise SystemExit("authority decision correlation_id does not match authority request")
+    if auth_dec["decision_status"] == "approved":
+        if not auth_dec["quorum_granted"]:
+            raise SystemExit("approved authority decision must grant quorum")
+        if auth_dec["resulting_authority"] != auth_req["requested_authority"]:
+            raise SystemExit("approved authority decision resulting_authority does not match requested_authority")
 
     print("workspace-fabric fixtures: OK")
     return 0
