@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.github.io/sociosphere/protocol/workspace-fabric/v0/evidence-event.schema.json",
+  "title": "WorkspaceFabricEvidenceEvent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "event_type",
+    "occurred_at",
+    "actor_ref",
+    "workspace_ref",
+    "mount_ref",
+    "dataset_ref",
+    "policy_bundle_ref",
+    "correlation_id",
+    "payload"
+  ],
+  "properties": {
+    "event_id": {"type": "string", "minLength": 1},
+    "event_type": {"type": "string", "minLength": 1},
+    "occurred_at": {"type": "string", "minLength": 1},
+    "actor_ref": {"type": "string", "minLength": 1},
+    "workspace_ref": {"type": "string", "minLength": 1},
+    "mount_ref": {"type": "string", "minLength": 1},
+    "dataset_ref": {"type": "string", "minLength": 1},
+    "policy_bundle_ref": {"type": "string", "minLength": 1},
+    "correlation_id": {"type": "string", "minLength": 1},
+    "payload": {"type": "object"}
+  }
+}
