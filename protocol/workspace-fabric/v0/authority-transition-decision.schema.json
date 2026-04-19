@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.github.io/sociosphere/protocol/workspace-fabric/v0/authority-transition-decision.schema.json",
+  "title": "MountAuthorityTransitionDecision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "api_version",
+    "kind",
+    "workspace_ref",
+    "mount_ref",
+    "decision_status",
+    "current_authority",
+    "resulting_authority",
+    "quorum_granted",
+    "policy_bundle_ref",
+    "correlation_id"
+  ],
+  "properties": {
+    "api_version": {"const": "sourceos.fabric.mount/v0.1"},
+    "kind": {"const": "MountAuthorityTransitionDecision"},
+    "workspace_ref": {"type": "string", "minLength": 1},
+    "mount_ref": {"type": "string", "minLength": 1},
+    "decision_status": {"enum": ["approved", "rejected", "no_op"]},
+    "current_authority": {"enum": ["local_first", "provider_first", "hybrid"]},
+    "resulting_authority": {"enum": ["local_first", "provider_first", "hybrid"]},
+    "quorum_granted": {"type": "boolean"},
+    "policy_bundle_ref": {"type": "string", "minLength": 1},
+    "correlation_id": {"type": "string", "minLength": 1}
+  }
+}
