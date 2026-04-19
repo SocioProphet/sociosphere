@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 
 from .cli import cmd_show_result_view
-from .planner_surface import planner_outcome_from_runtime_surface
+from .planner_surface import planner_outcome_from_runtime_surface, planner_outcomes_from_runtime_surface_matrix
 from .reconcile_flow_harness import run_authority_transition_flow, run_tombstone_propagation_flow
 from .reconcile_matrix_harness import run_reconcile_matrix
 from .result_interface import interface_from_serving_decision, interfaces_from_serving_matrix
@@ -80,12 +80,7 @@ class ResultViewSmokeTest(unittest.TestCase):
                 render_blocks_from_interface_matrix(
                     interfaces_from_serving_matrix(
                         serving_decisions_from_planner_matrix(
-                            {
-                                name: serving_decision_from_planner_outcome(
-                                    planner_outcome_from_runtime_surface(outcome_from_flow_result(name, matrix[name]))
-                                ).to_dict()
-                                for name in ["tombstone", "stale_mirror", "authority_transition"]
-                            }
+                            planner_outcomes_from_runtime_surface_matrix(outcomes_from_reconcile_matrix(matrix))
                         )
                     )
                 )
