@@ -1,0 +1,10 @@
+{
+  "api_version": "sourceos.fabric.mount/v0.1",
+  "kind": "MountReconcileRequired",
+  "workspace_ref": "ws-research",
+  "mount_ref": "topo-main",
+  "reason_code": "local_dirty_remote_delete",
+  "authority_mode": "local_first",
+  "resulting_state": "RECONCILE_REQUIRED",
+  "correlation_id": "reg-topo-main-20260418-005"
+}
