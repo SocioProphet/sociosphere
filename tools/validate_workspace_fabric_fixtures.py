@@ -15,6 +15,9 @@ RENEWAL = FIX / "lease-renewal-request.example.json"
 REVOCATION = FIX / "lease-revocation-request.example.json"
 AUTH_REQ = FIX / "authority-transition-request.example.json"
 AUTH_DEC = FIX / "authority-transition-decision.example.json"
+TOMBSTONE = FIX / "tombstone-decision.example.json"
+RECONCILE = FIX / "reconcile-required.example.json"
+TRANSITION = FIX / "transition.example.json"
 
 REQ_SCHEMA = WF / "mount-registration-request.schema.json"
 LEASE_SCHEMA = WF / "mount-registration-lease.schema.json"
@@ -23,6 +26,9 @@ RENEWAL_SCHEMA = WF / "lease-renewal-request.schema.json"
 REVOCATION_SCHEMA = WF / "lease-revocation-request.schema.json"
 AUTH_REQ_SCHEMA = WF / "authority-transition-request.schema.json"
 AUTH_DEC_SCHEMA = WF / "authority-transition-decision.schema.json"
+TOMBSTONE_SCHEMA = WF / "tombstone-decision.schema.json"
+RECONCILE_SCHEMA = WF / "reconcile-required.schema.json"
+TRANSITION_SCHEMA = WF / "lifecycle-transition.schema.json"
 
 
 def load(path: Path) -> dict:
@@ -44,6 +50,9 @@ def main() -> int:
         REVOCATION,
         AUTH_REQ,
         AUTH_DEC,
+        TOMBSTONE,
+        RECONCILE,
+        TRANSITION,
         REQ_SCHEMA,
         LEASE_SCHEMA,
         EVENT_SCHEMA,
@@ -51,6 +60,9 @@ def main() -> int:
         REVOCATION_SCHEMA,
         AUTH_REQ_SCHEMA,
         AUTH_DEC_SCHEMA,
+        TOMBSTONE_SCHEMA,
+        RECONCILE_SCHEMA,
+        TRANSITION_SCHEMA,
     ]
     for path in required_paths:
         if not path.exists():
@@ -63,6 +75,9 @@ def main() -> int:
     revocation = load(REVOCATION)
     auth_req = load(AUTH_REQ)
     auth_dec = load(AUTH_DEC)
+    tombstone = load(TOMBSTONE)
+    reconcile = load(RECONCILE)
+    transition = load(TRANSITION)
 
     req_schema = load(REQ_SCHEMA)
     lease_schema = load(LEASE_SCHEMA)
@@ -71,6 +86,9 @@ def main() -> int:
     revocation_schema = load(REVOCATION_SCHEMA)
     auth_req_schema = load(AUTH_REQ_SCHEMA)
     auth_dec_schema = load(AUTH_DEC_SCHEMA)
+    tombstone_schema = load(TOMBSTONE_SCHEMA)
+    reconcile_schema = load(RECONCILE_SCHEMA)
+    transition_schema = load(TRANSITION_SCHEMA)
 
     require_keys(req, req_schema["required"], "request fixture")
     require_keys(lease, lease_schema["required"], "lease fixture")
@@ -79,6 +97,9 @@ def main() -> int:
     require_keys(revocation, revocation_schema["required"], "revocation fixture")
     require_keys(auth_req, auth_req_schema["required"], "authority request fixture")
     require_keys(auth_dec, auth_dec_schema["required"], "authority decision fixture")
+    require_keys(tombstone, tombstone_schema["required"], "tombstone decision fixture")
+    require_keys(reconcile, reconcile_schema["required"], "reconcile-required fixture")
+    require_keys(transition, transition_schema["required"], "transition fixture")
 
     require_keys(req["workspace"], ["cell", "id", "principal"], "request.workspace")
     require_keys(req["mount"], ["id", "backend", "authority_mode"], "request.mount")
@@ -108,7 +129,15 @@ def main() -> int:
     if not lease_adapter_roles.issubset(request_adapter_roles):
         raise SystemExit("lease adapter approvals are not a subset of request adapters")
 
-    for name, obj in [("renewal", renewal), ("revocation", revocation), ("authority request", auth_req), ("authority decision", auth_dec)]:
+    for name, obj in [
+        ("renewal", renewal),
+        ("revocation", revocation),
+        ("authority request", auth_req),
+        ("authority decision", auth_dec),
+        ("tombstone decision", tombstone),
+        ("reconcile-required", reconcile),
+        ("transition", transition),
+    ]:
         if obj["workspace_ref"] != req["workspace"]["id"]:
             raise SystemExit(f"{name} workspace_ref does not match request workspace id")
         if obj["mount_ref"] != req["mount"]["id"]:
@@ -132,6 +161,15 @@ def main() -> int:
             raise SystemExit("approved authority decision must grant quorum")
         if auth_dec["resulting_authority"] != auth_req["requested_authority"]:
             raise SystemExit("approved authority decision resulting_authority does not match requested_authority")
+
+    if tombstone["signed_tombstone"] and not tombstone["local_dirty"]:
+        if tombstone["decision_status"] == "applied" and tombstone["resulting_state"] != "tombstoned":
+            raise SystemExit("applied tombstone must result in tombstoned state in this fixture")
+
+    if reconcile["resulting_state"] != "RECONCILE_REQUIRED":
+        raise SystemExit("reconcile fixture must result in RECONCILE_REQUIRED")
+    if transition["to_state"] == "RECONCILE_REQUIRED" and reconcile["correlation_id"] != transition["correlation_id"]:
+        raise SystemExit("transition and reconcile fixture should share correlation_id in this fixture")
 
     print("workspace-fabric fixtures: OK")
     return 0
