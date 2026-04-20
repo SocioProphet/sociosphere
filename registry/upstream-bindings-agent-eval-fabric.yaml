@@ -1,0 +1,50 @@
+bindings:
+  - lane: protocol_transport
+    canonical_repo: SocioProphet/TriTRPC
+    disposition: canonical_upstream
+    outputs:
+      - deterministic_transport_semantics
+      - canonical_fixtures
+      - protocol_ports
+  - lane: workspace_controller
+    canonical_repo: SocioProphet/sociosphere
+    disposition: canonical_meta_workspace_controller
+    outputs:
+      - workspace_manifest
+      - workspace_lock
+      - runner_semantics
+      - topology_enforcement
+      - integration_ledger
+  - lane: policy_control
+    canonical_repo: SocioProphet/policy-fabric
+    disposition: canonical_policy_control_repo
+    outputs:
+      - policy_contracts
+      - validation_evidence
+      - governed_decision_workflows
+  - lane: runtime_eval_fabric
+    canonical_repo: SocioProphet/prophet-platform
+    disposition: canonical_executable_consumer
+    outputs:
+      - readiness_surfaces
+      - provenance_routes
+      - competition_views
+      - receipt_emission
+      - downstream_suite_execution
+  - lane: agent_standards
+    canonical_repo: SocioProphet/socioprophet-agent-standards
+    disposition: canonical_standards_upstream
+    outputs:
+      - evidence_profiles
+      - control_gating_graduation_profiles
+      - orchestration_ray_profiles
+      - logical_statistical_test_profiles
+      - examples_and_manifests
+  - lane: ray_kuberay_deployment
+    canonical_repo: SocioProphet/prophet-platform-fabric-mlops-ts-suite
+    disposition: canonical_deployment_baseline
+    outputs:
+      - ray_train_baseline
+      - ray_serve_baseline
+      - mlops_cluster_profiles
+      - promotion_rollout_context
