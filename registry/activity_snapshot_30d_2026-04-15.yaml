@@ -1,0 +1,79 @@
+# registry/activity_snapshot_30d_2026-04-15.yaml
+# Public cross-org activity snapshot used for automation and integration tracking.
+# Private repositories are intentionally omitted.
+
+schema_version: 1
+captured_at: 2026-04-15
+since: 2026-03-16
+
+organizations:
+  SocioProphet:
+    - api-contracts
+    - contractforge
+    - socioprophet-standards-storage
+    - memory-mesh
+    - prophet-platform-standards
+    - prophet-platform-fabric-mlops-ts-suite
+    - sociosphere
+    - tritfabric
+    - prophet-cli
+    - socioprophet-standards-knowledge
+    - sherlock-search
+    - prophet-platform
+    - TriTRPC
+    - policy-fabric
+    - synapseiq
+    - socioprophet-agent-standards
+    - cloudshell-fog
+    - agentplane
+    - global-devsecops-intelligence
+    - delivery-excellence-automation
+    - agent-inbox
+    - human-digital-twin
+    - prophet-workspace
+    - semantic-serdes
+    - alexandrian-academy
+    - slash-topics
+    - manifests
+    - delivery-excellence
+    - meshrush
+    - gaia-world-model
+    - socioprophet
+    - ontogenesis
+    - hyperdiscovery
+    - Heller-Winters-Theorem
+    - delivery-excellence-innersource
+    - socioprophet-docs
+    - delivery-excellence-bounties
+    - cairnpath-mesh
+    - delivery-excellence-boards
+    - mcp-a2a-zero-trust
+    - exodus
+    - mempalace
+    - hermes-agent
+    - agent-skills
+    - OmniVoice
+    - identity-is-prime-reference
+    - graphbrain-contract
+    - usol-space-library
+
+  SociOS-Linux:
+    - source-os
+    - Zettlr
+    - SourceOS
+    - cloudshell-fog
+    - agentos-starter
+    - socioslinux-web
+    - workstation-contracts
+    - agentos-spine
+    - imagelab
+    - hyperswarm-agent-composable-cluster-scale-up
+
+  SourceOS-Linux:
+    - sourceos-spec
+    - openclaw
+    - MMTEB-MCP
+
+notes:
+  - "This snapshot is used as an integration watchlist for sociosphere manifest/lock maintenance."
+  - "If a repo vendors code from another repo, pin upstream SHAs and fail CI on drift."
