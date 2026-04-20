@@ -1,0 +1,23 @@
+# Proposed canonical-source fragment for SourceOS Linux substrate lane
+# Apply to governance/CANONICAL_SOURCES.yaml after registry normalization.
+
+namespaces:
+  sourceos/substrate:
+    canonical_repo: source-os
+    note: "Canonical Linux substrate is implemented in SociOS-Linux/SourceOS; workspace alias remains source-os until registry normalization."
+
+  sourceos/workstation-contracts:
+    canonical_repo: workstation-contracts
+    note: "Workstation/CI conformance for SourceOS Linux substrate lanes (SociOS-Linux/workstation-contracts)."
+
+  sourceos/boot-surface:
+    canonical_repo: sourceos-spec
+    note: "BootSurface contract family for substrate lanes."
+
+  sourceos/storage-surface:
+    canonical_repo: sourceos-spec
+    note: "StorageSurface contract family for substrate lanes."
+
+  sourceos/staged-deployment:
+    canonical_repo: sourceos-spec
+    note: "StagedDeployment contract family for substrate lanes."
