@@ -14,8 +14,10 @@ In scope for v0:
 - adapter role declaration
 - policy and quorum gating
 - lease issuance
+- lease renewal and revocation requests
+- authority-transition request and decision artifacts
 - evidence emission
-- machine-readable request, lease, and evidence schemas
+- machine-readable request, lease, evidence, and lifecycle schemas
 - lightweight fixture validation
 
 Out of scope for v0:
@@ -94,11 +96,19 @@ Machine-readable schemas:
 - `mount-registration-request.schema.json`
 - `mount-registration-lease.schema.json`
 - `evidence-event.schema.json`
+- `lease-renewal-request.schema.json`
+- `lease-revocation-request.schema.json`
+- `authority-transition-request.schema.json`
+- `authority-transition-decision.schema.json`
 
 Fixtures:
 - `fixtures/mount-registration-request.example.json`
 - `fixtures/mount-registration-lease.example.json`
 - `fixtures/evidence-event.example.json`
+- `fixtures/lease-renewal-request.example.json`
+- `fixtures/lease-revocation-request.example.json`
+- `fixtures/authority-transition-request.example.json`
+- `fixtures/authority-transition-decision.example.json`
 
 Validation entrypoint:
 - `python3 tools/validate_workspace_fabric_fixtures.py`

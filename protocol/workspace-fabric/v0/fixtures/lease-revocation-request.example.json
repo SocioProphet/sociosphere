@@ -1,0 +1,10 @@
+{
+  "api_version": "sourceos.fabric.mount/v0.1",
+  "kind": "MountLeaseRevocationRequest",
+  "workspace_ref": "ws-research",
+  "mount_ref": "topo-main",
+  "lease_id": "lease-01JABCXYZ",
+  "requested_by": "operator.local",
+  "reason": "manual_revoke_for_authority_reset",
+  "correlation_id": "reg-topo-main-20260418-002"
+}
