@@ -15,6 +15,8 @@ In scope for v0:
 - policy and quorum gating
 - lease issuance
 - evidence emission
+- machine-readable request, lease, and evidence schemas
+- lightweight fixture validation
 
 Out of scope for v0:
 - full sync protocol implementation
@@ -80,7 +82,23 @@ This protocol slice is the first implementation-facing target for:
 - rsync bootstrap/bulk sync
 - Google Drive compatibility mirrors
 
-See companion files:
+## Companion files
+
+Narrative and acceptance:
 - `ACCEPTANCE.md`
 - `FIXTURE.md`
 - `ADAPTERS.md`
+- `VALIDATION.md`
+
+Machine-readable schemas:
+- `mount-registration-request.schema.json`
+- `mount-registration-lease.schema.json`
+- `evidence-event.schema.json`
+
+Fixtures:
+- `fixtures/mount-registration-request.example.json`
+- `fixtures/mount-registration-lease.example.json`
+- `fixtures/evidence-event.example.json`
+
+Validation entrypoint:
+- `python3 tools/validate_workspace_fabric_fixtures.py`
