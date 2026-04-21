@@ -1,0 +1,15 @@
+{
+  "api_version": "sourceos.fabric.mount/v0.1",
+  "kind": "AdapterProfile",
+  "adapter_kind": "rsync",
+  "default_roles": ["bulk_sync"],
+  "allowed_authority_modes": ["local_first", "hybrid"],
+  "default_authority_mode": "local_first",
+  "authority_requires_quorum": false,
+  "supported_capabilities": [
+    "bulk_transfer",
+    "bootstrap_restore",
+    "filesystem_migration"
+  ],
+  "notes": "Transport and bootstrap path, not an authority root."
+}
