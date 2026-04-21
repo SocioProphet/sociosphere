@@ -1,0 +1,10 @@
+{
+  "api_version": "sourceos.fabric.mount/v0.1",
+  "kind": "MountLifecycleTransition",
+  "workspace_ref": "ws-research",
+  "mount_ref": "topo-main",
+  "from_state": "ACTIVE",
+  "to_state": "DEGRADED",
+  "reason": "transition_example",
+  "correlation_id": "reg-topo-main-20260418-005"
+}

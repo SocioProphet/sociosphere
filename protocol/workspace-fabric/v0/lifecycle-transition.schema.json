@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.github.io/sociosphere/protocol/workspace-fabric/v0/lifecycle-transition.schema.json",
+  "title": "MountLifecycleTransition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "api_version",
+    "kind",
+    "workspace_ref",
+    "mount_ref",
+    "from_state",
+    "to_state",
+    "reason",
+    "correlation_id"
+  ],
+  "properties": {
+    "api_version": {"const": "sourceos.fabric.mount/v0.1"},
+    "kind": {"const": "MountLifecycleTransition"},
+    "workspace_ref": {"type": "string", "minLength": 1},
+    "mount_ref": {"type": "string", "minLength": 1},
+    "from_state": {
+      "enum": [
+        "DISCOVERED",
+        "PROPOSED",
+        "POLICY_EVALUATING",
+        "QUORUM_EVALUATING",
+        "LEASE_ISSUED",
+        "ACTIVE",
+        "DEGRADED",
+        "RECONCILE_REQUIRED",
+        "REVOKED",
+        "TOMBSTONED"
+      ]
+    },
+    "to_state": {
+      "enum": [
+        "DISCOVERED",
+        "PROPOSED",
+        "POLICY_EVALUATING",
+        "QUORUM_EVALUATING",
+        "LEASE_ISSUED",
+        "ACTIVE",
+        "DEGRADED",
+        "RECONCILE_REQUIRED",
+        "REVOKED",
+        "TOMBSTONED"
+      ]
+    },
+    "reason": {"type": "string", "minLength": 1},
+    "correlation_id": {"type": "string", "minLength": 1}
+  }
+}

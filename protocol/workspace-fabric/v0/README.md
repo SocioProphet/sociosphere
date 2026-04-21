@@ -16,8 +16,11 @@ In scope for v0:
 - lease issuance
 - lease renewal and revocation requests
 - authority-transition request and decision artifacts
+- tombstone decision artifacts
+- reconcile-required artifacts
+- lifecycle transition artifacts
 - evidence emission
-- machine-readable request, lease, evidence, and lifecycle schemas
+- machine-readable request, lease, evidence, lifecycle, and reconcile schemas
 - lightweight fixture validation
 
 Out of scope for v0:
@@ -100,6 +103,9 @@ Machine-readable schemas:
 - `lease-revocation-request.schema.json`
 - `authority-transition-request.schema.json`
 - `authority-transition-decision.schema.json`
+- `tombstone-decision.schema.json`
+- `reconcile-required.schema.json`
+- `lifecycle-transition.schema.json`
 
 Fixtures:
 - `fixtures/mount-registration-request.example.json`
@@ -109,6 +115,9 @@ Fixtures:
 - `fixtures/lease-revocation-request.example.json`
 - `fixtures/authority-transition-request.example.json`
 - `fixtures/authority-transition-decision.example.json`
+- `fixtures/tombstone-decision.example.json`
+- `fixtures/reconcile-required.example.json`
+- `fixtures/transition.example.json`
 
 Validation entrypoint:
 - `python3 tools/validate_workspace_fabric_fixtures.py`

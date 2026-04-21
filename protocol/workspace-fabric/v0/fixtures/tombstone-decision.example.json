@@ -1,0 +1,12 @@
+{
+  "api_version": "sourceos.fabric.mount/v0.1",
+  "kind": "MountTombstoneDecision",
+  "workspace_ref": "ws-research",
+  "mount_ref": "topo-main",
+  "signed_tombstone": true,
+  "local_dirty": false,
+  "decision_status": "applied",
+  "resulting_state": "tombstoned",
+  "policy_bundle_ref": "policy/default",
+  "correlation_id": "reg-topo-main-20260418-004"
+}

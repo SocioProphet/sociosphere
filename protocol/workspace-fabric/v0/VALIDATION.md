@@ -14,6 +14,9 @@ This check currently validates:
 - the lease revocation request fixture shape
 - the authority-transition request fixture shape
 - the authority-transition decision fixture shape
-- workspace, mount, authority, dataset, adapter, lease, quorum, and correlation consistency across the fixtures
+- the tombstone decision fixture shape
+- the reconcile-required fixture shape
+- the lifecycle transition fixture shape
+- workspace, mount, authority, dataset, adapter, lease, quorum, state, and correlation consistency across the fixtures
 
 It is intentionally minimal and dependency-free so the protocol slice can be checked in a bare workspace before a fuller schema-validation stack exists.
