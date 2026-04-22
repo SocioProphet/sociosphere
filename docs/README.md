@@ -9,6 +9,7 @@
 - [Agentic workbench protocol v0](../protocol/agentic-workbench/v0/README.md)
 - [UI workbench app README](../apps/ui-workbench/README.md)
 - [Overview](architecture/overview.md)
+- [Runtime, content, and orchestration placement](architecture/runtime-content-placement.md)
 - [Upstream bindings — edge capabilities](architecture/upstream-bindings-edge-capabilities.md)
 - [Validation contract](architecture/validation-contract.md)
 - [Standards: adaptation v1](architecture/standards-adaptation.md)
