@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.github.io/sociosphere/protocol/workspace-fabric/v0/adapter-profile.schema.json",
+  "title": "WorkspaceFabricAdapterProfile",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "api_version",
+    "kind",
+    "adapter_kind",
+    "default_roles",
+    "allowed_authority_modes",
+    "default_authority_mode",
+    "authority_requires_quorum",
+    "supported_capabilities"
+  ],
+  "properties": {
+    "api_version": {"const": "sourceos.fabric.mount/v0.1"},
+    "kind": {"const": "AdapterProfile"},
+    "adapter_kind": {
+      "enum": ["topolvm", "hypercore", "s3", "rsync", "drive"]
+    },
+    "default_roles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "topic_distribution",
+          "object_snapshot_replica",
+          "compatibility_mirror",
+          "bulk_sync",
+          "collaboration_ingress",
+          "cold_archive"
+        ]
+      }
+    },
+    "allowed_authority_modes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"enum": ["local_first", "provider_first", "hybrid"]}
+    },
+    "default_authority_mode": {"enum": ["local_first", "provider_first", "hybrid"]},
+    "authority_requires_quorum": {"type": "boolean"},
+    "supported_capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "notes": {"type": "string"}
+  }
+}

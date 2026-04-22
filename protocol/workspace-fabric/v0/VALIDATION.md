@@ -1,10 +1,14 @@
 # Workspace Fabric Validation
 
-Current lightweight validation path:
+Local validation path:
 
 ```bash
 python3 tools/validate_workspace_fabric_fixtures.py
 ```
+
+CI validation path:
+
+- `.github/workflows/workspace-fabric.yml`
 
 This check currently validates:
 - the mount registration request fixture shape
@@ -17,6 +21,8 @@ This check currently validates:
 - the tombstone decision fixture shape
 - the reconcile-required fixture shape
 - the lifecycle transition fixture shape
+- the adapter profile schema
+- the TopoLVM, Hypercore, S3, rsync, and Drive adapter profile fixtures
 - workspace, mount, authority, dataset, adapter, lease, quorum, state, and correlation consistency across the fixtures
 
-It is intentionally minimal and dependency-free so the protocol slice can be checked in a bare workspace before a fuller schema-validation stack exists.
+It is intentionally lightweight and dependency-free so the protocol slice can be checked in a bare workspace before a fuller schema-validation stack exists.

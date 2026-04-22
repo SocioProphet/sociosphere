@@ -1,0 +1,15 @@
+{
+  "api_version": "sourceos.fabric.mount/v0.1",
+  "kind": "AdapterProfile",
+  "adapter_kind": "drive",
+  "default_roles": ["compatibility_mirror", "collaboration_ingress"],
+  "allowed_authority_modes": ["local_first", "provider_first", "hybrid"],
+  "default_authority_mode": "local_first",
+  "authority_requires_quorum": true,
+  "supported_capabilities": [
+    "document_interchange",
+    "compatibility_mirror",
+    "collaboration_ingress"
+  ],
+  "notes": "Compatibility mirror by default; authoritative promotion requires explicit approval and quorum."
+}

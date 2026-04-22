@@ -7,6 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 WF = ROOT / "protocol" / "workspace-fabric" / "v0"
 FIX = WF / "fixtures"
+ADP = FIX / "adapters"
 
 REQUEST = FIX / "mount-registration-request.example.json"
 LEASE = FIX / "mount-registration-lease.example.json"
@@ -29,6 +30,15 @@ AUTH_DEC_SCHEMA = WF / "authority-transition-decision.schema.json"
 TOMBSTONE_SCHEMA = WF / "tombstone-decision.schema.json"
 RECONCILE_SCHEMA = WF / "reconcile-required.schema.json"
 TRANSITION_SCHEMA = WF / "lifecycle-transition.schema.json"
+ADAPTER_PROFILE_SCHEMA = WF / "adapter-profile.schema.json"
+
+ADAPTER_FIXTURES = {
+    "topolvm": ADP / "topolvm.example.json",
+    "hypercore": ADP / "hypercore.example.json",
+    "s3": ADP / "s3.example.json",
+    "rsync": ADP / "rsync.example.json",
+    "drive": ADP / "drive.example.json",
+}
 
 
 def load(path: Path) -> dict:
@@ -63,6 +73,8 @@ def main() -> int:
         TOMBSTONE_SCHEMA,
         RECONCILE_SCHEMA,
         TRANSITION_SCHEMA,
+        ADAPTER_PROFILE_SCHEMA,
+        *ADAPTER_FIXTURES.values(),
     ]
     for path in required_paths:
         if not path.exists():
@@ -89,6 +101,8 @@ def main() -> int:
     tombstone_schema = load(TOMBSTONE_SCHEMA)
     reconcile_schema = load(RECONCILE_SCHEMA)
     transition_schema = load(TRANSITION_SCHEMA)
+    adapter_profile_schema = load(ADAPTER_PROFILE_SCHEMA)
+    adapter_profiles = {name: load(path) for name, path in ADAPTER_FIXTURES.items()}
 
     require_keys(req, req_schema["required"], "request fixture")
     require_keys(lease, lease_schema["required"], "lease fixture")
@@ -100,6 +114,9 @@ def main() -> int:
     require_keys(tombstone, tombstone_schema["required"], "tombstone decision fixture")
     require_keys(reconcile, reconcile_schema["required"], "reconcile-required fixture")
     require_keys(transition, transition_schema["required"], "transition fixture")
+
+    for name, profile in adapter_profiles.items():
+        require_keys(profile, adapter_profile_schema["required"], f"adapter profile {name}")
 
     require_keys(req["workspace"], ["cell", "id", "principal"], "request.workspace")
     require_keys(req["mount"], ["id", "backend", "authority_mode"], "request.mount")
@@ -170,6 +187,27 @@ def main() -> int:
         raise SystemExit("reconcile fixture must result in RECONCILE_REQUIRED")
     if transition["to_state"] == "RECONCILE_REQUIRED" and reconcile["correlation_id"] != transition["correlation_id"]:
         raise SystemExit("transition and reconcile fixture should share correlation_id in this fixture")
+
+    profile_names = set(adapter_profiles.keys())
+    if profile_names != {"topolvm", "hypercore", "s3", "rsync", "drive"}:
+        raise SystemExit(f"unexpected adapter profile set: {sorted(profile_names)}")
+
+    for name, profile in adapter_profiles.items():
+        if profile["default_authority_mode"] not in profile["allowed_authority_modes"]:
+            raise SystemExit(f"adapter profile {name} default_authority_mode not in allowed_authority_modes")
+
+    if adapter_profiles["topolvm"]["default_authority_mode"] != "local_first":
+        raise SystemExit("topolvm must default to local_first")
+    if "topic_distribution" not in adapter_profiles["hypercore"]["default_roles"]:
+        raise SystemExit("hypercore must advertise topic_distribution")
+    if "object_snapshot_replica" not in adapter_profiles["s3"]["default_roles"]:
+        raise SystemExit("s3 must advertise object_snapshot_replica")
+    if "bulk_sync" not in adapter_profiles["rsync"]["default_roles"]:
+        raise SystemExit("rsync must advertise bulk_sync")
+    if "compatibility_mirror" not in adapter_profiles["drive"]["default_roles"]:
+        raise SystemExit("drive must advertise compatibility_mirror")
+    if adapter_profiles["drive"]["default_authority_mode"] == "provider_first":
+        raise SystemExit("drive must not default to provider_first")
 
     print("workspace-fabric fixtures: OK")
     return 0

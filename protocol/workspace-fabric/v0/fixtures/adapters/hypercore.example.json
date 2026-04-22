@@ -1,0 +1,15 @@
+{
+  "api_version": "sourceos.fabric.mount/v0.1",
+  "kind": "AdapterProfile",
+  "adapter_kind": "hypercore",
+  "default_roles": ["topic_distribution"],
+  "allowed_authority_modes": ["local_first", "hybrid"],
+  "default_authority_mode": "local_first",
+  "authority_requires_quorum": false,
+  "supported_capabilities": [
+    "append_only_replication",
+    "offline_first_topic_sync",
+    "snapshot_distribution"
+  ],
+  "notes": "Append-only distribution plane, not default mutable filesystem authority."
+}
