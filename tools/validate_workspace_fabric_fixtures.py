@@ -16,6 +16,8 @@ RENEWAL = FIX / "lease-renewal-request.example.json"
 REVOCATION = FIX / "lease-revocation-request.example.json"
 AUTH_REQ = FIX / "authority-transition-request.example.json"
 AUTH_DEC = FIX / "authority-transition-decision.example.json"
+POLICY_DEC = FIX / "policy-decision.example.json"
+QUORUM_DEC = FIX / "quorum-decision.example.json"
 TOMBSTONE = FIX / "tombstone-decision.example.json"
 RECONCILE = FIX / "reconcile-required.example.json"
 TRANSITION = FIX / "transition.example.json"
@@ -27,6 +29,8 @@ RENEWAL_SCHEMA = WF / "lease-renewal-request.schema.json"
 REVOCATION_SCHEMA = WF / "lease-revocation-request.schema.json"
 AUTH_REQ_SCHEMA = WF / "authority-transition-request.schema.json"
 AUTH_DEC_SCHEMA = WF / "authority-transition-decision.schema.json"
+POLICY_DEC_SCHEMA = WF / "policy-decision.schema.json"
+QUORUM_DEC_SCHEMA = WF / "quorum-decision.schema.json"
 TOMBSTONE_SCHEMA = WF / "tombstone-decision.schema.json"
 RECONCILE_SCHEMA = WF / "reconcile-required.schema.json"
 TRANSITION_SCHEMA = WF / "lifecycle-transition.schema.json"
@@ -60,6 +64,8 @@ def main() -> int:
         REVOCATION,
         AUTH_REQ,
         AUTH_DEC,
+        POLICY_DEC,
+        QUORUM_DEC,
         TOMBSTONE,
         RECONCILE,
         TRANSITION,
@@ -70,6 +76,8 @@ def main() -> int:
         REVOCATION_SCHEMA,
         AUTH_REQ_SCHEMA,
         AUTH_DEC_SCHEMA,
+        POLICY_DEC_SCHEMA,
+        QUORUM_DEC_SCHEMA,
         TOMBSTONE_SCHEMA,
         RECONCILE_SCHEMA,
         TRANSITION_SCHEMA,
@@ -87,6 +95,8 @@ def main() -> int:
     revocation = load(REVOCATION)
     auth_req = load(AUTH_REQ)
     auth_dec = load(AUTH_DEC)
+    policy_dec = load(POLICY_DEC)
+    quorum_dec = load(QUORUM_DEC)
     tombstone = load(TOMBSTONE)
     reconcile = load(RECONCILE)
     transition = load(TRANSITION)
@@ -98,6 +108,8 @@ def main() -> int:
     revocation_schema = load(REVOCATION_SCHEMA)
     auth_req_schema = load(AUTH_REQ_SCHEMA)
     auth_dec_schema = load(AUTH_DEC_SCHEMA)
+    policy_dec_schema = load(POLICY_DEC_SCHEMA)
+    quorum_dec_schema = load(QUORUM_DEC_SCHEMA)
     tombstone_schema = load(TOMBSTONE_SCHEMA)
     reconcile_schema = load(RECONCILE_SCHEMA)
     transition_schema = load(TRANSITION_SCHEMA)
@@ -111,6 +123,8 @@ def main() -> int:
     require_keys(revocation, revocation_schema["required"], "revocation fixture")
     require_keys(auth_req, auth_req_schema["required"], "authority request fixture")
     require_keys(auth_dec, auth_dec_schema["required"], "authority decision fixture")
+    require_keys(policy_dec, policy_dec_schema["required"], "policy decision fixture")
+    require_keys(quorum_dec, quorum_dec_schema["required"], "quorum decision fixture")
     require_keys(tombstone, tombstone_schema["required"], "tombstone decision fixture")
     require_keys(reconcile, reconcile_schema["required"], "reconcile-required fixture")
     require_keys(transition, transition_schema["required"], "transition fixture")
@@ -151,6 +165,8 @@ def main() -> int:
         ("revocation", revocation),
         ("authority request", auth_req),
         ("authority decision", auth_dec),
+        ("policy decision", policy_dec),
+        ("quorum decision", quorum_dec),
         ("tombstone decision", tombstone),
         ("reconcile-required", reconcile),
         ("transition", transition),
@@ -178,6 +194,20 @@ def main() -> int:
             raise SystemExit("approved authority decision must grant quorum")
         if auth_dec["resulting_authority"] != auth_req["requested_authority"]:
             raise SystemExit("approved authority decision resulting_authority does not match requested_authority")
+
+    if policy_dec["policy_subject"] != "authority_transition":
+        raise SystemExit("policy decision fixture should target authority_transition in this slice")
+    if policy_dec["correlation_id"] != auth_req["correlation_id"]:
+        raise SystemExit("policy decision correlation_id does not match authority request")
+    if policy_dec["decision_status"] == "approved" and not policy_dec["reason_codes"]:
+        raise SystemExit("approved policy decision must carry reason codes")
+
+    if quorum_dec["subject"] != "authority_transition":
+        raise SystemExit("quorum decision fixture should target authority_transition in this slice")
+    if quorum_dec["correlation_id"] != auth_req["correlation_id"]:
+        raise SystemExit("quorum decision correlation_id does not match authority request")
+    if quorum_dec["decision_status"] == "granted" and quorum_dec["granted_approvers"] < quorum_dec["required_approvers"]:
+        raise SystemExit("granted quorum decision must satisfy required approver count")
 
     if tombstone["signed_tombstone"] and not tombstone["local_dirty"]:
         if tombstone["decision_status"] == "applied" and tombstone["resulting_state"] != "tombstoned":
