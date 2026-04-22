@@ -1,0 +1,58 @@
+# additive SourceOS/SociOS substrate boundary supplement
+# This file does not replace governance/CANONICAL_SOURCES.yaml.
+# It records the SourceOS build/provisioning boundaries codified during the
+# FCOS + Foreman/Katello substrate tranche and can be folded into the canonical
+# source map after review.
+
+namespaces:
+  sourceos/flavors:
+    canonical_repo: SourceOS
+    note: "Artifact-truth flavor definitions for SourceOS substrate families."
+
+  sourceos/cosa:
+    canonical_repo: SourceOS
+    note: "FCOS/coreos-assembler source material and image-composition inputs."
+
+  sourceos/butane:
+    canonical_repo: SourceOS
+    note: "Butane source fragments owned by the substrate artifact-truth lane."
+
+  sourceos/installer:
+    canonical_repo: SourceOS
+    note: "Installer profile definitions for live USB, PXE, and recovery surfaces."
+
+  sourceos/channels:
+    canonical_repo: SourceOS
+    note: "Release-channel declarations for SourceOS artifact families."
+
+  sourceos/manifests:
+    canonical_repo: SourceOS
+    note: "Artifact and release manifests owned by the substrate truth lane."
+
+  sourceos/automation:
+    canonical_repo: socios
+    note: "Opt-in automation commons around SourceOS build, publish, and provisioning."
+
+  sourceos/automation/build:
+    canonical_repo: socios
+    note: "Tekton execution scaffolds for FCOS/SourceOS build and customization lanes."
+
+  sourceos/automation/provisioning:
+    canonical_repo: socios
+    note: "Foreman/Katello and Smart Proxy automation around SourceOS artifacts."
+
+  sourceos/automation/gitops:
+    canonical_repo: socios
+    note: "Argo CD placement for Kubernetes-native automation services."
+
+  contracts/shared-content-build-release:
+    canonical_repo: sourceos-spec
+    note: "Shared cross-domain object family for content/build/release/evidence/catalog semantics."
+
+  protocol/execution/local-subprocess:
+    canonical_repo: workstation-contracts
+    note: "Local runner↔adapter subprocess contract (M2 IPC NDJSON pack)."
+
+  protocol/execution/remote-canonical:
+    canonical_repo: TriTRPC
+    note: "Canonical deterministic remote/authenticated transport authority."
