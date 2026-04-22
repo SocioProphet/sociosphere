@@ -1,0 +1,41 @@
+name: workspace-fabric
+
+on:
+  pull_request:
+    paths:
+      - "protocol/workspace-fabric/v0/**"
+      - "tools/validate_workspace_fabric_fixtures.py"
+      - ".github/workflows/workspace-fabric.yml"
+  push:
+    branches: [main]
+    paths:
+      - "protocol/workspace-fabric/v0/**"
+      - "tools/validate_workspace_fabric_fixtures.py"
+      - ".github/workflows/workspace-fabric.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validate-workspace-fabric:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate workspace-fabric fixtures
+        run: |
+          python tools/validate_workspace_fabric_fixtures.py
+
+      - name: Publish validation summary
+        if: always()
+        run: |
+          echo "workspace-fabric validation completed" >> "$GITHUB_STEP_SUMMARY"
