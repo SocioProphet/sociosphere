@@ -12,6 +12,7 @@ In scope for v0:
 - authority mode declaration
 - dataset and index binding
 - adapter role declaration
+- adapter profile fixtures
 - policy and quorum gating
 - lease issuance
 - lease renewal and revocation requests
@@ -20,8 +21,9 @@ In scope for v0:
 - reconcile-required artifacts
 - lifecycle transition artifacts
 - evidence emission
-- machine-readable request, lease, evidence, lifecycle, and reconcile schemas
+- machine-readable request, lease, evidence, lifecycle, reconcile, and adapter-profile schemas
 - lightweight fixture validation
+- CI validation wiring
 
 Out of scope for v0:
 - full sync protocol implementation
@@ -106,6 +108,7 @@ Machine-readable schemas:
 - `tombstone-decision.schema.json`
 - `reconcile-required.schema.json`
 - `lifecycle-transition.schema.json`
+- `adapter-profile.schema.json`
 
 Fixtures:
 - `fixtures/mount-registration-request.example.json`
@@ -118,6 +121,12 @@ Fixtures:
 - `fixtures/tombstone-decision.example.json`
 - `fixtures/reconcile-required.example.json`
 - `fixtures/transition.example.json`
+- `fixtures/adapters/topolvm.example.json`
+- `fixtures/adapters/hypercore.example.json`
+- `fixtures/adapters/s3.example.json`
+- `fixtures/adapters/rsync.example.json`
+- `fixtures/adapters/drive.example.json`
 
-Validation entrypoint:
+Validation entrypoints:
 - `python3 tools/validate_workspace_fabric_fixtures.py`
+- `.github/workflows/workspace-fabric.yml`
