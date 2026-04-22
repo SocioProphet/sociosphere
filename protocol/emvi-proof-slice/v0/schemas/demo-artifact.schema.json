@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sociosphere.io/protocol/emvi-proof-slice/v0/schemas/demo-artifact.schema.json",
+  "title": "EMVI Proof Slice Demo Artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "kind",
+    "generatedAt",
+    "protocolRef",
+    "actionSpec",
+    "events",
+    "summary"
+  ],
+  "properties": {
+    "kind": {"type": "string", "const": "EMVIProofSliceDemoArtifact"},
+    "generatedAt": {"type": "string", "format": "date-time"},
+    "protocolRef": {"type": "string"},
+    "actionSpec": {"type": "object"},
+    "events": {
+      "type": "array",
+      "items": {"type": "object"}
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["eventCount", "targetIds", "serviceFamilies", "correlationIds"],
+      "properties": {
+        "eventCount": {"type": "integer", "minimum": 0},
+        "targetIds": {"type": "array", "items": {"type": "string"}},
+        "serviceFamilies": {"type": "array", "items": {"type": "string"}},
+        "correlationIds": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}
