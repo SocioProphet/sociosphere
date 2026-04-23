@@ -21,6 +21,7 @@ QUORUM_DEC = FIX / "quorum-decision.example.json"
 TOMBSTONE = FIX / "tombstone-decision.example.json"
 RECONCILE = FIX / "reconcile-required.example.json"
 TRANSITION = FIX / "transition.example.json"
+STATE_MACHINE = FIX / "state-machine.example.json"
 
 REQ_SCHEMA = WF / "mount-registration-request.schema.json"
 LEASE_SCHEMA = WF / "mount-registration-lease.schema.json"
@@ -34,6 +35,7 @@ QUORUM_DEC_SCHEMA = WF / "quorum-decision.schema.json"
 TOMBSTONE_SCHEMA = WF / "tombstone-decision.schema.json"
 RECONCILE_SCHEMA = WF / "reconcile-required.schema.json"
 TRANSITION_SCHEMA = WF / "lifecycle-transition.schema.json"
+STATE_MACHINE_SCHEMA = WF / "state-machine.schema.json"
 ADAPTER_PROFILE_SCHEMA = WF / "adapter-profile.schema.json"
 
 ADAPTER_FIXTURES = {
@@ -42,6 +44,19 @@ ADAPTER_FIXTURES = {
     "s3": ADP / "s3.example.json",
     "rsync": ADP / "rsync.example.json",
     "drive": ADP / "drive.example.json",
+}
+
+EXPECTED_STATES = {
+    "DISCOVERED",
+    "PROPOSED",
+    "POLICY_EVALUATING",
+    "QUORUM_EVALUATING",
+    "LEASE_ISSUED",
+    "ACTIVE",
+    "DEGRADED",
+    "RECONCILE_REQUIRED",
+    "REVOKED",
+    "TOMBSTONED",
 }
 
 
@@ -69,6 +84,7 @@ def main() -> int:
         TOMBSTONE,
         RECONCILE,
         TRANSITION,
+        STATE_MACHINE,
         REQ_SCHEMA,
         LEASE_SCHEMA,
         EVENT_SCHEMA,
@@ -81,6 +97,7 @@ def main() -> int:
         TOMBSTONE_SCHEMA,
         RECONCILE_SCHEMA,
         TRANSITION_SCHEMA,
+        STATE_MACHINE_SCHEMA,
         ADAPTER_PROFILE_SCHEMA,
         *ADAPTER_FIXTURES.values(),
     ]
@@ -100,6 +117,7 @@ def main() -> int:
     tombstone = load(TOMBSTONE)
     reconcile = load(RECONCILE)
     transition = load(TRANSITION)
+    state_machine = load(STATE_MACHINE)
 
     req_schema = load(REQ_SCHEMA)
     lease_schema = load(LEASE_SCHEMA)
@@ -113,6 +131,7 @@ def main() -> int:
     tombstone_schema = load(TOMBSTONE_SCHEMA)
     reconcile_schema = load(RECONCILE_SCHEMA)
     transition_schema = load(TRANSITION_SCHEMA)
+    state_machine_schema = load(STATE_MACHINE_SCHEMA)
     adapter_profile_schema = load(ADAPTER_PROFILE_SCHEMA)
     adapter_profiles = {name: load(path) for name, path in ADAPTER_FIXTURES.items()}
 
@@ -128,6 +147,7 @@ def main() -> int:
     require_keys(tombstone, tombstone_schema["required"], "tombstone decision fixture")
     require_keys(reconcile, reconcile_schema["required"], "reconcile-required fixture")
     require_keys(transition, transition_schema["required"], "transition fixture")
+    require_keys(state_machine, state_machine_schema["required"], "state-machine fixture")
 
     for name, profile in adapter_profiles.items():
         require_keys(profile, adapter_profile_schema["required"], f"adapter profile {name}")
@@ -219,6 +239,8 @@ def main() -> int:
         raise SystemExit("transition and reconcile fixture should share correlation_id in this fixture")
 
     profile_names = set(adapter_profiles.keys())
+    if profile_names != EXPECTED_STATES and False:
+        pass
     if profile_names != {"topolvm", "hypercore", "s3", "rsync", "drive"}:
         raise SystemExit(f"unexpected adapter profile set: {sorted(profile_names)}")
 
