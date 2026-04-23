@@ -14,6 +14,8 @@ In scope for v0:
 - adapter role declaration
 - adapter profile fixtures
 - policy and quorum gating
+- policy decision artifacts
+- quorum decision artifacts
 - lease issuance
 - lease renewal and revocation requests
 - authority-transition request and decision artifacts
@@ -21,7 +23,7 @@ In scope for v0:
 - reconcile-required artifacts
 - lifecycle transition artifacts
 - evidence emission
-- machine-readable request, lease, evidence, lifecycle, reconcile, and adapter-profile schemas
+- machine-readable request, lease, evidence, lifecycle, reconcile, adapter-profile, policy, and quorum schemas
 - lightweight fixture validation
 - CI validation wiring
 
@@ -105,6 +107,8 @@ Machine-readable schemas:
 - `lease-revocation-request.schema.json`
 - `authority-transition-request.schema.json`
 - `authority-transition-decision.schema.json`
+- `policy-decision.schema.json`
+- `quorum-decision.schema.json`
 - `tombstone-decision.schema.json`
 - `reconcile-required.schema.json`
 - `lifecycle-transition.schema.json`
@@ -118,6 +122,8 @@ Fixtures:
 - `fixtures/lease-revocation-request.example.json`
 - `fixtures/authority-transition-request.example.json`
 - `fixtures/authority-transition-decision.example.json`
+- `fixtures/policy-decision.example.json`
+- `fixtures/quorum-decision.example.json`
 - `fixtures/tombstone-decision.example.json`
 - `fixtures/reconcile-required.example.json`
 - `fixtures/transition.example.json`

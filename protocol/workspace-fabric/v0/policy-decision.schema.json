@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.github.io/sociosphere/protocol/workspace-fabric/v0/policy-decision.schema.json",
+  "title": "MountPolicyDecision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "api_version",
+    "kind",
+    "workspace_ref",
+    "mount_ref",
+    "policy_bundle_ref",
+    "decision_status",
+    "policy_subject",
+    "reason_codes",
+    "correlation_id"
+  ],
+  "properties": {
+    "api_version": {"const": "sourceos.fabric.mount/v0.1"},
+    "kind": {"const": "MountPolicyDecision"},
+    "workspace_ref": {"type": "string", "minLength": 1},
+    "mount_ref": {"type": "string", "minLength": 1},
+    "policy_bundle_ref": {"type": "string", "minLength": 1},
+    "decision_status": {"enum": ["approved", "rejected", "conditional"]},
+    "policy_subject": {
+      "enum": [
+        "mount_registration",
+        "lease_renewal",
+        "lease_revocation",
+        "authority_transition",
+        "tombstone",
+        "reconcile"
+      ]
+    },
+    "reason_codes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "correlation_id": {"type": "string", "minLength": 1}
+  }
+}
