@@ -7,6 +7,8 @@
 
 ## Architecture
 - [Agentic workbench protocol v0](../protocol/agentic-workbench/v0/README.md)
+- [EMVI operator shell architecture](architecture/emvi/README.md)
+- [EMVI proof slice protocol v0](../protocol/emvi-proof-slice/v0/README.md)
 - [UI workbench app README](../apps/ui-workbench/README.md)
 - [Overview](architecture/overview.md)
 - [Upstream bindings — edge capabilities](architecture/upstream-bindings-edge-capabilities.md)

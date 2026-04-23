@@ -78,7 +78,7 @@ merge-order:
 	python3 engines/propagation_engine.py merge-order
 
 # --- workspace runner targets ---
-.PHONY: workspace-list lock-verify lock-update inventory topology-check
+.PHONY: workspace-list lock-verify lock-update inventory topology-check proof-slice-smoke
 
 workspace-list:
 	python3 tools/runner/runner.py list
@@ -94,6 +94,9 @@ inventory:
 
 topology-check:
 	python3 tools/check_topology.py
+
+proof-slice-smoke:
+	python3 tools/runner/proof_slice_smoke.py
 
 # --- hygiene targets ---
 .PHONY: hygiene-check
