@@ -59,6 +59,16 @@ EXPECTED_STATES = {
     "TOMBSTONED",
 }
 
+REQUIRED_EDGES = {
+    ("DISCOVERED", "PROPOSED"),
+    ("PROPOSED", "POLICY_EVALUATING"),
+    ("LEASE_ISSUED", "ACTIVE"),
+    ("ACTIVE", "DEGRADED"),
+    ("ACTIVE", "RECONCILE_REQUIRED"),
+    ("ACTIVE", "TOMBSTONED"),
+    ("ACTIVE", "REVOKED"),
+}
+
 
 def load(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -239,8 +249,6 @@ def main() -> int:
         raise SystemExit("transition and reconcile fixture should share correlation_id in this fixture")
 
     profile_names = set(adapter_profiles.keys())
-    if profile_names != EXPECTED_STATES and False:
-        pass
     if profile_names != {"topolvm", "hypercore", "s3", "rsync", "drive"}:
         raise SystemExit(f"unexpected adapter profile set: {sorted(profile_names)}")
 
@@ -260,6 +268,20 @@ def main() -> int:
         raise SystemExit("drive must advertise compatibility_mirror")
     if adapter_profiles["drive"]["default_authority_mode"] == "provider_first":
         raise SystemExit("drive must not default to provider_first")
+
+    states = set(state_machine["states"])
+    if states != EXPECTED_STATES:
+        raise SystemExit(f"unexpected state-machine state set: {sorted(states)}")
+    transition_pairs = {(edge["from"], edge["to"]) for edge in state_machine["transitions"]}
+    if not REQUIRED_EDGES.issubset(transition_pairs):
+        missing = sorted(REQUIRED_EDGES - transition_pairs)
+        raise SystemExit(f"state-machine missing required edges: {missing}")
+    if (transition["from_state"], transition["to_state"]) not in transition_pairs:
+        raise SystemExit("transition fixture edge is not present in the state-machine table")
+    if not any(to_state == "RECONCILE_REQUIRED" for _, to_state in transition_pairs):
+        raise SystemExit("state-machine must contain at least one path to RECONCILE_REQUIRED")
+    if tombstone["decision_status"] == "applied" and ("ACTIVE", "TOMBSTONED") not in transition_pairs:
+        raise SystemExit("state-machine must contain ACTIVE -> TOMBSTONED for the applied tombstone fixture")
 
     print("workspace-fabric fixtures: OK")
     return 0
