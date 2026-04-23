@@ -1,0 +1,65 @@
+# registry/activity_snapshot_30d_2026-04-20.yaml
+# Public cross-org activity snapshot used for automation and integration tracking.
+# Private repositories are intentionally omitted.
+
+schema_version: 1
+captured_at: 2026-04-20
+since: 2026-03-21
+
+organizations:
+  SocioProphet:
+    - lampstand
+    - workspace-inventory
+    - prophet-platform
+    - sociosphere
+    - policy-fabric
+    - prophet-platform-fabric-mlops-ts-suite
+    - tritfabric
+    - agentplane
+    - cairnpath-mesh
+    - socioprophet-standards-storage
+    - socioprophet
+    - socioprophet-agent-standards
+    - prophet-platform-standards
+    - sourceos-a2a-mcp-bootstrap
+    - TriTRPC
+    - ontogenesis
+    - meshrush
+    - global-devsecops-intelligence
+    - memory-mesh
+    - socioprophet-standards-knowledge
+    - sherlock-search
+    - mcp-a2a-zero-trust
+    - api-spec
+    - api-contracts
+    - contractforge
+    # NOTE: additional public repos exist in the wider 30d set; this snapshot is intentionally
+    # limited to repositories observed by the connector query `pushed:>=2026-03-21`.
+
+  SociOS-Linux:
+    - source-os
+    - SourceOS
+    - socios
+    - workstation-contracts
+    - asahi-installer
+    - Zettlr
+    - agentos-spine
+    - albert
+    - agentos-starter
+    - socios-installer
+    - installer
+    - enhancements
+    - cloudshell-fog
+    - socioslinux-web
+    - imagelab
+    - hyperswarm-agent-composable-cluster-scale-up
+
+  SourceOS-Linux:
+    - sourceos-spec
+    - nocalhost
+    - openclaw
+    - MMTEB-MCP
+
+notes:
+  - "This snapshot is an integration watchlist for sociosphere manifest/lock maintenance."
+  - "If a repo vendors code from another repo, pin upstream SHAs and fail CI on drift."
