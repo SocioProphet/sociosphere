@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.github.io/sociosphere/protocol/workspace-fabric/v0/state-machine.schema.json",
+  "title": "WorkspaceFabricStateMachine",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["api_version", "kind", "states", "transitions"],
+  "properties": {
+    "api_version": {"const": "sourceos.fabric.mount/v0.1"},
+    "kind": {"const": "MountStateMachine"},
+    "states": {
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 1,
+      "items": {
+        "enum": [
+          "DISCOVERED",
+          "PROPOSED",
+          "POLICY_EVALUATING",
+          "QUORUM_EVALUATING",
+          "LEASE_ISSUED",
+          "ACTIVE",
+          "DEGRADED",
+          "RECONCILE_REQUIRED",
+          "REVOKED",
+          "TOMBSTONED"
+        ]
+      }
+    },
+    "transitions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["from", "to", "trigger"],
+        "properties": {
+          "from": {
+            "enum": [
+              "DISCOVERED",
+              "PROPOSED",
+              "POLICY_EVALUATING",
+              "QUORUM_EVALUATING",
+              "LEASE_ISSUED",
+              "ACTIVE",
+              "DEGRADED",
+              "RECONCILE_REQUIRED",
+              "REVOKED",
+              "TOMBSTONED"
+            ]
+          },
+          "to": {
+            "enum": [
+              "DISCOVERED",
+              "PROPOSED",
+              "POLICY_EVALUATING",
+              "QUORUM_EVALUATING",
+              "LEASE_ISSUED",
+              "ACTIVE",
+              "DEGRADED",
+              "RECONCILE_REQUIRED",
+              "REVOKED",
+              "TOMBSTONED"
+            ]
+          },
+          "trigger": {"type": "string", "minLength": 1},
+          "notes": {"type": "string"}
+        }
+      }
+    }
+  }
+}

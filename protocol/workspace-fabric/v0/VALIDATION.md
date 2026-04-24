@@ -23,8 +23,10 @@ This check currently validates:
 - the tombstone decision fixture shape
 - the reconcile-required fixture shape
 - the lifecycle transition fixture shape
+- the state-machine schema and canonical state-machine fixture
 - the adapter profile schema
 - the TopoLVM, Hypercore, S3, rsync, and Drive adapter profile fixtures
 - workspace, mount, authority, dataset, adapter, lease, quorum, policy, state, and correlation consistency across the fixtures
+- required transition edges and the validity of the live transition fixture against the state-machine table
 
 It is intentionally lightweight and dependency-free so the protocol slice can be checked in a bare workspace before a fuller schema-validation stack exists.

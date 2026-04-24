@@ -21,6 +21,7 @@ QUORUM_DEC = FIX / "quorum-decision.example.json"
 TOMBSTONE = FIX / "tombstone-decision.example.json"
 RECONCILE = FIX / "reconcile-required.example.json"
 TRANSITION = FIX / "transition.example.json"
+STATE_MACHINE = FIX / "state-machine.example.json"
 
 REQ_SCHEMA = WF / "mount-registration-request.schema.json"
 LEASE_SCHEMA = WF / "mount-registration-lease.schema.json"
@@ -34,6 +35,7 @@ QUORUM_DEC_SCHEMA = WF / "quorum-decision.schema.json"
 TOMBSTONE_SCHEMA = WF / "tombstone-decision.schema.json"
 RECONCILE_SCHEMA = WF / "reconcile-required.schema.json"
 TRANSITION_SCHEMA = WF / "lifecycle-transition.schema.json"
+STATE_MACHINE_SCHEMA = WF / "state-machine.schema.json"
 ADAPTER_PROFILE_SCHEMA = WF / "adapter-profile.schema.json"
 
 ADAPTER_FIXTURES = {
@@ -42,6 +44,29 @@ ADAPTER_FIXTURES = {
     "s3": ADP / "s3.example.json",
     "rsync": ADP / "rsync.example.json",
     "drive": ADP / "drive.example.json",
+}
+
+EXPECTED_STATES = {
+    "DISCOVERED",
+    "PROPOSED",
+    "POLICY_EVALUATING",
+    "QUORUM_EVALUATING",
+    "LEASE_ISSUED",
+    "ACTIVE",
+    "DEGRADED",
+    "RECONCILE_REQUIRED",
+    "REVOKED",
+    "TOMBSTONED",
+}
+
+REQUIRED_EDGES = {
+    ("DISCOVERED", "PROPOSED"),
+    ("PROPOSED", "POLICY_EVALUATING"),
+    ("LEASE_ISSUED", "ACTIVE"),
+    ("ACTIVE", "DEGRADED"),
+    ("ACTIVE", "RECONCILE_REQUIRED"),
+    ("ACTIVE", "TOMBSTONED"),
+    ("ACTIVE", "REVOKED"),
 }
 
 
@@ -69,6 +94,7 @@ def main() -> int:
         TOMBSTONE,
         RECONCILE,
         TRANSITION,
+        STATE_MACHINE,
         REQ_SCHEMA,
         LEASE_SCHEMA,
         EVENT_SCHEMA,
@@ -81,6 +107,7 @@ def main() -> int:
         TOMBSTONE_SCHEMA,
         RECONCILE_SCHEMA,
         TRANSITION_SCHEMA,
+        STATE_MACHINE_SCHEMA,
         ADAPTER_PROFILE_SCHEMA,
         *ADAPTER_FIXTURES.values(),
     ]
@@ -100,6 +127,7 @@ def main() -> int:
     tombstone = load(TOMBSTONE)
     reconcile = load(RECONCILE)
     transition = load(TRANSITION)
+    state_machine = load(STATE_MACHINE)
 
     req_schema = load(REQ_SCHEMA)
     lease_schema = load(LEASE_SCHEMA)
@@ -113,6 +141,7 @@ def main() -> int:
     tombstone_schema = load(TOMBSTONE_SCHEMA)
     reconcile_schema = load(RECONCILE_SCHEMA)
     transition_schema = load(TRANSITION_SCHEMA)
+    state_machine_schema = load(STATE_MACHINE_SCHEMA)
     adapter_profile_schema = load(ADAPTER_PROFILE_SCHEMA)
     adapter_profiles = {name: load(path) for name, path in ADAPTER_FIXTURES.items()}
 
@@ -128,6 +157,7 @@ def main() -> int:
     require_keys(tombstone, tombstone_schema["required"], "tombstone decision fixture")
     require_keys(reconcile, reconcile_schema["required"], "reconcile-required fixture")
     require_keys(transition, transition_schema["required"], "transition fixture")
+    require_keys(state_machine, state_machine_schema["required"], "state-machine fixture")
 
     for name, profile in adapter_profiles.items():
         require_keys(profile, adapter_profile_schema["required"], f"adapter profile {name}")
@@ -238,6 +268,20 @@ def main() -> int:
         raise SystemExit("drive must advertise compatibility_mirror")
     if adapter_profiles["drive"]["default_authority_mode"] == "provider_first":
         raise SystemExit("drive must not default to provider_first")
+
+    states = set(state_machine["states"])
+    if states != EXPECTED_STATES:
+        raise SystemExit(f"unexpected state-machine state set: {sorted(states)}")
+    transition_pairs = {(edge["from"], edge["to"]) for edge in state_machine["transitions"]}
+    if not REQUIRED_EDGES.issubset(transition_pairs):
+        missing = sorted(REQUIRED_EDGES - transition_pairs)
+        raise SystemExit(f"state-machine missing required edges: {missing}")
+    if (transition["from_state"], transition["to_state"]) not in transition_pairs:
+        raise SystemExit("transition fixture edge is not present in the state-machine table")
+    if not any(to_state == "RECONCILE_REQUIRED" for _, to_state in transition_pairs):
+        raise SystemExit("state-machine must contain at least one path to RECONCILE_REQUIRED")
+    if tombstone["decision_status"] == "applied" and ("ACTIVE", "TOMBSTONED") not in transition_pairs:
+        raise SystemExit("state-machine must contain ACTIVE -> TOMBSTONED for the applied tombstone fixture")
 
     print("workspace-fabric fixtures: OK")
     return 0
