@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -19,11 +20,15 @@ REQUIRED_TOP_LEVEL = {
     "required_invariants",
     "software_review",
 }
-REQUIRED_SOURCE_LOCK_KEYS = {"ref", "github_blob_sha", "sha256", "captured_at", "required_terms"}
+REQUIRED_SOURCE_LOCK_KEYS = {"ref", "github_blob_sha", "sha256", "captured_at", "required_terms", "local_snapshot"}
 
 
 def fail(message: str) -> None:
     raise SystemExit(f"ERR: {message}")
+
+
+def sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -52,15 +57,27 @@ def validate_source_lock(surface: dict[str, Any], rel: str) -> None:
     blob_sha = str(source_lock["github_blob_sha"])
     if len(blob_sha) != 40 or not all(ch in "0123456789abcdef" for ch in blob_sha.lower()):
         fail(f"{rel} source_lock.github_blob_sha must be a 40-character hex SHA")
-    sha256 = str(source_lock["sha256"])
-    if len(sha256) != 64 or not all(ch in "0123456789abcdef" for ch in sha256.lower()):
+    expected_sha256 = str(source_lock["sha256"])
+    if len(expected_sha256) != 64 or not all(ch in "0123456789abcdef" for ch in expected_sha256.lower()):
         fail(f"{rel} source_lock.sha256 must be a 64-character hex SHA-256")
+
+    snapshot_rel = str(source_lock["local_snapshot"])
+    snapshot_path = ROOT / snapshot_rel
+    if not snapshot_path.exists():
+        fail(f"{rel} source_lock.local_snapshot missing file: {snapshot_rel}")
+    actual_sha256 = sha256_file(snapshot_path)
+    if actual_sha256 != expected_sha256:
+        fail(f"{rel} source_lock sha256 mismatch for {snapshot_rel}: expected {expected_sha256}, got {actual_sha256}")
+    snapshot_text = snapshot_path.read_text(encoding="utf-8")
+
     required_terms = source_lock["required_terms"]
     if not isinstance(required_terms, list) or not required_terms:
         fail(f"{rel} source_lock.required_terms must be a non-empty list")
     for term in ("kind: ApplicationSet", "search-orchestrator-academy-bridge", "infra/k8s/search-orchestrator/overlays/policy", "bundle: fogstack.knowledge"):
         if term not in required_terms:
             fail(f"{rel} source_lock.required_terms missing {term!r}")
+        if term not in snapshot_text:
+            fail(f"{rel} source_lock local snapshot missing required term {term!r}")
 
 
 def validate_application(app: dict[str, Any], rel: str) -> None:
@@ -122,7 +139,7 @@ def validate_record(path: Path) -> None:
 
     invariants = require_non_empty_list(record, "required_invariants", rel)
     invariant_ids = {item.get("id") for item in invariants if isinstance(item, dict)}
-    for required in {"appset-has-academy-bridge", "academy-bridge-bound-to-fogstack-knowledge", "deployment-topology-owned-by-sociosphere", "platform-appset-source-lock"}:
+    for required in {"appset-has-academy-bridge", "academy-bridge-bound-to-fogstack-knowledge", "deployment-topology-owned-by-sociosphere", "platform-appset-source-lock", "platform-appset-local-snapshot-lock"}:
         if required not in invariant_ids:
             fail(f"{rel} missing required invariant {required}")
 

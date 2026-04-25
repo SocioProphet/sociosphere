@@ -2,7 +2,7 @@
 # Purpose: typed Sociosphere deployment-topology record for Prophet Platform ArgoCD ApplicationSet bundle bindings.
 
 schema_version: "sociosphere.deployment-topology/v0.1"
-recorded_at: "2026-04-25T22:28:00Z"
+recorded_at: "2026-04-25T22:40:00Z"
 controller_repo: "SocioProphet/sociosphere"
 subject_repo: "SocioProphet/prophet-platform"
 status: "active"
@@ -20,6 +20,9 @@ source_prs:
   - repo: "SocioProphet/sociosphere"
     pr: 165
     merge_commit: "d18318fb66778c46d567f3361c89544725911e88"
+  - repo: "SocioProphet/sociosphere"
+    pr: 166
+    merge_commit: "bd6388cddf4be9fd0fc0b827d282498937579dc4"
 
 deployment_surfaces:
   - id: "prophet-platform.argocd.appset.socioprophet"
@@ -33,7 +36,8 @@ deployment_surfaces:
       ref: "main"
       github_blob_sha: "34fa8e7629cd086b6c5a1a6b77f6354fe27d6226"
       sha256: "caba8b802d4af00c5f6cedf24cc4c81034d43ce1bca84c0e7627415ab64f987e"
-      captured_at: "2026-04-25T22:28:00Z"
+      captured_at: "2026-04-25T22:40:00Z"
+      local_snapshot: "registry/deployment-topology/source-locks/prophet-platform/socioprophet-appset.yaml"
       required_terms:
         - "kind: ApplicationSet"
         - "search-orchestrator-academy-bridge"
@@ -91,15 +95,20 @@ required_invariants:
     statement: "Sociosphere records the observed platform ApplicationSet blob SHA and SHA-256 digest for drift detection."
     enforced_by:
       - "SocioProphet/sociosphere:tools/validate_deployment_topology.py"
+  - id: "platform-appset-local-snapshot-lock"
+    statement: "Sociosphere vendors a local snapshot of the observed platform ApplicationSet and recomputes SHA-256 during validation."
+    enforced_by:
+      - "SocioProphet/sociosphere:tools/validate_deployment_topology.py"
 
 software_review:
   correctness:
     - "Records the exact AppSet path and application element created by prophet-platform PR #181."
     - "Binds search-orchestrator-academy-bridge to fogstack.knowledge as typed Sociosphere topology data rather than freeform platform-local context only."
     - "Pins the observed platform AppSet blob SHA and SHA-256 digest for source-lock drift detection."
+    - "References a vendored local snapshot so Sociosphere CI can recompute the AppSet SHA-256 without reaching across repositories."
   weaknesses:
     - "This still does not prove live ArgoCD reconciliation in a cluster."
-    - "This record pins the observed source artifact but does not yet fetch/parse prophet-platform during Sociosphere CI."
+    - "The vendored snapshot can itself drift from the upstream platform file unless refreshed by process or a connector-backed check."
   next_hardening:
-    - "Add connector-backed or vendored artifact verification that recomputes this digest from the platform AppSet file."
+    - "Add connector-backed verification that refreshes the vendored snapshot from prophet-platform."
     - "Add live-cluster reconciliation evidence once an ArgoCD environment is available."
