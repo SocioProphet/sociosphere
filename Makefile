@@ -32,7 +32,7 @@ validate-standards:
 	@ok=1; if [ -f tools/validate_adaptation_program.py ]; then python3 tools/validate_adaptation_program.py standards/examples/adaptation/program.example.v1.json || ok=0; else echo "ERR: tools/validate_adaptation_program.py missing"; ok=0; fi; if [ -f standards/qes/tools/validate_qes_contracts.py ]; then python3 standards/qes/tools/validate_qes_contracts.py || ok=0; else echo "WARN: standards/qes/tools/validate_qes_contracts.py missing (skipping)"; fi; test $$ok -eq 1
 
 # --- registry targets ---
-.PHONY: registry-validate ontology-validate dep-cycles mirror-drift-check
+.PHONY: registry-validate ontology-validate dep-cycles mirror-drift-check build-intelligence-validate
 
 mirror-drift-check:
 	python3 engines/mirror_drift_engine.py check
@@ -45,6 +45,9 @@ registry-validate:
 	@echo "==> Validating mirror drift status..."
 	python3 engines/mirror_drift_engine.py check
 	@echo "OK: registry-validate passed"
+
+build-intelligence-validate:
+	python3 tools/validate_build_intelligence.py
 
 ontology-validate: registry-validate
 
@@ -110,5 +113,5 @@ hygiene-check:
 # --- full workspace check (run in CI) ---
 .PHONY: workspace-check
 
-workspace-check: validate registry-validate compliance-check lock-verify topology-check hygiene-check
+workspace-check: validate registry-validate build-intelligence-validate compliance-check lock-verify topology-check hygiene-check
 	@echo "OK: workspace-check passed"
