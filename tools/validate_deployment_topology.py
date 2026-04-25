@@ -19,6 +19,7 @@ REQUIRED_TOP_LEVEL = {
     "required_invariants",
     "software_review",
 }
+REQUIRED_SOURCE_LOCK_KEYS = {"ref", "github_blob_sha", "sha256", "captured_at", "required_terms"}
 
 
 def fail(message: str) -> None:
@@ -37,6 +38,29 @@ def require_non_empty_list(record: dict[str, Any], key: str, rel: str) -> list[A
     if not isinstance(value, list) or not value:
         fail(f"{rel} requires non-empty list at {key}")
     return value
+
+
+def validate_source_lock(surface: dict[str, Any], rel: str) -> None:
+    source_lock = surface.get("source_lock")
+    if not isinstance(source_lock, dict):
+        fail(f"{rel} deployment surface {surface.get('id')} requires source_lock")
+    missing = sorted(REQUIRED_SOURCE_LOCK_KEYS - set(source_lock))
+    if missing:
+        fail(f"{rel} source_lock missing required keys: {', '.join(missing)}")
+    if source_lock["ref"] != "main":
+        fail(f"{rel} source_lock.ref must be main")
+    blob_sha = str(source_lock["github_blob_sha"])
+    if len(blob_sha) != 40 or not all(ch in "0123456789abcdef" for ch in blob_sha.lower()):
+        fail(f"{rel} source_lock.github_blob_sha must be a 40-character hex SHA")
+    sha256 = str(source_lock["sha256"])
+    if len(sha256) != 64 or not all(ch in "0123456789abcdef" for ch in sha256.lower()):
+        fail(f"{rel} source_lock.sha256 must be a 64-character hex SHA-256")
+    required_terms = source_lock["required_terms"]
+    if not isinstance(required_terms, list) or not required_terms:
+        fail(f"{rel} source_lock.required_terms must be a non-empty list")
+    for term in ("kind: ApplicationSet", "search-orchestrator-academy-bridge", "infra/k8s/search-orchestrator/overlays/policy", "bundle: fogstack.knowledge"):
+        if term not in required_terms:
+            fail(f"{rel} source_lock.required_terms missing {term!r}")
 
 
 def validate_application(app: dict[str, Any], rel: str) -> None:
@@ -61,6 +85,7 @@ def validate_surface(surface: dict[str, Any], rel: str) -> None:
         fail(f"{rel} unsupported deployment surface kind={surface['kind']!r}")
     if surface["repo"] != "SocioProphet/prophet-platform":
         fail(f"{rel} currently supports prophet-platform surfaces only")
+    validate_source_lock(surface, rel)
     apps = surface["applications"]
     if not isinstance(apps, list) or not apps:
         fail(f"{rel} deployment surface requires non-empty applications list")
@@ -97,7 +122,7 @@ def validate_record(path: Path) -> None:
 
     invariants = require_non_empty_list(record, "required_invariants", rel)
     invariant_ids = {item.get("id") for item in invariants if isinstance(item, dict)}
-    for required in {"appset-has-academy-bridge", "academy-bridge-bound-to-fogstack-knowledge", "deployment-topology-owned-by-sociosphere"}:
+    for required in {"appset-has-academy-bridge", "academy-bridge-bound-to-fogstack-knowledge", "deployment-topology-owned-by-sociosphere", "platform-appset-source-lock"}:
         if required not in invariant_ids:
             fail(f"{rel} missing required invariant {required}")
 
