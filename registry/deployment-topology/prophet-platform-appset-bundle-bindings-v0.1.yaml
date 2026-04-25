@@ -1,0 +1,87 @@
+# registry/deployment-topology/prophet-platform-appset-bundle-bindings-v0.1.yaml
+# Purpose: typed Sociosphere deployment-topology record for Prophet Platform ArgoCD ApplicationSet bundle bindings.
+
+schema_version: "sociosphere.deployment-topology/v0.1"
+recorded_at: "2026-04-25T22:20:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+source_prs:
+  - repo: "SocioProphet/prophet-platform"
+    pr: 181
+    merge_commit: "7402547d9a3e684ac051945177763060b1f5aff4"
+  - repo: "SocioProphet/sociosphere"
+    pr: 163
+    merge_commit: "da14a5b712b353e6956ce059e7e581c518f25bec"
+  - repo: "SocioProphet/sociosphere"
+    pr: 164
+    merge_commit: "a4ddd094c5b1466414c85ac2b496d3ac93f7b67e"
+
+deployment_surfaces:
+  - id: "prophet-platform.argocd.appset.socioprophet"
+    kind: "ArgoCDApplicationSet"
+    repo: "SocioProphet/prophet-platform"
+    path: "infra/k8s/argo-cd/appsets/socioprophet-appset.yaml"
+    namespace: "argocd"
+    destination_namespace: "socioprophet"
+    target_revision: "main"
+    sync_policy:
+      automated: true
+      prune: true
+      self_heal: true
+      create_namespace: true
+    applications:
+      - name: "socioprophet-api"
+        path: "apps/api/kustomize/overlays/dev"
+        bundle: null
+        role: "platform-api"
+      - name: "socioprophet-gateway"
+        path: "apps/gateway/kustomize/overlays/dev"
+        bundle: null
+        role: "platform-gateway"
+      - name: "socioprophet-web"
+        path: "apps/socioprophet-web/kustomize/overlays/dev"
+        bundle: null
+        role: "platform-web"
+      - name: "search-orchestrator-academy-bridge"
+        path: "infra/k8s/search-orchestrator/overlays/policy"
+        bundle: "fogstack.knowledge"
+        role: "academy-search-bridge"
+        required_validation:
+          - "tools/validate_search_orchestrator_academy_deploy.py"
+        release_artifacts:
+          - "releases/manifests/search-orchestrator.academy-bridge.manifest.json"
+          - "releases/evidence/search-orchestrator.academy-bridge.validation.record.json"
+        bundle_artifacts:
+          - "bundles/fogstack.knowledge-v0.1.yaml"
+          - "releases/fogstack.knowledge-v0.1.release.json"
+          - "releases/manifests/fogstack.knowledge-v0.1.manifest.json"
+          - "conformance/rulepacks/fogstack.knowledge-v0.1.yaml"
+
+required_invariants:
+  - id: "appset-has-academy-bridge"
+    statement: "The socioprophet ApplicationSet must include search-orchestrator-academy-bridge."
+    enforced_by:
+      - "SocioProphet/prophet-platform:tools/validate_search_orchestrator_academy_deploy.py"
+      - "SocioProphet/sociosphere:tools/validate_deployment_topology.py"
+  - id: "academy-bridge-bound-to-fogstack-knowledge"
+    statement: "The search-orchestrator-academy-bridge ApplicationSet element must carry bundle=fogstack.knowledge."
+    enforced_by:
+      - "SocioProphet/prophet-platform:tools/validate_search_orchestrator_academy_deploy.py"
+      - "SocioProphet/sociosphere:tools/validate_deployment_topology.py"
+  - id: "deployment-topology-owned-by-sociosphere"
+    statement: "Sociosphere records deployment topology and build intelligence for platform AppSet bundle bindings."
+    enforced_by:
+      - "SocioProphet/sociosphere:tools/validate_deployment_topology.py"
+
+software_review:
+  correctness:
+    - "Records the exact AppSet path and application element created by prophet-platform PR #181."
+    - "Binds search-orchestrator-academy-bridge to fogstack.knowledge as typed Sociosphere topology data rather than freeform platform-local context only."
+  weaknesses:
+    - "This still does not prove live ArgoCD reconciliation in a cluster."
+    - "This record mirrors platform facts but does not fetch/parse the platform AppSet directly yet."
+  next_hardening:
+    - "Add cross-repo or vendored verification that the platform AppSet file still matches this topology record."
+    - "Add live-cluster reconciliation evidence once an ArgoCD environment is available."
