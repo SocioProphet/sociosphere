@@ -1,0 +1,128 @@
+# status/build-intelligence/prophet-platform-2026-04-25.yaml
+# Purpose: Sociosphere awareness record for Prophet Platform build/test/deploy work.
+# This is an additive status delta, not a replacement for status/ecosystem-status.yaml.
+
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-25T21:50:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+scope:
+  program: "Prophet Platform / Alexandrian Academy / Ops Fabric Integration"
+  lane: "deployment-topology-and-operations-intelligence"
+  intent: "Register platform build, test, release, and deployment topology changes in Sociosphere so workspace/repository intelligence remains aware of current implementation state."
+
+merged_tranches:
+  - pr: 178
+    title: "Add Prophet operations intelligence evidence slice"
+    merge_commit: "0ffe9cedf66c1afc133bc87f85d5568c6c926c80"
+    gates_closed:
+      - operations evidence schemas
+      - vendor-neutral normalizer
+      - operations evidence tests
+      - operator documentation
+    artifacts:
+      - "schemas/operations/prophet-operational-signal-v0.1.schema.json"
+      - "schemas/operations/prophet-runtime-topology-evidence-v0.1.schema.json"
+      - "schemas/operations/prophet-service-health-assessment-v0.1.schema.json"
+      - "schemas/operations/prophet-optimization-recommendation-v0.1.schema.json"
+      - "tools/normalize_prophet_operations_evidence.py"
+      - "tools/tests/test_normalize_prophet_operations_evidence.py"
+      - "docs/PROPHET_OPERATIONS_INTELLIGENCE.md"
+  - pr: 179
+    title: "Link operations recommendations to Policy Fabric decisions"
+    merge_commit: "7c2b5c369d44cfb7eea1eb06e52bf0cd26f1d106"
+    gates_closed:
+      - deterministic Policy Fabric decision refs
+      - evidence links from operations bundle to policy decision target
+      - checked-in example bundle
+      - tests enforcing decision refs and evidence links
+    artifacts:
+      - "tools/normalize_prophet_operations_evidence.py"
+      - "tools/tests/test_normalize_prophet_operations_evidence.py"
+      - "examples/operations/prophet_operations_evidence_bundle_with_policy_decision_links_0001.json"
+      - "docs/PROPHET_OPERATIONS_INTELLIGENCE.md"
+  - pr: 180
+    title: "Enforce operations policy decisions before action execution"
+    merge_commit: "ef4457814f81e55c0167ff766b5bd41ffa7d1777"
+    gates_closed:
+      - local action-blocking validator
+      - manual-review and allow decision examples
+      - tool tests wired into make validate
+      - pyyaml dependency fixed for existing FogStack tool tests
+      - post-merge main verification
+    artifacts:
+      - "tools/validate_prophet_operations_policy_decisions.py"
+      - "tools/tests/test_validate_prophet_operations_policy_decisions.py"
+      - "examples/operations/prophet_operations_action_decision_manual_review_0001.json"
+      - "examples/operations/prophet_operations_action_decision_allow_0001.json"
+      - "Makefile"
+      - "docs/PROPHET_OPERATIONS_INTELLIGENCE.md"
+
+active_tranches:
+  - pr: 181
+    title: "Wire academy bridge into ApplicationSet under fogstack.knowledge"
+    branch: "deploy/appset-academy-fogstack-knowledge-v0-1"
+    state: "open"
+    subject: "ArgoCD ApplicationSet deployment topology"
+    gates_completed:
+      - verified fogstack.knowledge bundle/release/manifest/rulepack/status artifacts exist
+      - verified ApplicationSet exists
+      - identified gap: ApplicationSet deployed api/gateway/web only
+      - reused existing Search Orchestrator Academy Bridge policy overlay
+      - added ApplicationSet entry for search-orchestrator-academy-bridge
+      - added bundle metadata: fogstack.knowledge
+      - extended deployment validator to require ApplicationSet + academy bridge + fogstack.knowledge
+    files_changed:
+      - "infra/k8s/argo-cd/appsets/socioprophet-appset.yaml"
+      - "tools/validate_search_orchestrator_academy_deploy.py"
+    pending_gates:
+      - CI/workflow pass
+      - merge
+      - post-merge main verification
+      - Sociosphere follow-up registration of final merge commit
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "updated"
+    notes: "Prophet Platform make validate now runs tools/tests through test-tools."
+    tool_test_dependencies:
+      - pytest
+      - pyyaml
+  relevant_workflows:
+    - "validate"
+    - "ci"
+    - "platform-contracts-check"
+    - "platform-wave1-stubs"
+    - "premerge-audit"
+    - "fogstack-validation"
+    - "fogstack-manifest-publication"
+    - "fogstack-manifest-promotion"
+
+software_review:
+  correctness:
+    - "Operations recommendations are now locally blocked unless a matching ProphetOperationsActionDecision with decision.outcome=allow exists."
+    - "ApplicationSet PR #181 reuses an existing validated Search Orchestrator overlay instead of creating a duplicate deployment path."
+  weaknesses:
+    - "prophet-platform structurally validates Policy Fabric decisions but does not yet import or pin the policy-fabric JSON Schema; cross-repo contract drift remains possible."
+    - "PR #181 proves repo-native deployment topology, not live ArgoCD reconciliation in a cluster."
+    - "Sociosphere ecosystem-status.yaml remains stale as of 2026-04-06; this file is a current delta, not a regenerated full snapshot."
+  next_hardening:
+    - "Add cross-repo Policy Fabric schema lock or vendored contract reference."
+    - "Finalize PR #181 and register final merge commit here."
+    - "Add Sociosphere validation for build-intelligence delta records."
+    - "Evaluate whether ApplicationSet should include explicit generators for bundle metadata beyond freeform element keys."
+
+running_backlog:
+  - "Finalize prophet-platform PR #181 CI/merge/main verification."
+  - "Register PR #181 final merge commit in Sociosphere."
+  - "Add Sociosphere validator for status/build-intelligence/*.yaml."
+  - "Create cross-repo contract lock for Policy Fabric operations action decision schema."
+  - "Verify Lampstand lifecycle integration against the handoff dossier."
+  - "Verify Policy Fabric live endpoint/service completeness."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Decide whether deployment topology belongs in AppSet only or also Sociosphere workspace manifest."
+  - "Reconcile ecosystem-status.yaml stale snapshot with current repo/PR state."
+  - "Continue SourceOS/nlboot/control-plane specs after deployment-topology closure."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
