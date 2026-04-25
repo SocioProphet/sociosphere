@@ -3,7 +3,7 @@
 # This is an additive status delta, not a replacement for status/ecosystem-status.yaml.
 
 schema_version: "sociosphere.build-intelligence/v0.1"
-recorded_at: "2026-04-25T23:25:00Z"
+recorded_at: "2026-04-25T23:48:00Z"
 controller_repo: "SocioProphet/sociosphere"
 subject_repo: "SocioProphet/prophet-platform"
 status: "active"
@@ -96,35 +96,50 @@ merged_tranches:
       - "tools/tests/test_validate_prophet_operations_policy_decisions.py"
       - "Makefile"
       - "docs/PROPHET_OPERATIONS_INTELLIGENCE.md"
+  - pr: 183
+    title: "Validate Lampstand lifecycle publication path"
+    merge_commit: "8e1f479d14e5f5608e5cb96874dfc3d00a189402"
+    gates_closed:
+      - inspected Lampstand catalog and carrier ingest implementation
+      - verified ingest writes payload/event/receipt/catalog artifacts
+      - verified ingest emits publication_request
+      - verified zone-router publication planning exists
+      - added repo-native lifecycle validator
+      - wired validate-lampstand-lifecycle into make validate
+      - CI exposed an over-strict validator assertion
+      - corrected explicit topic publication assertions
+      - CI/workflow pass
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "tools/validate_lampstand_lifecycle.py"
+      - "Makefile"
 
 active_tranches:
-  - pr: 182
-    title: "Lock operations decisions to Policy Fabric schema"
-    branch: "ops/policy-fabric-decision-schema-lock-v0-1"
+  - pr: 183
+    title: "Validate Lampstand lifecycle publication path"
+    branch: "lampstand/lifecycle-validation-v0-1"
     state: "merged"
-    subject: "Operations decision contract drift hardening"
+    subject: "Lampstand carrier ingest/catalog/publication lifecycle validation"
     gates_completed:
-      - fetched policy-fabric schema from main
-      - vendored schema locally
-      - enforced jsonschema validation
-      - added explicit invalid-decision schema test
-      - updated Makefile dependency install
-      - updated docs
+      - inspected Lampstand catalog implementation
+      - inspected Lampstand ingest implementation
+      - inspected publication request and zone-router planning path
+      - added local lifecycle smoke
+      - wired smoke into make validate
+      - corrected explicit topic semantics after CI failure
       - CI/workflow pass
-      - merge commit d4c39f1ea43700eb748d405f665746da021dc15a
+      - merge commit 8e1f479d14e5f5608e5cb96874dfc3d00a189402
       - post-merge main verification
     files_changed:
-      - "schemas/external/policy-fabric/prophet_operations_action_decision_v1.schema.json"
-      - "tools/validate_prophet_operations_policy_decisions.py"
-      - "tools/tests/test_validate_prophet_operations_policy_decisions.py"
+      - "tools/validate_lampstand_lifecycle.py"
       - "Makefile"
-      - "docs/PROPHET_OPERATIONS_INTELLIGENCE.md"
     pending_gates: []
 
 test_and_workflow_surfaces:
   make_validate:
     status: "updated"
-    notes: "Prophet Platform make validate runs tools/tests through test-tools, validates search-orchestrator academy deployment artifacts, and now installs jsonschema for vendored Policy Fabric decision schema validation."
+    notes: "Prophet Platform make validate runs tools/tests through test-tools, validates search-orchestrator academy deployment artifacts, validates Lampstand lifecycle consistency, and installs jsonschema for vendored Policy Fabric decision schema validation."
     tool_test_dependencies:
       - pytest
       - pyyaml
@@ -143,27 +158,31 @@ software_review:
   correctness:
     - "Operations recommendations are locally blocked unless a matching ProphetOperationsActionDecision with decision.outcome=allow exists."
     - "ApplicationSet deploys search-orchestrator-academy-bridge from infra/k8s/search-orchestrator/overlays/policy with bundle metadata set to fogstack.knowledge."
-    - "Platform decision validation now loads a vendored Policy Fabric JSON Schema and rejects invalid decision artifacts before semantic execution-gate checks."
+    - "Platform decision validation loads a vendored Policy Fabric JSON Schema and rejects invalid decision artifacts before semantic execution-gate checks."
+    - "Lampstand lifecycle validation now proves local carrier ingest, artifact creation, catalog linkage, publication request generation, and zone-router planning."
   weaknesses:
     - "The vendored Policy Fabric schema can drift from upstream policy-fabric unless refreshed by process or a connector-backed check."
     - "AppSet topology proves repo-native deployment topology, not live ArgoCD reconciliation in a cluster."
+    - "Lampstand lifecycle validation proves local repo-native consistency, not remote service deployment or live external publication mutation."
     - "Sociosphere ecosystem-status.yaml remains stale as of 2026-04-06; this file is a current delta, not a regenerated full snapshot."
     - "ApplicationSet bundle metadata is currently a freeform list element field, not a typed deployment contract in prophet-platform itself."
   next_hardening:
+    - "Verify Policy Fabric live endpoint/service completeness."
+    - "Verify Alexandrian Academy repo state against platform deployment topology."
     - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
     - "Add connector-backed verification that refreshes Sociosphere's vendored AppSet snapshot from prophet-platform."
     - "Add live-cluster reconciliation evidence once an ArgoCD environment is available."
     - "Regenerate or supersede ecosystem-status.yaml with current repo/PR state."
 
 running_backlog:
-  - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
-  - "Add connector-backed verification that refreshes Sociosphere's vendored AppSet snapshot from prophet-platform."
-  - "Verify Lampstand lifecycle integration against the handoff dossier."
   - "Verify Policy Fabric live endpoint/service completeness."
   - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
+  - "Add connector-backed verification that refreshes Sociosphere's vendored AppSet snapshot from prophet-platform."
   - "Decide whether deployment topology belongs in AppSet only or also Sociosphere workspace manifest."
   - "Reconcile ecosystem-status.yaml stale snapshot with current repo/PR state."
   - "Continue SourceOS/nlboot/control-plane specs after deployment-topology closure."
   - "Add live-cluster reconciliation evidence once an ArgoCD environment is available."
+  - "Harden Lampstand lifecycle beyond local smoke with remote service/publication lifecycle evidence."
   - "Maintain actor/generator/software-review format and gate-based progress reporting."
   - "Keep Sociosphere informed for every future platform build/test/deploy tranche."
