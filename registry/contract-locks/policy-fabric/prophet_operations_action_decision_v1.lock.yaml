@@ -1,0 +1,57 @@
+schema_version: "sociosphere.contract-lock/v0.1"
+recorded_at: "2026-04-25T23:35:00Z"
+controller_repo: "SocioProphet/sociosphere"
+upstream_repo: "SocioProphet/policy-fabric"
+consumer_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+contract:
+  name: "ProphetOperationsActionDecision"
+  version: "v1"
+  upstream_path: "contracts/prophet_operations_action_decision_v1.schema.json"
+  consumer_path: "schemas/external/policy-fabric/prophet_operations_action_decision_v1.schema.json"
+  local_snapshot: "registry/contract-locks/policy-fabric/prophet_operations_action_decision_v1.schema.json"
+  github_blob_sha: "1e45630d1b05044833de9a67679ed74a4014ae44"
+  sha256: "8f6d46e018f69d3bd277bcc554745b6b6bbc46bd9f9f24f20d292c5980a73730"
+  required_terms:
+    - "ProphetOperationsActionDecision"
+    - "schema_version"
+    - "recommendation_ref"
+    - "policy_refs"
+    - "manual_review"
+    - "allow"
+    - "deny"
+
+source_prs:
+  - repo: "SocioProphet/policy-fabric"
+    pr: 25
+    purpose: "introduced ProphetOperationsActionDecision schema"
+  - repo: "SocioProphet/prophet-platform"
+    pr: 182
+    merge_commit: "d4c39f1ea43700eb748d405f665746da021dc15a"
+    purpose: "vendored and enforced Policy Fabric schema in platform validator"
+  - repo: "SocioProphet/sociosphere"
+    pr: 168
+    merge_commit: "913c54fb62911cb74f2ed8463dc7ebd347e45121"
+    purpose: "registered platform schema-lock tranche in build intelligence"
+
+validation:
+  validator: "tools/validate_contract_locks.py"
+  checks:
+    - "lock required fields"
+    - "local snapshot exists"
+    - "local snapshot SHA-256 equals lock sha256"
+    - "required terms exist inside local snapshot"
+    - "consumer path is recorded for platform schema-lock traceability"
+
+software_review:
+  correctness:
+    - "Records upstream Policy Fabric schema identity and digest in Sociosphere."
+    - "Binds the upstream policy-fabric contract to the prophet-platform vendored consumer path."
+    - "Gives Sociosphere a local snapshot for CI-runnable digest verification."
+  weaknesses:
+    - "This does not fetch policy-fabric live during CI; it validates the vendored snapshot lock."
+    - "The lock must be refreshed when policy-fabric intentionally changes the contract."
+  next_hardening:
+    - "Add connector-backed refresh check against policy-fabric main."
+    - "Add platform-side schema digest metadata to compare consumer vendored schema with Sociosphere lock."
