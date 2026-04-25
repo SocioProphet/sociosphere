@@ -3,7 +3,7 @@
 # This is an additive status delta, not a replacement for status/ecosystem-status.yaml.
 
 schema_version: "sociosphere.build-intelligence/v0.1"
-recorded_at: "2026-04-25T21:50:00Z"
+recorded_at: "2026-04-25T21:58:00Z"
 controller_repo: "SocioProphet/sociosphere"
 subject_repo: "SocioProphet/prophet-platform"
 status: "active"
@@ -59,12 +59,29 @@ merged_tranches:
       - "examples/operations/prophet_operations_action_decision_allow_0001.json"
       - "Makefile"
       - "docs/PROPHET_OPERATIONS_INTELLIGENCE.md"
+  - pr: 181
+    title: "Wire academy bridge into ApplicationSet under fogstack.knowledge"
+    merge_commit: "7402547d9a3e684ac051945177763060b1f5aff4"
+    gates_closed:
+      - verified fogstack.knowledge bundle/release/manifest/rulepack/status artifacts exist
+      - verified ApplicationSet existed but deployed api/gateway/web only
+      - reused existing Search Orchestrator Academy Bridge policy overlay
+      - added ApplicationSet entry for search-orchestrator-academy-bridge
+      - added bundle metadata: fogstack.knowledge
+      - extended deployment validator to require ApplicationSet + academy bridge + fogstack.knowledge
+      - CI/workflow pass
+      - merge
+      - post-merge main verification
+      - Sociosphere final merge registration
+    artifacts:
+      - "infra/k8s/argo-cd/appsets/socioprophet-appset.yaml"
+      - "tools/validate_search_orchestrator_academy_deploy.py"
 
 active_tranches:
   - pr: 181
     title: "Wire academy bridge into ApplicationSet under fogstack.knowledge"
     branch: "deploy/appset-academy-fogstack-knowledge-v0-1"
-    state: "open"
+    state: "merged"
     subject: "ArgoCD ApplicationSet deployment topology"
     gates_completed:
       - verified fogstack.knowledge bundle/release/manifest/rulepack/status artifacts exist
@@ -74,19 +91,18 @@ active_tranches:
       - added ApplicationSet entry for search-orchestrator-academy-bridge
       - added bundle metadata: fogstack.knowledge
       - extended deployment validator to require ApplicationSet + academy bridge + fogstack.knowledge
+      - CI/workflow pass
+      - merge commit 7402547d9a3e684ac051945177763060b1f5aff4
+      - post-merge main verification
     files_changed:
       - "infra/k8s/argo-cd/appsets/socioprophet-appset.yaml"
       - "tools/validate_search_orchestrator_academy_deploy.py"
-    pending_gates:
-      - CI/workflow pass
-      - merge
-      - post-merge main verification
-      - Sociosphere follow-up registration of final merge commit
+    pending_gates: []
 
 test_and_workflow_surfaces:
   make_validate:
     status: "updated"
-    notes: "Prophet Platform make validate now runs tools/tests through test-tools."
+    notes: "Prophet Platform make validate now runs tools/tests through test-tools and validates search-orchestrator academy deployment artifacts."
     tool_test_dependencies:
       - pytest
       - pyyaml
@@ -104,25 +120,27 @@ software_review:
   correctness:
     - "Operations recommendations are now locally blocked unless a matching ProphetOperationsActionDecision with decision.outcome=allow exists."
     - "ApplicationSet PR #181 reuses an existing validated Search Orchestrator overlay instead of creating a duplicate deployment path."
+    - "The ApplicationSet now deploys search-orchestrator-academy-bridge from infra/k8s/search-orchestrator/overlays/policy with bundle metadata set to fogstack.knowledge."
   weaknesses:
     - "prophet-platform structurally validates Policy Fabric decisions but does not yet import or pin the policy-fabric JSON Schema; cross-repo contract drift remains possible."
     - "PR #181 proves repo-native deployment topology, not live ArgoCD reconciliation in a cluster."
     - "Sociosphere ecosystem-status.yaml remains stale as of 2026-04-06; this file is a current delta, not a regenerated full snapshot."
+    - "ApplicationSet bundle metadata is currently a freeform list element field, not a typed deployment contract."
   next_hardening:
     - "Add cross-repo Policy Fabric schema lock or vendored contract reference."
-    - "Finalize PR #181 and register final merge commit here."
-    - "Add Sociosphere validation for build-intelligence delta records."
+    - "Add typed Sociosphere deployment-topology record for AppSet bundle bindings."
     - "Evaluate whether ApplicationSet should include explicit generators for bundle metadata beyond freeform element keys."
+    - "Regenerate or supersede ecosystem-status.yaml with current repo/PR state."
 
 running_backlog:
-  - "Finalize prophet-platform PR #181 CI/merge/main verification."
-  - "Register PR #181 final merge commit in Sociosphere."
-  - "Add Sociosphere validator for status/build-intelligence/*.yaml."
   - "Create cross-repo contract lock for Policy Fabric operations action decision schema."
+  - "Add typed Sociosphere deployment-topology record for ApplicationSet bundle bindings."
   - "Verify Lampstand lifecycle integration against the handoff dossier."
   - "Verify Policy Fabric live endpoint/service completeness."
   - "Verify Alexandrian Academy repo state against platform deployment topology."
   - "Decide whether deployment topology belongs in AppSet only or also Sociosphere workspace manifest."
   - "Reconcile ecosystem-status.yaml stale snapshot with current repo/PR state."
   - "Continue SourceOS/nlboot/control-plane specs after deployment-topology closure."
+  - "Add live-cluster reconciliation evidence once an ArgoCD environment is available."
   - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Keep Sociosphere informed for every future platform build/test/deploy tranche."
