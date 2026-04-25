@@ -5,12 +5,14 @@ on:
     paths:
       - "protocol/workspace-fabric/v0/**"
       - "tools/validate_workspace_fabric_fixtures.py"
+      - "tools/workspace_fabric_state_machine*.py"
       - ".github/workflows/workspace-fabric.yml"
   push:
     branches: [main]
     paths:
       - "protocol/workspace-fabric/v0/**"
       - "tools/validate_workspace_fabric_fixtures.py"
+      - "tools/workspace_fabric_state_machine*.py"
       - ".github/workflows/workspace-fabric.yml"
 
 permissions:
@@ -35,7 +37,11 @@ jobs:
         run: |
           python tools/validate_workspace_fabric_fixtures.py
 
+      - name: Run workspace-fabric state-machine tests
+        run: |
+          python tools/workspace_fabric_state_machine_selftest.py
+
       - name: Publish validation summary
         if: always()
         run: |
-          echo "workspace-fabric validation completed" >> "$GITHUB_STEP_SUMMARY"
+          echo "workspace-fabric validation + runtime tests completed" >> "$GITHUB_STEP_SUMMARY"
