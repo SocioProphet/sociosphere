@@ -3,7 +3,7 @@
 # This is an additive status delta, not a replacement for status/ecosystem-status.yaml.
 
 schema_version: "sociosphere.build-intelligence/v0.1"
-recorded_at: "2026-04-25T21:58:00Z"
+recorded_at: "2026-04-25T23:25:00Z"
 controller_repo: "SocioProphet/sociosphere"
 subject_repo: "SocioProphet/prophet-platform"
 status: "active"
@@ -76,36 +76,59 @@ merged_tranches:
     artifacts:
       - "infra/k8s/argo-cd/appsets/socioprophet-appset.yaml"
       - "tools/validate_search_orchestrator_academy_deploy.py"
+  - pr: 182
+    title: "Lock operations decisions to Policy Fabric schema"
+    merge_commit: "d4c39f1ea43700eb748d405f665746da021dc15a"
+    gates_closed:
+      - fetched source schema from policy-fabric main
+      - vendored Policy Fabric operations action decision schema into prophet-platform
+      - validator loads vendored schema
+      - validator runs jsonschema validation before semantic linkage checks
+      - tool-test environment installs jsonschema
+      - invalid-decision test proves schema enforcement
+      - docs updated with schema-lock model
+      - CI/workflow pass
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "schemas/external/policy-fabric/prophet_operations_action_decision_v1.schema.json"
+      - "tools/validate_prophet_operations_policy_decisions.py"
+      - "tools/tests/test_validate_prophet_operations_policy_decisions.py"
+      - "Makefile"
+      - "docs/PROPHET_OPERATIONS_INTELLIGENCE.md"
 
 active_tranches:
-  - pr: 181
-    title: "Wire academy bridge into ApplicationSet under fogstack.knowledge"
-    branch: "deploy/appset-academy-fogstack-knowledge-v0-1"
+  - pr: 182
+    title: "Lock operations decisions to Policy Fabric schema"
+    branch: "ops/policy-fabric-decision-schema-lock-v0-1"
     state: "merged"
-    subject: "ArgoCD ApplicationSet deployment topology"
+    subject: "Operations decision contract drift hardening"
     gates_completed:
-      - verified fogstack.knowledge bundle/release/manifest/rulepack/status artifacts exist
-      - verified ApplicationSet exists
-      - identified gap: ApplicationSet deployed api/gateway/web only
-      - reused existing Search Orchestrator Academy Bridge policy overlay
-      - added ApplicationSet entry for search-orchestrator-academy-bridge
-      - added bundle metadata: fogstack.knowledge
-      - extended deployment validator to require ApplicationSet + academy bridge + fogstack.knowledge
+      - fetched policy-fabric schema from main
+      - vendored schema locally
+      - enforced jsonschema validation
+      - added explicit invalid-decision schema test
+      - updated Makefile dependency install
+      - updated docs
       - CI/workflow pass
-      - merge commit 7402547d9a3e684ac051945177763060b1f5aff4
+      - merge commit d4c39f1ea43700eb748d405f665746da021dc15a
       - post-merge main verification
     files_changed:
-      - "infra/k8s/argo-cd/appsets/socioprophet-appset.yaml"
-      - "tools/validate_search_orchestrator_academy_deploy.py"
+      - "schemas/external/policy-fabric/prophet_operations_action_decision_v1.schema.json"
+      - "tools/validate_prophet_operations_policy_decisions.py"
+      - "tools/tests/test_validate_prophet_operations_policy_decisions.py"
+      - "Makefile"
+      - "docs/PROPHET_OPERATIONS_INTELLIGENCE.md"
     pending_gates: []
 
 test_and_workflow_surfaces:
   make_validate:
     status: "updated"
-    notes: "Prophet Platform make validate now runs tools/tests through test-tools and validates search-orchestrator academy deployment artifacts."
+    notes: "Prophet Platform make validate runs tools/tests through test-tools, validates search-orchestrator academy deployment artifacts, and now installs jsonschema for vendored Policy Fabric decision schema validation."
     tool_test_dependencies:
       - pytest
       - pyyaml
+      - jsonschema
   relevant_workflows:
     - "validate"
     - "ci"
@@ -118,23 +141,23 @@ test_and_workflow_surfaces:
 
 software_review:
   correctness:
-    - "Operations recommendations are now locally blocked unless a matching ProphetOperationsActionDecision with decision.outcome=allow exists."
-    - "ApplicationSet PR #181 reuses an existing validated Search Orchestrator overlay instead of creating a duplicate deployment path."
-    - "The ApplicationSet now deploys search-orchestrator-academy-bridge from infra/k8s/search-orchestrator/overlays/policy with bundle metadata set to fogstack.knowledge."
+    - "Operations recommendations are locally blocked unless a matching ProphetOperationsActionDecision with decision.outcome=allow exists."
+    - "ApplicationSet deploys search-orchestrator-academy-bridge from infra/k8s/search-orchestrator/overlays/policy with bundle metadata set to fogstack.knowledge."
+    - "Platform decision validation now loads a vendored Policy Fabric JSON Schema and rejects invalid decision artifacts before semantic execution-gate checks."
   weaknesses:
-    - "prophet-platform structurally validates Policy Fabric decisions but does not yet import or pin the policy-fabric JSON Schema; cross-repo contract drift remains possible."
-    - "PR #181 proves repo-native deployment topology, not live ArgoCD reconciliation in a cluster."
+    - "The vendored Policy Fabric schema can drift from upstream policy-fabric unless refreshed by process or a connector-backed check."
+    - "AppSet topology proves repo-native deployment topology, not live ArgoCD reconciliation in a cluster."
     - "Sociosphere ecosystem-status.yaml remains stale as of 2026-04-06; this file is a current delta, not a regenerated full snapshot."
-    - "ApplicationSet bundle metadata is currently a freeform list element field, not a typed deployment contract."
+    - "ApplicationSet bundle metadata is currently a freeform list element field, not a typed deployment contract in prophet-platform itself."
   next_hardening:
-    - "Add cross-repo Policy Fabric schema lock or vendored contract reference."
-    - "Add typed Sociosphere deployment-topology record for AppSet bundle bindings."
-    - "Evaluate whether ApplicationSet should include explicit generators for bundle metadata beyond freeform element keys."
+    - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
+    - "Add connector-backed verification that refreshes Sociosphere's vendored AppSet snapshot from prophet-platform."
+    - "Add live-cluster reconciliation evidence once an ArgoCD environment is available."
     - "Regenerate or supersede ecosystem-status.yaml with current repo/PR state."
 
 running_backlog:
-  - "Create cross-repo contract lock for Policy Fabric operations action decision schema."
-  - "Add typed Sociosphere deployment-topology record for ApplicationSet bundle bindings."
+  - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
+  - "Add connector-backed verification that refreshes Sociosphere's vendored AppSet snapshot from prophet-platform."
   - "Verify Lampstand lifecycle integration against the handoff dossier."
   - "Verify Policy Fabric live endpoint/service completeness."
   - "Verify Alexandrian Academy repo state against platform deployment topology."
