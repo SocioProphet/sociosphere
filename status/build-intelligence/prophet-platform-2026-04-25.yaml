@@ -3,7 +3,7 @@
 # This is an additive status delta, not a replacement for status/ecosystem-status.yaml.
 
 schema_version: "sociosphere.build-intelligence/v0.1"
-recorded_at: "2026-04-25T23:48:00Z"
+recorded_at: "2026-04-25T23:58:00Z"
 controller_repo: "SocioProphet/sociosphere"
 subject_repo: "SocioProphet/prophet-platform"
 status: "active"
@@ -14,6 +14,21 @@ scope:
   intent: "Register platform build, test, release, and deployment topology changes in Sociosphere so workspace/repository intelligence remains aware of current implementation state."
 
 merged_tranches:
+  - pr: 177
+    title: "docs: add Next Gen TOM platform binding and validation workflow"
+    merge_commit: "2bd56692b0357464c68420d236e00d5a238e4796"
+    gates_closed:
+      - closed superseded PR 170 with reviewer-facing supersession comment
+      - inspected changed files and workflow target
+      - verified tools/validate_examples.py exists on main
+      - verified docs avoid claiming standards authority in runtime repo
+      - CI/workflow pass on PR head
+      - merge
+      - post-merge main verification
+    artifacts:
+      - ".github/workflows/brokerage-validation.yml"
+      - "docs/reference/next-gen-tom/INDEX.md"
+      - "docs/reference/next-gen-tom/brokerage-architecture.md"
   - pr: 178
     title: "Add Prophet operations intelligence evidence slice"
     merge_commit: "0ffe9cedf66c1afc133bc87f85d5568c6c926c80"
@@ -116,30 +131,28 @@ merged_tranches:
       - "Makefile"
 
 active_tranches:
-  - pr: 183
-    title: "Validate Lampstand lifecycle publication path"
-    branch: "lampstand/lifecycle-validation-v0-1"
+  - pr: 177
+    title: "docs: add Next Gen TOM platform binding and validation workflow"
+    branch: "docs/next-gen-tom-platform-binding-v4"
     state: "merged"
-    subject: "Lampstand carrier ingest/catalog/publication lifecycle validation"
+    subject: "Next Gen TOM runtime binding and brokerage validation workflow"
     gates_completed:
-      - inspected Lampstand catalog implementation
-      - inspected Lampstand ingest implementation
-      - inspected publication request and zone-router planning path
-      - added local lifecycle smoke
-      - wired smoke into make validate
-      - corrected explicit topic semantics after CI failure
-      - CI/workflow pass
-      - merge commit 8e1f479d14e5f5608e5cb96874dfc3d00a189402
+      - closed superseded PR 170
+      - inspected workflow and docs
+      - verified workflow target exists
+      - verified additive docs/workflow scope
+      - merged commit 2bd56692b0357464c68420d236e00d5a238e4796
       - post-merge main verification
     files_changed:
-      - "tools/validate_lampstand_lifecycle.py"
-      - "Makefile"
+      - ".github/workflows/brokerage-validation.yml"
+      - "docs/reference/next-gen-tom/INDEX.md"
+      - "docs/reference/next-gen-tom/brokerage-architecture.md"
     pending_gates: []
 
 test_and_workflow_surfaces:
   make_validate:
     status: "updated"
-    notes: "Prophet Platform make validate runs tools/tests through test-tools, validates search-orchestrator academy deployment artifacts, validates Lampstand lifecycle consistency, and installs jsonschema for vendored Policy Fabric decision schema validation."
+    notes: "Prophet Platform make validate runs tools/tests through test-tools, validates search-orchestrator academy deployment artifacts, validates Lampstand lifecycle consistency, and installs jsonschema for vendored Policy Fabric decision schema validation. Brokerage examples also have a dedicated workflow."
     tool_test_dependencies:
       - pytest
       - pyyaml
@@ -150,6 +163,7 @@ test_and_workflow_surfaces:
     - "platform-contracts-check"
     - "platform-wave1-stubs"
     - "premerge-audit"
+    - "brokerage-validation"
     - "fogstack-validation"
     - "fogstack-manifest-publication"
     - "fogstack-manifest-promotion"
@@ -159,7 +173,8 @@ software_review:
     - "Operations recommendations are locally blocked unless a matching ProphetOperationsActionDecision with decision.outcome=allow exists."
     - "ApplicationSet deploys search-orchestrator-academy-bridge from infra/k8s/search-orchestrator/overlays/policy with bundle metadata set to fogstack.knowledge."
     - "Platform decision validation loads a vendored Policy Fabric JSON Schema and rejects invalid decision artifacts before semantic execution-gate checks."
-    - "Lampstand lifecycle validation now proves local carrier ingest, artifact creation, catalog linkage, publication request generation, and zone-router planning."
+    - "Lampstand lifecycle validation proves local carrier ingest, artifact creation, catalog linkage, publication request generation, and zone-router planning."
+    - "Next Gen TOM platform binding docs explicitly keep standards authority upstream while binding runtime brokerage examples to CI validation."
   weaknesses:
     - "The vendored Policy Fabric schema can drift from upstream policy-fabric unless refreshed by process or a connector-backed check."
     - "AppSet topology proves repo-native deployment topology, not live ArgoCD reconciliation in a cluster."
@@ -177,12 +192,12 @@ software_review:
 running_backlog:
   - "Verify Policy Fabric live endpoint/service completeness."
   - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Inspect and triage prophet-platform PR 176."
+  - "Inspect search PR 157 for staleness."
+  - "Decide whether stacked zone-router PRs 142/156/173 should be refreshed, merged in order, or superseded."
+  - "Inspect telemetry draft PR 162."
   - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
   - "Add connector-backed verification that refreshes Sociosphere's vendored AppSet snapshot from prophet-platform."
-  - "Decide whether deployment topology belongs in AppSet only or also Sociosphere workspace manifest."
   - "Reconcile ecosystem-status.yaml stale snapshot with current repo/PR state."
-  - "Continue SourceOS/nlboot/control-plane specs after deployment-topology closure."
-  - "Add live-cluster reconciliation evidence once an ArgoCD environment is available."
-  - "Harden Lampstand lifecycle beyond local smoke with remote service/publication lifecycle evidence."
   - "Maintain actor/generator/software-review format and gate-based progress reporting."
   - "Keep Sociosphere informed for every future platform build/test/deploy tranche."
