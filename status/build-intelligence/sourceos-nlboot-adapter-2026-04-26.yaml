@@ -1,0 +1,74 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T16:30:00-04:00"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+scope:
+  program: "SourceOS / Boot and Recovery Plane"
+  lane: "sourceos-nlboot-bootreleaseset-adapter"
+  intent: "Register merged side-effect-free adapter mapping nlboot signed recovery manifest metadata into SourceOS BootReleaseSet."
+
+merged_tranches:
+  - pr: 223
+    title: "sourceos: re-land nlboot manifest BootReleaseSet adapter"
+    merge_commit: "3bcf02364f9fe0e7c985ddc9190a6be28d534a86"
+    branch: "work/sourceos-nlboot-adapter-reland"
+    gates_closed:
+      - observed earlier PR 220 had closed without merge and zero diff after branch absorption/reset
+      - re-landed adapter from current prophet-platform main instead of creating competing stale work
+      - added nlboot M2 recovery manifest fixture under SourceOS contract examples
+      - added nlboot M2 recovery token fixture under SourceOS contract examples
+      - added side-effect-free nlboot manifest to SourceOS BootReleaseSet converter
+      - added adapter smoke validation
+      - wired adapter smoke into SourceOS contracts workflow while preserving M2 filesystem registry smoke
+      - merged PR 223 by squash after mergeability check
+    artifacts:
+      - "contracts/sourceos/examples/nlboot-manifest.m2-demo.recovery.json"
+      - "contracts/sourceos/examples/nlboot-token.m2-demo.recovery.json"
+      - "tools/convert_nlboot_manifest_to_sourceos_bootreleaseset.py"
+      - "tools/smoke_nlboot_to_sourceos_bootreleaseset.py"
+      - ".github/workflows/sourceos-contracts.yml"
+
+linked_tranches:
+  - repo: "SociOS-Linux/nlboot"
+    pr: 5
+    merge_commit: "787129bb990e6bb458e33c9d57957a186686cdf6"
+    role: "Provides side-effect-free M2 recovery fixture inputs."
+  - repo: "SociOS-Linux/nlboot"
+    pr: 6
+    merge_commit: "7d4a5350b9ce62f41400597f708e7e857a1dbf23"
+    role: "Adds signed trust-root bundle verification hardening."
+  - repo: "SocioProphet/prophet-platform"
+    pr: 221
+    merge_commit: "643239fbb2ad2482f2b5ea868b382219aefa1c95"
+    role: "Publishes SourceOS M2 lifecycle proof bundle to local filesystem registry."
+
+software_review:
+  correctness:
+    - "prophet-platform now carries a converter from nlboot-shaped recovery metadata into schema-valid SourceOS BootReleaseSet."
+    - "The adapter validates manifest/token binding and requires rsa-pss-sha256 plus fips-140-3-compatible metadata."
+    - "The adapter preserves signature reference as evidence and emits kexec=denied with restricted network."
+    - "The SourceOS workflow now validates lifecycle proof, filesystem registry proof, and nlboot-to-BootReleaseSet mapping."
+  safety_boundary:
+    - "No nlboot execution was added."
+    - "No artifact fetching was added."
+    - "No host mutation was added."
+    - "No disk writes were added."
+    - "No kexec execution was added."
+    - "No remote state mutation was added."
+  weaknesses:
+    - "The adapter consumes metadata fixtures only; it does not yet consume registry-published manifests."
+    - "Synthetic boot Fingerprint emission from the adapter output remains follow-on work."
+    - "Trust-bundle authenticity is not yet wired through this adapter path."
+
+next_hardening:
+  - "Make nlboot consume or validate registry-published SourceOS manifest fixtures without side effects."
+  - "Emit synthetic SourceOS Fingerprint from a planned boot path."
+  - "Validate synthetic boot Fingerprint against assigned ReleaseSet and BootReleaseSet."
+  - "Wire nlboot signed trust-bundle authenticity into SourceOS adapter inputs."
+
+running_backlog:
+  - "Connect registry-published SourceOS proof artifacts to nlboot fixture inputs."
+  - "Add SourceOS lifecycle proof-slice aggregation across prophet-platform, nlboot, and sociosphere."
+  - "Continue avoiding hidden remote mutation without explicit policy gates."
