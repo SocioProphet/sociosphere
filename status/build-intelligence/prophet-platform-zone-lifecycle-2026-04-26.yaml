@@ -1,0 +1,86 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T01:18:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+scope:
+  program: "Prophet Platform / Zone Publication Runtime"
+  lane: "zone-publication-lifecycle-minimal"
+  intent: "Register the minimal current-main zone publication lifecycle implementation after stale-stack cleanup."
+
+merged_tranches:
+  - pr: 187
+    title: "Add minimal zone publication local outcome lifecycle"
+    merge_commit: "776a0e117e8d570fa926d3d408fa89a4f87d2393"
+    gates_closed:
+      - created current-main implementation branch from PR 186 audit baseline
+      - added ZonePublicationOutcome contract
+      - added local zone-router publication outcome writer
+      - added smoke for ingest to plan to outbox record to published outcome
+      - wired smoke into make validate and make smoke
+      - CI/workflow pass
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "contracts/ZonePublicationOutcome.v0.1.json"
+      - "apps/zone-router/src/zone_router/publish.py"
+      - "tools/smoke_zone_publication_local_publish.py"
+      - "Makefile"
+
+active_tranches:
+  - pr: 187
+    title: "Add minimal zone publication local outcome lifecycle"
+    branch: "work/zone-lifecycle-min"
+    state: "merged"
+    subject: "Minimal local zone publication outcome lifecycle"
+    gates_completed:
+      - outcome contract merged
+      - local publisher merged
+      - lifecycle smoke merged
+      - make validate wiring merged
+      - post-merge verification complete
+    files_changed:
+      - "contracts/ZonePublicationOutcome.v0.1.json"
+      - "apps/zone-router/src/zone_router/publish.py"
+      - "tools/smoke_zone_publication_local_publish.py"
+      - "Makefile"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "updated"
+    notes: "Prophet Platform make validate includes local zone publication publish smoke."
+  relevant_workflows:
+    - "validate"
+    - "ci"
+    - "platform-contracts-check"
+    - "platform-wave1-stubs"
+    - "premerge-audit"
+    - "brokerage-validation"
+
+software_review:
+  correctness:
+    - "The zone publication runtime now has a minimal published outcome path after outbox planning."
+    - "The published outcome preserves record, carrier, event, receipt, catalog, zone, and topic traceability."
+  weaknesses:
+    - "This implementation is local-only and does not add remote broker publication."
+    - "This implementation does not yet add adapterized transports, retry state, or failure evidence."
+  next_hardening:
+    - "Add adapterized transport modes."
+    - "Add failed publication outcome and failure evidence."
+    - "Add retry and attempt state."
+    - "Register future implementation tranches in Sociosphere after merge."
+
+running_backlog:
+  - "Add adapterized zone publication transport modes."
+  - "Add failed publication outcome and failure evidence."
+  - "Add retry and attempt state for zone publication lifecycle."
+  - "Verify Policy Fabric live endpoint/service completeness."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
+  - "Reconcile ecosystem-status.yaml stale snapshot with current repo/PR state."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Keep Sociosphere informed for every future platform build/test/deploy tranche."
