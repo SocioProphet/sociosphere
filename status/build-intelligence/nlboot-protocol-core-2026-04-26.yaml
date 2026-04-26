@@ -1,0 +1,91 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T14:58:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SociOS-Linux/nlboot"
+status: "active"
+
+scope:
+  program: "SourceOS / Boot and Recovery Plane"
+  lane: "nlboot-safe-protocol-planning-core"
+  intent: "Register the first executable nlboot protocol planning implementation."
+
+merged_tranches:
+  - pr: 1
+    title: "Add safe nlboot protocol planning core"
+    merge_commit: "a7a2d05d61bb44fe749c258dfd5f63e08948dfad"
+    gates_closed:
+      - confirmed nlboot had no reusable implementation surface available through connector inspection
+      - seeded repository implementation home
+      - added Python package metadata
+      - added safe protocol core for SignedBootManifest, EnrollmentToken, and BootPlan
+      - added CLI planner
+      - added unit tests for happy path, expiration, mismatched boot release, invalid signature ref, and wrong purpose
+      - added Makefile validation target
+      - documented side-effect-free safety model
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "pyproject.toml"
+      - "src/nlboot/__init__.py"
+      - "src/nlboot/protocol.py"
+      - "src/nlboot/cli.py"
+      - "tests/test_protocol.py"
+      - "Makefile"
+      - "README.md"
+
+active_tranches:
+  - pr: 1
+    title: "Add safe nlboot protocol planning core"
+    branch: "work/protocol-core"
+    state: "merged"
+    subject: "Safe nlboot protocol planning core"
+    gates_completed:
+      - protocol core merged
+      - CLI merged
+      - tests merged
+      - validation target merged
+      - documentation merged
+      - post-merge verification complete
+    files_changed:
+      - "pyproject.toml"
+      - "src/nlboot/__init__.py"
+      - "src/nlboot/protocol.py"
+      - "src/nlboot/cli.py"
+      - "tests/test_protocol.py"
+      - "Makefile"
+      - "README.md"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "added"
+    notes: "nlboot make validate runs pytest over the protocol planning core."
+  relevant_workflows: []
+
+software_review:
+  correctness:
+    - "nlboot now has executable protocol planning code rather than only a spec placeholder."
+    - "The planner validates one-time token expiry, status, release binding, boot-release binding, and purpose compatibility."
+    - "Plans are side-effect-free and record execute=false."
+  weaknesses:
+    - "No active CI workflow exists in nlboot yet."
+    - "Signature verification is shape validation only; real cryptographic verification remains future work."
+    - "No artifact fetching or host execution exists; those must remain policy-gated future tranches."
+  next_hardening:
+    - "Add GitHub Actions validation for nlboot."
+    - "Add real signature verification over boot manifests."
+    - "Add protocol examples aligned to SourceOS-Linux/sourceos-spec BootReleaseSet and EnrollmentToken examples."
+    - "Register future implementation tranches in Sociosphere after merge."
+
+running_backlog:
+  - "Add GitHub Actions validation for nlboot."
+  - "Add real signature verification over nlboot boot manifests."
+  - "Add nlboot protocol examples aligned to sourceos-spec BootReleaseSet and EnrollmentToken examples."
+  - "Map SourceOS design specs to implementation homes across sociosphere, prophet-platform, agentplane, and sourceos repos."
+  - "Add runtime configuration for Policy Fabric endpoint URL once deployment topology is defined."
+  - "Add deployment packaging for Policy Fabric endpoint after runtime topology is defined."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Do not add hidden remote mutation without explicit policy gates."
