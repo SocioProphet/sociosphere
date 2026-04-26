@@ -1,0 +1,55 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T16:20:00-04:00"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SociOS-Linux/nlboot"
+status: "active"
+
+scope:
+  program: "SourceOS / Boot and Recovery Plane"
+  lane: "nlboot-signed-trust-bundles"
+  intent: "Register merged nlboot signed trust-root bundle verification tranche."
+
+merged_tranches:
+  - pr: 6
+    title: "Add signed trust-root bundle verification"
+    merge_commit: "7d4a5350b9ce62f41400597f708e7e857a1dbf23"
+    branch: "work/signed-trust-bundles"
+    gates_closed:
+      - reviewed existing open nlboot trust-root PR instead of creating competing branch
+      - confirmed mergeability and no reported failing statuses
+      - inspected patch for side-effect-free trust-bundle verification semantics
+      - added canonical trust-bundle payload construction
+      - added root-key lookup and lifecycle validation before bundle acceptance
+      - added RSA-PSS/SHA-256 trust-bundle signature verification path
+      - added tests for positive path, missing root signer, non-FIPS algorithm, and revoked bundle keys
+      - merged PR 6 by squash
+    artifacts:
+      - "src/nlboot/verify.py"
+      - "tests/test_verify.py"
+
+software_review:
+  correctness:
+    - "nlboot trusted-key documents now have an authenticity path through signed trust-root bundle verification."
+    - "Trust-bundle signatures use canonical payload construction and RSA-PSS/SHA-256 verification."
+    - "Root keys are lifecycle-validated before being accepted for bundle verification."
+  safety_boundary:
+    - "No artifact fetching was added."
+    - "No host mutation was added."
+    - "No disk writes were added."
+    - "No kexec execution was added."
+    - "No remote state mutation was added."
+  weaknesses:
+    - "Positive-path tests monkeypatch the low-level RSA verifier rather than using deterministic signed fixture vectors."
+    - "Trust bundle verification is not yet wired into every CLI path as a mandatory mode."
+    - "No HSM/KMS or external identity provider integration exists."
+
+next_hardening:
+  - "Add deterministic trust-bundle signing fixture vectors."
+  - "Expose a CLI mode that requires verified trust bundles for M2 fixture planning."
+  - "Wire trust-bundle authenticity into registry-published SourceOS proof consumption."
+
+running_backlog:
+  - "Make nlboot consume a registry-published manifest fixture without side effects."
+  - "Emit synthetic SourceOS Fingerprint from a planned boot path."
+  - "Validate synthetic boot Fingerprint against assigned ReleaseSet and BootReleaseSet."
+  - "Continue avoiding hidden remote mutation without explicit policy gates."
