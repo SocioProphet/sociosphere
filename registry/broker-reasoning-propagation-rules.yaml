@@ -1,0 +1,79 @@
+# Broker reasoning propagation rules
+# Companion registry for the cross-cloud services broker reasoning loop.
+
+version: "0.1.0"
+updated_at: "2026-04-26"
+
+rules:
+  - id: broker-standard-change
+    trigger:
+      repo: prophet-platform-standards
+      paths:
+        - docs/NEXT_GEN_TOM_*.md
+        - schemas/broker-reasoning/**
+    propagate_to:
+      - repo: prophet-platform
+        action: review_binding
+        reason: broker runtime bindings, schemas, examples, and validation may need updates
+      - repo: policy-fabric
+        action: review_policy_binding
+        reason: policy decision, exception, and evidence requirements may need updates
+      - repo: agentplane
+        action: review_execution_binding
+        reason: broker validation, placement, run, and replay bundles may need updates
+      - repo: global-devsecops-intelligence
+        action: review_intelligence_projection
+        reason: broker exhaust entities, findings, and graph projections may need updates
+      - repo: alexandrian-academy
+        action: review_learning_binding
+        reason: broker training, evaluation, and canon learning objects may need updates
+      - repo: sociosphere
+        action: run_angel_critique
+        reason: workspace topology, source exposure, and hardening critique must be refreshed
+
+  - id: provider-binding-contract-change
+    trigger:
+      repo: prophet-platform
+      paths:
+        - specs/brokerage/schemas/provider-binding.schema.json
+        - specs/brokerage/events/examples/provider-binding.example.json
+        - docs/reference/next-gen-tom/provider-binding.md
+    propagate_to:
+      - repo: policy-fabric
+        action: review_policy_decision_inputs
+        reason: policy evaluation must understand ProviderBinding semantics
+      - repo: agentplane
+        action: review_bundle_inputs
+        reason: execution bundles may depend on ProviderBinding fields
+      - repo: global-devsecops-intelligence
+        action: review_graph_projection
+        reason: operational intelligence should project ProviderBinding fields and findings
+      - repo: sociosphere
+        action: validate_topology
+        reason: broker contract changes must be checked against dependency-direction rules
+
+  - id: broker-reasoning-output-change
+    trigger:
+      repo: global-devsecops-intelligence
+      paths:
+        - docs/architecture/broker-operational-intelligence-binding.md
+        - profiles/**
+        - open-ai4it-spec/**
+    propagate_to:
+      - repo: alexandrian-academy
+        action: review_training_outputs
+        reason: new findings may require training or evaluation objects
+      - repo: sociosphere
+        action: review_propagation_rules
+        reason: reasoning outputs may change cross-repo validation requirements
+
+outputs:
+  propagation_plan_kind: SocioSpherePropagationPlan
+  required_fields:
+    - change_ref
+    - source_repo
+    - changed_paths
+    - affected_repos
+    - required_actions
+    - rationale
+    - validation_lanes
