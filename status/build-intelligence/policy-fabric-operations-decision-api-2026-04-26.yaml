@@ -1,0 +1,79 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T12:50:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/policy-fabric"
+status: "active"
+
+scope:
+  program: "Prophet Platform / Policy Fabric Integration"
+  lane: "operations-decision-http-endpoint"
+  intent: "Register the first explicit Policy Fabric HTTP endpoint for operations action decisions."
+
+merged_tranches:
+  - pr: 27
+    title: "Expose operations decision evaluator through HTTP API"
+    merge_commit: "19ef4a52c740d1fe70f86622b908cd9c40943d33"
+    gates_closed:
+      - added FastAPI app for operations decisions
+      - added health endpoint
+      - added POST /v1/operations/action-decision endpoint
+      - preserved report-only safe default behavior
+      - added TestClient smoke validating endpoint decision against schema
+      - wired API smoke into make validate
+      - Repo Health pass
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "policy_fabric/operations_decision_api.py"
+      - "tools/smoke_operations_decision_api.py"
+      - "Makefile"
+
+active_tranches:
+  - pr: 27
+    title: "Expose operations decision evaluator through HTTP API"
+    branch: "work/operations-decision-http"
+    state: "merged"
+    subject: "Policy Fabric operations decision HTTP endpoint"
+    gates_completed:
+      - HTTP app merged
+      - endpoint smoke merged
+      - validation target merged
+      - post-merge verification complete
+    files_changed:
+      - "policy_fabric/operations_decision_api.py"
+      - "tools/smoke_operations_decision_api.py"
+      - "Makefile"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "updated"
+    notes: "Policy Fabric make validate runs both local evaluator and HTTP endpoint smoke tests against the ProphetOperationsActionDecision schema."
+  relevant_workflows:
+    - "Repo Health"
+
+software_review:
+  correctness:
+    - "Policy Fabric now exposes an explicit HTTP endpoint for operations action decisions."
+    - "Endpoint delegates to the deterministic evaluator and preserves report-only/manual-review defaults."
+    - "Endpoint smoke validates emitted decisions against the schema contract."
+  weaknesses:
+    - "Prophet Platform is not yet wired to call this endpoint."
+    - "Endpoint is not yet packaged/deployed as a service artifact."
+  next_hardening:
+    - "Wire prophet-platform live Policy Fabric adapter against this endpoint."
+    - "Add deployment packaging once service runtime topology is defined."
+    - "Register future implementation tranches in Sociosphere after merge."
+
+running_backlog:
+  - "Wire prophet-platform live Policy Fabric adapter against Policy Fabric operations decision endpoint."
+  - "Add deployment packaging for Policy Fabric endpoint after runtime topology is defined."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
+  - "Reconcile ecosystem-status.yaml stale snapshot with current repo/PR state."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Keep Sociosphere informed for every future platform build/test/deploy tranche."
+  - "Keep zone publication lifecycle slices small and current-main based."
+  - "Do not add hidden remote mutation without explicit policy gates."
