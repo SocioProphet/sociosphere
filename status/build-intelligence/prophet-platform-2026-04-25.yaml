@@ -3,7 +3,7 @@
 # This is an additive status delta, not a replacement for status/ecosystem-status.yaml.
 
 schema_version: "sociosphere.build-intelligence/v0.1"
-recorded_at: "2026-04-26T00:31:00Z"
+recorded_at: "2026-04-26T00:42:00Z"
 controller_repo: "SocioProphet/sociosphere"
 subject_repo: "SocioProphet/prophet-platform"
 status: "active"
@@ -150,34 +150,45 @@ merged_tranches:
       - "schemas/release/fogstack-release-evidence-index-v0.1.schema.json"
       - "tools/tests/test_fogstack_release_proof_pipeline.py"
       - "docs/FOGSTACK_RELEASE_PROOF_PIPELINE.md"
+  - pr: 185
+    title: "Refresh search orchestrator normalized result actions"
+    merge_commit: "47c240a5e734381622e14a3b1d0ca741c7e9501b"
+    gates_closed:
+      - inspected stale PR 157
+      - restacked normalized action result work onto current main
+      - closed stale PR 157 with reviewer-facing supersession comment
+      - populated SearchResultActions from backend action flags
+      - added test coverage for platform workspace action flags
+      - CI/workflow pass including search-orchestrator workflow
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "services/search-orchestrator/app/main.py"
+      - "services/search-orchestrator/tests/test_platform_scope_result.py"
 
 active_tranches:
-  - pr: 184
-    title: "Refresh Fog release proof canonical surface refs"
-    branch: "work/fog-refs"
+  - pr: 185
+    title: "Refresh search orchestrator normalized result actions"
+    branch: "work/search-actions"
     state: "merged"
-    subject: "Fog release proof canonical surface refs"
+    subject: "Search orchestrator normalized result action flags"
     gates_completed:
-      - restacked stale PR 176 work onto current main
-      - closed superseded PR 176
-      - added canonical surface CLI args to pipeline and linker
-      - persisted canonical refs into release evidence index
-      - updated schema/test/docs
+      - restacked stale PR 157 work onto current main
+      - closed superseded PR 157
+      - populated normalized search result actions
+      - added direct action-flag test coverage
       - CI/workflow pass
-      - merge commit 0d294a325658ea1bb008f4749250b40d7b818515
+      - merge commit 47c240a5e734381622e14a3b1d0ca741c7e9501b
       - post-merge main verification
     files_changed:
-      - "tools/link_fogstack_release_seal_artifacts.py"
-      - "tools/run_fogstack_release_proof_pipeline.py"
-      - "schemas/release/fogstack-release-evidence-index-v0.1.schema.json"
-      - "tools/tests/test_fogstack_release_proof_pipeline.py"
-      - "docs/FOGSTACK_RELEASE_PROOF_PIPELINE.md"
+      - "services/search-orchestrator/app/main.py"
+      - "services/search-orchestrator/tests/test_platform_scope_result.py"
     pending_gates: []
 
 test_and_workflow_surfaces:
   make_validate:
     status: "updated"
-    notes: "Prophet Platform make validate runs tools/tests through test-tools, validates search-orchestrator academy deployment artifacts, validates Lampstand lifecycle consistency, and installs jsonschema for vendored Policy Fabric decision schema validation. Brokerage examples also have a dedicated workflow. FogStack release proof canonical refs are covered by tool tests and FogStack workflows."
+    notes: "Prophet Platform make validate runs tools/tests through test-tools, validates search-orchestrator academy deployment artifacts, validates Lampstand lifecycle consistency, and installs jsonschema for vendored Policy Fabric decision schema validation. Brokerage examples also have a dedicated workflow. FogStack release proof canonical refs are covered by tool tests and FogStack workflows. Search orchestrator normalized action flags are covered by search-orchestrator tests."
     tool_test_dependencies:
       - pytest
       - pyyaml
@@ -185,6 +196,7 @@ test_and_workflow_surfaces:
   relevant_workflows:
     - "validate"
     - "ci"
+    - "search-orchestrator"
     - "platform-contracts-check"
     - "platform-wave1-stubs"
     - "premerge-audit"
@@ -202,9 +214,11 @@ software_review:
     - "Platform decision validation loads a vendored Policy Fabric JSON Schema and rejects invalid decision artifacts before semantic execution-gate checks."
     - "Lampstand lifecycle validation proves local carrier ingest, artifact creation, catalog linkage, publication request generation, and zone-router planning."
     - "Next Gen TOM platform binding docs explicitly keep standards authority upstream while binding runtime brokerage examples to CI validation."
-    - "Fog release proof now records optional canonical contract/deployment/runtime/policy surface refs in the release evidence index."
+    - "Fog release proof records optional canonical contract/deployment/runtime/policy surface refs in the release evidence index."
+    - "Search orchestrator API now exposes normalized action flags already present in backend result records."
   weaknesses:
     - "Canonical Fog surface refs are recorded but not resolved against live external systems."
+    - "Search action semantics for Academy results still depend on current backend flags and may need richer policy-aware action derivation."
     - "The vendored Policy Fabric schema can drift from upstream policy-fabric unless refreshed by process or a connector-backed check."
     - "AppSet topology proves repo-native deployment topology, not live ArgoCD reconciliation in a cluster."
     - "Lampstand lifecycle validation proves local repo-native consistency, not remote service deployment or live external publication mutation."
@@ -213,17 +227,17 @@ software_review:
     - "Verify Policy Fabric live endpoint/service completeness."
     - "Verify Alexandrian Academy repo state against platform deployment topology."
     - "Add resolver/validation for canonical Fog surface refs."
+    - "Add policy-aware action derivation for Academy search results if needed."
     - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
-    - "Add connector-backed verification that refreshes Sociosphere's vendored AppSet snapshot from prophet-platform."
     - "Regenerate or supersede ecosystem-status.yaml with current repo/PR state."
 
 running_backlog:
   - "Verify Policy Fabric live endpoint/service completeness."
   - "Verify Alexandrian Academy repo state against platform deployment topology."
   - "Add resolver/validation for canonical Fog surface refs."
-  - "Inspect search PR 157 for staleness."
   - "Decide whether stacked zone-router PRs 142/156/173 should be refreshed, merged in order, or superseded."
   - "Inspect telemetry draft PR 162."
+  - "Add policy-aware action derivation for Academy search results if needed."
   - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
   - "Add connector-backed verification that refreshes Sociosphere's vendored AppSet snapshot from prophet-platform."
   - "Reconcile ecosystem-status.yaml stale snapshot with current repo/PR state."
