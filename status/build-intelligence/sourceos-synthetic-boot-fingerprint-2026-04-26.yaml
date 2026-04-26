@@ -1,0 +1,76 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T17:30:00-04:00"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+scope:
+  program: "SourceOS / Boot and Recovery Plane"
+  lane: "sourceos-synthetic-boot-fingerprint"
+  intent: "Register merged synthetic SourceOS boot Fingerprint emission from a side-effect-free nlboot plan."
+
+merged_tranches:
+  - pr: 226
+    title: "sourceos: emit synthetic boot fingerprint from nlboot plan"
+    merge_commit: "58ba8eb66d22408e7a635faac633f739efe78503"
+    branch: "work/sourceos-synthetic-boot-fingerprint"
+    gates_closed:
+      - checked open SourceOS/nlboot/fingerprint PR surface before work
+      - closed duplicate stale adapter PR 222 as superseded by merged PR 223
+      - added synthetic SourceOS boot Fingerprint emitter
+      - added synthetic boot Fingerprint smoke test
+      - wired synthetic boot Fingerprint smoke into SourceOS contracts workflow
+      - preserved proof-only safety boundary
+      - merged PR 226 by squash after mergeability check
+    artifacts:
+      - "tools/emit_sourceos_synthetic_boot_fingerprint.py"
+      - "tools/smoke_sourceos_synthetic_boot_fingerprint.py"
+      - ".github/workflows/sourceos-contracts.yml"
+
+linked_tranches:
+  - repo: "SociOS-Linux/nlboot"
+    pr: 5
+    merge_commit: "787129bb990e6bb458e33c9d57957a186686cdf6"
+    role: "Provides side-effect-free M2 recovery fixture."
+  - repo: "SociOS-Linux/nlboot"
+    pr: 6
+    merge_commit: "7d4a5350b9ce62f41400597f708e7e857a1dbf23"
+    role: "Adds signed trust-root bundle verification hardening."
+  - repo: "SocioProphet/prophet-platform"
+    pr: 221
+    merge_commit: "643239fbb2ad2482f2b5ea868b382219aefa1c95"
+    role: "Publishes SourceOS M2 lifecycle proof bundle to local filesystem registry."
+  - repo: "SocioProphet/prophet-platform"
+    pr: 223
+    merge_commit: "3bcf02364f9fe0e7c985ddc9190a6be28d534a86"
+    role: "Maps nlboot recovery metadata into SourceOS BootReleaseSet."
+
+software_review:
+  correctness:
+    - "prophet-platform now emits a schema-valid SourceOS Fingerprint for a synthetic boot environment derived from a side-effect-free nlboot plan."
+    - "The synthetic fingerprint records boot_env isolation, recovery boot mode, assigned release set, assigned boot release set, artifact digests, and evidence refs."
+    - "The smoke path validates that the generated fingerprint is compliant and references the expected SourceOS proof objects."
+    - "The SourceOS workflow now validates lifecycle proof, filesystem registry proof, nlboot-to-BootReleaseSet mapping, and synthetic boot Fingerprint emission."
+  safety_boundary:
+    - "No live boot execution was added."
+    - "No nlboot execution was added."
+    - "No artifact fetching was added."
+    - "No host mutation was added."
+    - "No disk writes were added."
+    - "No kexec execution was added."
+    - "No remote state mutation was added."
+  weaknesses:
+    - "Synthetic boot Fingerprint emission uses a synthetic nlboot-plan-equivalent JSON object, not an actual nlboot CLI invocation."
+    - "Registry-published SourceOS artifacts are not yet consumed by nlboot."
+    - "Trust-bundle authenticity is not yet wired through the SourceOS adapter/fingerprint path."
+
+next_hardening:
+  - "Replace synthetic plan fixture with a captured nlboot-plan output fixture while remaining side-effect-free."
+  - "Make nlboot consume registry-published SourceOS manifest fixtures without side effects."
+  - "Validate boot Fingerprint against assigned ReleaseSet and BootReleaseSet through a reusable compliance helper."
+  - "Wire nlboot signed trust-bundle authenticity into SourceOS adapter inputs."
+
+running_backlog:
+  - "Connect registry-published SourceOS proof artifacts to nlboot fixture inputs."
+  - "Add SourceOS lifecycle proof-slice aggregation across prophet-platform, nlboot, and sociosphere."
+  - "Continue avoiding hidden remote mutation without explicit policy gates."
