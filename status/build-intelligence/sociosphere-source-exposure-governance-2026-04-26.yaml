@@ -1,0 +1,100 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T14:45:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/sociosphere"
+status: "active"
+
+scope:
+  program: "Angel of the Lord / Source Exposure Governance"
+  lane: "source-exposure-publication-safety"
+  intent: "Register the merged Sociosphere source exposure governance gate as the first implemented Angel of the Lord hardening lane."
+
+merged_tranches:
+  - pr: 185
+    title: "Add source exposure governance gate"
+    merge_commit: "69fa23d5af24d34958383a8664dd920c7c3d59c0"
+    gates_closed:
+      - added Source Exposure Governance Standard v0.1
+      - added machine-readable source exposure policy
+      - added structured source exposure report schema
+      - added stdlib-only source exposure validator
+      - added positive and negative validator tests
+      - added make source-exposure-check target
+      - wired source exposure check into validate workflow
+      - linked the standard from root and documentation indexes
+      - confirmed source exposure check passed in CI
+      - merged PR 185
+    artifacts:
+      - "standards/source-exposure/README.md"
+      - "standards/source-exposure/policy.v0.json"
+      - "standards/source-exposure/schemas/source_exposure_report.v1.json"
+      - "tools/check_source_exposure.py"
+      - "tests/test_source_exposure.py"
+      - "Makefile"
+      - ".github/workflows/validate.yml"
+      - "README.md"
+      - "docs/README.md"
+
+active_tranches:
+  - pr: 185
+    title: "Add source exposure governance gate"
+    branch: "work/source-exposure-governance-v0"
+    state: "merged"
+    subject: "Source exposure governance gate"
+    gates_completed:
+      - governance standard merged
+      - policy and report schema merged
+      - validator and tests merged
+      - CI hook merged
+      - source exposure check passed in validate workflow
+    files_changed:
+      - "standards/source-exposure/README.md"
+      - "standards/source-exposure/policy.v0.json"
+      - "standards/source-exposure/schemas/source_exposure_report.v1.json"
+      - "tools/check_source_exposure.py"
+      - "tests/test_source_exposure.py"
+      - "Makefile"
+      - ".github/workflows/validate.yml"
+      - "README.md"
+      - "docs/README.md"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  validate_workflow:
+    status: "updated"
+    notes: "The validate workflow now runs make source-exposure-check before UI and Python test stages."
+  make_targets:
+    - "source-exposure-check"
+    - "workspace-check"
+  relevant_workflows:
+    - "validate"
+    - "standards-validate"
+    - "workspace-spine"
+    - "ui-check"
+    - "compliance"
+
+software_review:
+  correctness:
+    - "Sociosphere now has a concrete CI-backed source exposure publication safety gate."
+    - "The validator blocks high-confidence source exposure findings while keeping policy and report artifacts machine-readable."
+    - "The source exposure lane is aligned to the workspace controller instead of becoming an untracked standalone process."
+  weaknesses:
+    - "The gate is repository-local and does not yet scan all materialized workspace repositories."
+    - "The gate does not yet include dependency vulnerability, VEX, SBOM, or provenance release-mirror checks."
+    - "The broader Angel of the Lord hardening regime still needs a formal umbrella standard and additional lanes."
+  next_hardening:
+    - "Formalize the Angel of the Lord hardening regime as the umbrella for recurring adversarial repository critique."
+    - "Add repo-level exposure classification to registry/canonical-repos.yaml."
+    - "Add workspace-wide source exposure scanning across materialized repositories."
+    - "Add CI permission and third-party action audit lane."
+    - "Add SBOM/VEX/provenance gates for public release mirrors."
+
+running_backlog:
+  - "Formalize the Angel of the Lord hardening regime as the umbrella workflow for adversarial CI critique."
+  - "Add repo-level exposure classification to registry/canonical-repos.yaml."
+  - "Add workspace-wide source exposure scan mode across materialized repos."
+  - "Add CI permission and third-party action audit lane."
+  - "Add dependency vulnerability and VEX/SBOM release gate."
+  - "Add delayed public release mirror gate with signed artifacts."
+  - "Add operator dashboard surface for Angel findings and source exposure posture."
+  - "Keep sensitive reproductions, raw telemetry, incident evidence, and live topology out of public artifacts."

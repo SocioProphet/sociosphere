@@ -24,6 +24,7 @@
 
 ## Standards
 - [QES (Quality Evidence Standard)](../standards/qes/README.md)
+- [Angel of the Lord Hardening Regime](../standards/angel-of-the-lord/README.md)
 - [Source Exposure Governance Standard](../standards/source-exposure/README.md)
 - [Adaptation README](standards/adaptation/README.md)
 
