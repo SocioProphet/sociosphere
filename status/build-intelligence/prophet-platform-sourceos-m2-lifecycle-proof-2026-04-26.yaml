@@ -1,0 +1,116 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T19:15:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+scope:
+  program: "SourceOS / Control Plane / M2 Demo"
+  lane: "sourceos-m2-lifecycle-proof"
+  intent: "Register the executable SourceOS M2 lifecycle proof generator and contract validation surface merged in prophet-platform."
+
+merged_tranches:
+  - pr: 216
+    title: "SourceOS: add M2 lifecycle proof generator"
+    merge_commit: "aba85024"
+    gates_closed:
+      - repaired stale PR 213 by resetting implementation branch to current main
+      - added SourceOSComplianceResult schema and M2 fixture
+      - added SourceOSProofIndex schema and M2 fixture
+      - added ConfigSource and Fingerprint M2 fixtures
+      - added deterministic M2 lifecycle proof generator
+      - added proof smoke test
+      - extended SourceOS contract validator to cover ReleaseSet, BootReleaseSet, ConfigSource, Fingerprint, ComplianceResult, and ProofIndex
+      - updated SourceOS workflow to run static validation and generated proof smoke
+      - SourceOS contracts workflow passed
+      - platform contracts check passed
+      - premerge audit passed
+      - brokerage validation passed
+      - platform wave1 stubs passed
+      - ci passed
+      - validate passed
+      - merged
+      - post-merge main verification completed
+    artifacts:
+      - "contracts/sourceos/compliance-result.v0.schema.json"
+      - "contracts/sourceos/proof-index.v0.schema.json"
+      - "contracts/sourceos/examples/config-source.m2-demo.v0.json"
+      - "contracts/sourceos/examples/fingerprint.m2-demo.v0.json"
+      - "contracts/sourceos/examples/compliance-result.m2-demo.v0.json"
+      - "contracts/sourceos/examples/proof-index.m2-demo.v0.json"
+      - "tools/build_sourceos_m2_lifecycle_proof.py"
+      - "tools/smoke_sourceos_m2_lifecycle_proof.py"
+      - "tools/validate_sourceos_contracts.py"
+      - ".github/workflows/sourceos-contracts.yml"
+      - "docs/SOURCEOS_M2_LIFECYCLE_PROOF.md"
+
+active_tranches:
+  - pr: 216
+    title: "SourceOS: add M2 lifecycle proof generator"
+    branch: "sourceos-m2-lifecycle-proof"
+    state: "merged"
+    subject: "SourceOS executable local M2 lifecycle proof"
+    gates_completed:
+      - deterministic proof generator merged
+      - generated proof smoke merged
+      - full static example validation merged
+      - CI pass
+      - post-merge verification complete
+    files_changed:
+      - "contracts/sourceos/compliance-result.v0.schema.json"
+      - "contracts/sourceos/proof-index.v0.schema.json"
+      - "contracts/sourceos/examples/config-source.m2-demo.v0.json"
+      - "contracts/sourceos/examples/fingerprint.m2-demo.v0.json"
+      - "contracts/sourceos/examples/compliance-result.m2-demo.v0.json"
+      - "contracts/sourceos/examples/proof-index.m2-demo.v0.json"
+      - "tools/build_sourceos_m2_lifecycle_proof.py"
+      - "tools/smoke_sourceos_m2_lifecycle_proof.py"
+      - "tools/validate_sourceos_contracts.py"
+      - ".github/workflows/sourceos-contracts.yml"
+      - "docs/SOURCEOS_M2_LIFECYCLE_PROOF.md"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  sourceos_contracts:
+    status: "passed"
+    notes: "Workflow validates static contract fixtures and runs generated M2 lifecycle proof smoke."
+  validate:
+    status: "passed"
+    notes: "Repository validate job passed before merge."
+  relevant_workflows:
+    - "SourceOS contracts"
+    - "platform-contracts-check"
+    - "premerge-audit"
+    - "brokerage-validation"
+    - "platform-wave1-stubs"
+    - "ci"
+    - "validate"
+
+software_review:
+  correctness:
+    - "The SourceOS object loop is now executable: ConfigSource, ReleaseSet, BootReleaseSet, Fingerprint, ComplianceResult, and ProofIndex are generated deterministically."
+    - "The proof generator validates generated objects against SourceOS schemas before writing the proof bundle."
+    - "The smoke test verifies all expected artifacts exist, ComplianceResult is compliant, and ProofIndex references generated artifacts."
+    - "Static examples now cover the full contract loop rather than only ReleaseSet and BootReleaseSet."
+  weaknesses:
+    - "This is still a local deterministic proof, not live Apple Silicon boot execution."
+    - "No nlboot execution, artifact fetch, disk mutation, token redemption, or website UI exists in this tranche."
+    - "The M2 system refs and artifact refs are contract placeholders, not real bootable images."
+  next_hardening:
+    - "Map nlboot signed manifest outputs into SourceOS BootReleaseSet ingestion."
+    - "Add device self-registration and one-time boot token redemption proof."
+    - "Add website/API ReleaseSet assignment endpoint."
+    - "Add Apple Silicon boot-picker integration mapping after PAL-Mac implementation home is selected."
+
+running_backlog:
+  - "Map nlboot signed manifest outputs into SourceOS BootReleaseSet ingestion."
+  - "Add SourceOS device self-registration stub."
+  - "Add one-time boot token redemption proof."
+  - "Add website/API ReleaseSet assignment endpoint."
+  - "Add Apple Silicon boot-picker integration mapping."
+  - "Add PAL-Mac implementation home and acceptance tests."
+  - "Add local artifact store for SourceOS generated proof bundles."
+  - "Wire Sociosphere validation expectations for SourceOS lifecycle objects."
+  - "Keep SourceOS boot execution side-effect-free until explicit policy gates exist."
+  - "Continue nlboot FIPS-ready trust-root lifecycle hardening."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
