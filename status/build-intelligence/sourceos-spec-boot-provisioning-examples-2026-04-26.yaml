@@ -1,0 +1,82 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T14:35:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SourceOS-Linux/sourceos-spec"
+status: "active"
+
+scope:
+  program: "SourceOS / Control Plane Contract Layer"
+  lane: "boot-provisioning-lifecycle-proof-examples"
+  intent: "Register BootReleaseSet and EnrollmentToken examples for the secure recovery/provisioning lane."
+
+merged_tranches:
+  - pr: 60
+    title: "Add BootReleaseSet and EnrollmentToken examples"
+    merge_commit: "001fa7731f1d39e6b1a6527c604b4d706d56053f"
+    gates_closed:
+      - confirmed existing BootReleaseSet schema under schemas/control-plane
+      - confirmed existing EnrollmentToken schema under schemas/control-plane
+      - avoided duplicate schema creation
+      - added BootReleaseSet recovery artifact example for M2 local-first demo
+      - added one-time EnrollmentToken recovery authorization example
+      - expanded control-plane example validator to cover ReleaseSet, Fingerprint, BootReleaseSet, and EnrollmentToken
+      - updated examples catalog
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "examples/boot_release_set.json"
+      - "examples/enrollment_token.json"
+      - "tools/validate_control_plane_examples.py"
+      - "examples/README.md"
+
+active_tranches:
+  - pr: 60
+    title: "Add BootReleaseSet and EnrollmentToken examples"
+    branch: "work/boot-provisioning-examples"
+    state: "merged"
+    subject: "SourceOS secure recovery/provisioning examples"
+    gates_completed:
+      - BootReleaseSet example merged
+      - EnrollmentToken example merged
+      - validator update merged
+      - examples catalog update merged
+      - post-merge verification complete
+    files_changed:
+      - "examples/boot_release_set.json"
+      - "examples/enrollment_token.json"
+      - "tools/validate_control_plane_examples.py"
+      - "examples/README.md"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "updated"
+    notes: "SourceOS spec make validate now validates ReleaseSet, Fingerprint, BootReleaseSet, and EnrollmentToken examples against control-plane schemas."
+  relevant_workflows: []
+
+software_review:
+  correctness:
+    - "The boot provisioning tranche extends the existing control-plane lifecycle proof without duplicating schemas."
+    - "The BootReleaseSet example links recovery boot artifacts to the assigned ReleaseSet."
+    - "The EnrollmentToken example models one-time recovery authorization for the M2 local-first demo device."
+    - "The example intentionally uses non-operational artifact URNs rather than live fetch URLs."
+  weaknesses:
+    - "The repo has no active PR workflow gate for this tranche."
+    - "This tranche does not yet define a richer signed boot manifest or nlboot wire protocol."
+  next_hardening:
+    - "Define richer signed boot manifest / nlboot-evolved provisioning protocol if current minimal BootReleaseSet is insufficient."
+    - "Map SourceOS design specs to implementation homes across sociosphere, prophet-platform, agentplane, and sourceos repos."
+    - "Register future implementation tranches in Sociosphere after merge."
+
+running_backlog:
+  - "Define richer signed boot manifest / nlboot-evolved provisioning protocol if current BootReleaseSet is insufficient."
+  - "Map SourceOS design specs to implementation homes across sociosphere, prophet-platform, agentplane, and sourceos repos."
+  - "Add runtime configuration for Policy Fabric endpoint URL once deployment topology is defined."
+  - "Add deployment packaging for Policy Fabric endpoint after runtime topology is defined."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Keep Sociosphere informed for every future platform build/test/deploy tranche."
+  - "Do not add hidden remote mutation without explicit policy gates."
+  - "Use SourceOS-Linux/sourceos-spec as canonical contract home for SourceOS typed schemas."
