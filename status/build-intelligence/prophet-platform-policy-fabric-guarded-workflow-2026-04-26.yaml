@@ -1,0 +1,85 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T14:05:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+scope:
+  program: "Prophet Platform / Policy Fabric Integration"
+  lane: "platform-policy-fabric-guarded-workflow"
+  intent: "Register the guarded Policy Fabric operations validation workflow after merge."
+
+merged_tranches:
+  - pr: 198
+    title: "Add guarded Policy Fabric operations validation workflow"
+    merge_commit: "900aae3e85a28b8e61b8a36271c2b9a09d7ff347"
+    gates_closed:
+      - added guarded workflow wrapper for Policy Fabric operations validation
+      - workflow extracts policy-gated recommendation from operations evidence bundle
+      - workflow invokes Policy Fabric operations endpoint client
+      - workflow writes decision artifact and validation report
+      - workflow runs existing execution-blocking local policy-decision validator
+      - added mock-endpoint smoke proving report-only/manual-review behavior and no remediation execution
+      - wired smoke into make validate and make smoke
+      - CI/workflow pass
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "tools/run_policy_fabric_guarded_operations_validation.py"
+      - "tools/smoke_policy_fabric_guarded_operations_validation.py"
+      - "Makefile"
+
+active_tranches:
+  - pr: 198
+    title: "Add guarded Policy Fabric operations validation workflow"
+    branch: "work/policy-fabric-guarded-workflow"
+    state: "merged"
+    subject: "Guarded Policy Fabric operations validation workflow"
+    gates_completed:
+      - guarded workflow merged
+      - mock endpoint smoke merged
+      - validation wiring merged
+      - post-merge verification complete
+    files_changed:
+      - "tools/run_policy_fabric_guarded_operations_validation.py"
+      - "tools/smoke_policy_fabric_guarded_operations_validation.py"
+      - "Makefile"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "updated"
+    notes: "Prophet Platform make validate includes guarded Policy Fabric operations validation smoke."
+  relevant_workflows:
+    - "validate"
+    - "ci"
+    - "platform-contracts-check"
+    - "platform-wave1-stubs"
+    - "premerge-audit"
+    - "brokerage-validation"
+
+software_review:
+  correctness:
+    - "Prophet Platform now has a guarded workflow that can obtain a Policy Fabric endpoint decision and feed it through the existing local execution gate."
+    - "The workflow writes decision and report artifacts and records executed_remediation=false."
+    - "The smoke proves manual-review decisions remain blocked for execution."
+  weaknesses:
+    - "Runtime endpoint URL configuration is still explicit/operator-supplied, not yet deployment-configured."
+    - "The workflow still does not execute actions; it validates policy decisions only."
+  next_hardening:
+    - "Add runtime configuration for Policy Fabric endpoint URL once deployment topology is defined."
+    - "Add SourceOS ReleaseSet and fingerprint schema implementation homes."
+    - "Register future implementation tranches in Sociosphere after merge."
+
+running_backlog:
+  - "Add runtime configuration for Policy Fabric endpoint URL once deployment topology is defined."
+  - "Produce SourceOS ReleaseSet.v1 schema."
+  - "Produce SourceOS fingerprint.v1 schema."
+  - "Produce BootReleaseSet.v0 / secure boot provisioning schema aligned to nlboot evolution."
+  - "Map SourceOS design specs to implementation homes across sociosphere, prophet-platform, agentplane, and sourceos repos."
+  - "Add deployment packaging for Policy Fabric endpoint after runtime topology is defined."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Do not add hidden remote mutation without explicit policy gates."
