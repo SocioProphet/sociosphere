@@ -1,0 +1,83 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T14:25:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SourceOS-Linux/sourceos-spec"
+status: "active"
+
+scope:
+  program: "SourceOS / Control Plane Contract Layer"
+  lane: "control-plane-lifecycle-proof-examples"
+  intent: "Register concrete ReleaseSet and Fingerprint examples for the local-first M2 lifecycle proof path."
+
+merged_tranches:
+  - pr: 59
+    title: "Add control-plane ReleaseSet and Fingerprint examples"
+    merge_commit: "64c8439387665335416738497c16ad4eef0b7e67"
+    gates_closed:
+      - identified SourceOS-Linux/sourceos-spec as canonical machine-readable contract repo
+      - confirmed ReleaseSet and Fingerprint schemas already exist under schemas/control-plane
+      - avoided duplicate schema creation
+      - added conforming ReleaseSet example for M2 local-first assignment
+      - added conforming Fingerprint example for post-apply compliance observation
+      - added control-plane example validator
+      - added Makefile validation target
+      - updated examples catalog
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "examples/release_set.json"
+      - "examples/fingerprint.json"
+      - "tools/validate_control_plane_examples.py"
+      - "Makefile"
+      - "examples/README.md"
+
+active_tranches:
+  - pr: 59
+    title: "Add control-plane ReleaseSet and Fingerprint examples"
+    branch: "work/control-plane-examples"
+    state: "merged"
+    subject: "SourceOS ReleaseSet and Fingerprint lifecycle examples"
+    gates_completed:
+      - examples merged
+      - validator merged
+      - examples catalog updated
+      - post-merge verification complete
+    files_changed:
+      - "examples/release_set.json"
+      - "examples/fingerprint.json"
+      - "tools/validate_control_plane_examples.py"
+      - "Makefile"
+      - "examples/README.md"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "added"
+    notes: "SourceOS spec make validate now validates ReleaseSet and Fingerprint examples against control-plane schemas."
+  relevant_workflows: []
+
+software_review:
+  correctness:
+    - "The schema home was selected from repo evidence rather than assumption."
+    - "Existing ReleaseSet and Fingerprint schemas were hardened with examples instead of duplicated."
+    - "The M2 local-first lifecycle proof path now has example objects for assignment and post-apply compliance observation."
+  weaknesses:
+    - "The repo has no active PR workflow gate for this tranche."
+    - "BootReleaseSet and secure boot provisioning examples remain future work."
+  next_hardening:
+    - "Add BootReleaseSet and enrollment/provisioning examples aligned to nlboot evolution."
+    - "Add stronger schema resolution validation over canonical wrappers if needed."
+    - "Register future implementation tranches in Sociosphere after merge."
+
+running_backlog:
+  - "Produce BootReleaseSet.v0 / secure boot provisioning examples aligned to nlboot evolution."
+  - "Map SourceOS design specs to implementation homes across sociosphere, prophet-platform, agentplane, and sourceos repos."
+  - "Add runtime configuration for Policy Fabric endpoint URL once deployment topology is defined."
+  - "Add deployment packaging for Policy Fabric endpoint after runtime topology is defined."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Keep Sociosphere informed for every future platform build/test/deploy tranche."
+  - "Do not add hidden remote mutation without explicit policy gates."
+  - "Use SourceOS-Linux/sourceos-spec as canonical contract home for SourceOS typed schemas."
