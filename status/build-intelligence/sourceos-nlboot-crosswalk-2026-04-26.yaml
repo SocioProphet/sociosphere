@@ -1,0 +1,62 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T15:40:00-04:00"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+scope:
+  program: "SourceOS / Boot and Recovery Plane"
+  lane: "sourceos-nlboot-fixture-crosswalk"
+  intent: "Register merged prophet-platform alignment between SourceOS M2 lifecycle proof objects and the nlboot M2 recovery fixture."
+
+merged_tranches:
+  - pr: 218
+    title: "sourceos: align M2 lifecycle proof with nlboot fixture"
+    merge_commit: "5207d5ac6c3d616331f19a88458773866423ffc2"
+    branch: "work/sourceos-nlboot-fixture-crosswalk"
+    gates_closed:
+      - confirmed no active SourceOS/BootReleaseSet/nlboot PR collision before work
+      - aligned SourceOS M2 lifecycle proof constants to nlboot fixture URNs
+      - added nlboot-crosswalk.json to generated proof bundle
+      - extended M2 proof smoke to verify crosswalk internal consistency
+      - documented SourceOS-to-nlboot crosswalk
+      - preserved proof-fixture-only safety boundary
+      - merged PR 218 by squash after mergeability check
+    artifacts:
+      - "tools/build_sourceos_m2_lifecycle_proof.py"
+      - "tools/smoke_sourceos_m2_lifecycle_proof.py"
+      - "docs/SOURCEOS_NLBOOT_CROSSWALK.md"
+
+linked_tranches:
+  - repo: "SociOS-Linux/nlboot"
+    pr: 5
+    merge_commit: "787129bb990e6bb458e33c9d57957a186686cdf6"
+    role: "Provides side-effect-free nlboot M2 recovery fixture consumed by this crosswalk."
+
+software_review:
+  correctness:
+    - "prophet-platform now emits a deterministic nlboot-crosswalk.json in the M2 lifecycle proof bundle."
+    - "The proof smoke validates that the generated crosswalk references the generated ReleaseSet and BootReleaseSet."
+    - "The generated BootReleaseSet includes the nlboot manifest id as an artifact URI."
+    - "The proof index now references the crosswalk artifact."
+  safety_boundary:
+    - "No live boot execution was added."
+    - "No artifact fetching was added."
+    - "No host mutation was added."
+    - "No disk writes were added."
+    - "No kexec execution was added."
+  weaknesses:
+    - "The crosswalk is still a deterministic proof fixture, not a live boot execution record."
+    - "Filesystem registry publication of SourceOS proof artifacts is not wired yet."
+    - "Synthetic boot Fingerprint emission from an nlboot plan remains follow-on work."
+
+next_hardening:
+  - "Publish the generated SourceOS M2 proof bundle through the filesystem registry path."
+  - "Make nlboot consume a registry-published manifest fixture without side effects."
+  - "Emit synthetic SourceOS Fingerprint from a planned boot path."
+  - "Validate synthetic boot Fingerprint against assigned ReleaseSet and BootReleaseSet."
+
+running_backlog:
+  - "Connect filesystem registry published SourceOS artifacts to nlboot fixture inputs."
+  - "Add SourceOS lifecycle proof-slice aggregation across prophet-platform, nlboot, and sociosphere."
+  - "Continue avoiding hidden remote mutation without explicit policy gates."
