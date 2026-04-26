@@ -1,0 +1,82 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T01:04:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+scope:
+  program: "Prophet Platform / Zone Publication Runtime"
+  lane: "zone-publication-stack-cleanup"
+  intent: "Register the current-main audit and cleanup of stale zone-publication stacked PRs."
+
+merged_tranches:
+  - pr: 186
+    title: "Audit stale zone publication stack"
+    merge_commit: "9a8b474c380a7bc99a910db13cff67d7cda3631c"
+    gates_closed:
+      - inspected stacked PRs 142, 156, and 173
+      - documented stale stack scope
+      - added CI-owned zone publication stack audit
+      - wired audit validation into make validate
+      - CI/workflow pass
+      - merge
+      - post-merge main verification
+      - closed stale PR 142
+      - closed stale PR 156
+      - closed stale PR 173
+    artifacts:
+      - "docs/ZONE_PUBLICATION_STACK_AUDIT.md"
+      - "tools/validate_zone_publication_stack_audit.py"
+      - "Makefile"
+
+active_tranches:
+  - pr: 186
+    title: "Audit stale zone publication stack"
+    branch: "work/zone-stack-audit"
+    state: "merged"
+    subject: "Zone publication stale-stack cleanup"
+    gates_completed:
+      - audit merged
+      - stale stack closed
+      - replacement scope recorded
+    files_changed:
+      - "docs/ZONE_PUBLICATION_STACK_AUDIT.md"
+      - "tools/validate_zone_publication_stack_audit.py"
+      - "Makefile"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "updated"
+    notes: "Prophet Platform make validate now includes zone publication stack audit validation."
+  relevant_workflows:
+    - "validate"
+    - "ci"
+    - "platform-contracts-check"
+    - "platform-wave1-stubs"
+    - "premerge-audit"
+    - "brokerage-validation"
+
+software_review:
+  correctness:
+    - "The stale stacked zone-publication PRs are no longer active review surfaces."
+    - "The replacement implementation scope is recorded in a CI-owned audit."
+  weaknesses:
+    - "The audit does not implement semantic-bridge validation, transport adapters, retry state, or failure evidence."
+    - "The next implementation must be opened from current main and should not reuse the stale branch stack directly."
+  next_hardening:
+    - "Open a current-main implementation PR for the minimal safe zone publication lifecycle replacement slice."
+    - "Register the implementation tranche in Sociosphere after merge."
+
+running_backlog:
+  - "Open current-main zone publication lifecycle replacement implementation."
+  - "Verify Policy Fabric live endpoint/service completeness."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Add policy-aware action derivation for Academy search results if needed."
+  - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
+  - "Add connector-backed verification that refreshes Sociosphere's vendored AppSet snapshot from prophet-platform."
+  - "Reconcile ecosystem-status.yaml stale snapshot with current repo/PR state."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Keep Sociosphere informed for every future platform build/test/deploy tranche."
