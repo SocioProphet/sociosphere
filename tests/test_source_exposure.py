@@ -13,8 +13,10 @@ def test_source_exposure_checker_blocks_private_key(tmp_path: Path) -> None:
     source_policy = Path("standards/source-exposure/policy.v0.json")
     policy_dir.joinpath("policy.v0.json").write_text(source_policy.read_text("utf-8"), "utf-8")
 
+    begin_private_key = "-----BEGIN " + "PRIVATE KEY-----"
+    end_private_key = "-----END " + "PRIVATE KEY-----"
     secret = repo / "bad.pem"
-    secret.write_text("-----BEGIN PRIVATE KEY-----\nredacted\n-----END PRIVATE KEY-----\n", "utf-8")
+    secret.write_text(f"{begin_private_key}\nredacted\n{end_private_key}\n", "utf-8")
 
     cp = subprocess.run(
         [
