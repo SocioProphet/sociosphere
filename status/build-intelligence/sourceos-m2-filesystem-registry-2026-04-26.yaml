@@ -1,0 +1,68 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T16:05:00-04:00"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+scope:
+  program: "SourceOS / Boot and Recovery Plane"
+  lane: "sourceos-m2-filesystem-registry"
+  intent: "Register merged local filesystem-registry publication smoke for the SourceOS M2 lifecycle proof bundle."
+
+merged_tranches:
+  - pr: 221
+    title: "sourceos: publish M2 lifecycle proof to filesystem registry"
+    merge_commit: "643239fbb2ad2482f2b5ea868b382219aefa1c95"
+    branch: "work/sourceos-m2-proof-filesystem-registry"
+    gates_closed:
+      - confirmed no active SourceOS filesystem registry PR collision before work
+      - added SourceOS M2 proof filesystem registry publisher
+      - added SourceOS M2 filesystem registry smoke test
+      - wired filesystem registry smoke into SourceOS contracts workflow
+      - documented SourceOS M2 filesystem registry layout and safety boundary
+      - preserved local proof-artifact-only safety boundary
+      - merged PR 221 by squash after mergeability check
+    artifacts:
+      - "tools/publish_sourceos_m2_filesystem_registry.py"
+      - "tools/smoke_sourceos_m2_filesystem_registry.py"
+      - ".github/workflows/sourceos-contracts.yml"
+      - "docs/SOURCEOS_M2_FILESYSTEM_REGISTRY.md"
+
+linked_tranches:
+  - repo: "SociOS-Linux/nlboot"
+    pr: 5
+    merge_commit: "787129bb990e6bb458e33c9d57957a186686cdf6"
+    role: "Provides side-effect-free nlboot M2 recovery fixture."
+  - repo: "SocioProphet/prophet-platform"
+    pr: 218
+    merge_commit: "5207d5ac6c3d616331f19a88458773866423ffc2"
+    role: "Aligns SourceOS M2 lifecycle proof objects to nlboot fixture."
+
+software_review:
+  correctness:
+    - "prophet-platform now publishes the generated SourceOS M2 proof bundle into a local filesystem registry layout."
+    - "The registry pointer includes release id, version, proof-index digest, and copied artifact digests."
+    - "The smoke path validates required proof artifacts are present in the local registry pointer."
+    - "The SourceOS contracts workflow now runs the filesystem registry smoke."
+  safety_boundary:
+    - "No network registry publication was added."
+    - "No boot-client artifact fetching was added."
+    - "No host mutation was added."
+    - "No disk writes were added."
+    - "No kexec execution was added."
+    - "No remote state mutation was added."
+  weaknesses:
+    - "This is still local filesystem publication only, not authenticated network serving."
+    - "nlboot does not yet consume the registry-published manifest fixture."
+    - "Synthetic boot Fingerprint emission from the planned boot path remains follow-on work."
+
+next_hardening:
+  - "Make nlboot consume a registry-published manifest fixture without side effects."
+  - "Emit synthetic SourceOS Fingerprint from a planned boot path."
+  - "Validate synthetic boot Fingerprint against assigned ReleaseSet and BootReleaseSet."
+  - "Add release pointer signing or signed root metadata before any network registry lane."
+
+running_backlog:
+  - "Connect registry-published SourceOS artifacts to nlboot fixture inputs."
+  - "Add SourceOS lifecycle proof-slice aggregation across prophet-platform, nlboot, and sociosphere."
+  - "Continue avoiding hidden remote mutation without explicit policy gates."
