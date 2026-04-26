@@ -1,0 +1,80 @@
+{
+  "schema_version": "sociosphere.source-exposure-policy/v0.1",
+  "name": "Sociosphere Source Exposure Governance Policy",
+  "default_visibility_tier": "community_inner_source",
+  "blocked_path_suffixes": [
+    ".pem",
+    ".key",
+    ".p12",
+    ".pfx",
+    ".har",
+    ".pcap",
+    ".pcapng",
+    ".tfstate",
+    ".tfstate.backup",
+    ".kubeconfig"
+  ],
+  "blocked_path_names": [
+    ".env",
+    ".env.local",
+    ".env.production",
+    "id_rsa",
+    "id_dsa",
+    "id_ecdsa",
+    "id_ed25519",
+    "kubeconfig",
+    "terraform.tfstate",
+    "terraform.tfstate.backup"
+  ],
+  "ignored_dirs": [
+    ".git",
+    ".hg",
+    ".svn",
+    ".venv",
+    "venv",
+    "node_modules",
+    "dist",
+    "build",
+    "__pycache__",
+    "artifacts"
+  ],
+  "max_file_bytes": 1048576,
+  "content_rules": [
+    {
+      "id": "private-key-material",
+      "severity": "block",
+      "pattern": "-----BEGIN (RSA |DSA |EC |OPENSSH |PGP )?PRIVATE KEY-----",
+      "description": "Private key material must never be committed or published."
+    },
+    {
+      "id": "aws-access-key-id",
+      "severity": "block",
+      "pattern": "\\bAKIA[0-9A-Z]{16}\\b",
+      "description": "AWS access key identifiers must never be committed or published."
+    },
+    {
+      "id": "github-token",
+      "severity": "block",
+      "pattern": "\\bgh[pousr]_[A-Za-z0-9_]{36,255}\\b",
+      "description": "GitHub tokens must never be committed or published."
+    },
+    {
+      "id": "slack-token",
+      "severity": "block",
+      "pattern": "\\bxox[baprs]-[A-Za-z0-9-]{10,}\\b",
+      "description": "Slack tokens must never be committed or published."
+    },
+    {
+      "id": "google-api-key",
+      "severity": "block",
+      "pattern": "\\bAIza[0-9A-Za-z\\-_]{35}\\b",
+      "description": "Google API keys must never be committed or published."
+    },
+    {
+      "id": "prod-env-assignment",
+      "severity": "warn",
+      "pattern": "(?i)\\b(PROD|PRODUCTION)_[A-Z0-9_]*(TOKEN|SECRET|PASSWORD|KEY)\\s*=",
+      "description": "Production credential variable assignments require review even if values are redacted."
+    }
+  ]
+}

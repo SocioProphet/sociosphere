@@ -80,6 +80,14 @@ compliance-check:
 compliance-summary:
 	python3 telemetry/compliance_checker.py summary --format json
 
+# --- source exposure governance targets ---
+.PHONY: source-exposure-check
+
+source-exposure-check:
+	@echo "==> Running source exposure publication safety check..."
+	python3 tools/check_source_exposure.py
+	@echo "OK: source-exposure-check passed"
+
 # --- merge order ---
 .PHONY: merge-order
 
@@ -119,5 +127,5 @@ hygiene-check:
 # --- full workspace check (run in CI) ---
 .PHONY: workspace-check
 
-workspace-check: validate registry-validate build-intelligence-validate deployment-topology-validate contract-lock-validate compliance-check lock-verify topology-check hygiene-check
+workspace-check: validate registry-validate build-intelligence-validate deployment-topology-validate contract-lock-validate compliance-check source-exposure-check lock-verify topology-check hygiene-check
 	@echo "OK: workspace-check passed"
