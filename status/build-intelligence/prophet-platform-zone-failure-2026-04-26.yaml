@@ -1,0 +1,91 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T01:48:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+scope:
+  program: "Prophet Platform / Zone Publication Runtime"
+  lane: "zone-publication-failure-evidence"
+  intent: "Register structured failed publication outcomes and failure evidence for zone publication transport failures."
+
+merged_tranches:
+  - pr: 189
+    title: "Add zone publication failure evidence path"
+    merge_commit: "3dfd194945f500998b66722cb8ff3caa280658fc"
+    gates_closed:
+      - added ZonePublicationFailureEvidence contract
+      - added forced-failure transport path transport://fail/test
+      - emitted structured failure evidence artifacts
+      - emitted failed publication outcomes linked to failure evidence
+      - updated ZonePublicationOutcome schema for published and failed status refs
+      - added failure evidence smoke
+      - wired failure smoke into make validate and make smoke
+      - CI/workflow pass
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "contracts/ZonePublicationFailureEvidence.v0.1.json"
+      - "apps/zone-router/src/zone_router/transport_adapters.py"
+      - "apps/zone-router/src/zone_router/publish.py"
+      - "contracts/ZonePublicationOutcome.v0.1.json"
+      - "tools/smoke_zone_publication_failure_evidence.py"
+      - "Makefile"
+
+active_tranches:
+  - pr: 189
+    title: "Add zone publication failure evidence path"
+    branch: "work/zone-failure-evidence"
+    state: "merged"
+    subject: "Structured failed zone publication outcomes"
+    gates_completed:
+      - failure evidence contract merged
+      - forced-failure transport merged
+      - failed outcome path merged
+      - smoke validation merged
+      - post-merge verification complete
+    files_changed:
+      - "contracts/ZonePublicationFailureEvidence.v0.1.json"
+      - "apps/zone-router/src/zone_router/transport_adapters.py"
+      - "apps/zone-router/src/zone_router/publish.py"
+      - "contracts/ZonePublicationOutcome.v0.1.json"
+      - "tools/smoke_zone_publication_failure_evidence.py"
+      - "Makefile"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "updated"
+    notes: "Prophet Platform make validate includes zone publication failure evidence smoke."
+  relevant_workflows:
+    - "validate"
+    - "ci"
+    - "platform-contracts-check"
+    - "platform-wave1-stubs"
+    - "premerge-audit"
+    - "brokerage-validation"
+
+software_review:
+  correctness:
+    - "Zone publication failures now produce structured failure evidence artifacts."
+    - "Failed outcomes preserve failure refs and trace back to publication record, carrier, event, receipt, catalog, zone, and topic."
+  weaknesses:
+    - "This implementation does not yet add retry and attempt state."
+    - "This implementation does not yet publish to a real remote broker endpoint."
+  next_hardening:
+    - "Add retry and attempt state."
+    - "Add real broker transport after local adapter semantics stabilize."
+    - "Register future implementation tranches in Sociosphere after merge."
+
+running_backlog:
+  - "Add retry and attempt state for zone publication lifecycle."
+  - "Add real broker transport after local adapter semantics stabilize."
+  - "Verify Policy Fabric live endpoint/service completeness."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
+  - "Reconcile ecosystem-status.yaml stale snapshot with current repo/PR state."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Keep Sociosphere informed for every future platform build/test/deploy tranche."
+  - "Keep zone publication lifecycle slices small and current-main based."
