@@ -1,0 +1,104 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T18:50:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SociOS-Linux/nlboot"
+status: "active"
+
+scope:
+  program: "SourceOS / Boot and Recovery Plane"
+  lane: "nlboot-fips-ready-manifest-verification"
+  intent: "Register nlboot RSA-PSS/SHA-256 manifest verification and FIPS-ready protocol enforcement."
+
+merged_tranches:
+  - pr: 3
+    title: "Add FIPS-ready RSA-PSS manifest verification"
+    merge_commit: "9671a3d4526b49b6710b1f14b3234b2c1b52d468"
+    gates_closed:
+      - corrected compliance claim language from certified/compliant to FIPS-ready/FIPS-profiled
+      - added RSA-PSS/SHA-256 verification helpers
+      - added trusted-key manifest loading
+      - added canonical manifest payload construction excluding signature_hex
+      - required trusted-key CLI input
+      - added --require-fips CLI gate
+      - required signature_algorithm rsa-pss-sha256 in SignedBootManifest
+      - required crypto_profile fips-140-3-compatible in SignedBootManifest
+      - added signature_algorithm and crypto_profile to emitted BootPlan
+      - added signed recovery manifest fixture
+      - added trusted RSA key fixture
+      - updated CLI smoke to verify with trusted keys and --require-fips
+      - updated unit tests for required manifest fields and rejection paths
+      - updated validation dependency install for cryptography
+      - CI validate pass
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "src/nlboot/verify.py"
+      - "src/nlboot/cli.py"
+      - "src/nlboot/protocol.py"
+      - "examples/signed_boot_manifest.recovery.json"
+      - "examples/trusted_keys.recovery.json"
+      - "tests/test_cli_examples.py"
+      - "tests/test_protocol.py"
+      - "Makefile"
+      - "pyproject.toml"
+
+active_tranches:
+  - pr: 3
+    title: "Add FIPS-ready RSA-PSS manifest verification"
+    branch: "work/signature-verification"
+    state: "merged"
+    subject: "nlboot FIPS-ready manifest verification"
+    gates_completed:
+      - verification helpers merged
+      - trusted-key CLI verification merged
+      - protocol metadata requirements merged
+      - test and fixture updates merged
+      - CI pass
+      - post-merge verification complete
+    files_changed:
+      - "src/nlboot/verify.py"
+      - "src/nlboot/cli.py"
+      - "src/nlboot/protocol.py"
+      - "examples/signed_boot_manifest.recovery.json"
+      - "examples/trusted_keys.recovery.json"
+      - "tests/test_cli_examples.py"
+      - "tests/test_protocol.py"
+      - "Makefile"
+      - "pyproject.toml"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "covered_by_ci"
+    notes: "nlboot validate workflow now covers cryptography dependency install, RSA-PSS trusted-key verification, required manifest metadata, and safe plan output."
+  relevant_workflows:
+    - "validate"
+
+software_review:
+  correctness:
+    - "nlboot now verifies recovery manifests against a trusted RSA public key before producing a plan."
+    - "The CLI requires trusted keys and can enforce the FIPS-ready profile with --require-fips."
+    - "SignedBootManifest requires rsa-pss-sha256, fips-140-3-compatible, and signature_hex fields."
+    - "Boot plans remain side-effect-free and keep execute=false."
+  weaknesses:
+    - "This is FIPS-ready protocol enforcement, not FIPS 140-3 certification by itself."
+    - "FIPS compliance depends on deployment with a validated cryptographic module/runtime."
+    - "No artifact fetch, disk mutation, or host execution exists yet."
+  next_hardening:
+    - "Add runtime evidence of validated cryptographic module/profile when running in FIPS-targeted deployments."
+    - "Add key rotation, revocation, and trust root lifecycle semantics."
+    - "Keep any execution-capable nlboot behavior explicitly policy gated."
+    - "Register future implementation tranches in Sociosphere after merge."
+
+running_backlog:
+  - "Add runtime evidence of validated cryptographic module/profile for FIPS-targeted deployments."
+  - "Add nlboot key rotation, revocation, and trust-root lifecycle semantics."
+  - "Keep execution-capable nlboot behavior explicitly policy gated."
+  - "Map SourceOS design specs to implementation homes across sociosphere, prophet-platform, agentplane, and sourceos repos."
+  - "Add runtime configuration for Policy Fabric endpoint URL once deployment topology is defined."
+  - "Add deployment packaging for Policy Fabric endpoint after runtime topology is defined."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Do not add hidden remote mutation without explicit policy gates."
