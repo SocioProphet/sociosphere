@@ -1,0 +1,78 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T19:12:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SociOS-Linux/nlboot"
+status: "active"
+
+scope:
+  program: "SourceOS / Boot and Recovery Plane"
+  lane: "nlboot-trusted-key-lifecycle"
+  intent: "Register nlboot trusted-key lifecycle validation after merge."
+
+merged_tranches:
+  - pr: 4
+    title: "Add trusted-key lifecycle validation"
+    merge_commit: "33621a5ad5ec56eccad031da7822eb94081a5de7"
+    gates_closed:
+      - added trusted-key status semantics
+      - added active, retired, and revoked lifecycle states
+      - added not_before validity window
+      - added not_after expiration window
+      - added revoked_at and revocation_reason metadata
+      - enforced lifecycle validation before accepting trusted keys
+      - added tests for active, future, expired, retired, and revoked keys
+      - CI validate pass
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "src/nlboot/verify.py"
+      - "tests/test_verify.py"
+
+active_tranches:
+  - pr: 4
+    title: "Add trusted-key lifecycle validation"
+    branch: "work/trust-lifecycle"
+    state: "merged"
+    subject: "nlboot trusted-key lifecycle validation"
+    gates_completed:
+      - lifecycle verifier merged
+      - lifecycle tests merged
+      - CI pass
+      - post-merge verification complete
+    files_changed:
+      - "src/nlboot/verify.py"
+      - "tests/test_verify.py"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "covered_by_ci"
+    notes: "nlboot validate workflow now covers trusted-key active/future/expired/retired/revoked lifecycle states."
+  relevant_workflows:
+    - "validate"
+
+software_review:
+  correctness:
+    - "nlboot now fails closed if trusted keys are revoked, retired, expired, or not yet active."
+    - "Trusted-key lifecycle validation occurs before trusted keys are accepted for manifest verification."
+    - "Tests cover both accepted and rejected lifecycle states."
+  weaknesses:
+    - "Lifecycle metadata is supplied in the trusted-key document but the document is not yet itself signed."
+    - "No remote revocation feed or trust-root bundle verification exists yet."
+  next_hardening:
+    - "Add signed trust-root bundle verification."
+    - "Add revocation list / trust-root refresh semantics."
+    - "Register future implementation tranches in Sociosphere after merge."
+
+running_backlog:
+  - "Add signed trust-root bundle verification for nlboot trusted-key documents."
+  - "Add revocation list / trust-root refresh semantics for nlboot."
+  - "Add runtime evidence of validated cryptographic module/profile for FIPS-targeted deployments."
+  - "Keep execution-capable nlboot behavior explicitly policy gated."
+  - "Map SourceOS design specs to implementation homes across sociosphere, prophet-platform, agentplane, and sourceos repos."
+  - "Add runtime configuration for Policy Fabric endpoint URL once deployment topology is defined."
+  - "Add deployment packaging for Policy Fabric endpoint after runtime topology is defined."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Do not add hidden remote mutation without explicit policy gates."
