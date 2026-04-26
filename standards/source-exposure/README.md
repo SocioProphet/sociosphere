@@ -6,6 +6,8 @@ This standard controls what Sociosphere and downstream platform repositories may
 
 The goal is not secrecy for its own sake. The goal is to prevent public repositories from becoming a live, machine-readable attack graph against our own running systems while preserving auditable MIT-licensed release source, public standards, provenance, SBOMs, and security accountability.
 
+This standard is the first implemented lane under the [Angel of the Lord Hardening Regime](../angel-of-the-lord/README.md).
+
 ## Core rule
 
 Public source is allowed only after it is no longer privileged reconnaissance against our live systems.
