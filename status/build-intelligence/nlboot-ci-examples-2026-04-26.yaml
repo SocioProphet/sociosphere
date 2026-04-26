@@ -1,0 +1,79 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T15:10:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SociOS-Linux/nlboot"
+status: "active"
+
+scope:
+  program: "SourceOS / Boot and Recovery Plane"
+  lane: "nlboot-ci-and-protocol-examples"
+  intent: "Register nlboot CI workflow and SourceOS-aligned protocol examples."
+
+merged_tranches:
+  - pr: 2
+    title: "Add nlboot CI and protocol examples"
+    merge_commit: "69df5bf1dd61ce0fc5916748c79f1a869c62b518"
+    gates_closed:
+      - added GitHub Actions validate workflow
+      - added signed boot manifest recovery example aligned to SourceOS M2 demo IDs
+      - added enrollment token recovery example aligned to SourceOS M2 demo IDs
+      - added CLI example smoke test
+      - validated PR through new workflow
+      - merge
+      - post-merge main verification
+    artifacts:
+      - ".github/workflows/validate.yml"
+      - "examples/signed_boot_manifest.recovery.json"
+      - "examples/enrollment_token.recovery.json"
+      - "tests/test_cli_examples.py"
+
+active_tranches:
+  - pr: 2
+    title: "Add nlboot CI and protocol examples"
+    branch: "work/ci-examples"
+    state: "merged"
+    subject: "nlboot CI and protocol examples"
+    gates_completed:
+      - CI workflow merged
+      - protocol examples merged
+      - CLI smoke merged
+      - post-merge verification complete
+    files_changed:
+      - ".github/workflows/validate.yml"
+      - "examples/signed_boot_manifest.recovery.json"
+      - "examples/enrollment_token.recovery.json"
+      - "tests/test_cli_examples.py"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "covered_by_ci"
+    notes: "nlboot GitHub Actions validate workflow now runs make validate on pull requests and main pushes."
+  relevant_workflows:
+    - "validate"
+
+software_review:
+  correctness:
+    - "nlboot now has CI coverage for protocol planning tests."
+    - "The protocol examples align to the SourceOS spec M2 recovery ReleaseSet and BootReleaseSet IDs."
+    - "The CLI smoke proves example inputs produce a non-executing recovery plan."
+  weaknesses:
+    - "Signature verification remains shape validation only."
+    - "No artifact fetch, disk mutation, or host execution exists."
+  next_hardening:
+    - "Add real signature verification over nlboot boot manifests."
+    - "Keep execution-capable behavior explicitly policy gated."
+    - "Register future implementation tranches in Sociosphere after merge."
+
+running_backlog:
+  - "Add real signature verification over nlboot boot manifests."
+  - "Keep execution-capable nlboot behavior explicitly policy gated."
+  - "Map SourceOS design specs to implementation homes across sociosphere, prophet-platform, agentplane, and sourceos repos."
+  - "Add runtime configuration for Policy Fabric endpoint URL once deployment topology is defined."
+  - "Add deployment packaging for Policy Fabric endpoint after runtime topology is defined."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Do not add hidden remote mutation without explicit policy gates."
+  - "Use SourceOS-Linux/sourceos-spec as canonical contract home for SourceOS typed schemas."
