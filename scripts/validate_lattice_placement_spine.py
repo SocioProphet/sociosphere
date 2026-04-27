@@ -14,8 +14,23 @@ REQUIRED_PRODUCERS = {
     "SociOS-Linux/cloudshell-fog",
     "SourceOS-Linux/dnote",
 }
-REQUIRED_RECORDS = {"BYOCPlacementPlan", "UnifiedNotebookShellPlacementPlan", "M2TopoLVMPlacementPlan"}
+REQUIRED_RECORDS = {
+    "BYOCPlacementPlan",
+    "UnifiedNotebookShellPlacementPlan",
+    "M2TopoLVMPlacementPlan",
+    "PlacementDryRunReport",
+}
 REQUIRED_CONSUMERS = {"SocioProphet/sherlock-search", "SocioProphet/prophet-cli", "SocioProphet/sociosphere"}
+REQUIRED_LANES = {"byoc", "cloudshell_fog", "command_line_notebook", "m2_topolvm", "placement_decision"}
+REQUIRED_DECISION_CHECKS = {
+    "byoc-compute-targets",
+    "byoc-storage-targets",
+    "byoc-io-bindings",
+    "cloudshell-fog-terminal-path",
+    "m2-topolvm-safety-boundary",
+    "notebook-adapter-launch-coverage",
+    "promotion-target-coverage",
+}
 
 
 def require(condition: bool, message: str) -> None:
@@ -36,14 +51,22 @@ def validate(path: Path) -> None:
     require(REQUIRED_RECORDS.issubset(record_names), f"missing records: {sorted(REQUIRED_RECORDS - record_names)}")
     lanes = data.get("placement_lanes")
     require(isinstance(lanes, dict), "placement_lanes must be object")
-    for key in ["byoc", "cloudshell_fog", "command_line_notebook", "m2_topolvm"]:
+    for key in REQUIRED_LANES:
         require(key in lanes, f"missing placement lane {key}")
+    decision = lanes.get("placement_decision")
+    require(isinstance(decision, dict), "placement_decision must be object")
+    require(decision.get("canonical_record") == "PlacementDryRunReport", "placement decision canonical record mismatch")
+    checks = set(decision.get("required_checks", []))
+    require(REQUIRED_DECISION_CHECKS.issubset(checks), f"missing decision checks: {sorted(REQUIRED_DECISION_CHECKS - checks)}")
     consumers = data.get("consumers")
     require(isinstance(consumers, list) and consumers, "consumers must be non-empty")
     consumer_repos = {item.get("repo") for item in consumers if isinstance(item, dict)}
     require(REQUIRED_CONSUMERS.issubset(consumer_repos), f"missing consumers: {sorted(REQUIRED_CONSUMERS - consumer_repos)}")
+    consumed_records = {record for item in consumers if isinstance(item, dict) for record in item.get("consumes", [])}
+    require("PlacementDryRunReport" in consumed_records, "PlacementDryRunReport must be consumed")
     invariant_text = "\n".join(str(item) for item in data.get("invariants", []))
     require("side-effect-free" in invariant_text, "side-effect-free invariant missing")
+    require("PlacementDryRunReport" in invariant_text, "PlacementDryRunReport invariant missing")
     require("PlatformAssetRecord" in invariant_text, "PlatformAssetRecord invariant missing")
 
 
