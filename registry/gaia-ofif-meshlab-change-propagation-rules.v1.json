@@ -1,8 +1,8 @@
 {
   "rules_version": "v1",
   "program": "gaia-ofif-meshlab-control-tower",
-  "updated_at": "2026-04-27T04:20:00Z",
-  "purpose": "Change propagation rules for cross-repo GAIA / OFIF / MeshLab / Control Tower contracts, fixtures, validators, OpenStreetMap bindings, and readiness metadata.",
+  "updated_at": "2026-04-27T20:20:00Z",
+  "purpose": "Change propagation rules for cross-repo GAIA / OFIF / MeshLab / Control Tower contracts, fixtures, validators, OpenStreetMap bindings, optional KubeEdge substrate governance, and readiness metadata.",
   "rules": [
     {
       "id": "gaia-schema-change",
@@ -38,6 +38,18 @@
         "Confirm OSM-only route or layer outputs are advisory unless additional validation exists.",
         "Review Sherlock OSM-derived map/search records.",
         "Do not add Lattice OSM runtime assets until executable runtime boundary is defined."
+      ]
+    },
+    {
+      "id": "kubeedge-optional-substrate-change",
+      "when": {"repo": "sociosphere", "paths": ["docs/integrations/KUBEEDGE_OPTIONAL_EDGE_SUBSTRATE.md", "registry/gaia-ofif-meshlab-capability-map.v1.json"]},
+      "notify": ["prophet-platform", "gaia-world-model", "orion-field-intelligence", "agentplane", "meshrush"],
+      "required_actions": [
+        "Confirm KubeEdge remains optional and not required for local-first or Smart Spaces deployments.",
+        "Confirm SourceOS/nlboot remains the host lifecycle authority.",
+        "Confirm no Smart Spaces implementation schema is created by implication.",
+        "Confirm Agentplane approval boundaries are required before actuation.",
+        "Update progress ledger if KubeEdge readiness state changes."
       ]
     },
     {
