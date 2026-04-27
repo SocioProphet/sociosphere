@@ -1,0 +1,30 @@
+{
+  "policy_version": "v0",
+  "policy_id": "osm-source-attribution-v0",
+  "status": "active-draft",
+  "required_artifact_fields": {
+    "OSMFeatureBinding": ["osm_ref", "attribution", "provenance.source_refs"],
+    "MapTileLayerManifest": ["attribution.attribution_text", "attribution.license_refs", "provenance.source_refs"],
+    "OSMRouteGraphManifest": ["safety_status", "attribution.attribution_text", "attribution.license_refs", "provenance.source_refs"],
+    "SherlockOSMRecord": ["spatial_refs", "provenance_refs"]
+  },
+  "route_policy": {
+    "default_status": "advisory",
+    "safety_critical_claim_requires": [
+      "route_validation_record",
+      "safety_case",
+      "operator_or_authority_approval"
+    ]
+  },
+  "runtime_policy": {
+    "lattice_admission_requires": [
+      "reviewed_runtime_boundary",
+      "executable_entrypoint",
+      "validation_command",
+      "passing_fixture",
+      "policy_constraints",
+      "rollback_semantics",
+      "named_evidence_outputs"
+    ]
+  }
+}
