@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.org/sociosphere/schemas/edge/edge_host_lifecycle_binding.v1.schema.json",
+  "title": "EdgeHostLifecycleBinding v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_version",
+    "binding_id",
+    "edge_node_id",
+    "site_ref",
+    "fleet_ref",
+    "workspace_ref",
+    "device_claim_ref",
+    "host_identity_ref",
+    "attestation_ref",
+    "sourceos_release_set_ref",
+    "nlboot_boot_release_set_ref",
+    "recovery_policy_ref",
+    "rollback_plan_ref",
+    "enrollment_state",
+    "validated_at",
+    "policy_bundle_refs",
+    "evidence_refs",
+    "classification"
+  ],
+  "properties": {
+    "record_version": {"type": "string", "const": "v1"},
+    "binding_id": {"type": "string"},
+    "edge_node_id": {"type": "string"},
+    "site_ref": {"type": "string"},
+    "fleet_ref": {"type": "string"},
+    "workspace_ref": {"type": "string"},
+    "device_claim_ref": {"type": "string"},
+    "host_identity_ref": {"type": "string"},
+    "attestation_ref": {"type": "string"},
+    "sourceos_release_set_ref": {"type": "string"},
+    "nlboot_boot_release_set_ref": {"type": "string"},
+    "recovery_policy_ref": {"type": "string"},
+    "rollback_plan_ref": {"type": "string"},
+    "enrollment_state": {"type": "string", "enum": ["planned", "enrolled", "validated", "active", "degraded", "quarantined", "retired"]},
+    "validated_at": {"type": "string", "format": "date-time"},
+    "kubeedge": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "selected": {"type": "boolean"},
+        "role": {"type": "string", "enum": ["edgecore", "cloudcore", "both"]},
+        "version": {"type": "string"},
+        "topology_ref": {"type": "string"},
+        "autonomy_policy_ref": {"type": "string"},
+        "workload_policy_ref": {"type": "string"},
+        "partition_behavior": {"type": "string", "enum": ["continue-approved-workloads", "pause-new-workloads", "quarantine", "not-selected"]}
+      }
+    },
+    "allowed_workload_classes": {"type": "array", "items": {"type": "string"}},
+    "policy_bundle_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "source_refs": {"type": "array", "items": {"type": "string"}},
+        "created_at": {"type": "string", "format": "date-time"},
+        "content_hash": {"type": "string"}
+      }
+    },
+    "classification": {
+      "type": "object",
+      "properties": {
+        "data_class": {"type": "string", "enum": ["public", "internal", "restricted", "sensitive"]},
+        "handling_tags": {"type": "array", "items": {"type": "string"}}
+      }
+    }
+  }
+}
