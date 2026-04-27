@@ -19,9 +19,17 @@ REQUIRED_RECORDS = {
     "UnifiedNotebookShellPlacementPlan",
     "M2TopoLVMPlacementPlan",
     "PlacementDryRunReport",
+    "SafePlacementExecutionPlan",
 }
 REQUIRED_CONSUMERS = {"SocioProphet/sherlock-search", "SocioProphet/prophet-cli", "SocioProphet/sociosphere"}
-REQUIRED_LANES = {"byoc", "cloudshell_fog", "command_line_notebook", "m2_topolvm", "placement_decision"}
+REQUIRED_LANES = {
+    "byoc",
+    "cloudshell_fog",
+    "command_line_notebook",
+    "m2_topolvm",
+    "placement_decision",
+    "safe_execution",
+}
 REQUIRED_DECISION_CHECKS = {
     "byoc-compute-targets",
     "byoc-storage-targets",
@@ -30,6 +38,21 @@ REQUIRED_DECISION_CHECKS = {
     "m2-topolvm-safety-boundary",
     "notebook-adapter-launch-coverage",
     "promotion-target-coverage",
+}
+REQUIRED_SAFE_STEPS = {
+    "prepare-runtime",
+    "mount-registry-readonly",
+    "create-ephemeral-namespace",
+    "prepare-terminal-session",
+    "render-manifests",
+    "emit-approval-request",
+}
+REQUIRED_BLOCKED_EFFECTS = {
+    "host-boot-mutation",
+    "kexec",
+    "persistent-cluster-apply",
+    "remote-state-mutation",
+    "writeable-m2-registry-mount",
 }
 
 
@@ -58,15 +81,24 @@ def validate(path: Path) -> None:
     require(decision.get("canonical_record") == "PlacementDryRunReport", "placement decision canonical record mismatch")
     checks = set(decision.get("required_checks", []))
     require(REQUIRED_DECISION_CHECKS.issubset(checks), f"missing decision checks: {sorted(REQUIRED_DECISION_CHECKS - checks)}")
+    safe_execution = lanes.get("safe_execution")
+    require(isinstance(safe_execution, dict), "safe_execution must be object")
+    require(safe_execution.get("canonical_record") == "SafePlacementExecutionPlan", "safe execution canonical record mismatch")
+    steps = set(safe_execution.get("required_steps", []))
+    require(REQUIRED_SAFE_STEPS.issubset(steps), f"missing safe execution steps: {sorted(REQUIRED_SAFE_STEPS - steps)}")
+    blocked = set(safe_execution.get("blocked_effects", []))
+    require(REQUIRED_BLOCKED_EFFECTS.issubset(blocked), f"missing blocked effects: {sorted(REQUIRED_BLOCKED_EFFECTS - blocked)}")
     consumers = data.get("consumers")
     require(isinstance(consumers, list) and consumers, "consumers must be non-empty")
     consumer_repos = {item.get("repo") for item in consumers if isinstance(item, dict)}
     require(REQUIRED_CONSUMERS.issubset(consumer_repos), f"missing consumers: {sorted(REQUIRED_CONSUMERS - consumer_repos)}")
     consumed_records = {record for item in consumers if isinstance(item, dict) for record in item.get("consumes", [])}
     require("PlacementDryRunReport" in consumed_records, "PlacementDryRunReport must be consumed")
+    require("SafePlacementExecutionPlan" in consumed_records, "SafePlacementExecutionPlan must be consumed")
     invariant_text = "\n".join(str(item) for item in data.get("invariants", []))
     require("side-effect-free" in invariant_text, "side-effect-free invariant missing")
     require("PlacementDryRunReport" in invariant_text, "PlacementDryRunReport invariant missing")
+    require("SafePlacementExecutionPlan" in invariant_text, "SafePlacementExecutionPlan invariant missing")
     require("PlatformAssetRecord" in invariant_text, "PlatformAssetRecord invariant missing")
 
 
