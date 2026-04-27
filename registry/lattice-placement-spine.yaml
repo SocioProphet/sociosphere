@@ -1,0 +1,119 @@
+schema_version: 1
+name: lattice-placement-spine
+owner_repo: SocioProphet/prophet-platform
+canonical_identity: PlatformAssetRecord
+purpose: >-
+  Registers governed placement lanes for Lattice Studio, including BYOC storage,
+  BYOC compute, BYOC I/O, CloudShell Fog shell placement, notebook placement,
+  command-line notebook placement, SourceOS M2 registry mounts, TopoLVM local
+  storage, and Inception agent cluster placement.
+
+producer_surfaces:
+  - repo: SocioProphet/prophet-platform
+    records:
+      - BYOCPlacementPlan
+      - UnifiedNotebookShellPlacementPlan
+      - M2TopoLVMPlacementPlan
+    role: canonical Studio placement record producer
+  - repo: SocioProphet/cloudshell-fog
+    records:
+      - CloudShellFogBinding
+    role: fog-first browser terminal and WebSocket PTY placement lane
+  - repo: SociOS-Linux/cloudshell-fog
+    records:
+      - CloudShellFogBinding
+    role: SociOS-local CloudShell Fog integration surface
+  - repo: SourceOS-Linux/dnote
+    records:
+      - CommandLineNotebookBinding
+    role: terminal-native command-line notebook surface
+
+placement_lanes:
+  byoc:
+    storage:
+      - s3-compatible
+      - posix
+      - minio
+      - nfs
+      - lakehouse
+    compute:
+      - kubernetes
+      - array-cluster
+      - ray-cluster
+      - spark-cluster
+      - edge-node
+      - local-sourceos
+    io:
+      - object-store
+      - posix-mount
+      - websocket-pty
+      - kafka
+      - http-api
+      - jdbc
+      - arrow-flight
+  cloudshell_fog:
+    repo: SocioProphet/cloudshell-fog
+    capabilities:
+      - oidc-authentication
+      - fog-first-placement
+      - cloud-fallback
+      - yaml-policy-profiles
+      - websocket-pty
+      - kubernetes-runtime-connector
+      - stub-runtime-connector
+      - audit-events
+      - opentelemetry
+      - argocd-gitops
+      - tekton-chains-supply-chain
+  command_line_notebook:
+    repo: SourceOS-Linux/dnote
+    capabilities:
+      - single-binary
+      - sqlite-local-store
+      - full-text-search
+      - self-hosted-sync
+      - terminal-native-notes
+      - sourceos-local-friendly
+  m2_topolvm:
+    source_registry_doc: SocioProphet/prophet-platform:docs/SOURCEOS_M2_FILESYSTEM_REGISTRY.md
+    proof_fixture: SocioProphet/prophet-platform:contracts/sourceos/examples/proof-index.m2-demo.v0.json
+    capabilities:
+      - sourceos-m2-filesystem-registry
+      - topolvm-volume-claims
+      - local-vm-k8s-pool-join
+      - inception-agent-cluster-binding
+      - proof-index-mounted
+      - safety-boundary-no-host-mutation
+
+consumers:
+  - repo: SocioProphet/sherlock-search
+    consumes:
+      - BYOCPlacementPlan
+      - UnifiedNotebookShellPlacementPlan
+      - M2TopoLVMPlacementPlan
+    role: indexes placement records as searchable platform assets
+  - repo: SocioProphet/prophet-cli
+    consumes:
+      - BYOCPlacementPlan
+      - UnifiedNotebookShellPlacementPlan
+      - M2TopoLVMPlacementPlan
+    role: should expose placement dry-run and inspection commands
+  - repo: SocioProphet/sociosphere
+    consumes:
+      - lattice-placement-spine
+    role: topology registration and validation
+
+invariants:
+  - Placement records must remain side-effect-free unless an executor explicitly enters an approved execution path.
+  - SourceOS M2 registry mounts are proof artifacts and must not mutate host boot state.
+  - TopoLVM placement must be dry-run until a separate executor is approved.
+  - CloudShell Fog and notebook placement must share policy, trust tier, data locality, audit, and telemetry semantics.
+  - PlatformAssetRecord remains the shared identity for placement records.
+
+next_required_links:
+  - repo: SocioProphet/prophet-platform
+    task: add dry-run executor report for BYOC and notebook placement plans
+  - repo: SocioProphet/prophet-cli
+    task: expose BYOC, notebook-shell, and M2 TopoLVM placement commands
+  - repo: SocioProphet/sherlock-search
+    task: add facets for placement lane, storage kind, compute kind, and I/O kind
