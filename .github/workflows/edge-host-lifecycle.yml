@@ -1,0 +1,25 @@
+name: Edge Host Lifecycle
+
+on:
+  push:
+    paths:
+      - 'schemas/edge/**'
+      - 'fixtures/edge/**'
+      - 'tools/check_edge_host_lifecycle_binding.py'
+      - '.github/workflows/edge-host-lifecycle.yml'
+  pull_request:
+    paths:
+      - 'schemas/edge/**'
+      - 'fixtures/edge/**'
+      - 'tools/check_edge_host_lifecycle_binding.py'
+      - '.github/workflows/edge-host-lifecycle.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python3 tools/check_edge_host_lifecycle_binding.py
