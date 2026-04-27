@@ -2,16 +2,17 @@
   "registry_version": "v1",
   "capability_program": "gaia-ofif-meshlab-control-tower",
   "status": "active",
-  "updated_at": "2026-04-27T03:45:00Z",
+  "updated_at": "2026-04-27T04:18:00Z",
   "authority": "SocioSphere governance registry",
   "source_of_truth": {
     "master_plan": "SocioProphet/prophet-platform:docs/GAIA_OFIF_MESHLAB_CONTROL_TOWER_MASTER_PLAN.md",
     "progress_ledger": "SocioProphet/prophet-platform:registry/gaia_ofif_meshlab_progress.v1.json",
-    "governance_doc": "SocioProphet/sociosphere:docs/integrations/GAIA_OFIF_MESHLAB_GOVERNANCE.md"
+    "governance_doc": "SocioProphet/sociosphere:docs/integrations/GAIA_OFIF_MESHLAB_GOVERNANCE.md",
+    "osm_requirements": "SocioProphet/prophet-platform:docs/requirements/OPENSTREETMAP_PLATFORM_REQUIREMENTS.md"
   },
   "repositories": [
-    {"name": "prophet-platform", "role": "master plan and progress ledger", "readiness": "validated"},
-    {"name": "gaia-world-model", "role": "world model, schemas, fixtures, executable proofs", "readiness": "executable"},
+    {"name": "prophet-platform", "role": "master plan, platform requirements, and progress ledger", "readiness": "validated"},
+    {"name": "gaia-world-model", "role": "world model, schemas, fixtures, executable proofs, OSM bindings", "readiness": "executable"},
     {"name": "orion-field-intelligence", "role": "field event envelopes and fixtures", "readiness": "fixture-backed"},
     {"name": "sherlock-search", "role": "discovery records and validation", "readiness": "validated"},
     {"name": "lattice-forge", "role": "runtime provenance after admission", "readiness": "blocked"},
@@ -22,6 +23,7 @@
   ],
   "validation_lanes": [
     {"id": "gaia-contract-fixtures", "repo": "gaia-world-model", "required": true, "state": "ci-defined"},
+    {"id": "gaia-openstreetmap-bindings", "repo": "gaia-world-model", "required": true, "state": "ci-defined"},
     {"id": "sherlock-geospatial-results", "repo": "sherlock-search", "required": true, "state": "ci-defined"},
     {"id": "meshrush-crystallization-fixtures", "repo": "meshrush", "required": true, "state": "ci-defined"},
     {"id": "agentplane-meshrush-candidate", "repo": "agentplane", "required": true, "state": "pr-open-ci-green"},
