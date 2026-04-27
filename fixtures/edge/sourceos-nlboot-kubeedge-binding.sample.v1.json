@@ -1,0 +1,49 @@
+{
+  "record_version": "v1",
+  "binding_id": "edge-host-binding-demo-0001",
+  "edge_node_id": "edge-node-demo-sourceos-001",
+  "site_ref": "site://demo/edge-lab",
+  "fleet_ref": "fleet://demo/gaia-edge",
+  "workspace_ref": "workspace://socioprophet/demo",
+  "device_claim_ref": "device-claim://sourceos/edge-node-demo-001",
+  "host_identity_ref": "spiffe://socioprophet.demo/edge/edge-node-demo-sourceos-001",
+  "attestation_ref": "attestation://sourceos/edge-node-demo-001/2026-04-27",
+  "sourceos_release_set_ref": "sourceos-release-set-demo-0001",
+  "nlboot_boot_release_set_ref": "boot-release-set-demo-0001",
+  "recovery_policy_ref": "policy://sourceos/recovery/demo-standard-v1",
+  "rollback_plan_ref": "rollback://sourceos/edge-node-demo-001/standard-v1",
+  "enrollment_state": "validated",
+  "validated_at": "2026-04-27T20:32:00Z",
+  "kubeedge": {
+    "selected": true,
+    "role": "edgecore",
+    "version": "candidate-v1",
+    "topology_ref": "topology://kubeedge/demo/cloud-edge-001",
+    "autonomy_policy_ref": "policy://kubeedge/autonomy/demo-standard-v1",
+    "workload_policy_ref": "policy://kubeedge/workload/demo-standard-v1",
+    "partition_behavior": "continue-approved-workloads"
+  },
+  "allowed_workload_classes": [
+    "read-only-fixture-api",
+    "field-event-buffer",
+    "local-validation"
+  ],
+  "policy_bundle_refs": [
+    "policy://sociosphere/edge-host-lifecycle/demo-standard-v1",
+    "policy://sourceos/recovery/demo-standard-v1"
+  ],
+  "evidence_refs": [
+    "evidence://sourceos/release/sourceos-release-set-demo-0001",
+    "evidence://nlboot/boot-release-set-demo-0001",
+    "evidence://attestation/sourceos/edge-node-demo-001"
+  ],
+  "provenance": {
+    "source_refs": ["fixture://sociosphere/edge-host-lifecycle/demo-0001"],
+    "created_at": "2026-04-27T20:32:00Z",
+    "content_hash": "sha256:edgehostbindingdemo0000000000000000000000000000000000000000000"
+  },
+  "classification": {
+    "data_class": "internal",
+    "handling_tags": ["demo", "edge-host", "sourceos", "nlboot", "kubeedge-optional"]
+  }
+}
