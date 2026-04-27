@@ -1,0 +1,78 @@
+schema_version: 1
+name: lattice-platform-asset-spine
+canonical_identity: PlatformAssetRecord
+owner_repo: SocioProphet/prophet-platform
+purpose: >-
+  Registers the cross-repo Prophet Lattice product-surface metadata spine so
+  boot, runtime, search, topics, semantic governance, contract, policy, and
+  model-governance integrations share one asset identity.
+
+producer_surfaces:
+  - repo: SourceOS-Linux/sourceos-boot
+    handoff_object: BootReleaseSet v1
+    platform_asset_kind: boot-release-set
+    role: boot-live-installer-recovery-rollback
+  - repo: SocioProphet/lattice-forge
+    handoff_object: RuntimeAsset v1
+    platform_asset_kind: runtime-asset
+    role: runtime-package-kernel-sbom-provenance-scan
+
+canonical_platform:
+  repo: SocioProphet/prophet-platform
+  app: apps/lattice-surface-ingestor
+  canonical_record: PlatformAssetRecord
+  record_set: PlatformAssetRecordSet
+  enrichment_set: PlatformAssetRecordEnrichmentSet
+  generated_artifacts:
+    - build/lattice-surface-ingestor/lattice-surface-records.json
+    - build/lattice-surface-ingestor/lattice-surface-enrichments.json
+    - build/lattice-surface-ingestor/store/manifest.json
+
+consumers:
+  - repo: SocioProphet/sherlock-search
+    fixture: contracts/lattice/platform-asset-index-document.v1.schema.json
+    consumes: PlatformAssetRecordEnrichment.search
+    role: search-discovery-indexing
+  - repo: SocioProphet/slash-topics
+    fixture: protocols/lattice/platform-asset-topic-pack.v1.json
+    consumes: PlatformAssetRecordEnrichment.slashTopics
+    role: governed-topic-scoping
+  - repo: SocioProphet/new-hope
+    fixture: fixtures/lattice/platform-asset-carrier.v1.json
+    consumes: PlatformAssetRecordEnrichment.newHope
+    role: semantic-carrier-membrane-governance
+  - repo: SocioProphet/contractforge
+    fixture: examples/lattice/platform-asset-contract-reference.v1.json
+    consumes: PlatformAssetRecordEnrichment.contractForge
+    role: contract-referenced-asset-modeling
+  - repo: SocioProphet/policy-fabric
+    fixture: examples/lattice/platform-asset-policy-subject.v1.json
+    consumes: PlatformAssetRecordEnrichment.policyFabric
+    role: policy-subject-validation-replay
+  - repo: SocioProphet/graphbrain-contract
+    fixture: examples/lattice/platform-runtime-context.v1.json
+    consumes: PlatformAssetRecordEnrichment.languageModeling
+    role: runtime-model-governance-context
+
+invariants:
+  - PlatformAssetRecord.assetId is the canonical asset identity.
+  - Downstream repos may add enrichments, fixtures, envelopes, and mappings.
+  - Downstream repos must not replace PlatformAssetRecord.assetId with local canonical IDs for the same asset.
+  - Search, topic, semantic-governance, contract, policy, and model-governance layers must remain derivable from the same platform record.
+  - Generated enrichments must be sidecars, not destructive edits to producer records.
+
+next_required_links:
+  - repo: SocioProphet/sociosphere
+    task: add topology dependency checks against this registry
+  - repo: SocioProphet/prophet-platform
+    task: persist records and enrichments into catalog/evidence service
+  - repo: SocioProphet/sherlock-search
+    task: add ingestion converter from PlatformAssetRecordEnrichmentSet
+  - repo: SocioProphet/slash-topics
+    task: add replay fixture proving deterministic topic output
+  - repo: SocioProphet/new-hope
+    task: add membrane replay fixture
+  - repo: SocioProphet/contractforge
+    task: add explanation fixture for approval and rollback state
+  - repo: SocioProphet/policy-fabric
+    task: add validation/replay report fixture
