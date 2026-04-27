@@ -1,0 +1,53 @@
+{
+  "registry_id": "socioprophet.sociosphere.multidomain-geospatial-standards-compliance.v1",
+  "version": "v1",
+  "status": "draft",
+  "updated_at": "2026-04-27",
+  "purpose": "Governance registry for implementation repositories that consume the SocioProphet multi-domain geospatial standards package.",
+  "standards_authorities": [
+    "SocioProphet/prophet-platform-standards",
+    "SocioProphet/socioprophet-standards-storage",
+    "SocioProphet/socioprophet-standards-knowledge",
+    "SocioProphet/socioprophet-agent-standards"
+  ],
+  "required_implementation_docs": [
+    {
+      "repo": "SocioProphet/prophet-platform",
+      "path": "docs/standards/COMPLIES_WITH_MULTIDOMAIN_GEOSPATIAL_STANDARDS.md",
+      "status": "committed"
+    },
+    {
+      "repo": "SocioProphet/gaia-world-model",
+      "path": "docs/standards/COMPLIES_WITH_MULTIDOMAIN_GEOSPATIAL_STANDARDS.md",
+      "status": "committed"
+    },
+    {
+      "repo": "SocioProphet/sociosphere",
+      "path": "docs/standards/COMPLIES_WITH_MULTIDOMAIN_GEOSPATIAL_STANDARDS.md",
+      "status": "committed"
+    },
+    {
+      "repo": "SocioProphet/sherlock-search",
+      "path": "docs/standards/COMPLIES_WITH_MULTIDOMAIN_GEOSPATIAL_STANDARDS.md",
+      "status": "committed"
+    },
+    {
+      "repo": "SocioProphet/agentplane",
+      "path": "docs/standards/COMPLIES_WITH_MULTIDOMAIN_GEOSPATIAL_STANDARDS.md",
+      "status": "open_pr",
+      "pr": 62
+    },
+    {
+      "repo": "SocioProphet/lattice-forge",
+      "path": "docs/standards/COMPLIES_WITH_MULTIDOMAIN_GEOSPATIAL_STANDARDS.md",
+      "status": "committed"
+    }
+  ],
+  "minimum_checks": {
+    "implementation_doc_declares_standards_consumed": true,
+    "implementation_doc_declares_repository_responsibility": true,
+    "implementation_doc_declares_promotion_gate": true,
+    "agent_runtime_requires_approval_evidence_replay": true,
+    "lattice_admission_requires_executable_runtime_boundary": true
+  }
+}
