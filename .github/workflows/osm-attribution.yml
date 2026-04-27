@@ -1,0 +1,23 @@
+name: OSM Attribution
+
+on:
+  push:
+    paths:
+      - 'standards/osm-source-attribution/**'
+      - 'tools/check_osm_source_attribution.py'
+      - '.github/workflows/osm-attribution.yml'
+  pull_request:
+    paths:
+      - 'standards/osm-source-attribution/**'
+      - 'tools/check_osm_source_attribution.py'
+      - '.github/workflows/osm-attribution.yml'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python3 tools/check_osm_source_attribution.py
