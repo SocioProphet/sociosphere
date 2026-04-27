@@ -14,6 +14,7 @@ REQUIRED_RULE = ["id", "when", "notify", "required_actions"]
 REQUIRED_RULE_IDS = {
     "gaia-schema-change",
     "gaia-fixture-change",
+    "openstreetmap-integration-change",
     "ofif-event-fixture-change",
     "sherlock-result-schema-change",
     "meshrush-crystallization-change",
