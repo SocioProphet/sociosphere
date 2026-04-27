@@ -6,8 +6,8 @@ purpose: >-
   Registers governed placement lanes for Lattice Studio, including BYOC storage,
   BYOC compute, BYOC I/O, CloudShell Fog shell placement, notebook placement,
   command-line notebook placement, SourceOS M2 registry mounts, TopoLVM local
-  storage, Inception agent cluster placement, and the PlacementDryRunReport
-  decision artifact that answers whether a promoted workload can run here.
+  storage, Inception agent cluster placement, PlacementDryRunReport run-readiness
+  decisions, and SafePlacementExecutionPlan controlled post-decision execution plans.
 
 producer_surfaces:
   - repo: SocioProphet/prophet-platform
@@ -16,7 +16,8 @@ producer_surfaces:
       - UnifiedNotebookShellPlacementPlan
       - M2TopoLVMPlacementPlan
       - PlacementDryRunReport
-    role: canonical Studio placement record and run-readiness decision producer
+      - SafePlacementExecutionPlan
+    role: canonical Studio placement, run-readiness, and safe execution plan producer
   - repo: SocioProphet/cloudshell-fog
     records:
       - CloudShellFogBinding
@@ -97,6 +98,22 @@ placement_lanes:
       - m2-topolvm-safety-boundary
       - notebook-adapter-launch-coverage
       - promotion-target-coverage
+  safe_execution:
+    canonical_record: SafePlacementExecutionPlan
+    purpose: controlled post-decision execution plan that can render runtime, readonly registry, namespace, terminal session, manifests, and approval request artifacts before any state-changing execution
+    required_steps:
+      - prepare-runtime
+      - mount-registry-readonly
+      - create-ephemeral-namespace
+      - prepare-terminal-session
+      - render-manifests
+      - emit-approval-request
+    blocked_effects:
+      - host-boot-mutation
+      - kexec
+      - persistent-cluster-apply
+      - remote-state-mutation
+      - writeable-m2-registry-mount
 
 consumers:
   - repo: SocioProphet/sherlock-search
@@ -105,14 +122,16 @@ consumers:
       - UnifiedNotebookShellPlacementPlan
       - M2TopoLVMPlacementPlan
       - PlacementDryRunReport
-    role: indexes placement records and run-readiness decisions as searchable platform assets
+      - SafePlacementExecutionPlan
+    role: indexes placement records, run-readiness decisions, and safe execution plans as searchable platform assets
   - repo: SocioProphet/prophet-cli
     consumes:
       - BYOCPlacementPlan
       - UnifiedNotebookShellPlacementPlan
       - M2TopoLVMPlacementPlan
       - PlacementDryRunReport
-    role: exposes placement dry-run, inspection, and can-this-run-here commands
+      - SafePlacementExecutionPlan
+    role: exposes placement dry-run, inspection, can-this-run-here, and safe execution plan commands
   - repo: SocioProphet/sociosphere
     consumes:
       - lattice-placement-spine
@@ -121,6 +140,8 @@ consumers:
 invariants:
   - Placement records must remain side-effect-free unless an executor explicitly enters an approved execution path.
   - PlacementDryRunReport is the canonical can-this-run-here decision artifact.
+  - SafePlacementExecutionPlan is the canonical controlled post-decision execution plan artifact.
+  - SafePlacementExecutionPlan must preserve approval gates before cluster apply, host mutation, and remote state mutation.
   - SourceOS M2 registry mounts are proof artifacts and must not mutate host boot state.
   - TopoLVM placement must be dry-run until a separate executor is approved.
   - CloudShell Fog and notebook placement must share policy, trust tier, data locality, audit, and telemetry semantics.
@@ -128,8 +149,8 @@ invariants:
 
 next_required_links:
   - repo: SocioProphet/prophet-platform
-    task: add an executor that consumes PlacementDryRunReport and emits an approved execution plan without violating safety boundaries
+    task: add an executor approval artifact that upgrades SafePlacementExecutionPlan from not-requested to requested without applying cluster state
   - repo: SocioProphet/prophet-cli
-    task: expose BYOC, notebook-shell, M2 TopoLVM, and PlacementDryRunReport commands
+    task: expose BYOC, notebook-shell, M2 TopoLVM, PlacementDryRunReport, and SafePlacementExecutionPlan commands
   - repo: SocioProphet/sherlock-search
-    task: add facets for placement lane, storage kind, compute kind, I/O kind, and decision status
+    task: add facets for placement lane, storage kind, compute kind, I/O kind, decision status, and approval state
