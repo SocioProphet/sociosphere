@@ -15,6 +15,7 @@ REQUIRED_RULE_IDS = {
     "gaia-schema-change",
     "gaia-fixture-change",
     "openstreetmap-integration-change",
+    "kubeedge-optional-substrate-change",
     "ofif-event-fixture-change",
     "sherlock-result-schema-change",
     "meshrush-crystallization-change",
