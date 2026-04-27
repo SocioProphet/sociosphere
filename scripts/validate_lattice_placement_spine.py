@@ -20,6 +20,7 @@ REQUIRED_RECORDS = {
     "M2TopoLVMPlacementPlan",
     "PlacementDryRunReport",
     "SafePlacementExecutionPlan",
+    "ExecutionApprovalRequest",
 }
 REQUIRED_CONSUMERS = {"SocioProphet/sherlock-search", "SocioProphet/prophet-cli", "SocioProphet/sociosphere"}
 REQUIRED_LANES = {
@@ -29,6 +30,7 @@ REQUIRED_LANES = {
     "m2_topolvm",
     "placement_decision",
     "safe_execution",
+    "execution_approval",
 }
 REQUIRED_DECISION_CHECKS = {
     "byoc-compute-targets",
@@ -47,12 +49,24 @@ REQUIRED_SAFE_STEPS = {
     "render-manifests",
     "emit-approval-request",
 }
-REQUIRED_BLOCKED_EFFECTS = {
+REQUIRED_SAFE_BLOCKED_EFFECTS = {
     "host-boot-mutation",
     "kexec",
     "persistent-cluster-apply",
     "remote-state-mutation",
     "writeable-m2-registry-mount",
+}
+REQUIRED_APPROVAL_SCOPES = {
+    "ephemeral-namespace",
+    "readonly-mount",
+    "terminal-session-render",
+}
+REQUIRED_APPROVAL_BLOCKED_EFFECTS = {
+    "host-change",
+    "persistent-apply",
+    "remote-state-change",
+    "writeable-registry-mount",
+    "terminal-attach",
 }
 
 
@@ -86,8 +100,15 @@ def validate(path: Path) -> None:
     require(safe_execution.get("canonical_record") == "SafePlacementExecutionPlan", "safe execution canonical record mismatch")
     steps = set(safe_execution.get("required_steps", []))
     require(REQUIRED_SAFE_STEPS.issubset(steps), f"missing safe execution steps: {sorted(REQUIRED_SAFE_STEPS - steps)}")
-    blocked = set(safe_execution.get("blocked_effects", []))
-    require(REQUIRED_BLOCKED_EFFECTS.issubset(blocked), f"missing blocked effects: {sorted(REQUIRED_BLOCKED_EFFECTS - blocked)}")
+    safe_blocked = set(safe_execution.get("blocked_effects", []))
+    require(REQUIRED_SAFE_BLOCKED_EFFECTS.issubset(safe_blocked), f"missing safe blocked effects: {sorted(REQUIRED_SAFE_BLOCKED_EFFECTS - safe_blocked)}")
+    approval = lanes.get("execution_approval")
+    require(isinstance(approval, dict), "execution_approval must be object")
+    require(approval.get("canonical_record") == "ExecutionApprovalRequest", "execution approval canonical record mismatch")
+    scopes = set(approval.get("required_scopes", []))
+    require(REQUIRED_APPROVAL_SCOPES.issubset(scopes), f"missing approval scopes: {sorted(REQUIRED_APPROVAL_SCOPES - scopes)}")
+    approval_blocked = set(approval.get("blocked_effects", []))
+    require(REQUIRED_APPROVAL_BLOCKED_EFFECTS.issubset(approval_blocked), f"missing approval blocked effects: {sorted(REQUIRED_APPROVAL_BLOCKED_EFFECTS - approval_blocked)}")
     consumers = data.get("consumers")
     require(isinstance(consumers, list) and consumers, "consumers must be non-empty")
     consumer_repos = {item.get("repo") for item in consumers if isinstance(item, dict)}
@@ -95,10 +116,12 @@ def validate(path: Path) -> None:
     consumed_records = {record for item in consumers if isinstance(item, dict) for record in item.get("consumes", [])}
     require("PlacementDryRunReport" in consumed_records, "PlacementDryRunReport must be consumed")
     require("SafePlacementExecutionPlan" in consumed_records, "SafePlacementExecutionPlan must be consumed")
+    require("ExecutionApprovalRequest" in consumed_records, "ExecutionApprovalRequest must be consumed")
     invariant_text = "\n".join(str(item) for item in data.get("invariants", []))
     require("side-effect-free" in invariant_text, "side-effect-free invariant missing")
     require("PlacementDryRunReport" in invariant_text, "PlacementDryRunReport invariant missing")
     require("SafePlacementExecutionPlan" in invariant_text, "SafePlacementExecutionPlan invariant missing")
+    require("ExecutionApprovalRequest" in invariant_text, "ExecutionApprovalRequest invariant missing")
     require("PlatformAssetRecord" in invariant_text, "PlatformAssetRecord invariant missing")
 
 
