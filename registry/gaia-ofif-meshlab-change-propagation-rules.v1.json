@@ -1,23 +1,13 @@
 {
   "rules_version": "v1",
   "program": "gaia-ofif-meshlab-control-tower",
-  "updated_at": "2026-04-27T04:05:00Z",
-  "purpose": "Change propagation rules for cross-repo GAIA / OFIF / MeshLab / Control Tower contracts, fixtures, validators, and readiness metadata.",
+  "updated_at": "2026-04-27T04:20:00Z",
+  "purpose": "Change propagation rules for cross-repo GAIA / OFIF / MeshLab / Control Tower contracts, fixtures, validators, OpenStreetMap bindings, and readiness metadata.",
   "rules": [
     {
       "id": "gaia-schema-change",
-      "when": {
-        "repo": "gaia-world-model",
-        "paths": ["schemas/**"]
-      },
-      "notify": [
-        "prophet-platform",
-        "sociosphere",
-        "sherlock-search",
-        "orion-field-intelligence",
-        "meshrush",
-        "agentplane"
-      ],
+      "when": {"repo": "gaia-world-model", "paths": ["schemas/**"]},
+      "notify": ["prophet-platform", "sociosphere", "sherlock-search", "orion-field-intelligence", "meshrush", "agentplane"],
       "required_actions": [
         "Run GAIA contract fixture validation.",
         "Update affected fixtures or validators.",
@@ -28,10 +18,7 @@
     },
     {
       "id": "gaia-fixture-change",
-      "when": {
-        "repo": "gaia-world-model",
-        "paths": ["fixtures/**"]
-      },
+      "when": {"repo": "gaia-world-model", "paths": ["fixtures/**"]},
       "notify": ["prophet-platform", "sociosphere", "sherlock-search", "meshrush"],
       "required_actions": [
         "Run GAIA contract fixture validation.",
@@ -41,11 +28,21 @@
       ]
     },
     {
+      "id": "openstreetmap-integration-change",
+      "when": {"repo": "gaia-world-model", "paths": ["docs/integrations/OPENSTREETMAP_INTEGRATION.md", "schemas/geospatial/**", "fixtures/geospatial/**"]},
+      "notify": ["prophet-platform", "sociosphere", "sherlock-search", "lampstand", "lattice-forge"],
+      "required_actions": [
+        "Run GAIA contract fixture validation for OSM bindings and map tile layer manifests.",
+        "Confirm OSM node/way/relation identity is preserved.",
+        "Confirm OSM attribution and license metadata are present.",
+        "Confirm OSM-only route or layer outputs are advisory unless additional validation exists.",
+        "Review Sherlock OSM-derived map/search records.",
+        "Do not add Lattice OSM runtime assets until executable runtime boundary is defined."
+      ]
+    },
+    {
       "id": "ofif-event-fixture-change",
-      "when": {
-        "repo": "orion-field-intelligence",
-        "paths": ["fixtures/**", "ontology/**", "docs/integrations/**"]
-      },
+      "when": {"repo": "orion-field-intelligence", "paths": ["fixtures/**", "ontology/**", "docs/integrations/**"]},
       "notify": ["gaia-world-model", "prophet-platform", "sociosphere", "meshrush"],
       "required_actions": [
         "Review OFIF-to-GAIA mapping contract compatibility.",
@@ -56,10 +53,7 @@
     },
     {
       "id": "sherlock-result-schema-change",
-      "when": {
-        "repo": "sherlock-search",
-        "paths": ["schemas/**", "examples/**", "tools/**"]
-      },
+      "when": {"repo": "sherlock-search", "paths": ["schemas/**", "examples/**", "tools/**"]},
       "notify": ["gaia-world-model", "prophet-platform", "sociosphere", "meshrush"],
       "required_actions": [
         "Run Sherlock result validation.",
@@ -70,10 +64,7 @@
     },
     {
       "id": "meshrush-crystallization-change",
-      "when": {
-        "repo": "meshrush",
-        "paths": ["fixtures/graph-views/**", "tools/**", "docs/integrations/**"]
-      },
+      "when": {"repo": "meshrush", "paths": ["fixtures/graph-views/**", "tools/**", "docs/integrations/**"]},
       "notify": ["agentplane", "gaia-world-model", "prophet-platform", "sociosphere"],
       "required_actions": [
         "Run MeshRush crystallization fixture validation.",
@@ -84,10 +75,7 @@
     },
     {
       "id": "agentplane-meshrush-candidate-change",
-      "when": {
-        "repo": "agentplane",
-        "paths": ["schemas/meshrush-*.json", "examples/meshrush/**", "scripts/validate_meshrush_candidate.py", "docs/integrations/MESHRUSH_ADAPTER_CONTRACT.md"]
-      },
+      "when": {"repo": "agentplane", "paths": ["schemas/meshrush-*.json", "examples/meshrush/**", "scripts/validate_meshrush_candidate.py", "docs/integrations/MESHRUSH_ADAPTER_CONTRACT.md"]},
       "notify": ["meshrush", "prophet-platform", "sociosphere"],
       "required_actions": [
         "Run Agentplane MeshRush candidate validation.",
@@ -98,10 +86,7 @@
     },
     {
       "id": "lattice-runtime-admission-change",
-      "when": {
-        "repo": "lattice-forge",
-        "paths": ["examples/runtime-assets/**", "schemas/**"]
-      },
+      "when": {"repo": "lattice-forge", "paths": ["examples/runtime-assets/**", "schemas/**"]},
       "notify": ["gaia-world-model", "prophet-platform", "sociosphere", "agentplane"],
       "required_actions": [
         "Confirm a matching GAIA runtime boundary exists.",
@@ -112,10 +97,7 @@
     },
     {
       "id": "progress-ledger-change",
-      "when": {
-        "repo": "prophet-platform",
-        "paths": ["registry/gaia_ofif_meshlab_progress.v1.json", "docs/GAIA_OFIF_MESHLAB_CONTROL_TOWER_MASTER_PLAN.md"]
-      },
+      "when": {"repo": "prophet-platform", "paths": ["registry/gaia_ofif_meshlab_progress.v1.json", "docs/GAIA_OFIF_MESHLAB_CONTROL_TOWER_MASTER_PLAN.md", "docs/requirements/OPENSTREETMAP_PLATFORM_REQUIREMENTS.md"]},
       "notify": ["sociosphere"],
       "required_actions": [
         "Ensure progress ledger and SocioSphere capability map do not disagree on readiness states.",
@@ -125,10 +107,7 @@
     },
     {
       "id": "smart-spaces-boundary-change",
-      "when": {
-        "repo": "prophet-platform",
-        "paths": ["docs/decisions/SMART_SPACES_DOMAIN_HOME_DECISION.md"]
-      },
+      "when": {"repo": "prophet-platform", "paths": ["docs/decisions/SMART_SPACES_DOMAIN_HOME_DECISION.md"]},
       "notify": ["gaia-world-model", "orion-field-intelligence", "sociosphere", "meshrush", "agentplane"],
       "required_actions": [
         "Do not create implementation files until domain-home decision narrows or closes.",
