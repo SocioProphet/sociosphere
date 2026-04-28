@@ -23,13 +23,16 @@ ui-dev: ui-preflight
 # --- end ui-workbench targets ---
 
 # --- standards validation targets ---
-.PHONY: validate validate-standards multidomain-geospatial-standards-compliance-validate
+.PHONY: validate validate-standards multidomain-geospatial-standards-compliance-validate program-dashboard-validate
 
-validate: validate-standards
+validate: validate-standards program-dashboard-validate
 	@echo "OK: validate"
 
 validate-standards:
 	@ok=1; if [ -f tools/validate_adaptation_program.py ]; then python3 tools/validate_adaptation_program.py standards/examples/adaptation/program.example.v1.json || ok=0; else echo "ERR: tools/validate_adaptation_program.py missing"; ok=0; fi; if [ -f standards/qes/tools/validate_qes_contracts.py ]; then python3 standards/qes/tools/validate_qes_contracts.py || ok=0; else echo "WARN: standards/qes/tools/validate_qes_contracts.py missing (skipping)"; fi; if [ -f tools/check_multidomain_geospatial_standards_compliance.py ]; then python3 tools/check_multidomain_geospatial_standards_compliance.py || ok=0; else echo "ERR: tools/check_multidomain_geospatial_standards_compliance.py missing"; ok=0; fi; test $$ok -eq 1
+
+program-dashboard-validate:
+	python3 tools/validate_program_dashboard.py
 
 multidomain-geospatial-standards-compliance-validate:
 	python3 tools/check_multidomain_geospatial_standards_compliance.py
