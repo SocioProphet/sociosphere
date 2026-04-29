@@ -6,14 +6,18 @@ purpose: >-
   Registers governed federated query lanes for Lattice Studio across SQL-compatible
   query via Apache Drill, document storage, annotation stores, SPARQL, ontology
   query, Cypher/property graphs, GraphBrain hypergraphs, OpenCog AtomSpace/Atomese,
-  Sherlock Search, Slash Topics, New Hope, and Lampstand local search.
+  Sherlock Search, Slash Topics, New Hope, and Lampstand local search, plus
+  QueryRoutingDryRunPlan route-planning artifacts that prove backend routing
+  without issuing runtime queries.
 
 producer_surfaces:
   - repo: SocioProphet/prophet-platform
     records:
       - FederatedQueryPlane
       - FederatedQueryEvidence
-    role: canonical Lattice Studio federated query plane producer
+      - QueryRoutingDryRunPlan
+      - QueryRoutingEvidence
+    role: canonical Lattice Studio federated query plane and query-routing dry-run producer
   - repo: SocioProphet/sherlock-search
     records:
       - SherlockIndexDocument
@@ -166,16 +170,48 @@ query_lanes:
       - stats-query
       - datahub-promotion-candidate-query
 
+routing_dry_run:
+  canonical_record: QueryRoutingDryRunPlan
+  evidence_record: QueryRoutingEvidence
+  purpose: route query requests to governed backends without executing remote or local queries
+  required_boundaries:
+    - dry-run-only
+    - no-remote-query-execution
+    - no-local-index-read
+    - no-sql-submission
+    - no-sparql-submission
+    - no-cypher-submission
+    - no-atomese-submission
+    - no-sherlock-query-submission
+    - no-topic-pack-read
+    - no-newhope-runtime-call
+    - no-lampstand-rpc-call
+  required_route_families:
+    - drill-sql-route
+    - document-query-route
+    - annotation-query-route
+    - sparql-route
+    - ontology-query-route
+    - cypher-route
+    - graphbrain-route
+    - atomese-route
+    - sherlock-route
+    - slash-topics-route
+    - new-hope-route
+    - lampstand-route
+
 consumers:
   - repo: SocioProphet/prophet-cli
     consumes:
       - FederatedQueryPlane
-    role: exposes lattice-query command surface
+      - QueryRoutingDryRunPlan
+    role: exposes lattice-query and lattice-route command surfaces
   - repo: SocioProphet/sherlock-search
     consumes:
       - FederatedQueryPlane
+      - QueryRoutingDryRunPlan
       - PlatformAssetRecord
-    role: indexes query-plane records as searchable platform assets
+    role: indexes query-plane and query-routing records as searchable platform assets
   - repo: SocioProphet/sociosphere
     consumes:
       - lattice-federated-query-spine
@@ -183,16 +219,18 @@ consumers:
 
 invariants:
   - FederatedQueryPlane is the canonical Lattice query-plane artifact.
+  - QueryRoutingDryRunPlan is the canonical route-only dry-run artifact for federated query backend selection.
   - Query backends must be policy-bound and catalog-scoped.
+  - QueryRoutingDryRunPlan must not issue SQL, SPARQL, Cypher, Atomese, Sherlock, Slash Topics, New Hope, Lampstand, remote, or local-index runtime calls.
   - Sherlock, Slash Topics, New Hope, and Lampstand must be first-class query integrations, not compatibility labels only.
   - Ontology query must remain distinct from SPARQL because reasoning, SHACL shapes, and schema alignment require explicit governance.
   - Local Lampstand query must not silently promote local files into shared catalogs without a DataHubPromotionCandidate artifact.
-  - PlatformAssetRecord remains the shared identity for query-plane registration.
+  - PlatformAssetRecord remains the shared identity for query-plane and query-routing registration.
 
 next_required_links:
   - repo: SocioProphet/prophet-platform
-    task: add executable dry-run query planner that validates backend routing without issuing remote queries
+    task: add negative-path fixtures for blocked query routing decisions
   - repo: SocioProphet/sherlock-search
-    task: add facets for query language, backend kind, catalog scope, policy ref, and integration repo
+    task: add facets for query language, backend kind, catalog scope, policy ref, integration repo, and route decision status
   - repo: SocioProphet/sociosphere
     task: register query policy and query topology in global workspace/governance views
