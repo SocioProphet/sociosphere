@@ -1,0 +1,29 @@
+name: Repo Governance Matrix
+
+on:
+  pull_request:
+    paths:
+      - "registry/repo-governance-matrix-v0.yaml"
+      - "tools/validate_repo_governance_matrix.py"
+      - ".github/workflows/repo-governance-matrix.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "registry/repo-governance-matrix-v0.yaml"
+      - "tools/validate_repo_governance_matrix.py"
+      - ".github/workflows/repo-governance-matrix.yml"
+
+jobs:
+  validate-repo-governance-matrix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate repo governance matrix
+        run: python tools/validate_repo_governance_matrix.py

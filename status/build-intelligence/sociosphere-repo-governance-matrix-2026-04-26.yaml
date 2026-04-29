@@ -1,0 +1,49 @@
+record_type: build-intelligence
+record_version: 0.1.0
+date: 2026-04-26
+repo: SocioProphet/sociosphere
+branch: repo-governance-matrix-v0
+subject: repo-governance-matrix
+status: proposed
+summary: >-
+  Registers the SocioProphet repository governance matrix tranche. The tranche
+  classifies repositories as canonical, promotion-candidate, or provenance-only
+  and adds a zero-dependency validator plus CI gate for the machine-readable
+  matrix.
+artifacts:
+  - docs/governance/repo-governance-matrix-v0.md
+  - registry/repo-governance-matrix-v0.yaml
+  - tools/validate_repo_governance_matrix.py
+  - .github/workflows/repo-governance-matrix.yml
+governance_classes:
+  canonical:
+    - SocioProphet/socioprophet
+    - SocioProphet/prophet-platform
+    - SocioProphet/sociosphere
+    - SocioProphet/agentplane
+    - SocioProphet/TriTRPC
+    - SocioProphet/ontogenesis
+  promotion_candidate:
+    - SocioProphet/policy-fabric
+    - SocioProphet/prophet-platform-standards
+    - SocioProphet/prophet-workspace
+    - SocioProphet/socioprophet-agent-standards
+    - SocioProphet/socioprophet-standards-storage
+    - SocioProphet/socioprophet-standards-knowledge
+    - SocioProphet/gaia-world-model
+    - SocioProphet/slash-topics
+  provenance_only:
+    - mdheller/socioprophet-old
+    - SocioProphet/socioprophet-web-medium
+    - SocioProphet/tritrpc-notes-archive
+validation:
+  validator: tools/validate_repo_governance_matrix.py
+  ci_workflow: .github/workflows/repo-governance-matrix.yml
+risk: low
+limitations:
+  - Matrix is draft v0 and should be reviewed against current org inventory before canonical promotion.
+  - Validator is structural and intentionally does not yet query GitHub for repo existence or branch state.
+next_steps:
+  - Add repo-existence and archived-state checks.
+  - Add ownership/RACI fields.
+  - Add promotion decision records for policy-fabric and prophet-platform-standards.
