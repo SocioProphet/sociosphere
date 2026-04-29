@@ -1,0 +1,15 @@
+{
+  "api_version": "sourceos.fabric.mount/v0.1",
+  "kind": "AdapterProfile",
+  "adapter_kind": "s3",
+  "default_roles": ["object_snapshot_replica", "cold_archive"],
+  "allowed_authority_modes": ["local_first", "provider_first", "hybrid"],
+  "default_authority_mode": "local_first",
+  "authority_requires_quorum": true,
+  "supported_capabilities": [
+    "object_replication",
+    "snapshot_restore",
+    "cold_archive"
+  ],
+  "notes": "Object snapshot and archive plane; provider-first promotion requires quorum."
+}

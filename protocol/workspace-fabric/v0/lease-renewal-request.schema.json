@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.github.io/sociosphere/protocol/workspace-fabric/v0/lease-renewal-request.schema.json",
+  "title": "MountLeaseRenewalRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "api_version",
+    "kind",
+    "workspace_ref",
+    "mount_ref",
+    "lease_id",
+    "requested_ttl",
+    "correlation_id"
+  ],
+  "properties": {
+    "api_version": {"const": "sourceos.fabric.mount/v0.1"},
+    "kind": {"const": "MountLeaseRenewalRequest"},
+    "workspace_ref": {"type": "string", "minLength": 1},
+    "mount_ref": {"type": "string", "minLength": 1},
+    "lease_id": {"type": "string", "minLength": 1},
+    "requested_ttl": {"type": "string", "minLength": 1},
+    "correlation_id": {"type": "string", "minLength": 1}
+  }
+}

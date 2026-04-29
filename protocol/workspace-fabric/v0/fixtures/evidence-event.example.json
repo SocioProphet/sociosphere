@@ -1,0 +1,20 @@
+{
+  "event_id": "ev-01JABCXYZ",
+  "event_type": "mount.registration.proposed",
+  "occurred_at": "2026-04-18T23:00:00Z",
+  "actor_ref": "operator.local",
+  "workspace_ref": "ws-research",
+  "mount_ref": "topo-main",
+  "dataset_ref": "ds-notes",
+  "policy_bundle_ref": "policy/default",
+  "correlation_id": "reg-topo-main-20260418-001",
+  "payload": {
+    "authority_mode": "local_first",
+    "backend": "topolvm",
+    "adapters": [
+      "hypercore:topic_distribution",
+      "s3:object_snapshot_replica"
+    ],
+    "status": "proposed"
+  }
+}

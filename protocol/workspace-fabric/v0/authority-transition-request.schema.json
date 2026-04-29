@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.github.io/sociosphere/protocol/workspace-fabric/v0/authority-transition-request.schema.json",
+  "title": "MountAuthorityTransitionRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "api_version",
+    "kind",
+    "workspace_ref",
+    "mount_ref",
+    "current_authority",
+    "requested_authority",
+    "reason",
+    "quorum_profile",
+    "correlation_id"
+  ],
+  "properties": {
+    "api_version": {"const": "sourceos.fabric.mount/v0.1"},
+    "kind": {"const": "MountAuthorityTransitionRequest"},
+    "workspace_ref": {"type": "string", "minLength": 1},
+    "mount_ref": {"type": "string", "minLength": 1},
+    "current_authority": {"enum": ["local_first", "provider_first", "hybrid"]},
+    "requested_authority": {"enum": ["local_first", "provider_first", "hybrid"]},
+    "reason": {"type": "string", "minLength": 1},
+    "quorum_profile": {"type": "string", "minLength": 1},
+    "correlation_id": {"type": "string", "minLength": 1}
+  }
+}

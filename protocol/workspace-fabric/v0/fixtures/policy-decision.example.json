@@ -1,0 +1,13 @@
+{
+  "api_version": "sourceos.fabric.mount/v0.1",
+  "kind": "MountPolicyDecision",
+  "workspace_ref": "ws-research",
+  "mount_ref": "topo-main",
+  "policy_bundle_ref": "policy/default",
+  "decision_status": "approved",
+  "policy_subject": "authority_transition",
+  "reason_codes": [
+    "remote_authority_promotion_allowed_with_quorum"
+  ],
+  "correlation_id": "reg-topo-main-20260418-003"
+}

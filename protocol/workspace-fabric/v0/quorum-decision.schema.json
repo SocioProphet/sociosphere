@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.github.io/sociosphere/protocol/workspace-fabric/v0/quorum-decision.schema.json",
+  "title": "MountQuorumDecision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "api_version",
+    "kind",
+    "workspace_ref",
+    "mount_ref",
+    "quorum_profile",
+    "decision_status",
+    "subject",
+    "required_approvers",
+    "granted_approvers",
+    "correlation_id"
+  ],
+  "properties": {
+    "api_version": {"const": "sourceos.fabric.mount/v0.1"},
+    "kind": {"const": "MountQuorumDecision"},
+    "workspace_ref": {"type": "string", "minLength": 1},
+    "mount_ref": {"type": "string", "minLength": 1},
+    "quorum_profile": {"type": "string", "minLength": 1},
+    "decision_status": {"enum": ["granted", "rejected", "not_required"]},
+    "subject": {
+      "enum": [
+        "authority_transition",
+        "tombstone_application",
+        "remote_authority_promotion",
+        "reconcile_resolution"
+      ]
+    },
+    "required_approvers": {"type": "integer", "minimum": 0},
+    "granted_approvers": {"type": "integer", "minimum": 0},
+    "correlation_id": {"type": "string", "minLength": 1}
+  }
+}

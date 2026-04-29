@@ -1,0 +1,32 @@
+{
+  "api_version": "sourceos.fabric.mount/v0.1",
+  "kind": "MountStateMachine",
+  "states": [
+    "DISCOVERED",
+    "PROPOSED",
+    "POLICY_EVALUATING",
+    "QUORUM_EVALUATING",
+    "LEASE_ISSUED",
+    "ACTIVE",
+    "DEGRADED",
+    "RECONCILE_REQUIRED",
+    "REVOKED",
+    "TOMBSTONED"
+  ],
+  "transitions": [
+    {"from": "DISCOVERED", "to": "PROPOSED", "trigger": "registration_submitted"},
+    {"from": "PROPOSED", "to": "POLICY_EVALUATING", "trigger": "policy_evaluation_started"},
+    {"from": "POLICY_EVALUATING", "to": "QUORUM_EVALUATING", "trigger": "quorum_required"},
+    {"from": "POLICY_EVALUATING", "to": "LEASE_ISSUED", "trigger": "policy_approved_no_quorum"},
+    {"from": "QUORUM_EVALUATING", "to": "LEASE_ISSUED", "trigger": "quorum_granted"},
+    {"from": "LEASE_ISSUED", "to": "ACTIVE", "trigger": "mount_activated"},
+    {"from": "ACTIVE", "to": "DEGRADED", "trigger": "mirror_stale_or_partial_availability"},
+    {"from": "DEGRADED", "to": "ACTIVE", "trigger": "recovered_or_refreshed"},
+    {"from": "ACTIVE", "to": "RECONCILE_REQUIRED", "trigger": "local_dirty_remote_delete"},
+    {"from": "DEGRADED", "to": "RECONCILE_REQUIRED", "trigger": "state_conflict_detected"},
+    {"from": "RECONCILE_REQUIRED", "to": "ACTIVE", "trigger": "manual_reconcile_completed"},
+    {"from": "ACTIVE", "to": "TOMBSTONED", "trigger": "signed_tombstone_applied"},
+    {"from": "RECONCILE_REQUIRED", "to": "TOMBSTONED", "trigger": "tombstone_applied_after_reconcile"},
+    {"from": "ACTIVE", "to": "REVOKED", "trigger": "lease_revoked"}
+  ]
+}
