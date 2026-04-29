@@ -23,9 +23,9 @@ ui-dev: ui-preflight
 # --- end ui-workbench targets ---
 
 # --- standards validation targets ---
-.PHONY: validate validate-standards multidomain-geospatial-standards-compliance-validate program-dashboard-validate
+.PHONY: validate validate-standards multidomain-geospatial-standards-compliance-validate program-dashboard-validate model-fabric-work-register-validate
 
-validate: validate-standards program-dashboard-validate
+validate: validate-standards program-dashboard-validate model-fabric-work-register-validate
 	@echo "OK: validate"
 
 validate-standards:
@@ -33,6 +33,9 @@ validate-standards:
 
 program-dashboard-validate:
 	python3 tools/validate_program_dashboard.py
+
+model-fabric-work-register-validate:
+	python3 tools/validate_model_fabric_work_register.py
 
 multidomain-geospatial-standards-compliance-validate:
 	python3 tools/check_multidomain_geospatial_standards_compliance.py
