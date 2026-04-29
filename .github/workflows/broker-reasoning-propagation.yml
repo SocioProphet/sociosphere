@@ -14,6 +14,9 @@ on:
       - "tools/check_broker_reasoning_propagation.py"
       - ".github/workflows/broker-reasoning-propagation.yml"
 
+permissions:
+  contents: read
+
 jobs:
   validate-broker-propagation:
     runs-on: ubuntu-latest
