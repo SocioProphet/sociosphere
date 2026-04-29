@@ -1,0 +1,77 @@
+{
+  "apiVersion": "sociosphere.socioprophet.dev/v1",
+  "kind": "AgentWorkRegister",
+  "metadata": {
+    "name": "model-fabric-agent-work-register",
+    "version": "0.1.0",
+    "generatedAt": "2026-04-29T23:30:00Z"
+  },
+  "spec": {
+    "program": "SocioProphet Model Fabric",
+    "workItems": [
+      {
+        "repo": "SocioProphet/prophet-platform",
+        "issueRef": "https://github.com/SocioProphet/prophet-platform/issues/277",
+        "assignedLane": "Codex",
+        "workstream": "Platform Runtime Adapters",
+        "expectedArtifact": "model-fabric adapter contract fixtures and tests",
+        "status": "open",
+        "acceptanceSummary": "Adapter contracts reference functional service registry entries and stay deterministic/local-only."
+      },
+      {
+        "repo": "SocioProphet/model-router",
+        "issueRef": "https://github.com/SocioProphet/model-router/issues/4",
+        "assignedLane": "Codex",
+        "workstream": "Release Engineering",
+        "expectedArtifact": "model-router release dry-run artifacts and provenance metadata",
+        "status": "open",
+        "acceptanceSummary": "make release-dry-run emits deterministic artifact metadata without publishing a release."
+      },
+      {
+        "repo": "SocioProphet/guardrail-fabric",
+        "issueRef": "https://github.com/SocioProphet/guardrail-fabric/issues/5",
+        "assignedLane": "Copilot",
+        "workstream": "Release Engineering",
+        "expectedArtifact": "guardrail-fabric release dry-run artifacts and provenance metadata",
+        "status": "open",
+        "acceptanceSummary": "make release-dry-run remains local-only and make validate stays green."
+      },
+      {
+        "repo": "SocioProphet/model-governance-ledger",
+        "issueRef": "https://github.com/SocioProphet/model-governance-ledger/issues/5",
+        "assignedLane": "Codex",
+        "workstream": "Release Engineering",
+        "expectedArtifact": "model-governance-ledger release dry-run artifacts and provenance metadata",
+        "status": "open",
+        "acceptanceSummary": "make release-dry-run emits checksums/provenance without storing model weights, datasets, or claims."
+      },
+      {
+        "repo": "SocioProphet/agent-registry",
+        "issueRef": "https://github.com/SocioProphet/agent-registry/issues/7",
+        "assignedLane": "Copilot",
+        "workstream": "Release Engineering",
+        "expectedArtifact": "agent-registry release dry-run artifacts and provenance metadata",
+        "status": "open",
+        "acceptanceSummary": "make release-dry-run is deterministic and does not add identity-provider integration or credentials."
+      },
+      {
+        "repo": "SocioProphet/homebrew-prophet",
+        "issueRef": "https://github.com/SocioProphet/homebrew-prophet/issues/4",
+        "assignedLane": "Copilot",
+        "workstream": "Homebrew Release Formulae",
+        "expectedArtifact": "model-fabric release formula templates and documentation",
+        "status": "open",
+        "acceptanceSummary": "Templates contain placeholders only; no fake URLs or checksums; make validate remains green."
+      },
+      {
+        "repo": "SocioProphet/sociosphere",
+        "issueRef": "https://github.com/SocioProphet/sociosphere/issues/224",
+        "assignedLane": "Codex",
+        "workstream": "Agent Coordination",
+        "expectedArtifact": "agent work register and validation",
+        "status": "in-progress",
+        "acceptanceSummary": "Register references active Codex/Copilot lanes and validates as coordination metadata."
+      }
+    ]
+  }
+}
