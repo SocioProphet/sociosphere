@@ -1,0 +1,86 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T01:32:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+scope:
+  program: "Prophet Platform / Zone Publication Runtime"
+  lane: "zone-publication-transport-delivery"
+  intent: "Register the adapter-backed local zone publication delivery artifact implementation."
+
+merged_tranches:
+  - pr: 188
+    title: "Add zone publication transport delivery artifacts"
+    merge_commit: "b08887bc9ff66cf3ce8f0acf4377e4405811909e"
+    gates_closed:
+      - added ZonePublicationDelivery contract
+      - added local/jsonl and kafka/jsonl local-standin transport adapter surface
+      - linked published outcomes to delivery artifact and topic log refs
+      - updated local publication smoke to validate delivery and topic-log linkage
+      - CI/workflow pass
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "contracts/ZonePublicationDelivery.v0.1.json"
+      - "apps/zone-router/src/zone_router/transport_adapters.py"
+      - "apps/zone-router/src/zone_router/publish.py"
+      - "contracts/ZonePublicationOutcome.v0.1.json"
+      - "tools/smoke_zone_publication_local_publish.py"
+
+active_tranches:
+  - pr: 188
+    title: "Add zone publication transport delivery artifacts"
+    branch: "work/zone-transport-adapters"
+    state: "merged"
+    subject: "Adapter-backed local zone publication delivery artifacts"
+    gates_completed:
+      - delivery contract merged
+      - transport adapter merged
+      - outcome delivery refs merged
+      - smoke validation merged
+      - post-merge verification complete
+    files_changed:
+      - "contracts/ZonePublicationDelivery.v0.1.json"
+      - "apps/zone-router/src/zone_router/transport_adapters.py"
+      - "apps/zone-router/src/zone_router/publish.py"
+      - "contracts/ZonePublicationOutcome.v0.1.json"
+      - "tools/smoke_zone_publication_local_publish.py"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "updated"
+    notes: "Prophet Platform make validate includes local zone publication publish smoke, which now validates delivery artifacts and topic logs."
+  relevant_workflows:
+    - "validate"
+    - "ci"
+    - "platform-contracts-check"
+    - "platform-wave1-stubs"
+    - "premerge-audit"
+    - "brokerage-validation"
+
+software_review:
+  correctness:
+    - "Zone publication outcomes now reference delivery artifacts and topic logs."
+    - "The adapter surface supports local/jsonl and kafka/jsonl local-standin transport refs without remote broker mutation."
+  weaknesses:
+    - "This implementation does not yet publish to a real remote broker endpoint."
+    - "This implementation does not yet add failed outcome evidence or retry state."
+  next_hardening:
+    - "Add failed publication outcome and failure evidence."
+    - "Add retry and attempt state."
+    - "Add real broker transport after local adapter semantics stabilize."
+
+running_backlog:
+  - "Add failed publication outcome and failure evidence."
+  - "Add retry and attempt state for zone publication lifecycle."
+  - "Add real broker transport after local adapter semantics stabilize."
+  - "Verify Policy Fabric live endpoint/service completeness."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
+  - "Reconcile ecosystem-status.yaml stale snapshot with current repo/PR state."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Keep Sociosphere informed for every future platform build/test/deploy tranche."

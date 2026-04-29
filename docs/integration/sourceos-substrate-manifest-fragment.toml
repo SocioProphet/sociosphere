@@ -1,0 +1,24 @@
+# Proposed manifest fragment for SourceOS substrate lane
+# Apply to manifest/workspace.toml after registry normalization.
+
+[[repos]]
+name = "source-os"
+role = "component"
+url = "https://github.com/SociOS-Linux/SourceOS"
+ref = "main"
+local_path = "components/sourceos_substrate"
+license_hint = "MIT"
+
+[[repos]]
+name = "sourceos-spec"
+role = "standards"
+url = "https://github.com/SourceOS-Linux/sourceos-spec"
+ref = "main"
+local_path = "components/sourceos_spec"
+
+[[repos]]
+name = "workstation-contracts"
+role = "standards"
+url = "https://github.com/SociOS-Linux/workstation-contracts"
+ref = "main"
+local_path = "components/workstation_contracts"

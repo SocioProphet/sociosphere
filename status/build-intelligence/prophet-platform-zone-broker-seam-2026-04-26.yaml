@@ -1,0 +1,83 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T02:18:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+scope:
+  program: "Prophet Platform / Zone Publication Runtime"
+  lane: "zone-publication-broker-seam"
+  intent: "Register safe remote broker transport seam for zone publication without remote mutation."
+
+merged_tranches:
+  - pr: 191
+    title: "Add safe remote broker transport seam"
+    merge_commit: "7e4031833642b4ae25b2f81ebbaf8a95bfda8601"
+    gates_closed:
+      - added transport://kafka/remote as explicit broker-required transport mode
+      - added required broker config checks
+      - failed closed with structured failure evidence when config is absent
+      - failed closed when config is present because broker client is not implemented in this slice
+      - added remote broker seam smoke
+      - wired smoke into make validate and make smoke
+      - CI/workflow pass
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "apps/zone-router/src/zone_router/transport_adapters.py"
+      - "tools/smoke_zone_publication_remote_broker_seam.py"
+      - "Makefile"
+
+active_tranches:
+  - pr: 191
+    title: "Add safe remote broker transport seam"
+    branch: "work/zone-broker-seam"
+    state: "merged"
+    subject: "Safe remote broker transport seam"
+    gates_completed:
+      - remote transport seam merged
+      - fail-closed config validation merged
+      - smoke validation merged
+      - post-merge verification complete
+    files_changed:
+      - "apps/zone-router/src/zone_router/transport_adapters.py"
+      - "tools/smoke_zone_publication_remote_broker_seam.py"
+      - "Makefile"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "updated"
+    notes: "Prophet Platform make validate includes remote broker seam smoke."
+  relevant_workflows:
+    - "validate"
+    - "ci"
+    - "platform-contracts-check"
+    - "platform-wave1-stubs"
+    - "premerge-audit"
+    - "brokerage-validation"
+
+software_review:
+  correctness:
+    - "Remote broker mode is explicit and does not silently fall back to local publication."
+    - "The broker seam fails closed with structured evidence when configuration or implementation is absent."
+  weaknesses:
+    - "This implementation does not publish to a real remote broker endpoint."
+    - "Real broker publication still requires an explicitly configured and policy-gated tranche."
+  next_hardening:
+    - "Add policy-gated real broker transport implementation."
+    - "Verify Policy Fabric live endpoint/service completeness before autonomous remote mutation."
+    - "Register future implementation tranches in Sociosphere after merge."
+
+running_backlog:
+  - "Add policy-gated real broker transport implementation."
+  - "Verify Policy Fabric live endpoint/service completeness."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
+  - "Reconcile ecosystem-status.yaml stale snapshot with current repo/PR state."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Keep Sociosphere informed for every future platform build/test/deploy tranche."
+  - "Keep zone publication lifecycle slices small and current-main based."
+  - "Do not add hidden remote mutation without explicit policy gates."

@@ -1,0 +1,89 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T02:02:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+scope:
+  program: "Prophet Platform / Zone Publication Runtime"
+  lane: "zone-publication-retry-state"
+  intent: "Register retry and attempt state for zone publication outcomes."
+
+merged_tranches:
+  - pr: 190
+    title: "Add zone publication retry attempt state"
+    merge_commit: "b0d1cfdab366b1cc9a2dd51ddf8882fdc0ae1240"
+    gates_closed:
+      - added retry state helper over publication outcome log
+      - added attempt and previous-outcome fields to zone publication outcomes
+      - added retry eligibility semantics
+      - updated ZonePublicationOutcome schema with retry fields
+      - added fail-then-success retry smoke
+      - wired retry smoke into make validate and make smoke
+      - CI/workflow pass
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "apps/zone-router/src/zone_router/retry_state.py"
+      - "apps/zone-router/src/zone_router/publish.py"
+      - "contracts/ZonePublicationOutcome.v0.1.json"
+      - "tools/smoke_zone_publication_retry_state.py"
+      - "Makefile"
+
+active_tranches:
+  - pr: 190
+    title: "Add zone publication retry attempt state"
+    branch: "work/zone-retry-state"
+    state: "merged"
+    subject: "Retry and attempt state for zone publication outcomes"
+    gates_completed:
+      - retry helper merged
+      - publisher attempt state merged
+      - schema update merged
+      - retry smoke merged
+      - post-merge verification complete
+    files_changed:
+      - "apps/zone-router/src/zone_router/retry_state.py"
+      - "apps/zone-router/src/zone_router/publish.py"
+      - "contracts/ZonePublicationOutcome.v0.1.json"
+      - "tools/smoke_zone_publication_retry_state.py"
+      - "Makefile"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "updated"
+    notes: "Prophet Platform make validate includes zone publication retry state smoke."
+  relevant_workflows:
+    - "validate"
+    - "ci"
+    - "platform-contracts-check"
+    - "platform-wave1-stubs"
+    - "premerge-audit"
+    - "brokerage-validation"
+
+software_review:
+  correctness:
+    - "Zone publication outcomes now carry attempt numbers and previous outcome linkage."
+    - "Retry state is derived from the local outcome log without hidden scheduler state."
+    - "A fail-then-success smoke proves retry-after-failure linkage."
+  weaknesses:
+    - "This implementation records retry state but does not autonomously retry."
+    - "This implementation does not yet publish to a real remote broker endpoint."
+  next_hardening:
+    - "Add real broker transport after local adapter semantics stabilize."
+    - "Add policy-gated retry orchestration if autonomous retry becomes in scope."
+    - "Register future implementation tranches in Sociosphere after merge."
+
+running_backlog:
+  - "Add real broker transport after local adapter semantics stabilize."
+  - "Add policy-gated retry orchestration if autonomous retry becomes in scope."
+  - "Verify Policy Fabric live endpoint/service completeness."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
+  - "Reconcile ecosystem-status.yaml stale snapshot with current repo/PR state."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Keep Sociosphere informed for every future platform build/test/deploy tranche."
+  - "Keep zone publication lifecycle slices small and current-main based."

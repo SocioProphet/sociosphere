@@ -23,16 +23,22 @@ ui-dev: ui-preflight
 # --- end ui-workbench targets ---
 
 # --- standards validation targets ---
-.PHONY: validate validate-standards
+.PHONY: validate validate-standards multidomain-geospatial-standards-compliance-validate program-dashboard-validate
 
-validate: validate-standards
+validate: validate-standards program-dashboard-validate
 	@echo "OK: validate"
 
 validate-standards:
-	@ok=1; if [ -f tools/validate_adaptation_program.py ]; then python3 tools/validate_adaptation_program.py standards/examples/adaptation/program.example.v1.json || ok=0; else echo "ERR: tools/validate_adaptation_program.py missing"; ok=0; fi; if [ -f standards/qes/tools/validate_qes_contracts.py ]; then python3 standards/qes/tools/validate_qes_contracts.py || ok=0; else echo "WARN: standards/qes/tools/validate_qes_contracts.py missing (skipping)"; fi; test $$ok -eq 1
+	@ok=1; if [ -f tools/validate_adaptation_program.py ]; then python3 tools/validate_adaptation_program.py standards/examples/adaptation/program.example.v1.json || ok=0; else echo "ERR: tools/validate_adaptation_program.py missing"; ok=0; fi; if [ -f standards/qes/tools/validate_qes_contracts.py ]; then python3 standards/qes/tools/validate_qes_contracts.py || ok=0; else echo "WARN: standards/qes/tools/validate_qes_contracts.py missing (skipping)"; fi; if [ -f tools/check_multidomain_geospatial_standards_compliance.py ]; then python3 tools/check_multidomain_geospatial_standards_compliance.py || ok=0; else echo "ERR: tools/check_multidomain_geospatial_standards_compliance.py missing"; ok=0; fi; test $$ok -eq 1
+
+program-dashboard-validate:
+	python3 tools/validate_program_dashboard.py
+
+multidomain-geospatial-standards-compliance-validate:
+	python3 tools/check_multidomain_geospatial_standards_compliance.py
 
 # --- registry targets ---
-.PHONY: registry-validate ontology-validate dep-cycles mirror-drift-check
+.PHONY: registry-validate ontology-validate dep-cycles mirror-drift-check build-intelligence-validate deployment-topology-validate contract-lock-validate
 
 mirror-drift-check:
 	python3 engines/mirror_drift_engine.py check
@@ -45,6 +51,15 @@ registry-validate:
 	@echo "==> Validating mirror drift status..."
 	python3 engines/mirror_drift_engine.py check
 	@echo "OK: registry-validate passed"
+
+build-intelligence-validate:
+	python3 tools/validate_build_intelligence.py
+
+deployment-topology-validate:
+	python3 tools/validate_deployment_topology.py
+
+contract-lock-validate:
+	python3 tools/validate_contract_locks.py
 
 ontology-validate: registry-validate
 
@@ -71,6 +86,14 @@ compliance-check:
 compliance-summary:
 	python3 telemetry/compliance_checker.py summary --format json
 
+# --- source exposure governance targets ---
+.PHONY: source-exposure-check
+
+source-exposure-check:
+	@echo "==> Running source exposure publication safety check..."
+	python3 tools/check_source_exposure.py
+	@echo "OK: source-exposure-check passed"
+
 # --- merge order ---
 .PHONY: merge-order
 
@@ -78,7 +101,7 @@ merge-order:
 	python3 engines/propagation_engine.py merge-order
 
 # --- workspace runner targets ---
-.PHONY: workspace-list lock-verify lock-update inventory topology-check
+.PHONY: workspace-list lock-verify lock-update inventory topology-check proof-slice-smoke
 
 workspace-list:
 	python3 tools/runner/runner.py list
@@ -95,6 +118,9 @@ inventory:
 topology-check:
 	python3 tools/check_topology.py
 
+proof-slice-smoke:
+	python3 tools/runner/proof_slice_smoke.py
+
 # --- hygiene targets ---
 .PHONY: hygiene-check
 
@@ -107,5 +133,5 @@ hygiene-check:
 # --- full workspace check (run in CI) ---
 .PHONY: workspace-check
 
-workspace-check: validate registry-validate compliance-check lock-verify topology-check hygiene-check
+workspace-check: validate registry-validate build-intelligence-validate deployment-topology-validate contract-lock-validate compliance-check source-exposure-check lock-verify topology-check hygiene-check
 	@echo "OK: workspace-check passed"

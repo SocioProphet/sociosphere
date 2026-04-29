@@ -1,0 +1,131 @@
+{
+  "rules_version": "v1",
+  "program": "gaia-ofif-meshlab-control-tower",
+  "updated_at": "2026-04-27T20:20:00Z",
+  "purpose": "Change propagation rules for cross-repo GAIA / OFIF / MeshLab / Control Tower contracts, fixtures, validators, OpenStreetMap bindings, optional KubeEdge substrate governance, and readiness metadata.",
+  "rules": [
+    {
+      "id": "gaia-schema-change",
+      "when": {"repo": "gaia-world-model", "paths": ["schemas/**"]},
+      "notify": ["prophet-platform", "sociosphere", "sherlock-search", "orion-field-intelligence", "meshrush", "agentplane"],
+      "required_actions": [
+        "Run GAIA contract fixture validation.",
+        "Update affected fixtures or validators.",
+        "Update prophet-platform progress ledger if readiness state changes.",
+        "Review Sherlock discovery records for schema drift.",
+        "Review MeshRush graph-view references when evidence/node references change."
+      ]
+    },
+    {
+      "id": "gaia-fixture-change",
+      "when": {"repo": "gaia-world-model", "paths": ["fixtures/**"]},
+      "notify": ["prophet-platform", "sociosphere", "sherlock-search", "meshrush"],
+      "required_actions": [
+        "Run GAIA contract fixture validation.",
+        "Run OFIF bridge and soil-fusion proof chain when OFIF/soil fixtures change.",
+        "Review Sherlock examples that cite changed fixture IDs.",
+        "Review MeshRush crystallization fixtures that traverse changed fixture IDs."
+      ]
+    },
+    {
+      "id": "openstreetmap-integration-change",
+      "when": {"repo": "gaia-world-model", "paths": ["docs/integrations/OPENSTREETMAP_INTEGRATION.md", "schemas/geospatial/**", "fixtures/geospatial/**"]},
+      "notify": ["prophet-platform", "sociosphere", "sherlock-search", "lampstand", "lattice-forge"],
+      "required_actions": [
+        "Run GAIA contract fixture validation for OSM bindings and map tile layer manifests.",
+        "Confirm OSM node/way/relation identity is preserved.",
+        "Confirm OSM attribution and license metadata are present.",
+        "Confirm OSM-only route or layer outputs are advisory unless additional validation exists.",
+        "Review Sherlock OSM-derived map/search records.",
+        "Do not add Lattice OSM runtime assets until executable runtime boundary is defined."
+      ]
+    },
+    {
+      "id": "kubeedge-optional-substrate-change",
+      "when": {"repo": "sociosphere", "paths": ["docs/integrations/KUBEEDGE_OPTIONAL_EDGE_SUBSTRATE.md", "registry/gaia-ofif-meshlab-capability-map.v1.json"]},
+      "notify": ["prophet-platform", "gaia-world-model", "orion-field-intelligence", "agentplane", "meshrush"],
+      "required_actions": [
+        "Confirm KubeEdge remains optional and not required for local-first or Smart Spaces deployments.",
+        "Confirm SourceOS/nlboot remains the host lifecycle authority.",
+        "Confirm no Smart Spaces implementation schema is created by implication.",
+        "Confirm Agentplane approval boundaries are required before actuation.",
+        "Update progress ledger if KubeEdge readiness state changes."
+      ]
+    },
+    {
+      "id": "ofif-event-fixture-change",
+      "when": {"repo": "orion-field-intelligence", "paths": ["fixtures/**", "ontology/**", "docs/integrations/**"]},
+      "notify": ["gaia-world-model", "prophet-platform", "sociosphere", "meshrush"],
+      "required_actions": [
+        "Review OFIF-to-GAIA mapping contract compatibility.",
+        "Run GAIA OFIF bridge proof if the changed fixture is consumed by GAIA.",
+        "Update MeshRush graph-view entry-node references if event IDs change.",
+        "Update progress ledger when readiness changes."
+      ]
+    },
+    {
+      "id": "sherlock-result-schema-change",
+      "when": {"repo": "sherlock-search", "paths": ["schemas/**", "examples/**", "tools/**"]},
+      "notify": ["gaia-world-model", "prophet-platform", "sociosphere", "meshrush"],
+      "required_actions": [
+        "Run Sherlock result validation.",
+        "Review GAIA search record schemas and examples.",
+        "Review MeshRush graph-view artifacts that cite Sherlock result IDs.",
+        "Update capability map readiness if validation state changes."
+      ]
+    },
+    {
+      "id": "meshrush-crystallization-change",
+      "when": {"repo": "meshrush", "paths": ["fixtures/graph-views/**", "tools/**", "docs/integrations/**"]},
+      "notify": ["agentplane", "gaia-world-model", "prophet-platform", "sociosphere"],
+      "required_actions": [
+        "Run MeshRush crystallization fixture validation.",
+        "Review Agentplane MeshRush execution candidate mapping.",
+        "Confirm recommended_next_action.action_boundary is preserved.",
+        "Confirm advisory artifacts remain non-runnable unless policy explicitly permits execution."
+      ]
+    },
+    {
+      "id": "agentplane-meshrush-candidate-change",
+      "when": {"repo": "agentplane", "paths": ["schemas/meshrush-*.json", "examples/meshrush/**", "scripts/validate_meshrush_candidate.py", "docs/integrations/MESHRUSH_ADAPTER_CONTRACT.md"]},
+      "notify": ["meshrush", "prophet-platform", "sociosphere"],
+      "required_actions": [
+        "Run Agentplane MeshRush candidate validation.",
+        "Confirm advisory candidates are non-runnable.",
+        "Confirm approval_required candidates cannot run without approval-state transition.",
+        "Update progress ledger after PR merge or blocker changes."
+      ]
+    },
+    {
+      "id": "lattice-runtime-admission-change",
+      "when": {"repo": "lattice-forge", "paths": ["examples/runtime-assets/**", "schemas/**"]},
+      "notify": ["gaia-world-model", "prophet-platform", "sociosphere", "agentplane"],
+      "required_actions": [
+        "Confirm a matching GAIA runtime boundary exists.",
+        "Confirm executable entrypoint and validation command exist in owning domain repo.",
+        "Reject speculative runtime fixtures without admission criteria.",
+        "Update capability map readiness if runtime becomes admission-ready."
+      ]
+    },
+    {
+      "id": "progress-ledger-change",
+      "when": {"repo": "prophet-platform", "paths": ["registry/gaia_ofif_meshlab_progress.v1.json", "docs/GAIA_OFIF_MESHLAB_CONTROL_TOWER_MASTER_PLAN.md", "docs/requirements/OPENSTREETMAP_PLATFORM_REQUIREMENTS.md"]},
+      "notify": ["sociosphere"],
+      "required_actions": [
+        "Ensure progress ledger and SocioSphere capability map do not disagree on readiness states.",
+        "Run SocioSphere capability map validation if readiness states changed.",
+        "Record unresolved blockers explicitly."
+      ]
+    },
+    {
+      "id": "smart-spaces-boundary-change",
+      "when": {"repo": "prophet-platform", "paths": ["docs/decisions/SMART_SPACES_DOMAIN_HOME_DECISION.md"]},
+      "notify": ["gaia-world-model", "orion-field-intelligence", "sociosphere", "meshrush", "agentplane"],
+      "required_actions": [
+        "Do not create implementation files until domain-home decision narrows or closes.",
+        "Review privacy and surveillance-risk requirements before any schema placement.",
+        "Update capability map blocked_items if the decision state changes."
+      ]
+    }
+  ]
+}

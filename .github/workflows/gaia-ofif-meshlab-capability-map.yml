@@ -1,0 +1,28 @@
+name: GAIA OFIF MeshLab Capability Map
+
+on:
+  push:
+    paths:
+      - 'registry/gaia-ofif-meshlab-capability-map.v1.json'
+      - 'tools/check_gaia_ofif_meshlab_capability_map.py'
+      - '.github/workflows/gaia-ofif-meshlab-capability-map.yml'
+  pull_request:
+    paths:
+      - 'registry/gaia-ofif-meshlab-capability-map.v1.json'
+      - 'tools/check_gaia_ofif_meshlab_capability_map.py'
+      - '.github/workflows/gaia-ofif-meshlab-capability-map.yml'
+
+jobs:
+  validate-capability-map:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate capability map registry
+        run: python3 tools/check_gaia_ofif_meshlab_capability_map.py

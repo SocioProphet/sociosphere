@@ -1,0 +1,175 @@
+schema_version: 1
+name: lattice-placement-spine
+owner_repo: SocioProphet/prophet-platform
+canonical_identity: PlatformAssetRecord
+purpose: >-
+  Registers governed placement lanes for Lattice Studio, including BYOC storage,
+  BYOC compute, BYOC I/O, CloudShell Fog shell placement, notebook placement,
+  command-line notebook placement, SourceOS M2 registry mounts, TopoLVM local
+  storage, Inception agent cluster placement, PlacementDryRunReport run-readiness
+  decisions, SafePlacementExecutionPlan controlled post-decision execution plans,
+  and ExecutionApprovalRequest approval-workflow artifacts.
+
+producer_surfaces:
+  - repo: SocioProphet/prophet-platform
+    records:
+      - BYOCPlacementPlan
+      - UnifiedNotebookShellPlacementPlan
+      - M2TopoLVMPlacementPlan
+      - PlacementDryRunReport
+      - SafePlacementExecutionPlan
+      - ExecutionApprovalRequest
+    role: canonical Studio placement, run-readiness, safe execution, and approval request producer
+  - repo: SocioProphet/cloudshell-fog
+    records:
+      - CloudShellFogBinding
+    role: fog-first browser terminal and WebSocket PTY placement lane
+  - repo: SociOS-Linux/cloudshell-fog
+    records:
+      - CloudShellFogBinding
+    role: SociOS-local CloudShell Fog integration surface
+  - repo: SourceOS-Linux/dnote
+    records:
+      - CommandLineNotebookBinding
+    role: terminal-native command-line notebook surface
+
+placement_lanes:
+  byoc:
+    storage:
+      - s3-compatible
+      - posix
+      - minio
+      - nfs
+      - lakehouse
+    compute:
+      - kubernetes
+      - array-cluster
+      - ray-cluster
+      - spark-cluster
+      - edge-node
+      - local-sourceos
+    io:
+      - object-store
+      - posix-mount
+      - websocket-pty
+      - kafka
+      - http-api
+      - jdbc
+      - arrow-flight
+  cloudshell_fog:
+    repo: SocioProphet/cloudshell-fog
+    capabilities:
+      - oidc-authentication
+      - fog-first-placement
+      - cloud-fallback
+      - yaml-policy-profiles
+      - websocket-pty
+      - kubernetes-runtime-connector
+      - stub-runtime-connector
+      - audit-events
+      - opentelemetry
+      - argocd-gitops
+      - tekton-chains-supply-chain
+  command_line_notebook:
+    repo: SourceOS-Linux/dnote
+    capabilities:
+      - single-binary
+      - sqlite-local-store
+      - full-text-search
+      - self-hosted-sync
+      - terminal-native-notes
+      - sourceos-local-friendly
+  m2_topolvm:
+    source_registry_doc: SocioProphet/prophet-platform:docs/SOURCEOS_M2_FILESYSTEM_REGISTRY.md
+    proof_fixture: SocioProphet/prophet-platform:contracts/sourceos/examples/proof-index.m2-demo.v0.json
+    capabilities:
+      - sourceos-m2-filesystem-registry
+      - topolvm-volume-claims
+      - local-vm-k8s-pool-join
+      - inception-agent-cluster-binding
+      - proof-index-mounted
+      - safety-boundary-no-host-mutation
+  placement_decision:
+    canonical_record: PlacementDryRunReport
+    purpose: can-this-run-here decision artifact for BYOC, CloudShell Fog, M2 TopoLVM, notebook launch, and notebook promotion paths
+    required_checks:
+      - byoc-compute-targets
+      - byoc-storage-targets
+      - byoc-io-bindings
+      - cloudshell-fog-terminal-path
+      - m2-topolvm-safety-boundary
+      - notebook-adapter-launch-coverage
+      - promotion-target-coverage
+  safe_execution:
+    canonical_record: SafePlacementExecutionPlan
+    purpose: controlled post-decision execution plan that can render runtime, readonly registry, namespace, terminal session, manifests, and approval request artifacts before any state-changing execution
+    required_steps:
+      - prepare-runtime
+      - mount-registry-readonly
+      - create-ephemeral-namespace
+      - prepare-terminal-session
+      - render-manifests
+      - emit-approval-request
+    blocked_effects:
+      - host-boot-mutation
+      - kexec
+      - persistent-cluster-apply
+      - remote-state-mutation
+      - writeable-m2-registry-mount
+  execution_approval:
+    canonical_record: ExecutionApprovalRequest
+    purpose: governed approval-workflow artifact that requests scoped approvals for SafePlacementExecutionPlan without applying state
+    required_scopes:
+      - ephemeral-namespace
+      - readonly-mount
+      - terminal-session-render
+    blocked_effects:
+      - host-change
+      - persistent-apply
+      - remote-state-change
+      - writeable-registry-mount
+      - terminal-attach
+
+consumers:
+  - repo: SocioProphet/sherlock-search
+    consumes:
+      - BYOCPlacementPlan
+      - UnifiedNotebookShellPlacementPlan
+      - M2TopoLVMPlacementPlan
+      - PlacementDryRunReport
+      - SafePlacementExecutionPlan
+      - ExecutionApprovalRequest
+    role: indexes placement records, run-readiness decisions, safe execution plans, and approval requests as searchable platform assets
+  - repo: SocioProphet/prophet-cli
+    consumes:
+      - BYOCPlacementPlan
+      - UnifiedNotebookShellPlacementPlan
+      - M2TopoLVMPlacementPlan
+      - PlacementDryRunReport
+      - SafePlacementExecutionPlan
+      - ExecutionApprovalRequest
+    role: exposes placement dry-run, inspection, can-this-run-here, safe execution plan, and execution approval commands
+  - repo: SocioProphet/sociosphere
+    consumes:
+      - lattice-placement-spine
+    role: topology registration and validation
+
+invariants:
+  - Placement records must remain side-effect-free unless an executor explicitly enters an approved execution path.
+  - PlacementDryRunReport is the canonical can-this-run-here decision artifact.
+  - SafePlacementExecutionPlan is the canonical controlled post-decision execution plan artifact.
+  - ExecutionApprovalRequest is the canonical approval-workflow artifact after SafePlacementExecutionPlan.
+  - SafePlacementExecutionPlan must preserve approval gates before cluster apply, host mutation, and remote state mutation.
+  - ExecutionApprovalRequest must remain a request artifact and must not apply state, mutate hosts, attach live terminals, or open writeable registry mounts.
+  - SourceOS M2 registry mounts are proof artifacts and must not mutate host boot state.
+  - TopoLVM placement must be dry-run until a separate executor is approved.
+  - CloudShell Fog and notebook placement must share policy, trust tier, data locality, audit, and telemetry semantics.
+  - PlatformAssetRecord remains the shared identity for placement records.
+
+next_required_links:
+  - repo: SocioProphet/prophet-platform
+    task: add approval response artifacts that transition ExecutionApprovalRequest to approved or rejected without applying cluster state
+  - repo: SocioProphet/prophet-cli
+    task: expose BYOC, notebook-shell, M2 TopoLVM, PlacementDryRunReport, SafePlacementExecutionPlan, and ExecutionApprovalRequest commands
+  - repo: SocioProphet/sherlock-search
+    task: add facets for placement lane, storage kind, compute kind, I/O kind, decision status, approval state, and approval scope

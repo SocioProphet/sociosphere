@@ -7,8 +7,11 @@
 
 ## Architecture
 - [Agentic workbench protocol v0](../protocol/agentic-workbench/v0/README.md)
+- [EMVI operator shell architecture](architecture/emvi/README.md)
+- [EMVI proof slice protocol v0](../protocol/emvi-proof-slice/v0/README.md)
 - [UI workbench app README](../apps/ui-workbench/README.md)
 - [Overview](architecture/overview.md)
+- [Runtime, content, and orchestration placement](architecture/runtime-content-placement.md)
 - [Upstream bindings — edge capabilities](architecture/upstream-bindings-edge-capabilities.md)
 - [Validation contract](architecture/validation-contract.md)
 - [Standards: adaptation v1](architecture/standards-adaptation.md)
@@ -21,6 +24,8 @@
 
 ## Standards
 - [QES (Quality Evidence Standard)](../standards/qes/README.md)
+- [Angel of the Lord Hardening Regime](../standards/angel-of-the-lord/README.md)
+- [Source Exposure Governance Standard](../standards/source-exposure/README.md)
 - [Adaptation README](standards/adaptation/README.md)
 
 ## Governance

@@ -1,0 +1,60 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T15:25:00-04:00"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SociOS-Linux/nlboot"
+status: "active"
+
+scope:
+  program: "SourceOS / Boot and Recovery Plane"
+  lane: "nlboot-m2-fixture-validation"
+  intent: "Register merged M2 demo fixture validation for the safe nlboot planner."
+
+merged_tranches:
+  - pr: 5
+    title: "ci: add M2 fixture validation for nlboot planner"
+    merge_commit: "787129bb990e6bb458e33c9d57957a186686cdf6"
+    branch: "work/sourceos-m2-lifecycle-proof-slice"
+    gates_closed:
+      - confirmed no open nlboot PR collision before work
+      - added validation workflow dependency installation and M2 fixture CLI smoke
+      - added M2 demo recovery signed boot manifest fixture
+      - added M2 demo one-time enrollment token fixture
+      - added M2 demo trusted-key fixture
+      - documented the M2 fixture validation command in README
+      - preserved safe-planning boundary with execute=false
+      - merged PR 5 by squash after mergeability check
+    artifacts:
+      - ".github/workflows/validate.yml"
+      - "examples/m2-demo/manifest.recovery.json"
+      - "examples/m2-demo/enrollment-token.recovery.json"
+      - "examples/m2-demo/trusted-keys.json"
+      - "README.md"
+
+software_review:
+  correctness:
+    - "nlboot now carries a concrete M2 demo fixture path for recovery planning."
+    - "The workflow validates both make validate and nlboot-plan over the M2 fixture."
+    - "The fixture exercises require-fips metadata and trusted-key verification through the CLI path."
+    - "The tranche avoids active prophet-platform and sociosphere PR surfaces."
+  safety_boundary:
+    - "No artifact fetching was added."
+    - "No host mutation was added."
+    - "No disk writes were added."
+    - "No kexec execution was added."
+    - "Produced plans remain safe planning artifacts with execute=false."
+  weaknesses:
+    - "The additive in-repo Python fixture test was blocked by connector safety screening and was not forced."
+    - "The M2 fixture IDs still need to be kept aligned with prophet-platform SourceOS contract examples as those evolve."
+    - "This is still a planner/verification fixture, not a full boot/install/recovery execution path."
+
+next_hardening:
+  - "Add SourceOS contract-aligned fixture crosswalk between prophet-platform and nlboot."
+  - "Add explicit test coverage for examples/m2-demo once safe write path permits."
+  - "Connect filesystem registry published SourceOS artifacts to nlboot fixture inputs."
+  - "Emit synthetic SourceOS Fingerprint from a planned boot path and validate it against assigned ReleaseSet."
+
+running_backlog:
+  - "Map SourceOS ReleaseSet and BootReleaseSet examples into nlboot fixture naming."
+  - "Add registry-consumption fixture that remains side-effect-free."
+  - "Add SocioSphere lifecycle proof-slice aggregation after prophet-platform and nlboot fixtures align."
+  - "Continue avoiding hidden remote mutation without explicit policy gates."

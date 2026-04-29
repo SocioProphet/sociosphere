@@ -1,0 +1,85 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T12:40:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/policy-fabric"
+status: "active"
+
+scope:
+  program: "Prophet Platform / Policy Fabric Integration"
+  lane: "operations-decision-service-completeness"
+  intent: "Register the first repo-native Policy Fabric operations action decision evaluator surface."
+
+merged_tranches:
+  - pr: 26
+    title: "Add operations decision service evaluator"
+    merge_commit: "c5c072aae22e3ee46c410a2e6bfa26b2e35b129d"
+    gates_closed:
+      - inspected policy-fabric for existing service endpoint surfaces
+      - found contract surface but no obvious service endpoint surface
+      - added deterministic local operations action decision evaluator
+      - added schema-validating operations decision smoke
+      - added Makefile validate target
+      - patched ownership classification for new service files
+      - patched config managed paths to match ownership contract
+      - Repo Health pass
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "policy_fabric/operations_decision_service.py"
+      - "tools/smoke_operations_decision_service.py"
+      - "Makefile"
+      - ".policy-fabric/ownership.json"
+      - ".policy-fabric/config.json"
+
+active_tranches:
+  - pr: 26
+    title: "Add operations decision service evaluator"
+    branch: "work/operations-decision-service"
+    state: "merged"
+    subject: "Policy Fabric operations action decision evaluator"
+    gates_completed:
+      - evaluator merged
+      - schema smoke merged
+      - validation target merged
+      - ownership/config governance fixed
+      - post-merge verification complete
+    files_changed:
+      - "policy_fabric/operations_decision_service.py"
+      - "tools/smoke_operations_decision_service.py"
+      - "Makefile"
+      - ".policy-fabric/ownership.json"
+      - ".policy-fabric/config.json"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "added"
+    notes: "Policy Fabric make validate runs the operations decision service smoke against the ProphetOperationsActionDecision schema."
+  relevant_workflows:
+    - "Repo Health"
+
+software_review:
+  correctness:
+    - "Policy Fabric now emits schema-valid ProphetOperationsActionDecision artifacts from operations recommendations."
+    - "Default report-only mode returns manual_review and requires human approval."
+    - "The evaluator does not execute remediation or remote mutation."
+  weaknesses:
+    - "This is a local evaluator, not an HTTP service endpoint."
+    - "Policy Fabric still needs an explicit live endpoint surface before platform remote policy calls should rely on it."
+  next_hardening:
+    - "Expose the evaluator through an explicit HTTP endpoint with the same schema validation and safe defaults."
+    - "Wire prophet-platform live Policy Fabric adapter against the endpoint after the endpoint is merged and registered."
+    - "Register future implementation tranches in Sociosphere after merge."
+
+running_backlog:
+  - "Expose Policy Fabric operations decision evaluator through HTTP endpoint."
+  - "Wire prophet-platform live Policy Fabric adapter against the endpoint."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
+  - "Reconcile ecosystem-status.yaml stale snapshot with current repo/PR state."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Keep Sociosphere informed for every future platform build/test/deploy tranche."
+  - "Keep zone publication lifecycle slices small and current-main based."
+  - "Do not add hidden remote mutation without explicit policy gates."

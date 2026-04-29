@@ -1,0 +1,43 @@
+"""Canonical schema target metadata for the software operational risk lane.
+
+This module mirrors the registry YAML so automation code can reference the intended
+canonical schema artifacts without hard-coding source repo paths inline.
+"""
+
+SCHEMA_TARGETS = {
+    "outage_corpus": {
+        "normalized_type": "SoftwareOperationalIncident",
+        "schema_id": "https://schemas.srcos.ai/v2/SoftwareOperationalIncident.json",
+        "source_repo": "SourceOS-Linux/sourceos-spec",
+        "source_path": "schemas/SoftwareOperationalIncident.json",
+        "example_path": "examples/softwareoperationalincident.json",
+    },
+    "upstream_watch": {
+        "normalized_type": "UpstreamWatchItem",
+        "schema_id": "https://schemas.srcos.ai/v2/UpstreamWatchItem.json",
+        "source_repo": "SourceOS-Linux/sourceos-spec",
+        "source_path": "schemas/UpstreamWatchItem.json",
+        "example_path": "examples/upstreamwatchitem.json",
+    },
+    "reserve_report": {
+        "normalized_type": "ReserveScenarioReport",
+        "schema_id": "https://schemas.srcos.ai/v2/ReserveScenarioReport.json",
+        "source_repo": "SourceOS-Linux/sourceos-spec",
+        "source_path": "schemas/ReserveScenarioReport.json",
+        "example_path": "examples/reservescenarioreport.json",
+    },
+    "scenario_run": {
+        "normalized_type": "SoftwareOperationalScenarioRun",
+        "schema_id": "https://schemas.srcos.ai/v2/SoftwareOperationalScenarioRun.json",
+        "source_repo": "SourceOS-Linux/sourceos-spec",
+        "source_path": "schemas/SoftwareOperationalScenarioRun.json",
+        "example_path": "examples/softwareoperationalscenariorun.json",
+    },
+    "analysis_bundle": {
+        "normalized_type": "SoftwareOperationalAnalysisBundle",
+        "schema_id": "https://schemas.srcos.ai/v2/SoftwareOperationalAnalysisBundle.json",
+        "source_repo": "SourceOS-Linux/sourceos-spec",
+        "source_path": "schemas/SoftwareOperationalAnalysisBundle.json",
+        "example_path": "examples/softwareoperationalanalysisbundle.json",
+    },
+}

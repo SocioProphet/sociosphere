@@ -1,0 +1,207 @@
+# SOTA workstream governance gates
+#
+# This file defines the cross-repo readiness gates used to assess whether a
+# SourceOS / Prophet Platform / Agentplane workstream is state-of-the-art enough
+# to be treated as production-grade or demo-grade.
+
+schema_version: v0.1
+owner: sociosphere
+status: draft
+
+readout_format:
+  required_sections:
+    - program_objective
+    - workstream_advanced
+    - files_changed
+    - evidence_produced
+    - current_score_change
+    - risks_introduced_or_reduced
+    - next_best_action
+
+score_bands:
+  not_started:
+    range: "0-20"
+    meaning: "Idea or placeholder only. No enforceable contract."
+  scaffolded:
+    range: "21-45"
+    meaning: "Docs or stubs exist, but runnable/evidence path is incomplete."
+  integrated:
+    range: "46-65"
+    meaning: "Correct authority boundaries and partial implementation exist."
+  demo_ready:
+    range: "66-80"
+    meaning: "Runnable or deterministic proof path exists with evidence and rollback semantics."
+  production_grade:
+    range: "81-92"
+    meaning: "CI/validation, evidence, promotion, rollback, security gates, and non-regression are enforced."
+  sota:
+    range: "93-100"
+    meaning: "Production-grade plus adversarial review, repeatable evidence, cross-repo governance, and measured non-regression across releases."
+
+required_gates:
+  authority_boundary:
+    description: "Canonical owner is identified and downstream repos do not duplicate semantics."
+    required_evidence:
+      - canonical_repo_reference
+      - downstream_consumer_reference
+      - boundary_or_source_map_reference
+    blocking_conditions:
+      - duplicate_semantics
+      - missing_owner
+      - ambiguous_source_of_truth
+
+  contract_completeness:
+    description: "Machine-readable contract or schema exists for exchanged objects."
+    required_evidence:
+      - schema_or_contract_path
+      - stable_id_or_urn_rule
+      - compatibility_notes
+    blocking_conditions:
+      - prose_only_for_exchanged_object
+      - breaking_schema_change_without_adr
+      - missing_stable_identifier
+
+  build_or_execution_path:
+    description: "Runnable path or deterministic proof path exists."
+    required_evidence:
+      - workflow_or_pipeline_ref
+      - proof_generator_ref
+      - executor_or_runner_ref
+    blocking_conditions:
+      - no_runnable_path
+      - no_deterministic_proof_path
+      - secrets_inline
+
+  evidence_and_replay:
+    description: "Run/build emits evidence and replay or re-run boundary."
+    required_evidence:
+      - validation_artifact
+      - placement_decision
+      - run_artifact
+      - replay_artifact
+      - evidence_bundle_or_release_manifest
+    blocking_conditions:
+      - missing_digest_or_content_ref
+      - no_replay_boundary
+      - evidence_not_retained
+
+  promotion_and_rollback:
+    description: "Promotion state and rollback path are explicit."
+    required_evidence:
+      - channel_or_lifecycle_environment
+      - promoted_artifact_ref
+      - previous_known_good_ref
+      - rollback_policy_ref
+    blocking_conditions:
+      - no_channel_or_lifecycle_environment
+      - no_previous_known_good
+      - promotion_without_evidence
+
+  security_and_angel_review:
+    description: "Security posture and Angel of the Lord review are applied where required."
+    required_evidence:
+      - angel_epoch_grade_or_waiver
+      - unresolved_findings_list
+      - runtime_base_or_host_substrate_classification
+      - source_exposure_review
+    blocking_conditions:
+      - unresolved_blocker
+      - unresolved_material_high
+      - host_substrate_misclassified
+      - source_exposure_unreviewed
+
+  non_regression:
+    description: "Prior accepted behavior remains non-regressed within policy."
+    required_evidence:
+      - epoch_regression_check
+      - evaluation_record
+      - baseline_ref
+      - current_ref
+    blocking_conditions:
+      - missing_regression_check
+      - material_regression_without_remediation
+      - stochastic_claim_without_repeated_run_or_confidence_bound
+
+workstreams:
+  sourceos_artifact_truth:
+    canonical_owner: SociOS-Linux/SourceOS
+    primary_consumers:
+      - SociOS-Linux/socios
+      - SocioProphet/prophet-platform
+      - SocioProphet/agentplane
+    current_band: demo_ready
+    current_score: 65
+    required_next_gate: contract_completeness
+
+  socios_foreman_katello_automation:
+    canonical_owner: SociOS-Linux/socios
+    primary_consumers:
+      - SocioProphet/prophet-platform
+      - SocioProphet/agentplane
+    current_band: integrated
+    current_score: 60
+    required_next_gate: evidence_and_replay
+
+  prophet_platform_m2_lifecycle_proof:
+    canonical_owner: SocioProphet/prophet-platform
+    primary_consumers:
+      - SocioProphet/sociosphere
+      - SocioProphet/agentplane
+    current_band: demo_ready
+    current_score: 70
+    required_next_gate: build_or_execution_path
+
+  agentplane_sourceos_image_production_lane:
+    canonical_owner: SocioProphet/agentplane
+    primary_consumers:
+      - SocioProphet/prophet-platform
+      - SociOS-Linux/socios
+    current_band: integrated
+    current_score: 60
+    required_next_gate: build_or_execution_path
+
+  sourceos_spec_release_contracts:
+    canonical_owner: SourceOS-Linux/sourceos-spec
+    primary_consumers:
+      - SociOS-Linux/SourceOS
+      - SociOS-Linux/socios
+      - SocioProphet/prophet-platform
+      - SocioProphet/agentplane
+    current_band: integrated
+    current_score: 55
+    required_next_gate: contract_completeness
+
+promotion_policy:
+  demo_ready_minimum:
+    minimum_score: 66
+    required_gates:
+      - authority_boundary
+      - contract_completeness
+      - build_or_execution_path
+      - evidence_and_replay
+  production_grade_minimum:
+    minimum_score: 81
+    required_gates:
+      - authority_boundary
+      - contract_completeness
+      - build_or_execution_path
+      - evidence_and_replay
+      - promotion_and_rollback
+      - security_and_angel_review
+      - non_regression
+  sota_minimum:
+    minimum_score: 93
+    required_gates:
+      - authority_boundary
+      - contract_completeness
+      - build_or_execution_path
+      - evidence_and_replay
+      - promotion_and_rollback
+      - security_and_angel_review
+      - non_regression
+    additional_requirements:
+      - cross_repo_readout_current
+      - adversarial_review_complete
+      - measured_non_regression_across_release
+      - rollback_exercised
+      - evidence_exportable

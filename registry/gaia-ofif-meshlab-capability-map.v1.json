@@ -1,0 +1,59 @@
+{
+  "registry_version": "v1",
+  "capability_program": "gaia-ofif-meshlab-control-tower",
+  "status": "active",
+  "updated_at": "2026-04-27T20:18:00Z",
+  "authority": "SocioSphere governance registry",
+  "source_of_truth": {
+    "master_plan": "SocioProphet/prophet-platform:docs/GAIA_OFIF_MESHLAB_CONTROL_TOWER_MASTER_PLAN.md",
+    "progress_ledger": "SocioProphet/prophet-platform:registry/gaia_ofif_meshlab_progress.v1.json",
+    "governance_doc": "SocioProphet/sociosphere:docs/integrations/GAIA_OFIF_MESHLAB_GOVERNANCE.md",
+    "osm_requirements": "SocioProphet/prophet-platform:docs/requirements/OPENSTREETMAP_PLATFORM_REQUIREMENTS.md",
+    "kubeedge_optional_substrate": "SocioProphet/sociosphere:docs/integrations/KUBEEDGE_OPTIONAL_EDGE_SUBSTRATE.md"
+  },
+  "repositories": [
+    {"name": "prophet-platform", "role": "master plan, platform requirements, OSM API, and progress ledger", "readiness": "validated"},
+    {"name": "gaia-world-model", "role": "world model, schemas, fixtures, executable proofs, OSM bindings", "readiness": "executable"},
+    {"name": "orion-field-intelligence", "role": "field event envelopes and fixtures", "readiness": "fixture-backed"},
+    {"name": "sherlock-search", "role": "discovery records and validation", "readiness": "validated"},
+    {"name": "lattice-forge", "role": "runtime provenance after admission", "readiness": "blocked"},
+    {"name": "lampstand", "role": "local sampling and percolation", "readiness": "planned"},
+    {"name": "meshrush", "role": "graph operation and crystallization", "readiness": "validated"},
+    {"name": "agentplane", "role": "governed execution candidate handoff", "readiness": "pr-open"},
+    {"name": "nlboot", "role": "boot/recovery/provisioning", "readiness": "planned"},
+    {"name": "sourceos", "role": "host lifecycle authority for optional edge substrates", "readiness": "planned"}
+  ],
+  "validation_lanes": [
+    {"id": "gaia-contract-fixtures", "repo": "gaia-world-model", "required": true, "state": "ci-defined"},
+    {"id": "gaia-openstreetmap-bindings", "repo": "gaia-world-model", "required": true, "state": "ci-defined"},
+    {"id": "sherlock-geospatial-results", "repo": "sherlock-search", "required": true, "state": "ci-defined"},
+    {"id": "meshrush-crystallization-fixtures", "repo": "meshrush", "required": true, "state": "ci-defined"},
+    {"id": "agentplane-meshrush-candidate", "repo": "agentplane", "required": true, "state": "pr-open-ci-green"},
+    {"id": "lattice-runtime-admission", "repo": "lattice-forge", "required": false, "state": "blocked-until-entrypoints"},
+    {"id": "smart-spaces-domain-home", "repo": "undecided", "required": false, "state": "open-decision"},
+    {"id": "kubeedge-optional-edge-substrate", "repo": "sociosphere", "required": false, "state": "governance-defined"}
+  ],
+  "readiness_states": {
+    "planned": "strategy or doctrine only",
+    "contracted": "schema or contract exists",
+    "fixture-backed": "one or more fixtures exist",
+    "validated": "validator or CI exists",
+    "executable": "deterministic executable proof exists",
+    "admission-ready": "ready for runtime packaging or cross-repo consumption",
+    "blocked": "explicit unresolved dependency or policy issue"
+  },
+  "blocked_items": [
+    {
+      "item": "Lattice Forge runtime assets",
+      "reason": "runtime assets require executable entrypoints, validation commands, policy constraints, rollback semantics, and reviewed boundaries"
+    },
+    {
+      "item": "Smart Spaces implementation",
+      "reason": "domain home and privacy/surveillance boundaries are intentionally undecided"
+    },
+    {
+      "item": "KubeEdge implementation",
+      "reason": "KubeEdge is optional and should not be implemented until a concrete fleet/site need exists and SourceOS/nlboot host-lifecycle authority is preserved"
+    }
+  ]
+}

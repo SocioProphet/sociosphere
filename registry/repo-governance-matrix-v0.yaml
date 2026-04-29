@@ -1,0 +1,129 @@
+version: 0.1.0
+status: draft
+date: 2026-04-26
+owner: sociosphere-governance
+purpose: Classify SocioProphet estate repositories by governance authority.
+classes:
+  canonical:
+    description: Authoritative repositories for current platform authority.
+  promotion_candidate:
+    description: Active repositories that require promotion before becoming authoritative.
+  provenance_only:
+    description: Historical or experimental evidence sources, not current authority.
+repositories:
+  - name: SocioProphet/socioprophet
+    class: canonical
+    function: public_application_surface
+    authority:
+      contracts: true
+      runtime_behavior: true
+      standards: limited_repo_local
+      evidence_state: true
+  - name: SocioProphet/prophet-platform
+    class: canonical
+    function: core_platform_contracts_capabilities_release_publication
+    authority:
+      contracts: true
+      runtime_behavior: true
+      standards: platform_local
+      evidence_state: true
+  - name: SocioProphet/sociosphere
+    class: canonical
+    function: workspace_governance_build_intelligence_registration
+    authority:
+      contracts: true
+      runtime_behavior: limited
+      standards: governance_local
+      evidence_state: true
+  - name: SocioProphet/agentplane
+    class: canonical
+    function: execution_control_plane
+    authority:
+      contracts: true
+      runtime_behavior: true
+      standards: execution_local
+      evidence_state: true
+  - name: SocioProphet/TriTRPC
+    class: canonical
+    function: deterministic_authenticated_transport
+    authority:
+      contracts: true
+      runtime_behavior: true
+      standards: protocol_local
+      evidence_state: true
+  - name: SocioProphet/ontogenesis
+    class: canonical
+    function: ontology_shacl_contexts_catalog
+    authority:
+      contracts: true
+      runtime_behavior: false
+      standards: true
+      evidence_state: true
+  - name: SocioProphet/policy-fabric
+    class: promotion_candidate
+    function: cross_platform_policy_fabric
+    promotion_condition: Canonical repos import it as authoritative policy source or enforcement package.
+    risk: policy_duplication_across_repos
+  - name: SocioProphet/prophet-platform-standards
+    class: promotion_candidate
+    function: reusable_platform_standards
+    promotion_condition: Referenced by prophet-platform release gates and Sociosphere registration.
+    risk: standards_drift_from_runtime_platform
+  - name: SocioProphet/prophet-workspace
+    class: promotion_candidate
+    function: workspace_model_implementation_lane
+    promotion_condition: Sociosphere delegates concrete workspace behavior to this repo.
+    risk: scope_overlap_with_sociosphere
+  - name: SocioProphet/socioprophet-agent-standards
+    class: promotion_candidate
+    function: agent_standards
+    promotion_condition: Adopted by agentplane and socioprophet as shared contract.
+    risk: competing_with_agentplane_repo_local_definitions
+  - name: SocioProphet/socioprophet-standards-storage
+    class: promotion_candidate
+    function: storage_and_incident_intelligence_standards
+    promotion_condition: Storage contracts are imported by runtime or platform repos.
+    risk: storage_semantics_fragment_between_platform_and_app_layers
+  - name: SocioProphet/socioprophet-standards-knowledge
+    class: promotion_candidate
+    function: knowledge_context_publication_masking_tokenization_standards
+    promotion_condition: Wired into ontogenesis, socioprophet, and knowledge surfaces.
+    risk: knowledge_semantics_split_across_docs_surfaces_ontology
+  - name: SocioProphet/gaia-world-model
+    class: promotion_candidate
+    function: auditable_world_model_scaffolding
+    promotion_condition: GAIA domain model is explicitly imported by platform or ontology spine.
+    risk: domain_scope_outpaces_validation
+  - name: SocioProphet/slash-topics
+    class: promotion_candidate
+    function: governed_topic_packs_semantic_bi_outputs
+    promotion_condition: Outputs feed live surface ontology search or analytics.
+    risk: topic_taxonomy_drift_from_config_surfaces_json
+  - name: mdheller/socioprophet-old
+    class: provenance_only
+    function: historical_implementation_reference
+    restriction: must_not_define_current_contracts
+  - name: SocioProphet/socioprophet-web-medium
+    class: provenance_only
+    function: historical_web_material
+    restriction: must_not_define_current_public_surface_behavior
+  - name: SocioProphet/tritrpc-notes-archive
+    class: provenance_only
+    function: tritrpc_notes_archive
+    restriction: must_not_supersede_TriTRPC
+authority_boundaries:
+  - public_surface_behavior_belongs_in_socioprophet_unless_reusable_platform_behavior
+  - platform_release_gates_and_publication_mechanics_belong_in_prophet_platform
+  - cross_repo_awareness_and_build_intelligence_registration_belong_in_sociosphere
+  - agent_execution_semantics_belong_in_agentplane
+  - transport_semantics_belong_in_TriTRPC
+  - ontology_terms_and_SHACL_validation_belong_in_ontogenesis
+  - standards_repos_require_explicit_import_ADR_or_registration_to_be_authoritative
+  - provenance_repos_are_evidence_not_authority
+promotion_checklist:
+  - declared_scope_boundary
+  - canonical_repo_consumer
+  - ci_or_validation_gates
+  - sociosphere_registration_or_ADR_linkage
+  - ownership_or_RACI_statement
+  - deprecation_rule_for_overlapping_definitions

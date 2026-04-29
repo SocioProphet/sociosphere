@@ -1,0 +1,29 @@
+name: broker-reasoning-propagation
+
+on:
+  pull_request:
+    paths:
+      - "registry/broker-reasoning-propagation-rules.yaml"
+      - "tools/check_broker_reasoning_propagation.py"
+      - ".github/workflows/broker-reasoning-propagation.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "registry/broker-reasoning-propagation-rules.yaml"
+      - "tools/check_broker_reasoning_propagation.py"
+      - ".github/workflows/broker-reasoning-propagation.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate-broker-propagation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate broker propagation rules
+        run: python tools/check_broker_reasoning_propagation.py

@@ -1,0 +1,83 @@
+schema_version: "sociosphere.build-intelligence/v0.1"
+recorded_at: "2026-04-26T13:35:00Z"
+controller_repo: "SocioProphet/sociosphere"
+subject_repo: "SocioProphet/prophet-platform"
+status: "active"
+
+scope:
+  program: "Prophet Platform / Policy Fabric Integration"
+  lane: "platform-policy-fabric-endpoint-client"
+  intent: "Register the Prophet Platform client for the Policy Fabric operations action decision endpoint."
+
+merged_tranches:
+  - pr: 193
+    title: "Add Policy Fabric operations endpoint client"
+    merge_commit: "1c4ba5a35b52f6452623527937affee255cc669d"
+    gates_closed:
+      - added endpoint client for Policy Fabric operations action decisions
+      - client posts recommendation and mode to /v1/operations/action-decision
+      - client validates returned decisions against vendored Policy Fabric schema
+      - added mock-endpoint smoke proving request shape and report-only/manual-review semantics
+      - wired smoke into make validate and make smoke
+      - CI/workflow pass
+      - merge
+      - post-merge main verification
+    artifacts:
+      - "tools/request_policy_fabric_operations_decision.py"
+      - "tools/smoke_policy_fabric_operations_endpoint_client.py"
+      - "Makefile"
+
+active_tranches:
+  - pr: 193
+    title: "Add Policy Fabric operations endpoint client"
+    branch: "work/policy-fabric-live-adapter"
+    state: "merged"
+    subject: "Prophet Platform Policy Fabric endpoint client"
+    gates_completed:
+      - endpoint client merged
+      - mock-endpoint smoke merged
+      - validation wiring merged
+      - post-merge verification complete
+    files_changed:
+      - "tools/request_policy_fabric_operations_decision.py"
+      - "tools/smoke_policy_fabric_operations_endpoint_client.py"
+      - "Makefile"
+    pending_gates: []
+
+test_and_workflow_surfaces:
+  make_validate:
+    status: "updated"
+    notes: "Prophet Platform make validate includes Policy Fabric operations endpoint client smoke."
+  relevant_workflows:
+    - "validate"
+    - "ci"
+    - "platform-contracts-check"
+    - "platform-wave1-stubs"
+    - "premerge-audit"
+    - "brokerage-validation"
+
+software_review:
+  correctness:
+    - "Prophet Platform can now request operations action decisions from the Policy Fabric endpoint contract."
+    - "Returned decisions are validated against the vendored Policy Fabric schema."
+    - "The smoke proves report-only/manual-review safety semantics without requiring an external deployment."
+  weaknesses:
+    - "The client is not yet invoked inside the execution gate."
+    - "The integration is not yet wired to a deployed Policy Fabric service URL in runtime configuration."
+  next_hardening:
+    - "Add a guarded workflow that invokes the client before producing action decision artifacts."
+    - "Add runtime configuration for Policy Fabric endpoint URL once deployment topology is defined."
+    - "Register future implementation tranches in Sociosphere after merge."
+
+running_backlog:
+  - "Add guarded workflow that invokes Policy Fabric endpoint before producing action decision artifacts."
+  - "Add runtime configuration for Policy Fabric endpoint URL once deployment topology is defined."
+  - "Add deployment packaging for Policy Fabric endpoint after runtime topology is defined."
+  - "Verify Alexandrian Academy repo state against platform deployment topology."
+  - "Add resolver/validation for canonical Fog surface refs."
+  - "Inspect telemetry draft PR 162."
+  - "Add upstream Policy Fabric schema digest/refresh check in Sociosphere."
+  - "Reconcile ecosystem-status.yaml stale snapshot with current repo/PR state."
+  - "Maintain actor/generator/software-review format and gate-based progress reporting."
+  - "Keep Sociosphere informed for every future platform build/test/deploy tranche."
+  - "Do not add hidden remote mutation without explicit policy gates."

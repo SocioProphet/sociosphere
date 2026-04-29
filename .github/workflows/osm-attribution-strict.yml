@@ -1,0 +1,48 @@
+name: OSM Attribution Strict
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'standards/osm-source-attribution/**'
+      - 'tools/check_osm_source_attribution.py'
+      - '.github/workflows/osm-attribution-strict.yml'
+  push:
+    paths:
+      - 'standards/osm-source-attribution/**'
+      - 'tools/check_osm_source_attribution.py'
+      - '.github/workflows/osm-attribution-strict.yml'
+
+jobs:
+  validate-mounted-fixtures:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out SocioSphere
+        uses: actions/checkout@v4
+        with:
+          path: sociosphere
+
+      - name: Check out GAIA world model
+        uses: actions/checkout@v4
+        with:
+          repository: SocioProphet/gaia-world-model
+          path: gaia-world-model
+
+      - name: Check out Sherlock Search
+        uses: actions/checkout@v4
+        with:
+          repository: SocioProphet/sherlock-search
+          path: sherlock-search
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Strict OSM attribution and source-reference validation
+        working-directory: sociosphere
+        env:
+          OSM_ATTRIBUTION_REQUIRE_FIXTURES: "1"
+          GAIA_FIXTURE_ROOT: ${{ github.workspace }}/gaia-world-model
+          SHERLOCK_FIXTURE_ROOT: ${{ github.workspace }}/sherlock-search
+        run: python3 tools/check_osm_source_attribution.py

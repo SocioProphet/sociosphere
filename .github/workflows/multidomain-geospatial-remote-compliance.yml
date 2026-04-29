@@ -1,0 +1,30 @@
+name: Multi-Domain Geospatial Remote Compliance
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'registry/multidomain_geospatial_standards_compliance.v1.json'
+      - 'tools/check_multidomain_geospatial_remote_compliance.py'
+      - '.github/workflows/multidomain-geospatial-remote-compliance.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'registry/multidomain_geospatial_standards_compliance.v1.json'
+      - 'tools/check_multidomain_geospatial_remote_compliance.py'
+      - '.github/workflows/multidomain-geospatial-remote-compliance.yml'
+
+jobs:
+  validate:
+    name: Verify implementation compliance docs remotely
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Verify remote compliance docs
+        run: python3 tools/check_multidomain_geospatial_remote_compliance.py
