@@ -4,7 +4,7 @@
   "metadata": {
     "name": "model-fabric-agent-work-register",
     "version": "0.2.0",
-    "generatedAt": "2026-04-30T11:45:00Z"
+    "generatedAt": "2026-04-30T12:08:00Z"
   },
   "spec": {
     "program": "SocioProphet Model Fabric",
@@ -19,8 +19,8 @@
         "acceptanceSummary": "Adapter contracts reference functional service registry entries and stay deterministic/local-only."
       },
       {
-        "repo": "SocioProphet/prophet-platform",
-        "issueRef": "https://github.com/SocioProphet/prophet-platform/issues/280",
+        "repo": "SocioProphet/functional-model-surfaces",
+        "issueRef": "https://github.com/SocioProphet/functional-model-surfaces/issues/7",
         "assignedLane": "Copilot",
         "workstream": "Functional Model Surfaces",
         "expectedArtifact": "functional model surface contracts, adapter fixtures, and validator tests",
@@ -65,7 +65,7 @@
       },
       {
         "repo": "SocioProphet/homebrew-prophet",
-        "issueRef": "https://github.com/SocioProphet/homebrew-prophet/issues/4",
+        "issueRef": "https://github.com/SocioProphet/homebrew-prophet/issues/5",
         "assignedLane": "Copilot",
         "workstream": "Homebrew Release Formulae",
         "expectedArtifact": "model-fabric release formula templates and documentation",
@@ -74,7 +74,7 @@
       },
       {
         "repo": "SocioProphet/homebrew-prophet",
-        "issueRef": "https://github.com/SocioProphet/homebrew-prophet/issues/5",
+        "issueRef": "https://github.com/SocioProphet/homebrew-prophet/issues/6",
         "assignedLane": "Codex",
         "workstream": "Homebrew Release Formulae",
         "expectedArtifact": "homebrew-prophet Codex-generated versioned formula updates and release artifact attestations",
@@ -92,7 +92,7 @@
       },
       {
         "repo": "SocioProphet/policy-fabric",
-        "issueRef": "https://github.com/SocioProphet/policy-fabric/issues/35",
+        "issueRef": "https://github.com/SocioProphet/policy-fabric/issues/36",
         "assignedLane": "Copilot",
         "workstream": "Policy Fabric",
         "expectedArtifact": "policy-fabric model-fabric binding fixtures, policy-pack schema updates, and validator tests",
@@ -101,7 +101,7 @@
       },
       {
         "repo": "SocioProphet/global-devsecops-intelligence",
-        "issueRef": "https://github.com/SocioProphet/global-devsecops-intelligence/issues/7",
+        "issueRef": "https://github.com/SocioProphet/global-devsecops-intelligence/issues/12",
         "assignedLane": "Codex",
         "workstream": "DevSecOps Intelligence",
         "expectedArtifact": "devsecops intelligence model-fabric telemetry integration and live metric collector stubs",
@@ -110,7 +110,7 @@
       },
       {
         "repo": "SocioProphet/prophet-cli",
-        "issueRef": "https://github.com/SocioProphet/prophet-cli/issues/35",
+        "issueRef": "https://github.com/SocioProphet/prophet-cli/issues/36",
         "assignedLane": "Codex",
         "workstream": "Prophet CLI",
         "expectedArtifact": "prophet-cli model-fabric delegation integration and release binary stubs",
@@ -119,7 +119,7 @@
       },
       {
         "repo": "SourceOS-Linux/sourceos-spec",
-        "issueRef": "https://github.com/SourceOS-Linux/sourceos-spec/issues/64",
+        "issueRef": "https://github.com/SourceOS-Linux/sourceos-spec/issues/68",
         "assignedLane": "Codex",
         "workstream": "SourceOS Boot/Spec",
         "expectedArtifact": "SourceOSDesiredState schema, spec fixtures, and conformance tests",
@@ -128,10 +128,19 @@
       },
       {
         "repo": "SourceOS-Linux/sourceos-boot",
-        "issueRef": "https://github.com/SourceOS-Linux/sourceos-boot/issues/6",
+        "issueRef": "https://github.com/SourceOS-Linux/sourceos-boot/issues/9",
+        "assignedLane": "Codex",
+        "workstream": "SourceOS Boot/Spec",
+        "expectedArtifact": "BootReleaseSet schema, boot sequence fixtures, and conformance tests",
+        "status": "open",
+        "acceptanceSummary": "Boot schema and fixtures are deterministic and local-only; no runtime boot execution required; make validate passes."
+      },
+      {
+        "repo": "SourceOS-Linux/sourceos-boot",
+        "issueRef": "https://github.com/SourceOS-Linux/sourceos-boot/issues/11",
         "assignedLane": "Copilot",
         "workstream": "SourceOS Boot/Spec",
-        "expectedArtifact": "BootReleaseSet schema, boot sequence fixtures, and integration test stubs",
+        "expectedArtifact": "BootReleaseSet integration stubs and boot sequence adapter tests",
         "status": "open",
         "acceptanceSummary": "Boot fixtures reference SourceOSDesiredState spec records; schema is deterministic; no runtime boot execution required; make validate passes."
       }
