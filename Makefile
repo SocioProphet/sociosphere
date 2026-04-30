@@ -89,6 +89,12 @@ compliance-check:
 compliance-summary:
 	python3 telemetry/compliance_checker.py summary --format json
 
+# --- GAIA World Model v1 readiness targets ---
+.PHONY: gaia-world-model-v1-readiness-validate
+
+gaia-world-model-v1-readiness-validate:
+	python3 tools/check_gaia_world_model_v1_readiness.py
+
 # --- source exposure governance targets ---
 .PHONY: source-exposure-check
 
