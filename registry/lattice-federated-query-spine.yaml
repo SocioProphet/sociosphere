@@ -8,7 +8,8 @@ purpose: >-
   query, Cypher/property graphs, GraphBrain hypergraphs, OpenCog AtomSpace/Atomese,
   Sherlock Search, Slash Topics, New Hope, and Lampstand local search, plus
   QueryRoutingDryRunPlan route-planning artifacts that prove backend routing
-  without issuing runtime queries.
+  through the Slash Topics, New Hope, Memory Mesh, and lab-profile governance
+  envelope without issuing runtime queries.
 
 producer_surfaces:
   - repo: SocioProphet/prophet-platform
@@ -40,6 +41,12 @@ producer_surfaces:
       - ModerationEvent
       - MembraneDecision
     role: higher-order semantic runtime and membrane query source
+  - repo: SocioProphet/memory-mesh
+    records:
+      - MemoryProfile
+      - MemoryEvent
+      - MemoryEvidence
+    role: scoped recall, writeback, redaction, retention, promotion, and evidence policy for Slash Topic scopes
   - repo: SocioProphet/lampstand
     records:
       - LocalIndex
@@ -58,126 +65,121 @@ producer_surfaces:
       - HypergraphQueryContract
     role: GraphBrain-style semantic hypergraph query contract
 
+lab_profile_sources:
+  confirmed_repos:
+    - repo: SocioProphet/speechlab
+      profile_ref: lab://speech-lab/default
+    - repo: SociOS-Linux/imagelab
+      profile_ref: lab://image-lab/default
+    - repo: SociOS-Linux/ocrlab
+      profile_ref: lab://ocr-lab/default
+    - repo: SociOS-Linux/speechlab
+      profile_ref: lab://speech-lab/default
+    - repo: SociOS-Linux/videolab
+      profile_ref: lab://video-lab/default
+  intended_capability_refs:
+    - lab://nlp-lab/default
+    - lab://embedding-lab/default
+    - lab://vision-lab/default
+  role: model and modality profile selection without lab runtime execution during query-routing dry-runs
+
 query_lanes:
   sql:
     canonical_backend: apache-drill
     backend_kind: drill-sql
     language: sql
-    required_capabilities:
-      - lakehouse-query
-      - object-lake-query
-      - table-query
-      - jdbc-compatible-results
+    required_capabilities: [lakehouse-query, object-lake-query, table-query, jdbc-compatible-results]
   documents:
     canonical_backend: document-store
     backend_kind: document-store
     language: document-query
-    required_capabilities:
-      - metadata-query
-      - full-text-query
-      - document-id-query
-      - policy-scoped-document-access
+    required_capabilities: [metadata-query, full-text-query, document-id-query, policy-scoped-document-access]
   annotations:
     canonical_backend: annotation-store
     backend_kind: annotation-store
     language: annotation-query
-    required_capabilities:
-      - label-query
-      - claim-query
-      - target-query
-      - provenance-query
+    required_capabilities: [label-query, claim-query, target-query, provenance-query]
   sparql:
     canonical_backend: rdf-store
     backend_kind: rdf-store
     language: sparql
-    required_capabilities:
-      - triple-pattern-query
-      - named-graph-query
-      - ontology-backed-query
+    required_capabilities: [triple-pattern-query, named-graph-query, ontology-backed-query]
   ontology:
     canonical_backend: ontogenesis
     backend_kind: ontology-reasoner
     language: ontology-query
-    required_capabilities:
-      - class-query
-      - shape-query
-      - constraint-query
-      - schema-alignment-query
-      - reasoning-result-query
+    required_capabilities: [class-query, shape-query, constraint-query, schema-alignment-query, reasoning-result-query]
   cypher:
     canonical_backend: property-graph
     backend_kind: property-graph
     language: cypher
-    required_capabilities:
-      - node-edge-query
-      - path-query
-      - graph-facet-query
+    required_capabilities: [node-edge-query, path-query, graph-facet-query]
   graphbrain:
     canonical_backend: graphbrain-contract
     backend_kind: hypergraph-store
     language: graphbrain-hypergraph
-    required_capabilities:
-      - hyperedge-query
-      - semantic-frame-query
-      - claim-hypergraph-query
+    required_capabilities: [hyperedge-query, semantic-frame-query, claim-hypergraph-query]
   atomese:
     canonical_backend: opencog-atomspace
     backend_kind: atomspace
     language: atomese
-    required_capabilities:
-      - atomspace-query
-      - atomese-pattern-query
-      - cognitive-graph-query
+    required_capabilities: [atomspace-query, atomese-pattern-query, cognitive-graph-query]
   sherlock:
     canonical_backend: SocioProphet/sherlock-search
     backend_kind: sherlock-index
     language: sherlock-query
-    required_capabilities:
-      - hybrid-search
-      - platform-record-query
-      - evidence-query
-      - query-replay-receipts
+    required_capabilities: [hybrid-search, platform-record-query, evidence-query, query-replay-receipts]
   slash_topics:
     canonical_backend: SocioProphet/slash-topics
     backend_kind: slash-topic-pack
     language: slash-topic-query
-    required_capabilities:
-      - signed-topic-pack-query
-      - policy-membrane-query
-      - deterministic-receipt-query
-      - scoped-search-query
+    required_capabilities: [signed-topic-pack-query, policy-membrane-query, deterministic-receipt-query, scoped-search-query]
   new_hope:
     canonical_backend: SocioProphet/new-hope
     backend_kind: newhope-runtime
     language: newhope-membrane-query
-    required_capabilities:
-      - message-query
-      - thread-query
-      - claim-query
-      - citation-query
-      - entity-query
-      - lens-query
-      - moderation-event-query
-      - membrane-decision-query
+    required_capabilities: [message-query, thread-query, claim-query, citation-query, entity-query, lens-query, moderation-event-query, membrane-decision-query]
   lampstand:
     canonical_backend: SocioProphet/lampstand
     backend_kind: lampstand-local-index
     language: lampstand-local-query
-    required_capabilities:
-      - local-file-query
-      - sqlite-fts5-query
-      - health-query
-      - stats-query
-      - datahub-promotion-candidate-query
+    required_capabilities: [local-file-query, sqlite-fts5-query, health-query, stats-query, datahub-promotion-candidate-query]
+
+governance_envelope:
+  canonical_sequence:
+    - slash-topic-scope
+    - newhope-membrane-admission
+    - memory-mesh-recall-policy
+    - lab-profile-selection
+    - physical-backend-route
+  required_refs:
+    topic_scope_ref_prefix: slash-topic://
+    topic_pack_ref_prefix: slash-topics://packs/
+    membrane_ref_prefix: newhope://membranes/
+    memory_profile_ref_prefix: memory-mesh://profiles/
+    memory_event_ref: memory-mesh://events/query-route-dry-run
+  required_lab_profile_refs:
+    - lab://nlp-lab/default
+    - lab://embedding-lab/default
+    - lab://image-lab/default
+    - lab://speech-lab/default
+    - lab://vision-lab/default
 
 routing_dry_run:
   canonical_record: QueryRoutingDryRunPlan
   evidence_record: QueryRoutingEvidence
-  purpose: route query requests to governed backends without executing remote or local queries
+  purpose: route query requests to governed backends only after the governance envelope is present, without executing remote or local queries
   required_boundaries:
     - dry-run-only
+    - slash-topic-scope-required
+    - newhope-membrane-required
+    - memory-mesh-context-bound
+    - lab-profile-bound
     - no-remote-query-execution
     - no-local-index-read
+    - no-memory-writeback
+    - no-embedding-job
+    - no-lab-runtime-call
     - no-sql-submission
     - no-sparql-submission
     - no-cypher-submission
@@ -202,35 +204,35 @@ routing_dry_run:
 
 consumers:
   - repo: SocioProphet/prophet-cli
-    consumes:
-      - FederatedQueryPlane
-      - QueryRoutingDryRunPlan
+    consumes: [FederatedQueryPlane, QueryRoutingDryRunPlan]
     role: exposes lattice-query and lattice-route command surfaces
   - repo: SocioProphet/sherlock-search
-    consumes:
-      - FederatedQueryPlane
-      - QueryRoutingDryRunPlan
-      - PlatformAssetRecord
+    consumes: [FederatedQueryPlane, QueryRoutingDryRunPlan, PlatformAssetRecord]
     role: indexes query-plane and query-routing records as searchable platform assets
   - repo: SocioProphet/sociosphere
-    consumes:
-      - lattice-federated-query-spine
+    consumes: [lattice-federated-query-spine]
     role: topology registration and validation
 
 invariants:
   - FederatedQueryPlane is the canonical Lattice query-plane artifact.
   - QueryRoutingDryRunPlan is the canonical route-only dry-run artifact for federated query backend selection.
+  - QueryRoutingDryRunPlan must require Slash Topics scope before backend selection.
+  - QueryRoutingDryRunPlan must require New Hope membrane admission before backend selection.
+  - QueryRoutingDryRunPlan must require Memory Mesh recall policy before backend selection.
+  - QueryRoutingDryRunPlan must require lab profile selection before backend selection.
   - Query backends must be policy-bound and catalog-scoped.
-  - QueryRoutingDryRunPlan must not issue SQL, SPARQL, Cypher, Atomese, Sherlock, Slash Topics, New Hope, Lampstand, remote, or local-index runtime calls.
-  - Sherlock, Slash Topics, New Hope, and Lampstand must be first-class query integrations, not compatibility labels only.
+  - QueryRoutingDryRunPlan must not issue SQL, SPARQL, Cypher, Atomese, Sherlock, Slash Topics, New Hope, Lampstand, Memory Mesh, lab runtime, remote, or local-index runtime calls.
+  - Sherlock, Slash Topics, New Hope, Memory Mesh, and Lampstand must be first-class query integrations, not compatibility labels only.
   - Ontology query must remain distinct from SPARQL because reasoning, SHACL shapes, and schema alignment require explicit governance.
   - Local Lampstand query must not silently promote local files into shared catalogs without a DataHubPromotionCandidate artifact.
   - PlatformAssetRecord remains the shared identity for query-plane and query-routing registration.
 
 next_required_links:
   - repo: SocioProphet/prophet-platform
-    task: add negative-path fixtures for blocked query routing decisions
+    task: add negative-path fixtures for blocked query routing decisions and lab-profile omission
+  - repo: SocioProphet/memory-mesh
+    task: define slash-topic-scoped memory profile contract
   - repo: SocioProphet/sherlock-search
-    task: add facets for query language, backend kind, catalog scope, policy ref, integration repo, and route decision status
+    task: add facets for query language, backend kind, catalog scope, policy ref, integration repo, route decision status, memory profile, and governance envelope
   - repo: SocioProphet/sociosphere
     task: register query policy and query topology in global workspace/governance views
