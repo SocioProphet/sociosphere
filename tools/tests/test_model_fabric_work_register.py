@@ -56,6 +56,15 @@ def test_codex_items_have_valid_codex_status() -> None:
             )
 
 
+def test_non_codex_items_do_not_have_codex_status() -> None:
+    data = json.loads(REGISTER.read_text(encoding="utf-8"))
+    for item in data["spec"]["workItems"]:
+        if item["assignedLane"] != "Codex":
+            assert "codexStatus" not in item, (
+                f"Non-Codex lane item {item['issueRef']} must not declare codexStatus"
+            )
+
+
 def test_codex_review_task_present() -> None:
     data = json.loads(REGISTER.read_text(encoding="utf-8"))
     codex_items = [i for i in data["spec"]["workItems"] if i["assignedLane"] == "Codex"]
