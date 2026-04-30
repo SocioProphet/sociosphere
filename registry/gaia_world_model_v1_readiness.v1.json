@@ -1,0 +1,84 @@
+{
+  "registry_id": "socioprophet.sociosphere.gaia-world-model-v1-readiness.v1",
+  "version": "v1",
+  "status": "active",
+  "updated_at": "2026-04-29",
+  "purpose": "Governance readiness registry distinguishing completed GAIA Workbench v0 product work from the remaining GAIA World Model v1 program.",
+  "baseline": {
+    "current_slice": "GAIA Workbench v0",
+    "target": "GAIA World Model v1",
+    "baseline_prs": [
+      "SocioProphet/socioprophet#294",
+      "SocioProphet/prophet-platform#259",
+      "SocioProphet/gaia-world-model#13"
+    ]
+  },
+  "readiness_lanes": [
+    {
+      "lane": "deployable_map_demo",
+      "state": "open",
+      "required_repos": ["SocioProphet/socioprophet", "SocioProphet/prophet-platform", "SocioProphet/sociosphere"],
+      "required_checks": ["staging_urls_declared", "vite_gaia_map_api_base_set", "healthz_readyz_exposed", "browser_e2e_smoke"]
+    },
+    {
+      "lane": "bounded_live_osm_ingestion",
+      "state": "open",
+      "required_repos": ["SocioProphet/gaia-world-model", "SocioProphet/prophet-platform", "SocioProphet/sherlock-search", "SocioProphet/meshrush"],
+      "required_checks": ["source_envelope", "odbl_attribution", "geometry_validation", "h3_coverage", "source_receipt"]
+    },
+    {
+      "lane": "production_tile_layer_serving",
+      "state": "open",
+      "required_repos": ["SocioProphet/gaia-world-model", "SocioProphet/prophet-platform", "SocioProphet/socioprophet"],
+      "required_checks": ["tile_manifest", "content_digest", "attribution_display", "stale_layer_status"]
+    },
+    {
+      "lane": "eo_satellite_adapter",
+      "state": "fixture_planning",
+      "required_repos": ["SocioProphet/gaia-world-model", "SocioProphet/prophet-platform", "SocioProphet/sherlock-search"],
+      "required_checks": ["source_product_id", "acquisition_time", "quality_mask", "uncertainty_flags", "temporal_validity", "license_constraints"]
+    },
+    {
+      "lane": "lidar_dem_terrain",
+      "state": "fixture_planning",
+      "required_repos": ["SocioProphet/gaia-world-model", "SocioProphet/meshrush", "SocioProphet/agentplane"],
+      "required_checks": ["vertical_datum", "classification_codes", "derived_asset_confidence", "advisory_boundary", "approval_gate"]
+    },
+    {
+      "lane": "weather_reanalysis_time",
+      "state": "planning",
+      "required_repos": ["SocioProphet/gaia-world-model", "SocioProphet/prophet-platform", "SocioProphet/socioprophet", "SocioProphet/sherlock-search"],
+      "required_checks": ["issue_time", "valid_time", "forecast_horizon", "stale_warning", "temporal_query"]
+    },
+    {
+      "lane": "fusion_semantics",
+      "state": "fixture_runtime_pending",
+      "required_repos": ["SocioProphet/gaia-world-model", "SocioProphet/prophet-platform", "SocioProphet/sherlock-search", "SocioProphet/meshrush", "SocioProphet/agentplane"],
+      "required_checks": ["input_evidence_refs", "uncertainty_preserved", "temporal_validity_preserved", "source_conflict_exposed", "agent_review_for_high_impact"]
+    },
+    {
+      "lane": "gaia_world_model_api",
+      "state": "open",
+      "required_repos": ["SocioProphet/prophet-platform", "SocioProphet/socioprophet"],
+      "required_checks": ["openapi", "catalog_api", "features_api", "observations_api", "tiles_api", "governance_api", "search_api"]
+    },
+    {
+      "lane": "runtime_admission",
+      "state": "candidate_only",
+      "required_repos": ["SocioProphet/agentplane", "SocioProphet/lattice-forge", "SocioProphet/sociosphere", "SocioProphet/gaia-world-model", "SocioProphet/prophet-platform"],
+      "required_checks": ["entrypoint", "validation_command", "source_exposure_review", "license_review", "failure_modes", "rollback_semantics", "evidence_output", "human_approval_boundary"]
+    },
+    {
+      "lane": "deployment_operations",
+      "state": "open",
+      "required_repos": ["SocioProphet/socioprophet", "SocioProphet/prophet-platform", "SocioProphet/sociosphere"],
+      "required_checks": ["staging_url", "api_health", "ingestion_job_status", "layer_freshness", "failed_validation_records", "user_visible_data_mode"]
+    }
+  ],
+  "non_claims": [
+    "Do not claim production tile serving until tile/layer serving lane is done.",
+    "Do not claim live OSM ingestion until bounded live extract is validated and served.",
+    "Do not claim calibrated operational world model status from fixture-backed proofs.",
+    "Do not admit ingestion/fusion runtimes to Lattice without Agentplane/SocioSphere review."
+  ]
+}
