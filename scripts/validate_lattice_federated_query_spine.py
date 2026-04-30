@@ -13,11 +13,17 @@ REQUIRED_PRODUCERS = {
     "SocioProphet/sherlock-search",
     "SocioProphet/slash-topics",
     "SocioProphet/new-hope",
+    "SocioProphet/memory-mesh",
     "SocioProphet/lampstand",
     "SocioProphet/ontogenesis",
     "SocioProphet/graphbrain-contract",
 }
-REQUIRED_RECORDS = {"FederatedQueryPlane", "FederatedQueryEvidence"}
+REQUIRED_RECORDS = {
+    "FederatedQueryPlane",
+    "FederatedQueryEvidence",
+    "QueryRoutingDryRunPlan",
+    "QueryRoutingEvidence",
+}
 REQUIRED_LANES = {
     "sql",
     "documents",
@@ -47,6 +53,54 @@ REQUIRED_LANGUAGES = {
     "lampstand-local-query",
 }
 REQUIRED_CONSUMERS = {"SocioProphet/prophet-cli", "SocioProphet/sherlock-search", "SocioProphet/sociosphere"}
+REQUIRED_GOVERNANCE_SEQUENCE = [
+    "slash-topic-scope",
+    "newhope-membrane-admission",
+    "memory-mesh-recall-policy",
+    "lab-profile-selection",
+    "physical-backend-route",
+]
+REQUIRED_LAB_PROFILE_REFS = {
+    "lab://nlp-lab/default",
+    "lab://embedding-lab/default",
+    "lab://image-lab/default",
+    "lab://speech-lab/default",
+    "lab://vision-lab/default",
+}
+REQUIRED_BOUNDARIES = {
+    "dry-run-only",
+    "slash-topic-scope-required",
+    "newhope-membrane-required",
+    "memory-mesh-context-bound",
+    "lab-profile-bound",
+    "no-remote-query-execution",
+    "no-local-index-read",
+    "no-memory-writeback",
+    "no-embedding-job",
+    "no-lab-runtime-call",
+    "no-sql-submission",
+    "no-sparql-submission",
+    "no-cypher-submission",
+    "no-atomese-submission",
+    "no-sherlock-query-submission",
+    "no-topic-pack-read",
+    "no-newhope-runtime-call",
+    "no-lampstand-rpc-call",
+}
+REQUIRED_ROUTE_FAMILIES = {
+    "drill-sql-route",
+    "document-query-route",
+    "annotation-query-route",
+    "sparql-route",
+    "ontology-query-route",
+    "cypher-route",
+    "graphbrain-route",
+    "atomese-route",
+    "sherlock-route",
+    "slash-topics-route",
+    "new-hope-route",
+    "lampstand-route",
+}
 
 
 def require(condition: bool, message: str) -> None:
@@ -59,16 +113,23 @@ def validate(path: Path) -> None:
     require(isinstance(data, dict), "registry must decode to object")
     require(data.get("schema_version") == 1, "schema_version must be 1")
     require(data.get("canonical_identity") == "PlatformAssetRecord", "canonical identity mismatch")
+
     producers = data.get("producer_surfaces")
     require(isinstance(producers, list) and producers, "producer_surfaces must be non-empty")
     producer_repos = {item.get("repo") for item in producers if isinstance(item, dict)}
     require(REQUIRED_PRODUCERS.issubset(producer_repos), f"missing producers: {sorted(REQUIRED_PRODUCERS - producer_repos)}")
     record_names = {record for item in producers if isinstance(item, dict) for record in item.get("records", [])}
     require(REQUIRED_RECORDS.issubset(record_names), f"missing query records: {sorted(REQUIRED_RECORDS - record_names)}")
+
+    lab_sources = data.get("lab_profile_sources")
+    require(isinstance(lab_sources, dict), "lab_profile_sources must be object")
+    intended_refs = set(lab_sources.get("intended_capability_refs", []))
+    confirmed_refs = {item.get("profile_ref") for item in lab_sources.get("confirmed_repos", []) if isinstance(item, dict)}
+    require(REQUIRED_LAB_PROFILE_REFS.issubset(intended_refs | confirmed_refs), "missing required lab profile refs")
+
     lanes = data.get("query_lanes")
     require(isinstance(lanes, dict), "query_lanes must be object")
-    for lane in REQUIRED_LANES:
-        require(lane in lanes, f"missing query lane {lane}")
+    require(REQUIRED_LANES.issubset(lanes), f"missing query lanes: {sorted(REQUIRED_LANES - set(lanes))}")
     languages = {item.get("language") for item in lanes.values() if isinstance(item, dict)}
     require(REQUIRED_LANGUAGES.issubset(languages), f"missing languages: {sorted(REQUIRED_LANGUAGES - languages)}")
     for lane_name, lane_doc in lanes.items():
@@ -78,14 +139,50 @@ def validate(path: Path) -> None:
         require(lane_doc.get("language"), f"lane {lane_name} missing language")
         caps = lane_doc.get("required_capabilities")
         require(isinstance(caps, list) and caps, f"lane {lane_name} must declare required_capabilities")
+
+    envelope = data.get("governance_envelope")
+    require(isinstance(envelope, dict), "governance_envelope must be object")
+    require(envelope.get("canonical_sequence") == REQUIRED_GOVERNANCE_SEQUENCE, "governance sequence mismatch")
+    required_refs = envelope.get("required_refs")
+    require(isinstance(required_refs, dict), "governance required_refs must be object")
+    require(required_refs.get("topic_scope_ref_prefix") == "slash-topic://", "Slash Topics scope prefix mismatch")
+    require(required_refs.get("topic_pack_ref_prefix") == "slash-topics://packs/", "Slash Topics pack prefix mismatch")
+    require(required_refs.get("membrane_ref_prefix") == "newhope://membranes/", "New Hope membrane prefix mismatch")
+    require(required_refs.get("memory_profile_ref_prefix") == "memory-mesh://profiles/", "Memory Mesh profile prefix mismatch")
+    require(required_refs.get("memory_event_ref") == "memory-mesh://events/query-route-dry-run", "Memory Mesh event ref mismatch")
+    lab_refs = set(envelope.get("required_lab_profile_refs", []))
+    require(REQUIRED_LAB_PROFILE_REFS.issubset(lab_refs), f"missing envelope lab refs: {sorted(REQUIRED_LAB_PROFILE_REFS - lab_refs)}")
+
+    routing = data.get("routing_dry_run")
+    require(isinstance(routing, dict), "routing_dry_run must be object")
+    require(routing.get("canonical_record") == "QueryRoutingDryRunPlan", "routing canonical record mismatch")
+    require(routing.get("evidence_record") == "QueryRoutingEvidence", "routing evidence record mismatch")
+    boundaries = set(routing.get("required_boundaries", []))
+    require(REQUIRED_BOUNDARIES.issubset(boundaries), f"missing route boundaries: {sorted(REQUIRED_BOUNDARIES - boundaries)}")
+    families = set(routing.get("required_route_families", []))
+    require(REQUIRED_ROUTE_FAMILIES.issubset(families), f"missing route families: {sorted(REQUIRED_ROUTE_FAMILIES - families)}")
+
     consumers = data.get("consumers")
     require(isinstance(consumers, list) and consumers, "consumers must be non-empty")
     consumer_repos = {item.get("repo") for item in consumers if isinstance(item, dict)}
     require(REQUIRED_CONSUMERS.issubset(consumer_repos), f"missing consumers: {sorted(REQUIRED_CONSUMERS - consumer_repos)}")
     consumed_records = {record for item in consumers if isinstance(item, dict) for record in item.get("consumes", [])}
     require("FederatedQueryPlane" in consumed_records, "FederatedQueryPlane must be consumed")
+    require("QueryRoutingDryRunPlan" in consumed_records, "QueryRoutingDryRunPlan must be consumed")
+
     invariant_text = "\n".join(str(item) for item in data.get("invariants", []))
-    for required in ["FederatedQueryPlane", "Sherlock", "Slash Topics", "New Hope", "Lampstand", "Ontology query", "PlatformAssetRecord"]:
+    for required in [
+        "FederatedQueryPlane",
+        "QueryRoutingDryRunPlan",
+        "Slash Topics",
+        "New Hope",
+        "Memory Mesh",
+        "lab profile selection",
+        "Sherlock",
+        "Lampstand",
+        "Ontology query",
+        "PlatformAssetRecord",
+    ]:
         require(required in invariant_text, f"missing invariant text for {required}")
 
 
