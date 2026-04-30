@@ -3,11 +3,38 @@
   "kind": "AgentWorkRegister",
   "metadata": {
     "name": "model-fabric-agent-work-register",
-    "version": "0.2.0",
-    "generatedAt": "2026-04-30T12:08:00Z"
+    "version": "0.3.0",
+    "generatedAt": "2026-04-30T18:00:00Z"
   },
   "spec": {
     "program": "SocioProphet Model Fabric",
+    "laneSemantics": {
+      "Codex": {
+        "trigger": {
+          "review": "@codex review — triggers Codex to post findings as a comment; delivery evidence is the comment content only.",
+          "implementation": "@codex Please take this... — triggers Codex to attempt an implementation; delivery is NOT confirmed until a GitHub PR, branch, commit, or merge is verifiable."
+        },
+        "statuses": {
+          "codex_dispatched": "Codex has been triggered on the issue; no Codex response observed yet.",
+          "codex_engaged": "Codex has acknowledged or replied to the task; no artifact produced yet.",
+          "codex_findings_posted": "Codex posted review findings or analysis as a comment. This is engagement evidence, not delivery evidence.",
+          "codex_pr_open": "Codex has opened a verifiable GitHub PR. Delivery is pending merge.",
+          "codex_pr_merged": "Codex PR has been merged into the target branch. Delivery is confirmed.",
+          "codex_unverified_output": "Codex posted output (comment, design, or analysis) but no GitHub PR, branch, commit, or merge is verifiable. This counts as engagement evidence only, NOT delivery."
+        },
+        "deliveryNote": "A Codex comment alone is NOT delivery. Delivery requires a verifiable GitHub artifact: a merged PR, an open PR, a branch, or a commit. codex_findings_posted and codex_unverified_output are engagement evidence only."
+      },
+      "Copilot": {
+        "trigger": "Assigned via GitHub issue (`@copilot` mention or issue assignment); copilot-swe-agent[bot] opens a PR.",
+        "statuses": {
+          "open": "Issue is assigned; Copilot PR not yet opened.",
+          "in-progress": "Copilot PR is open and under review.",
+          "blocked": "Copilot PR is blocked pending an upstream dependency or review feedback.",
+          "closed": "Copilot PR is merged; delivery confirmed."
+        },
+        "deliveryNote": "Copilot delivery is verified when a GitHub PR is merged. PR open counts as in-progress, not delivery."
+      }
+    },
     "workItems": [
       {
         "repo": "SocioProphet/prophet-platform",
@@ -16,7 +43,18 @@
         "workstream": "Platform Runtime Adapters",
         "expectedArtifact": "model-fabric adapter contract fixtures and tests",
         "status": "open",
+        "codexStatus": "codex_dispatched",
         "acceptanceSummary": "Adapter contracts reference functional service registry entries and stay deterministic/local-only."
+      },
+      {
+        "repo": "SocioProphet/functional-model-surfaces",
+        "issueRef": "https://github.com/SocioProphet/functional-model-surfaces/issues/5",
+        "assignedLane": "Codex",
+        "workstream": "Functional Model Surfaces",
+        "expectedArtifact": "Codex review findings on functional model surface contracts posted as a GitHub comment (trigger: @codex review)",
+        "status": "in-progress",
+        "codexStatus": "codex_findings_posted",
+        "acceptanceSummary": "Codex review comment is present on the issue. This is engagement evidence; delivery requires a verifiable GitHub PR, branch, commit, or merge."
       },
       {
         "repo": "SocioProphet/functional-model-surfaces",
@@ -34,6 +72,7 @@
         "workstream": "Release Engineering",
         "expectedArtifact": "model-router release dry-run artifacts and provenance metadata",
         "status": "open",
+        "codexStatus": "codex_dispatched",
         "acceptanceSummary": "make release-dry-run emits deterministic artifact metadata without publishing a release."
       },
       {
@@ -52,6 +91,7 @@
         "workstream": "Release Engineering",
         "expectedArtifact": "model-governance-ledger release dry-run artifacts and provenance metadata",
         "status": "open",
+        "codexStatus": "codex_dispatched",
         "acceptanceSummary": "make release-dry-run emits checksums/provenance without storing model weights, datasets, or claims."
       },
       {
@@ -79,6 +119,7 @@
         "workstream": "Homebrew Release Formulae",
         "expectedArtifact": "homebrew-prophet Codex-generated versioned formula updates and release artifact attestations",
         "status": "open",
+        "codexStatus": "codex_dispatched",
         "acceptanceSummary": "Versioned formulae reference immutable checksums from published release artifacts; no fake URLs; make validate stays green."
       },
       {
@@ -86,9 +127,10 @@
         "issueRef": "https://github.com/SocioProphet/sociosphere/issues/224",
         "assignedLane": "Codex",
         "workstream": "Agent Coordination",
-        "expectedArtifact": "agent work register and validation",
+        "expectedArtifact": "Codex-implemented agent work register with explicit Codex lane status semantics and validation (trigger: @codex Please take this...)",
         "status": "in-progress",
-        "acceptanceSummary": "Register references active Codex/Copilot lanes and validates as coordination metadata."
+        "codexStatus": "codex_unverified_output",
+        "acceptanceSummary": "Codex produced detailed design output on this issue but no verifiable GitHub PR, branch, or commit was found at verification time. Output is engagement evidence only. Copilot is materializing the bounded implementation as a fallback."
       },
       {
         "repo": "SocioProphet/policy-fabric",
@@ -106,6 +148,7 @@
         "workstream": "DevSecOps Intelligence",
         "expectedArtifact": "devsecops intelligence model-fabric telemetry integration and live metric collector stubs",
         "status": "open",
+        "codexStatus": "codex_dispatched",
         "acceptanceSummary": "Metric collector stubs emit deterministic telemetry records; no live GitHub API credentials; make validate stays green."
       },
       {
@@ -115,6 +158,7 @@
         "workstream": "Prophet CLI",
         "expectedArtifact": "prophet-cli model-fabric delegation integration and release binary stubs",
         "status": "open",
+        "codexStatus": "codex_dispatched",
         "acceptanceSummary": "Delegation wiring references model-fabric adapter contracts; release binary stubs do not publish; make validate passes."
       },
       {
@@ -124,6 +168,7 @@
         "workstream": "SourceOS Boot/Spec",
         "expectedArtifact": "SourceOSDesiredState schema, spec fixtures, and conformance tests",
         "status": "open",
+        "codexStatus": "codex_dispatched",
         "acceptanceSummary": "Schema and fixtures are deterministic and local-only; no boot implementation proof required at this stage; make validate passes."
       },
       {
@@ -133,6 +178,7 @@
         "workstream": "SourceOS Boot/Spec",
         "expectedArtifact": "BootReleaseSet schema, boot sequence fixtures, and conformance tests",
         "status": "open",
+        "codexStatus": "codex_dispatched",
         "acceptanceSummary": "Boot schema and fixtures are deterministic and local-only; no runtime boot execution required; make validate passes."
       },
       {
