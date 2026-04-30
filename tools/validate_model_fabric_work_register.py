@@ -72,6 +72,8 @@ def main() -> int:
                     f"{prefix}.codexStatus '{item['codexStatus']}' is invalid; "
                     f"must be one of {sorted(ALLOWED_CODEX_STATUS)}"
                 )
+        elif "codexStatus" in item:
+            return fail(f"{prefix} is not a Codex lane item but declares codexStatus")
         if not str(item["issueRef"]).startswith("https://github.com/"):
             return fail(f"{prefix}.issueRef must be a GitHub URL")
         if item["issueRef"] in issue_refs:
