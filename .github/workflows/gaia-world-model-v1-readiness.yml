@@ -1,0 +1,32 @@
+name: GAIA World Model v1 Readiness
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'registry/gaia_world_model_v1_readiness.v1.json'
+      - 'tools/check_gaia_world_model_v1_readiness.py'
+      - '.github/workflows/gaia-world-model-v1-readiness.yml'
+  pull_request:
+    paths:
+      - 'registry/gaia_world_model_v1_readiness.v1.json'
+      - 'tools/check_gaia_world_model_v1_readiness.py'
+      - '.github/workflows/gaia-world-model-v1-readiness.yml'
+
+jobs:
+  validate-readiness:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Validate GAIA World Model v1 readiness registry
+        run: python3 tools/check_gaia_world_model_v1_readiness.py
