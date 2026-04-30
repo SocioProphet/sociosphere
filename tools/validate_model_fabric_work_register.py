@@ -18,6 +18,14 @@ REQUIRED_FIELDS = {
 }
 ALLOWED_LANES = {"Codex", "Copilot"}
 ALLOWED_STATUS = {"open", "in-progress", "blocked", "closed"}
+ALLOWED_CODEX_STATUS = {
+    "codex_dispatched",
+    "codex_engaged",
+    "codex_findings_posted",
+    "codex_pr_open",
+    "codex_pr_merged",
+    "codex_unverified_output",
+}
 REQUIRED_REPOS = {
     "SocioProphet/prophet-platform",
     "SocioProphet/model-router",
@@ -56,6 +64,14 @@ def main() -> int:
             return fail(f"{prefix}.assignedLane is invalid")
         if item["status"] not in ALLOWED_STATUS:
             return fail(f"{prefix}.status is invalid")
+        if item["assignedLane"] == "Codex":
+            if "codexStatus" not in item:
+                return fail(f"{prefix} is a Codex lane item but is missing required field: codexStatus")
+            if item["codexStatus"] not in ALLOWED_CODEX_STATUS:
+                return fail(
+                    f"{prefix}.codexStatus '{item['codexStatus']}' is invalid; "
+                    f"must be one of {sorted(ALLOWED_CODEX_STATUS)}"
+                )
         if not str(item["issueRef"]).startswith("https://github.com/"):
             return fail(f"{prefix}.issueRef must be a GitHub URL")
         if item["issueRef"] in issue_refs:
