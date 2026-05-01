@@ -41,8 +41,10 @@ REQUIRED_TRACKING_REFS = {
     "SocioProphet/slash-topics#25",
     "SocioProphet/new-hope#9",
     "SocioProphet/policy-fabric#41",
+    "SocioProphet/policy-fabric#42",
     "SocioProphet/cloudshell-fog#31",
     "SocioProphet/sociosphere#240",
+    "SocioProphet/sociosphere#242",
 }
 REQUIRED_LANES = {
     "runtime-artifacts",
@@ -111,7 +113,7 @@ def main() -> int:
         data = yaml.safe_load(REGISTRY.read_text(encoding="utf-8"))
         require(isinstance(data, dict), "registry must be mapping")
         require(data.get("kind") == "LatticeRuntimeProfileConsumerParityRegistration", "kind mismatch")
-        require(data.get("version") == "0.2.0", "version must be 0.2.0 after promotion gate registration")
+        require(data.get("version") == "0.3.0", "version must be 0.3.0 after policy promotion registration")
 
         umbrella = data.get("umbrella")
         require(isinstance(umbrella, dict), "umbrella must be mapping")
@@ -181,9 +183,17 @@ def main() -> int:
         require("bypass-agentplane" in shell_lane["must_not"], "CloudShell lane must forbid AgentPlane bypass")
 
         policy_lane = next(lane for lane in lanes if lane.get("id") == "policy-runtime-gates")
-        require("RuntimeProfileBinding" in policy_lane["recognizes"], "Policy lane must recognize RuntimeProfileBinding")
-        require("RuntimePromotionManifest" in policy_lane["recognizes"], "Policy lane must recognize RuntimePromotionManifest")
+        require("SocioProphet/policy-fabric#42" in policy_lane["tracking_refs"], "Policy lane must include policy-fabric#42")
+        policy_recognizes = "\n".join(str(item) for item in policy_lane["recognizes"])
+        require("RuntimeProfileBinding" in policy_recognizes, "Policy lane must recognize RuntimeProfileBinding")
+        require("RuntimePromotionManifest" in policy_recognizes, "Policy lane must recognize RuntimePromotionManifest")
+        require("dev-runtime-promotion-allow-decisions" in policy_recognizes, "Policy lane must recognize dev runtime promotion decisions")
+        require("stable-runtime-promotion-deny-review-decisions" in policy_recognizes, "Policy lane must recognize stable deny/review decisions")
         require("create-parallel-metadata-spine" in policy_lane["must_not"], "Policy lane must forbid parallel metadata spine")
+        require("allow-stable-promotion-with-generated-evidence-only" in policy_lane["must_not"], "Policy lane must forbid stable promotion with generated evidence only")
+
+        topology_lane = next(lane for lane in lanes if lane.get("id") == "topology-consumer-parity")
+        require("SocioProphet/sociosphere#242" in topology_lane["tracking_refs"], "Topology lane must include sociosphere#242")
 
         validation = data.get("validation_requirements")
         require(isinstance(validation, dict), "validation_requirements must be mapping")
@@ -199,6 +209,7 @@ def main() -> int:
             "require_runtime_profile_topics_before_newhope_membrane",
             "require_runtime_profile_index_before_shell_discovery",
             "require_promotion_manifest_before_runtime_promotion_decision",
+            "require_runtime_promotion_policy_after_manifest",
             "require_external_evidence_before_stable_promotion",
             "forbid_runtime_schema_redefinition_outside_lattice_forge",
             "forbid_policy_bypass",
