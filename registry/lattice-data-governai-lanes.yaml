@@ -1,4 +1,4 @@
-version: "0.1.0"
+version: "0.2.0"
 updated_at: "2026-05-01"
 kind: LatticeDataGovernAITopologyRegistration
 
@@ -6,30 +6,42 @@ umbrella:
   repo: SocioProphet/prophet-platform
   issue: 291
   product_surface: Lattice Studio/Data/GovernAI
-  purpose: "Reproducible community AI workbench for data products, notebooks, models, prompts, agents, publications, and evidence."
+  purpose: "Reproducible community AI workbench for data products, notebooks, models, prompts, agents, publications, active metadata, trust, and evidence."
 
 spine:
   - ContentAsset
   - CatalogAsset
   - DataProduct
   - AnnotationSet
+  - LabelingProject
+  - AnnotationReliabilityScore
   - TrainingDataset
   - EvaluationDataset
+  - TrainingUsePolicy
   - RuntimeAsset
   - NotebookSession
   - QueryRun
   - RayBeamJob
   - ModelCandidate
+  - ModelZooEntry
+  - PromptAsset
+  - RAGPipeline
+  - VectorIndex
   - EvaluationBundle
   - Factsheet
   - PublicationArtifact
+  - ResearchPackage
   - ReviewWorkflow
+  - ActiveMetadataEvent
+  - TrustSignal
+  - TrustPostureSummary
   - PlatformAssetRecord
 
 lanes:
   - id: canonical-contracts
     owner_repo: SourceOS-Linux/sourceos-spec
-    tracking_ref: SourceOS-Linux/sourceos-spec#75
+    tracking_refs:
+      - SourceOS-Linux/sourceos-spec#75
     role: canonical-schema-owner
     owns:
       - DataProduct
@@ -45,7 +57,8 @@ lanes:
 
   - id: platform-vertical-fixture
     owner_repo: SocioProphet/prophet-platform
-    tracking_ref: SocioProphet/prophet-platform#299
+    tracking_refs:
+      - SocioProphet/prophet-platform#299
     role: product-fixture-owner
     owns:
       - CatalogAsset
@@ -60,9 +73,49 @@ lanes:
       - redefine-canonical-schemas
       - own-agent-execution
 
+  - id: platform-expanded-product-surfaces
+    owner_repo: SocioProphet/prophet-platform
+    tracking_refs:
+      - SocioProphet/prophet-platform#300
+      - SocioProphet/prophet-platform#301
+      - SocioProphet/prophet-platform#302
+      - SocioProphet/prophet-platform#303
+      - SocioProphet/prophet-platform#304
+      - SocioProphet/prophet-platform#305
+    role: product-surface-owner
+    owns:
+      - ModelZooEntry
+      - ModelEndpoint
+      - PromptAsset
+      - RAGPipeline
+      - VectorIndex
+      - ResearchPackage
+      - ReviewThread
+      - ReviewDecision
+      - CitationGraph
+      - ReproductionAttempt
+      - LabelingProject
+      - AnnotationReliabilityScore
+      - TrainingDataset
+      - EvaluationDataset
+      - TrainingUsePolicy
+      - ActiveMetadataEvent
+      - TrustSignal
+      - TrustPostureSummary
+    consumes:
+      - SourceOS-Linux/sourceos-spec#75
+      - SocioProphet/lattice-forge#10
+      - SocioProphet/policy-fabric#40
+    must_not:
+      - redefine-canonical-schemas
+      - own-search-index
+      - own-topic-public-surface
+      - own-semantic-membrane
+
   - id: runtime-production
     owner_repo: SocioProphet/lattice-forge
-    tracking_ref: SocioProphet/lattice-forge#10
+    tracking_refs:
+      - SocioProphet/lattice-forge#10
     role: runtime-artifact-owner
     owns:
       - RuntimeAsset
@@ -75,7 +128,8 @@ lanes:
 
   - id: governed-mlops-execution
     owner_repo: SocioProphet/prophet-platform-fabric-mlops-ts-suite
-    tracking_ref: SocioProphet/prophet-platform-fabric-mlops-ts-suite#33
+    tracking_refs:
+      - SocioProphet/prophet-platform-fabric-mlops-ts-suite#33
     role: mlops-fixture-owner
     owns:
       - RayJobDryRunPlan
@@ -93,7 +147,9 @@ lanes:
 
   - id: policy-subjects
     owner_repo: SocioProphet/policy-fabric
-    tracking_ref: SocioProphet/policy-fabric#39
+    tracking_refs:
+      - SocioProphet/policy-fabric#39
+      - SocioProphet/policy-fabric#40
     role: policy-gate-owner
     owns:
       - policy-subject-fixtures
@@ -104,17 +160,24 @@ lanes:
       - RuntimeAsset
       - NotebookSession
       - ModelAsset
+      - ModelZooEntry
       - PromptAsset
+      - RAGPipeline
       - AgentAsset
       - EvaluationBundle
       - Factsheet
       - PublicationArtifact
+      - ResearchPackage
+      - ActiveMetadataEvent
+      - TrustPostureSummary
     must_not:
       - create-parallel-metadata-spine
 
   - id: topology-registration
     owner_repo: SocioProphet/sociosphere
-    tracking_ref: SocioProphet/sociosphere#237
+    tracking_refs:
+      - SocioProphet/sociosphere#237
+      - SocioProphet/sociosphere#238
     role: topology-governor
     owns:
       - dependency-direction
@@ -128,44 +191,72 @@ lanes:
 
   - id: search-indexing
     owner_repo: SocioProphet/sherlock-search
-    tracking_ref: SocioProphet/sherlock-search#29
+    tracking_refs:
+      - SocioProphet/sherlock-search#29
+      - SocioProphet/sherlock-search#30
+      - SocioProphet/sherlock-search#31
     role: search-consumer
     consumes:
       - PlatformAssetRecord
       - policyRef
       - evidenceCorrelationId
       - trust-fields
+      - model-zoo-records
+      - prompt-rag-records
+      - publication-review-records
+      - annotation-training-records
+      - active-metadata-records
     must_not:
       - redefine-asset-identity
 
   - id: topic-classification
     owner_repo: SocioProphet/slash-topics
-    tracking_ref: SocioProphet/slash-topics#22
+    tracking_refs:
+      - SocioProphet/slash-topics#22
+      - SocioProphet/slash-topics#23
+      - SocioProphet/slash-topics#24
     role: public-topic-governance-surface
     consumes:
       - PlatformAssetRecord
       - DataProduct
       - ModelAsset
+      - ModelZooEntry
       - PromptAsset
+      - RAGPipeline
       - PublicationArtifact
+      - ResearchPackage
+      - TrainingDataset
+      - EvaluationDataset
+      - ActiveMetadataEvent
+      - TrustPostureSummary
     must_not:
       - own-runtime-substrate
 
   - id: semantic-membrane
     owner_repo: SocioProphet/new-hope
-    tracking_ref: SocioProphet/new-hope#6
+    tracking_refs:
+      - SocioProphet/new-hope#6
+      - SocioProphet/new-hope#7
+      - SocioProphet/new-hope#8
     role: internal-semantic-membrane
     consumes:
       - PlatformAssetRecord
       - topic-classification
       - policyRef
       - evidenceCorrelationId
+      - ModelZooEntry
+      - RAGPipeline
+      - TrainingDataset
+      - ResearchPackage
+      - TrustPostureSummary
     must_not:
       - replace-slash-topics-public-surface
 
   - id: execution-consumer
     owner_repo: SocioProphet/agentplane
-    tracking_ref: SocioProphet/agentplane#75
+    tracking_refs:
+      - SocioProphet/agentplane#75
+      - SocioProphet/agentplane#76
     role: governed-execution-consumer
     consumes:
       - RuntimeAsset
@@ -179,7 +270,9 @@ lanes:
 
   - id: developer-home
     owner_repo: SocioProphet/cloudshell-fog
-    tracking_ref: SocioProphet/cloudshell-fog#29
+    tracking_refs:
+      - SocioProphet/cloudshell-fog#29
+      - SocioProphet/cloudshell-fog#30
     role: user-workbench-shell-surface
     consumes:
       - PlatformAssetRecord
@@ -214,6 +307,7 @@ validation_requirements:
   required_lanes:
     - canonical-contracts
     - platform-vertical-fixture
+    - platform-expanded-product-surfaces
     - runtime-production
     - governed-mlops-execution
     - policy-subjects
@@ -226,15 +320,40 @@ validation_requirements:
   required_tracking_refs:
     - SourceOS-Linux/sourceos-spec#75
     - SocioProphet/prophet-platform#299
+    - SocioProphet/prophet-platform#300
+    - SocioProphet/prophet-platform#301
+    - SocioProphet/prophet-platform#302
+    - SocioProphet/prophet-platform#303
+    - SocioProphet/prophet-platform#304
+    - SocioProphet/prophet-platform#305
     - SocioProphet/lattice-forge#10
     - SocioProphet/prophet-platform-fabric-mlops-ts-suite#33
     - SocioProphet/policy-fabric#39
+    - SocioProphet/policy-fabric#40
     - SocioProphet/sociosphere#237
+    - SocioProphet/sociosphere#238
     - SocioProphet/sherlock-search#29
+    - SocioProphet/sherlock-search#30
+    - SocioProphet/sherlock-search#31
     - SocioProphet/slash-topics#22
+    - SocioProphet/slash-topics#23
+    - SocioProphet/slash-topics#24
     - SocioProphet/new-hope#6
+    - SocioProphet/new-hope#7
+    - SocioProphet/new-hope#8
     - SocioProphet/agentplane#75
+    - SocioProphet/agentplane#76
     - SocioProphet/cloudshell-fog#29
+    - SocioProphet/cloudshell-fog#30
+  expanded_asset_surfaces:
+    - ModelZooEntry
+    - PromptAsset
+    - RAGPipeline
+    - ResearchPackage
+    - TrainingDataset
+    - EvaluationDataset
+    - ActiveMetadataEvent
+    - TrustPostureSummary
   forbid_parallel_metadata_spines: true
   require_policy_before_publication: true
   require_runtime_before_execution: true
