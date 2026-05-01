@@ -17,6 +17,7 @@ NOTEBOOK = "runtime-asset:prophet-python-ml:0.1.0"
 RAY = "runtime-asset:prophet-ray-ml:0.1.0"
 BEAM = "runtime-asset:prophet-beam-dataops:0.1.0"
 BINDING = "runtime-profile-binding:lattice-data-governai:0.1.0"
+PROMOTION_MANIFEST = "runtime-promotion-manifest:lattice-runtime-promotion-manifest:0.1.0"
 
 REQUIRED_OWNER_REPOS = {
     "SocioProphet/lattice-forge",
@@ -32,6 +33,7 @@ REQUIRED_OWNER_REPOS = {
 }
 REQUIRED_TRACKING_REFS = {
     "SocioProphet/lattice-forge#11",
+    "SocioProphet/lattice-forge#12",
     "SocioProphet/prophet-platform#306",
     "SocioProphet/prophet-platform-fabric-mlops-ts-suite#34",
     "SocioProphet/agentplane#77",
@@ -69,6 +71,19 @@ REQUIRED_ROLE_BINDINGS = {
     "QualityProfile": BEAM,
     "VectorIndex": BEAM,
 }
+REQUIRED_PROMOTION_DEV_EVIDENCE = {
+    "RuntimeAsset",
+    "SBOM",
+    "scan-report",
+    "attestation",
+    "signature",
+    "RuntimePromotionManifest",
+}
+REQUIRED_STABLE_EVIDENCE = {
+    "external-scanner-evidence",
+    "external-signing-authority-evidence",
+    "human-approval",
+}
 
 
 def fail(message: str) -> int:
@@ -96,7 +111,7 @@ def main() -> int:
         data = yaml.safe_load(REGISTRY.read_text(encoding="utf-8"))
         require(isinstance(data, dict), "registry must be mapping")
         require(data.get("kind") == "LatticeRuntimeProfileConsumerParityRegistration", "kind mismatch")
-        require(data.get("version") == "0.1.0", "version mismatch")
+        require(data.get("version") == "0.2.0", "version must be 0.2.0 after promotion gate registration")
 
         umbrella = data.get("umbrella")
         require(isinstance(umbrella, dict), "umbrella must be mapping")
@@ -110,11 +125,20 @@ def main() -> int:
         require(refs.get("ray_runtime_ref") == RAY, "ray runtime ref mismatch")
         require(refs.get("beam_runtime_ref") == BEAM, "beam runtime ref mismatch")
         require(refs.get("runtime_profile_binding_ref") == BINDING, "runtime profile binding ref mismatch")
+        require(refs.get("runtime_promotion_manifest_ref") == PROMOTION_MANIFEST, "runtime promotion manifest ref mismatch")
 
         role_bindings = data.get("runtime_role_bindings")
         require(isinstance(role_bindings, dict), "runtime_role_bindings must be mapping")
         for role, runtime_ref in REQUIRED_ROLE_BINDINGS.items():
             require(role_bindings.get(role) == runtime_ref, f"role binding mismatch for {role}")
+
+        promotion_gates = data.get("promotion_evidence_gates")
+        require(isinstance(promotion_gates, dict), "promotion_evidence_gates must be mapping")
+        dev_requires = set(as_list(promotion_gates.get("dev_promotion_requires"), "promotion_evidence_gates.dev_promotion_requires"))
+        stable_requires = set(as_list(promotion_gates.get("stable_promotion_requires"), "promotion_evidence_gates.stable_promotion_requires"))
+        require(REQUIRED_PROMOTION_DEV_EVIDENCE <= dev_requires, f"dev promotion missing evidence: {sorted(REQUIRED_PROMOTION_DEV_EVIDENCE - dev_requires)}")
+        require(REQUIRED_STABLE_EVIDENCE <= stable_requires, f"stable promotion missing evidence: {sorted(REQUIRED_STABLE_EVIDENCE - stable_requires)}")
+        require(promotion_gates.get("stable_promotion_default") == "blocked", "stable promotion default must be blocked")
 
         lanes = as_list(data.get("consumer_parity_wave"), "consumer_parity_wave")
         lane_ids = {lane.get("id") for lane in lanes if isinstance(lane, dict)}
@@ -135,6 +159,14 @@ def main() -> int:
         missing_tracking = sorted(REQUIRED_TRACKING_REFS - tracking_refs)
         require(not missing_tracking, f"missing tracking refs: {missing_tracking}")
 
+        runtime_lane = next(lane for lane in lanes if lane.get("id") == "runtime-artifacts")
+        runtime_recognizes = "\n".join(str(item) for item in runtime_lane["recognizes"])
+        require("RuntimePromotionManifest" in runtime_recognizes, "runtime lane must recognize RuntimePromotionManifest")
+        require("dev-promotion-generated-evidence-gates" in runtime_recognizes, "runtime lane must recognize dev promotion evidence gates")
+        require("stable-promotion-blockers" in runtime_recognizes, "runtime lane must recognize stable promotion blockers")
+        require("SocioProphet/lattice-forge#12" in runtime_lane["tracking_refs"], "runtime lane must include lattice-forge#12")
+        require("allow-stable-promotion-with-generated-evidence-only" in runtime_lane["must_not"], "runtime lane must forbid stable promotion with generated evidence only")
+
         mlops_lane = next(lane for lane in lanes if lane.get("id") == "mlops-runtime-execution")
         recognizes = "\n".join(str(item) for item in mlops_lane["recognizes"])
         require("RayJobDryRunPlan -> runtime-asset:prophet-ray-ml:0.1.0" in recognizes, "MLOps lane must bind Ray to Ray runtime")
@@ -150,6 +182,7 @@ def main() -> int:
 
         policy_lane = next(lane for lane in lanes if lane.get("id") == "policy-runtime-gates")
         require("RuntimeProfileBinding" in policy_lane["recognizes"], "Policy lane must recognize RuntimeProfileBinding")
+        require("RuntimePromotionManifest" in policy_lane["recognizes"], "Policy lane must recognize RuntimePromotionManifest")
         require("create-parallel-metadata-spine" in policy_lane["must_not"], "Policy lane must forbid parallel metadata spine")
 
         validation = data.get("validation_requirements")
@@ -165,6 +198,8 @@ def main() -> int:
             "require_policy_before_runtime_launch",
             "require_runtime_profile_topics_before_newhope_membrane",
             "require_runtime_profile_index_before_shell_discovery",
+            "require_promotion_manifest_before_runtime_promotion_decision",
+            "require_external_evidence_before_stable_promotion",
             "forbid_runtime_schema_redefinition_outside_lattice_forge",
             "forbid_policy_bypass",
         ]:
