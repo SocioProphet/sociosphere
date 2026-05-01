@@ -1,4 +1,4 @@
-version: "0.2.0"
+version: "0.3.0"
 updated_at: "2026-05-01"
 kind: LatticeDataGovernAITopologyRegistration
 
@@ -6,7 +6,7 @@ umbrella:
   repo: SocioProphet/prophet-platform
   issue: 291
   product_surface: Lattice Studio/Data/GovernAI
-  purpose: "Reproducible community AI workbench for data products, notebooks, models, prompts, agents, publications, active metadata, trust, and evidence."
+  purpose: "Reproducible community AI workbench for data products, notebooks, models, prompts, agents, publications, active metadata, trust, runtime profiles, and evidence."
 
 spine:
   - ContentAsset
@@ -19,6 +19,7 @@ spine:
   - EvaluationDataset
   - TrainingUsePolicy
   - RuntimeAsset
+  - RuntimeProfileBinding
   - NotebookSession
   - QueryRun
   - RayBeamJob
@@ -36,6 +37,25 @@ spine:
   - TrustSignal
   - TrustPostureSummary
   - PlatformAssetRecord
+
+runtime_profiles:
+  notebook_runtime_ref: runtime-asset:prophet-python-ml:0.1.0
+  ray_runtime_ref: runtime-asset:prophet-ray-ml:0.1.0
+  beam_runtime_ref: runtime-asset:prophet-beam-dataops:0.1.0
+  role_bindings:
+    NotebookSession: runtime-asset:prophet-python-ml:0.1.0
+    QueryRun: runtime-asset:prophet-python-ml:0.1.0
+    PublicationArtifact: runtime-asset:prophet-python-ml:0.1.0
+    ModelZooEntry: runtime-asset:prophet-ray-ml:0.1.0
+    ModelRuntimeProfile: runtime-asset:prophet-ray-ml:0.1.0
+    ModelEndpoint: runtime-asset:prophet-ray-ml:0.1.0
+    RayJobDryRunPlan: runtime-asset:prophet-ray-ml:0.1.0
+    RAGPipeline: runtime-asset:prophet-ray-ml:0.1.0
+    EvaluationBundle: runtime-asset:prophet-ray-ml:0.1.0
+    BeamPipelineDryRunPlan: runtime-asset:prophet-beam-dataops:0.1.0
+    TrainingDatasetRecipe: runtime-asset:prophet-beam-dataops:0.1.0
+    QualityProfile: runtime-asset:prophet-beam-dataops:0.1.0
+    VectorIndex: runtime-asset:prophet-beam-dataops:0.1.0
 
 lanes:
   - id: canonical-contracts
@@ -69,6 +89,7 @@ lanes:
     consumes:
       - SourceOS-Linux/sourceos-spec#75
       - SocioProphet/lattice-forge#10
+      - SocioProphet/lattice-forge#11
     must_not:
       - redefine-canonical-schemas
       - own-agent-execution
@@ -105,6 +126,7 @@ lanes:
     consumes:
       - SourceOS-Linux/sourceos-spec#75
       - SocioProphet/lattice-forge#10
+      - SocioProphet/lattice-forge#11
       - SocioProphet/policy-fabric#40
     must_not:
       - redefine-canonical-schemas
@@ -116,15 +138,37 @@ lanes:
     owner_repo: SocioProphet/lattice-forge
     tracking_refs:
       - SocioProphet/lattice-forge#10
+      - SocioProphet/lattice-forge#11
     role: runtime-artifact-owner
     owns:
       - RuntimeAsset
+      - prophet-python-ml
+      - prophet-ray-ml
+      - prophet-beam-dataops
       - runtime-lockfiles
       - kernel-metadata
       - runtime-sbom-signature-scan-evidence
     must_not:
       - own-data-product-policy
       - own-platform-ui
+      - own-agent-execution
+
+  - id: runtime-profile-bindings
+    owner_repo: SocioProphet/prophet-platform
+    tracking_refs:
+      - SocioProphet/prophet-platform#306
+    role: runtime-role-binding-owner
+    owns:
+      - RuntimeProfileBinding
+      - notebook-runtime-role
+      - ray-runtime-role
+      - beam-runtime-role
+    consumes:
+      - SocioProphet/lattice-forge#11
+    must_not:
+      - own-runtime-build-artifacts
+      - own-agent-execution
+      - redefine-runtime-asset-schema
 
   - id: governed-mlops-execution
     owner_repo: SocioProphet/prophet-platform-fabric-mlops-ts-suite
@@ -141,6 +185,7 @@ lanes:
       - DataContract
       - RuntimeAsset
       - EvaluationBundle
+      - SocioProphet/lattice-forge#11
     must_not:
       - own-canonical-data-schemas
       - bypass-policy-fabric
@@ -170,6 +215,7 @@ lanes:
       - ResearchPackage
       - ActiveMetadataEvent
       - TrustPostureSummary
+      - RuntimeProfileBinding
     must_not:
       - create-parallel-metadata-spine
 
@@ -178,6 +224,7 @@ lanes:
     tracking_refs:
       - SocioProphet/sociosphere#237
       - SocioProphet/sociosphere#238
+      - SocioProphet/sociosphere#239
     role: topology-governor
     owns:
       - dependency-direction
@@ -201,6 +248,7 @@ lanes:
       - policyRef
       - evidenceCorrelationId
       - trust-fields
+      - runtime-profile-bindings
       - model-zoo-records
       - prompt-rag-records
       - publication-review-records
@@ -219,6 +267,8 @@ lanes:
     consumes:
       - PlatformAssetRecord
       - DataProduct
+      - RuntimeAsset
+      - RuntimeProfileBinding
       - ModelAsset
       - ModelZooEntry
       - PromptAsset
@@ -244,6 +294,7 @@ lanes:
       - topic-classification
       - policyRef
       - evidenceCorrelationId
+      - RuntimeProfileBinding
       - ModelZooEntry
       - RAGPipeline
       - TrainingDataset
@@ -257,9 +308,11 @@ lanes:
     tracking_refs:
       - SocioProphet/agentplane#75
       - SocioProphet/agentplane#76
+      - SocioProphet/agentplane#77
     role: governed-execution-consumer
     consumes:
       - RuntimeAsset
+      - RuntimeProfileBinding
       - DataProduct
       - ModelAsset
       - EvaluationBundle
@@ -267,6 +320,7 @@ lanes:
       - PolicyBundle
     must_not:
       - own-lattice-canonical-schemas
+      - own-runtime-build-artifacts
 
   - id: developer-home
     owner_repo: SocioProphet/cloudshell-fog
@@ -277,6 +331,7 @@ lanes:
     consumes:
       - PlatformAssetRecord
       - RuntimeAsset
+      - RuntimeProfileBinding
       - DataProduct
       - EvidenceBundle
       - Factsheet
@@ -287,11 +342,13 @@ lanes:
 dependency_direction_rules:
   canonical_schemas_flow_from:
     - SourceOS-Linux/sourceos-spec
+  runtime_artifacts_flow_from:
+    - SocioProphet/lattice-forge
+  runtime_profile_bindings_flow_from:
+    - SocioProphet/prophet-platform
   platform_records_flow_from:
     - SocioProphet/prophet-platform
     - SocioProphet/prophet-platform-fabric-mlops-ts-suite
-  runtime_artifacts_flow_from:
-    - SocioProphet/lattice-forge
   policy_decisions_flow_from:
     - SocioProphet/policy-fabric
   topology_governance_flow_from:
@@ -309,6 +366,7 @@ validation_requirements:
     - platform-vertical-fixture
     - platform-expanded-product-surfaces
     - runtime-production
+    - runtime-profile-bindings
     - governed-mlops-execution
     - policy-subjects
     - topology-registration
@@ -326,12 +384,15 @@ validation_requirements:
     - SocioProphet/prophet-platform#303
     - SocioProphet/prophet-platform#304
     - SocioProphet/prophet-platform#305
+    - SocioProphet/prophet-platform#306
     - SocioProphet/lattice-forge#10
+    - SocioProphet/lattice-forge#11
     - SocioProphet/prophet-platform-fabric-mlops-ts-suite#33
     - SocioProphet/policy-fabric#39
     - SocioProphet/policy-fabric#40
     - SocioProphet/sociosphere#237
     - SocioProphet/sociosphere#238
+    - SocioProphet/sociosphere#239
     - SocioProphet/sherlock-search#29
     - SocioProphet/sherlock-search#30
     - SocioProphet/sherlock-search#31
@@ -343,6 +404,7 @@ validation_requirements:
     - SocioProphet/new-hope#8
     - SocioProphet/agentplane#75
     - SocioProphet/agentplane#76
+    - SocioProphet/agentplane#77
     - SocioProphet/cloudshell-fog#29
     - SocioProphet/cloudshell-fog#30
   expanded_asset_surfaces:
@@ -354,7 +416,13 @@ validation_requirements:
     - EvaluationDataset
     - ActiveMetadataEvent
     - TrustPostureSummary
+    - RuntimeProfileBinding
+  runtime_profile_refs:
+    - runtime-asset:prophet-python-ml:0.1.0
+    - runtime-asset:prophet-ray-ml:0.1.0
+    - runtime-asset:prophet-beam-dataops:0.1.0
   forbid_parallel_metadata_spines: true
   require_policy_before_publication: true
   require_runtime_before_execution: true
   require_platform_record_before_search: true
+  require_runtime_profile_binding_before_agent_execution: true
