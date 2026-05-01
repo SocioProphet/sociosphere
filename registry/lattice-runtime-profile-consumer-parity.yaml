@@ -1,4 +1,4 @@
-version: "0.2.0"
+version: "0.3.0"
 updated_at: "2026-05-01"
 kind: LatticeRuntimeProfileConsumerParityRegistration
 
@@ -7,7 +7,7 @@ umbrella:
   issue: 291
   parent_registry: registry/lattice-data-governai-lanes.yaml
   parent_registry_version: "0.3.0"
-  purpose: "Registers runtime-profile consumer parity and promotion-evidence gates for notebook, Ray, and Beam RuntimeAsset recognition across runtime, platform, execution, search, topic, membrane, policy, shell, and topology consumers."
+  purpose: "Registers runtime-profile consumer parity, promotion-evidence gates, and RuntimePromotionManifest policy decisions for notebook, Ray, and Beam RuntimeAsset recognition across runtime, platform, execution, search, topic, membrane, policy, shell, and topology consumers."
 
 runtime_profile_refs:
   notebook_runtime_ref: runtime-asset:prophet-python-ml:0.1.0
@@ -152,6 +152,7 @@ consumer_parity_wave:
     owner_repo: SocioProphet/policy-fabric
     tracking_refs:
       - SocioProphet/policy-fabric#41
+      - SocioProphet/policy-fabric#42
     role: policy-gate-owner
     recognizes:
       - RuntimeAsset
@@ -160,9 +161,12 @@ consumer_parity_wave:
       - RayRuntimeProfile
       - BeamRuntimeProfile
       - RuntimePromotionManifest
+      - dev-runtime-promotion-allow-decisions
+      - stable-runtime-promotion-deny-review-decisions
     must_not:
       - create-parallel-metadata-spine
       - bypass-policy-fabric
+      - allow-stable-promotion-with-generated-evidence-only
 
   - id: cloudshell-runtime-routes
     owner_repo: SocioProphet/cloudshell-fog
@@ -185,10 +189,12 @@ consumer_parity_wave:
     owner_repo: SocioProphet/sociosphere
     tracking_refs:
       - SocioProphet/sociosphere#240
+      - SocioProphet/sociosphere#242
     role: topology-governor
     recognizes:
       - all-runtime-profile-consumer-parity-records
       - RuntimePromotionManifest topology closure
+      - RuntimePromotionManifest policy closure
     must_not:
       - implement-downstream-features
 
@@ -203,8 +209,10 @@ validation_requirements:
     - SocioProphet/slash-topics#25
     - SocioProphet/new-hope#9
     - SocioProphet/policy-fabric#41
+    - SocioProphet/policy-fabric#42
     - SocioProphet/cloudshell-fog#31
     - SocioProphet/sociosphere#240
+    - SocioProphet/sociosphere#242
   required_owner_repos:
     - SocioProphet/lattice-forge
     - SocioProphet/prophet-platform
@@ -221,6 +229,7 @@ validation_requirements:
   require_runtime_profile_topics_before_newhope_membrane: true
   require_runtime_profile_index_before_shell_discovery: true
   require_promotion_manifest_before_runtime_promotion_decision: true
+  require_runtime_promotion_policy_after_manifest: true
   require_external_evidence_before_stable_promotion: true
   forbid_runtime_schema_redefinition_outside_lattice_forge: true
   forbid_policy_bypass: true
