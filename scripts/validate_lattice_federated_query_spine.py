@@ -18,6 +18,8 @@ REQUIRED_PRODUCERS = {
     "SocioProphet/ontogenesis",
     "SocioProphet/graphbrain-contract",
 }
+REQUIRED_PUBLIC_SURFACE = "SocioProphet/slash-topics"
+REQUIRED_RUNTIME_SUBSTRATE = "SocioProphet/new-hope"
 REQUIRED_RECORDS = {
     "FederatedQueryPlane",
     "FederatedQueryEvidence",
@@ -121,6 +123,28 @@ def validate(path: Path) -> None:
     record_names = {record for item in producers if isinstance(item, dict) for record in item.get("records", [])}
     require(REQUIRED_RECORDS.issubset(record_names), f"missing query records: {sorted(REQUIRED_RECORDS - record_names)}")
 
+    topology = data.get("query_surface_topology")
+    require(isinstance(topology, dict), "query_surface_topology must be present as an object")
+    public_surface = topology.get("public_query_surface")
+    runtime_substrate = topology.get("runtime_membrane_substrate")
+    require(
+        public_surface == REQUIRED_PUBLIC_SURFACE,
+        f"query_surface_topology.public_query_surface must be {REQUIRED_PUBLIC_SURFACE} (the public query surface)",
+    )
+    require(
+        runtime_substrate == REQUIRED_RUNTIME_SUBSTRATE,
+        f"query_surface_topology.runtime_membrane_substrate must be {REQUIRED_RUNTIME_SUBSTRATE} (the runtime substrate)",
+    )
+    compat_refs = topology.get("new_hope_compat_refs")
+    require(
+        isinstance(compat_refs, list) and compat_refs,
+        "query_surface_topology.new_hope_compat_refs must be a non-empty list of New Hope compatibility refs",
+    )
+    require(
+        topology.get("slash_topics_runtime_alias_guidance"),
+        "query_surface_topology.slash_topics_runtime_alias_guidance must be present",
+    )
+
     lab_sources = data.get("lab_profile_sources")
     require(isinstance(lab_sources, dict), "lab_profile_sources must be object")
     intended_refs = set(lab_sources.get("intended_capability_refs", []))
@@ -182,6 +206,8 @@ def validate(path: Path) -> None:
         "Lampstand",
         "Ontology query",
         "PlatformAssetRecord",
+        "public query and governance surface",
+        "runtime membrane substrate",
     ]:
         require(required in invariant_text, f"missing invariant text for {required}")
 

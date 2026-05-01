@@ -29,7 +29,7 @@ producer_surfaces:
       - TopicPack
       - PolicyMembrane
       - DeterministicReceipt
-    role: governed signed scoped search and query packs
+    role: public query and governance surface - governed signed scoped search and query packs
   - repo: SocioProphet/new-hope
     records:
       - Message
@@ -40,7 +40,7 @@ producer_surfaces:
       - Lens
       - ModerationEvent
       - MembraneDecision
-    role: higher-order semantic runtime and membrane query source
+    role: runtime membrane substrate - internal semantic runtime and membrane query source
   - repo: SocioProphet/memory-mesh
     records:
       - MemoryProfile
@@ -82,6 +82,22 @@ lab_profile_sources:
     - lab://embedding-lab/default
     - lab://vision-lab/default
   role: model and modality profile selection without lab runtime execution during query-routing dry-runs
+
+query_surface_topology:
+  public_query_surface: SocioProphet/slash-topics
+  runtime_membrane_substrate: SocioProphet/new-hope
+  rationale: >-
+    Per ADR-0001, Slash Topics is the public query and governance surface. New Hope is the
+    internal membrane and runtime substrate. Memory Mesh is attached to Slash Topics scopes.
+    Lattice query routing preserves the governance envelope through this hierarchy.
+    Slash Topics and New Hope must not be treated as ambiguous peer public surfaces.
+  new_hope_compat_refs:
+    - newhope://membranes/
+    - newhope://
+  slash_topics_runtime_alias_guidance: >-
+    Future: Slash Topics may expose runtime aliases (e.g., slash-topic-runtime://) but must
+    not be treated as an ambiguous peer of New Hope's membrane substrate. Any runtime alias
+    must remain subordinate to New Hope's membrane admission gate in the governance sequence.
 
 query_lanes:
   sql:
@@ -226,6 +242,7 @@ invariants:
   - Ontology query must remain distinct from SPARQL because reasoning, SHACL shapes, and schema alignment require explicit governance.
   - Local Lampstand query must not silently promote local files into shared catalogs without a DataHubPromotionCandidate artifact.
   - PlatformAssetRecord remains the shared identity for query-plane and query-routing registration.
+  - Slash Topics is the public query and governance surface; New Hope is the runtime membrane substrate and must not be treated as an ambiguous peer public surface.
 
 next_required_links:
   - repo: SocioProphet/prophet-platform
