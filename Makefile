@@ -23,9 +23,9 @@ ui-dev: ui-preflight
 # --- end ui-workbench targets ---
 
 # --- standards validation targets ---
-.PHONY: validate validate-standards multidomain-geospatial-standards-compliance-validate program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate
+.PHONY: validate validate-standards multidomain-geospatial-standards-compliance-validate program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate lattice-runtime-profile-consumer-parity-validate
 
-validate: validate-standards program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate
+validate: validate-standards program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate lattice-runtime-profile-consumer-parity-validate
 	@echo "OK: validate"
 
 validate-standards:
@@ -40,6 +40,10 @@ model-fabric-work-register-validate:
 lattice-data-governai-topology-validate:
 	python3 -m pip install --user pyyaml >/dev/null
 	python3 tools/validate_lattice_data_governai_topology.py
+
+lattice-runtime-profile-consumer-parity-validate:
+	python3 -m pip install --user pyyaml >/dev/null
+	python3 tools/validate_lattice_runtime_profile_consumer_parity.py
 
 multidomain-geospatial-standards-compliance-validate:
 	python3 tools/check_multidomain_geospatial_standards_compliance.py
