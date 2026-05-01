@@ -120,6 +120,47 @@ def validate(path: Path) -> None:
     require(REQUIRED_PRODUCERS.issubset(producer_repos), f"missing producers: {sorted(REQUIRED_PRODUCERS - producer_repos)}")
     record_names = {record for item in producers if isinstance(item, dict) for record in item.get("records", [])}
     require(REQUIRED_RECORDS.issubset(record_names), f"missing query records: {sorted(REQUIRED_RECORDS - record_names)}")
+    roles = {item.get("repo"): str(item.get("role", "")) for item in producers if isinstance(item, dict)}
+    require("public query/governance surface" in roles.get("SocioProphet/slash-topics", ""), "Slash Topics producer role must be public query/governance surface")
+    require("internal membrane/runtime substrate" in roles.get("SocioProphet/new-hope", ""), "New Hope producer role must be internal membrane/runtime substrate")
+    require("compatibility surface" in roles.get("SocioProphet/new-hope", ""), "New Hope producer role must preserve compatibility surface")
+
+    surface_model = data.get("surface_model")
+    require(isinstance(surface_model, dict), "surface_model must be object")
+    public_surface = surface_model.get("public_query_surface")
+    require(isinstance(public_surface, dict), "public_query_surface must be object")
+    require(public_surface.get("repo") == "SocioProphet/slash-topics", "public query surface must be Slash Topics")
+    require(public_surface.get("name") == "Slash Topics", "public query surface name mismatch")
+    public_refs = set(public_surface.get("refs", []))
+    require("slash-topic://" in public_refs, "Slash Topic scope ref missing")
+    require("slash-topics://packs/" in public_refs, "Slash Topics pack ref missing")
+    require("slash-topics://runtime/membranes/" in public_refs, "Slash Topics runtime alias ref missing")
+    public_owns = set(public_surface.get("owns", []))
+    for required in ["topic-scope", "topic-pack", "policy-membrane-reference", "deterministic-receipt", "public-lattice-query-adapter"]:
+        require(required in public_owns, f"Slash Topics public surface missing {required}")
+
+    runtime_substrate = surface_model.get("runtime_substrate")
+    require(isinstance(runtime_substrate, dict), "runtime_substrate must be object")
+    require(runtime_substrate.get("repo") == "SocioProphet/new-hope", "runtime substrate must be New Hope")
+    require(runtime_substrate.get("name") == "New Hope", "runtime substrate name mismatch")
+    runtime_refs = set(runtime_substrate.get("refs", []))
+    require("newhope://membranes/" in runtime_refs, "New Hope membrane ref missing")
+    require("newhope://protocol-packs/" in runtime_refs, "New Hope protocol-pack compatibility ref missing")
+    runtime_owns = set(runtime_substrate.get("owns", []))
+    for required in ["carrier", "receptor", "protocol", "membrane-decision", "replay", "provenance", "federation"]:
+        require(required in runtime_owns, f"New Hope runtime substrate missing {required}")
+
+    memory_attachment = surface_model.get("memory_attachment")
+    require(isinstance(memory_attachment, dict), "memory_attachment must be object")
+    require(memory_attachment.get("repo") == "SocioProphet/memory-mesh", "memory attachment must use Memory Mesh")
+    require(memory_attachment.get("attaches_to") == "slash-topic-scope", "Memory Mesh must attach to Slash Topic scope")
+
+    migration_policy = surface_model.get("migration_policy")
+    require(isinstance(migration_policy, dict), "migration_policy must be object")
+    require(migration_policy.get("recommendation") == "keep-slash-topics-as-public-surface-and-new-hope-as-runtime-substrate", "migration recommendation mismatch")
+    require(migration_policy.get("future_alias", "").startswith("slash-topics://runtime/membranes/"), "future Slash Topics runtime alias missing")
+    require(migration_policy.get("compatibility_ref", "").startswith("newhope://membranes/"), "New Hope compatibility ref missing")
+    require(migration_policy.get("forbidden_model") == "ambiguous-peer-public-surfaces", "forbidden ambiguous peer model must be explicit")
 
     lab_sources = data.get("lab_profile_sources")
     require(isinstance(lab_sources, dict), "lab_profile_sources must be object")
@@ -148,6 +189,7 @@ def validate(path: Path) -> None:
     require(required_refs.get("topic_scope_ref_prefix") == "slash-topic://", "Slash Topics scope prefix mismatch")
     require(required_refs.get("topic_pack_ref_prefix") == "slash-topics://packs/", "Slash Topics pack prefix mismatch")
     require(required_refs.get("membrane_ref_prefix") == "newhope://membranes/", "New Hope membrane prefix mismatch")
+    require(required_refs.get("runtime_alias_ref_prefix") == "slash-topics://runtime/membranes/", "Slash Topics runtime alias prefix mismatch")
     require(required_refs.get("memory_profile_ref_prefix") == "memory-mesh://profiles/", "Memory Mesh profile prefix mismatch")
     require(required_refs.get("memory_event_ref") == "memory-mesh://events/query-route-dry-run", "Memory Mesh event ref mismatch")
     lab_refs = set(envelope.get("required_lab_profile_refs", []))
@@ -174,9 +216,11 @@ def validate(path: Path) -> None:
     for required in [
         "FederatedQueryPlane",
         "QueryRoutingDryRunPlan",
-        "Slash Topics",
-        "New Hope",
-        "Memory Mesh",
+        "Slash Topics is the public query and governance surface",
+        "New Hope is the internal membrane/runtime substrate",
+        "New Hope must not be treated as a competing peer public product surface",
+        "Slash Topics runtime aliases must preserve New Hope compatibility references",
+        "Memory Mesh memory settings attach to Slash Topic scopes",
         "lab profile selection",
         "Sherlock",
         "Lampstand",
