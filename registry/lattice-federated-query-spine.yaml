@@ -9,7 +9,9 @@ purpose: >-
   Sherlock Search, Slash Topics, New Hope, and Lampstand local search, plus
   QueryRoutingDryRunPlan route-planning artifacts that prove backend routing
   through the Slash Topics, New Hope, Memory Mesh, and lab-profile governance
-  envelope without issuing runtime queries.
+  envelope without issuing runtime queries. Slash Topics is the public query and
+  governance surface; New Hope is the internal membrane/runtime substrate and
+  compatibility surface until Slash Topics runtime aliases are fully conformed.
 
 producer_surfaces:
   - repo: SocioProphet/prophet-platform
@@ -29,7 +31,7 @@ producer_surfaces:
       - TopicPack
       - PolicyMembrane
       - DeterministicReceipt
-    role: governed signed scoped search and query packs
+    role: public query/governance surface for topic scope, topic packs, policy membrane references, deterministic receipts, and future Slash Topics runtime aliases
   - repo: SocioProphet/new-hope
     records:
       - Message
@@ -40,7 +42,7 @@ producer_surfaces:
       - Lens
       - ModerationEvent
       - MembraneDecision
-    role: higher-order semantic runtime and membrane query source
+    role: internal membrane/runtime substrate and New Hope compatibility surface for carrier, receptor, protocol, membrane decision, replay, provenance, and federation objects
   - repo: SocioProphet/memory-mesh
     records:
       - MemoryProfile
@@ -64,6 +66,46 @@ producer_surfaces:
     records:
       - HypergraphQueryContract
     role: GraphBrain-style semantic hypergraph query contract
+
+surface_model:
+  public_query_surface:
+    repo: SocioProphet/slash-topics
+    name: Slash Topics
+    refs:
+      - slash-topic://
+      - slash-topics://packs/
+      - slash-topics://runtime/membranes/
+    owns:
+      - topic-scope
+      - topic-pack
+      - policy-membrane-reference
+      - deterministic-receipt
+      - public-lattice-query-adapter
+  runtime_substrate:
+    repo: SocioProphet/new-hope
+    name: New Hope
+    refs:
+      - newhope://membranes/
+      - newhope://protocol-packs/
+    owns:
+      - carrier
+      - receptor
+      - protocol
+      - membrane-decision
+      - replay
+      - provenance
+      - federation
+  memory_attachment:
+    repo: SocioProphet/memory-mesh
+    attaches_to: slash-topic-scope
+    refs:
+      - memory-mesh://profiles/
+      - memory-mesh://events/query-route-dry-run
+  migration_policy:
+    recommendation: keep-slash-topics-as-public-surface-and-new-hope-as-runtime-substrate
+    future_alias: slash-topics://runtime/membranes/query-admission@0.1.0
+    compatibility_ref: newhope://membranes/query-admission@0.1.0
+    forbidden_model: ambiguous-peer-public-surfaces
 
 lab_profile_sources:
   confirmed_repos:
@@ -156,6 +198,7 @@ governance_envelope:
     topic_scope_ref_prefix: slash-topic://
     topic_pack_ref_prefix: slash-topics://packs/
     membrane_ref_prefix: newhope://membranes/
+    runtime_alias_ref_prefix: slash-topics://runtime/membranes/
     memory_profile_ref_prefix: memory-mesh://profiles/
     memory_event_ref: memory-mesh://events/query-route-dry-run
   required_lab_profile_refs:
@@ -216,6 +259,11 @@ consumers:
 invariants:
   - FederatedQueryPlane is the canonical Lattice query-plane artifact.
   - QueryRoutingDryRunPlan is the canonical route-only dry-run artifact for federated query backend selection.
+  - Slash Topics is the public query and governance surface for topic scope, topic packs, policy membrane references, deterministic receipts, and the public Lattice query adapter.
+  - New Hope is the internal membrane/runtime substrate and compatibility surface for carrier, receptor, protocol, membrane decision, replay, provenance, and federation objects.
+  - New Hope must not be treated as a competing peer public product surface to Slash Topics.
+  - Slash Topics runtime aliases must preserve New Hope compatibility references during migration.
+  - Memory Mesh memory settings attach to Slash Topic scopes rather than directly to physical query backends.
   - QueryRoutingDryRunPlan must require Slash Topics scope before backend selection.
   - QueryRoutingDryRunPlan must require New Hope membrane admission before backend selection.
   - QueryRoutingDryRunPlan must require Memory Mesh recall policy before backend selection.
