@@ -1,0 +1,201 @@
+version: "0.1.0"
+updated_at: "2026-05-01"
+kind: LatticeRuntimeProfileConsumerParityRegistration
+
+umbrella:
+  repo: SocioProphet/prophet-platform
+  issue: 291
+  parent_registry: registry/lattice-data-governai-lanes.yaml
+  parent_registry_version: "0.3.0"
+  purpose: "Registers the final runtime-profile consumer parity wave for notebook, Ray, and Beam RuntimeAsset recognition across runtime, platform, execution, search, topic, membrane, policy, shell, and topology consumers."
+
+runtime_profile_refs:
+  notebook_runtime_ref: runtime-asset:prophet-python-ml:0.1.0
+  ray_runtime_ref: runtime-asset:prophet-ray-ml:0.1.0
+  beam_runtime_ref: runtime-asset:prophet-beam-dataops:0.1.0
+  runtime_profile_binding_ref: runtime-profile-binding:lattice-data-governai:0.1.0
+
+runtime_role_bindings:
+  NotebookSession: runtime-asset:prophet-python-ml:0.1.0
+  QueryRun: runtime-asset:prophet-python-ml:0.1.0
+  PublicationArtifact: runtime-asset:prophet-python-ml:0.1.0
+  ModelZooEntry: runtime-asset:prophet-ray-ml:0.1.0
+  ModelRuntimeProfile: runtime-asset:prophet-ray-ml:0.1.0
+  ModelEndpoint: runtime-asset:prophet-ray-ml:0.1.0
+  RayJobDryRunPlan: runtime-asset:prophet-ray-ml:0.1.0
+  RAGPipeline: runtime-asset:prophet-ray-ml:0.1.0
+  EvaluationBundle: runtime-asset:prophet-ray-ml:0.1.0
+  BeamPipelineDryRunPlan: runtime-asset:prophet-beam-dataops:0.1.0
+  TrainingDatasetRecipe: runtime-asset:prophet-beam-dataops:0.1.0
+  QualityProfile: runtime-asset:prophet-beam-dataops:0.1.0
+  VectorIndex: runtime-asset:prophet-beam-dataops:0.1.0
+
+consumer_parity_wave:
+  - id: runtime-artifacts
+    owner_repo: SocioProphet/lattice-forge
+    tracking_refs:
+      - SocioProphet/lattice-forge#11
+    role: runtime-artifact-owner
+    recognizes:
+      - runtime-asset:prophet-python-ml:0.1.0
+      - runtime-asset:prophet-ray-ml:0.1.0
+      - runtime-asset:prophet-beam-dataops:0.1.0
+    must_not:
+      - own-platform-runtime-bindings
+      - own-agent-execution
+
+  - id: platform-runtime-bindings
+    owner_repo: SocioProphet/prophet-platform
+    tracking_refs:
+      - SocioProphet/prophet-platform#306
+    role: runtime-role-binding-owner
+    recognizes:
+      - runtime-profile-binding:lattice-data-governai:0.1.0
+      - runtime-asset:prophet-python-ml:0.1.0
+      - runtime-asset:prophet-ray-ml:0.1.0
+      - runtime-asset:prophet-beam-dataops:0.1.0
+    must_not:
+      - own-runtime-build-artifacts
+      - own-agent-execution
+
+  - id: mlops-runtime-execution
+    owner_repo: SocioProphet/prophet-platform-fabric-mlops-ts-suite
+    tracking_refs:
+      - SocioProphet/prophet-platform-fabric-mlops-ts-suite#34
+    role: role-specific-runtime-execution-fixture-owner
+    recognizes:
+      - RayJobDryRunPlan -> runtime-asset:prophet-ray-ml:0.1.0
+      - BeamPipelineDryRunPlan -> runtime-asset:prophet-beam-dataops:0.1.0
+      - EvaluationBundle -> runtime-asset:prophet-ray-ml:0.1.0
+    must_not:
+      - collapse-ray-and-beam-onto-notebook-runtime
+      - bypass-policy-fabric
+
+  - id: agentplane-runtime-consumer
+    owner_repo: SocioProphet/agentplane
+    tracking_refs:
+      - SocioProphet/agentplane#77
+    role: execution-consumer
+    recognizes:
+      - runtime-profile-binding:lattice-data-governai:0.1.0
+      - runtime-asset:prophet-python-ml:0.1.0
+      - runtime-asset:prophet-ray-ml:0.1.0
+      - runtime-asset:prophet-beam-dataops:0.1.0
+    must_not:
+      - own-runtime-build-artifacts
+      - redefine-runtime-asset-schema
+
+  - id: sherlock-runtime-index
+    owner_repo: SocioProphet/sherlock-search
+    tracking_refs:
+      - SocioProphet/sherlock-search#32
+    role: search-consumer
+    recognizes:
+      - runtime-profile-binding:lattice-data-governai:0.1.0
+      - runtime-asset:prophet-python-ml:0.1.0
+      - runtime-asset:prophet-ray-ml:0.1.0
+      - runtime-asset:prophet-beam-dataops:0.1.0
+    must_not:
+      - redefine-asset-identity
+
+  - id: slash-runtime-topics
+    owner_repo: SocioProphet/slash-topics
+    tracking_refs:
+      - SocioProphet/slash-topics#25
+    role: public-topic-governance-surface
+    recognizes:
+      - slash-topic://lattice/data-governai/runtime-profiles
+      - runtime-profile-binding:lattice-data-governai:0.1.0
+      - runtime-asset:prophet-python-ml:0.1.0
+      - runtime-asset:prophet-ray-ml:0.1.0
+      - runtime-asset:prophet-beam-dataops:0.1.0
+    must_not:
+      - own-runtime-substrate
+
+  - id: newhope-runtime-membrane
+    owner_repo: SocioProphet/new-hope
+    tracking_refs:
+      - SocioProphet/new-hope#9
+    role: internal-semantic-membrane
+    recognizes:
+      - slash-topic://lattice/data-governai/runtime-profiles
+      - newhope://membranes/lattice-data-governai-admission@0.1.0
+      - runtime-profile-binding:lattice-data-governai:0.1.0
+      - runtime-asset:prophet-python-ml:0.1.0
+      - runtime-asset:prophet-ray-ml:0.1.0
+      - runtime-asset:prophet-beam-dataops:0.1.0
+    must_not:
+      - replace-slash-topics-public-surface
+      - redefine-runtime-asset-schema
+
+  - id: policy-runtime-gates
+    owner_repo: SocioProphet/policy-fabric
+    tracking_refs:
+      - SocioProphet/policy-fabric#41
+    role: policy-gate-owner
+    recognizes:
+      - RuntimeAsset
+      - RuntimeProfileBinding
+      - NotebookRuntimeProfile
+      - RayRuntimeProfile
+      - BeamRuntimeProfile
+    must_not:
+      - create-parallel-metadata-spine
+      - bypass-policy-fabric
+
+  - id: cloudshell-runtime-routes
+    owner_repo: SocioProphet/cloudshell-fog
+    tracking_refs:
+      - SocioProphet/cloudshell-fog#31
+    role: user-workbench-shell-surface
+    recognizes:
+      - /lattice runtime pick prophet-python-ml
+      - /lattice runtime pick prophet-ray-ml
+      - /lattice runtime pick prophet-beam-dataops
+      - /lattice runtime bindings inspect
+      - /lattice mlops ray run community_truth_demo --runtime prophet-ray-ml --dry-run
+      - /lattice dataops beam run community_truth_demo --runtime prophet-beam-dataops --dry-run
+    must_not:
+      - bypass-policy-fabric
+      - bypass-agentplane
+      - bypass-slash-topics-or-new-hope
+
+  - id: topology-consumer-parity
+    owner_repo: SocioProphet/sociosphere
+    tracking_refs:
+      - SocioProphet/sociosphere#240
+    role: topology-governor
+    recognizes:
+      - all-runtime-profile-consumer-parity-records
+    must_not:
+      - implement-downstream-features
+
+validation_requirements:
+  required_tracking_refs:
+    - SocioProphet/lattice-forge#11
+    - SocioProphet/prophet-platform#306
+    - SocioProphet/prophet-platform-fabric-mlops-ts-suite#34
+    - SocioProphet/agentplane#77
+    - SocioProphet/sherlock-search#32
+    - SocioProphet/slash-topics#25
+    - SocioProphet/new-hope#9
+    - SocioProphet/policy-fabric#41
+    - SocioProphet/cloudshell-fog#31
+    - SocioProphet/sociosphere#240
+  required_owner_repos:
+    - SocioProphet/lattice-forge
+    - SocioProphet/prophet-platform
+    - SocioProphet/prophet-platform-fabric-mlops-ts-suite
+    - SocioProphet/agentplane
+    - SocioProphet/sherlock-search
+    - SocioProphet/slash-topics
+    - SocioProphet/new-hope
+    - SocioProphet/policy-fabric
+    - SocioProphet/cloudshell-fog
+    - SocioProphet/sociosphere
+  require_runtime_profile_binding_before_agent_execution: true
+  require_policy_before_runtime_launch: true
+  require_runtime_profile_topics_before_newhope_membrane: true
+  require_runtime_profile_index_before_shell_discovery: true
+  forbid_runtime_schema_redefinition_outside_lattice_forge: true
+  forbid_policy_bypass: true
