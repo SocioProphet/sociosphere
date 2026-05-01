@@ -1,0 +1,241 @@
+version: "0.1.0"
+updated_at: "2026-05-01"
+kind: LatticeDataGovernAITopologyRegistration
+
+umbrella:
+  repo: SocioProphet/prophet-platform
+  issue: 291
+  product_surface: Lattice Studio/Data/GovernAI
+  purpose: "Reproducible community AI workbench for data products, notebooks, models, prompts, agents, publications, and evidence."
+
+spine:
+  - ContentAsset
+  - CatalogAsset
+  - DataProduct
+  - AnnotationSet
+  - TrainingDataset
+  - EvaluationDataset
+  - RuntimeAsset
+  - NotebookSession
+  - QueryRun
+  - RayBeamJob
+  - ModelCandidate
+  - EvaluationBundle
+  - Factsheet
+  - PublicationArtifact
+  - ReviewWorkflow
+  - PlatformAssetRecord
+
+lanes:
+  - id: canonical-contracts
+    owner_repo: SourceOS-Linux/sourceos-spec
+    tracking_ref: SourceOS-Linux/sourceos-spec#75
+    role: canonical-schema-owner
+    owns:
+      - DataProduct
+      - DataContract
+      - QualityProfile
+      - AnnotationSet
+      - EvaluationBundle
+      - Factsheet
+      - PublicationArtifact
+    must_not:
+      - implement-product-fixtures
+      - own-runtime-execution
+
+  - id: platform-vertical-fixture
+    owner_repo: SocioProphet/prophet-platform
+    tracking_ref: SocioProphet/prophet-platform#299
+    role: product-fixture-owner
+    owns:
+      - CatalogAsset
+      - NotebookSession
+      - QueryRun
+      - PromotionCandidate
+      - PlatformAssetRecord
+    consumes:
+      - SourceOS-Linux/sourceos-spec#75
+      - SocioProphet/lattice-forge#10
+    must_not:
+      - redefine-canonical-schemas
+      - own-agent-execution
+
+  - id: runtime-production
+    owner_repo: SocioProphet/lattice-forge
+    tracking_ref: SocioProphet/lattice-forge#10
+    role: runtime-artifact-owner
+    owns:
+      - RuntimeAsset
+      - runtime-lockfiles
+      - kernel-metadata
+      - runtime-sbom-signature-scan-evidence
+    must_not:
+      - own-data-product-policy
+      - own-platform-ui
+
+  - id: governed-mlops-execution
+    owner_repo: SocioProphet/prophet-platform-fabric-mlops-ts-suite
+    tracking_ref: SocioProphet/prophet-platform-fabric-mlops-ts-suite#33
+    role: mlops-fixture-owner
+    owns:
+      - RayJobDryRunPlan
+      - BeamPipelineDryRunPlan
+      - LineageRun
+      - PromotionGate
+    consumes:
+      - DataProduct
+      - DataContract
+      - RuntimeAsset
+      - EvaluationBundle
+    must_not:
+      - own-canonical-data-schemas
+      - bypass-policy-fabric
+
+  - id: policy-subjects
+    owner_repo: SocioProphet/policy-fabric
+    tracking_ref: SocioProphet/policy-fabric#39
+    role: policy-gate-owner
+    owns:
+      - policy-subject-fixtures
+      - allow-deny-review-required-decisions
+      - promotion-gate-rules
+    consumes:
+      - DataProduct
+      - RuntimeAsset
+      - NotebookSession
+      - ModelAsset
+      - PromptAsset
+      - AgentAsset
+      - EvaluationBundle
+      - Factsheet
+      - PublicationArtifact
+    must_not:
+      - create-parallel-metadata-spine
+
+  - id: topology-registration
+    owner_repo: SocioProphet/sociosphere
+    tracking_ref: SocioProphet/sociosphere#237
+    role: topology-governor
+    owns:
+      - dependency-direction
+      - lane-registration
+      - build-intelligence-routing
+      - topology-validation
+    consumes:
+      - all-lattice-lane-records
+    must_not:
+      - implement-downstream-features
+
+  - id: search-indexing
+    owner_repo: SocioProphet/sherlock-search
+    tracking_ref: SocioProphet/sherlock-search#29
+    role: search-consumer
+    consumes:
+      - PlatformAssetRecord
+      - policyRef
+      - evidenceCorrelationId
+      - trust-fields
+    must_not:
+      - redefine-asset-identity
+
+  - id: topic-classification
+    owner_repo: SocioProphet/slash-topics
+    tracking_ref: SocioProphet/slash-topics#22
+    role: public-topic-governance-surface
+    consumes:
+      - PlatformAssetRecord
+      - DataProduct
+      - ModelAsset
+      - PromptAsset
+      - PublicationArtifact
+    must_not:
+      - own-runtime-substrate
+
+  - id: semantic-membrane
+    owner_repo: SocioProphet/new-hope
+    tracking_ref: SocioProphet/new-hope#6
+    role: internal-semantic-membrane
+    consumes:
+      - PlatformAssetRecord
+      - topic-classification
+      - policyRef
+      - evidenceCorrelationId
+    must_not:
+      - replace-slash-topics-public-surface
+
+  - id: execution-consumer
+    owner_repo: SocioProphet/agentplane
+    tracking_ref: SocioProphet/agentplane#75
+    role: governed-execution-consumer
+    consumes:
+      - RuntimeAsset
+      - DataProduct
+      - ModelAsset
+      - EvaluationBundle
+      - PublicationArtifact
+      - PolicyBundle
+    must_not:
+      - own-lattice-canonical-schemas
+
+  - id: developer-home
+    owner_repo: SocioProphet/cloudshell-fog
+    tracking_ref: SocioProphet/cloudshell-fog#29
+    role: user-workbench-shell-surface
+    consumes:
+      - PlatformAssetRecord
+      - RuntimeAsset
+      - DataProduct
+      - EvidenceBundle
+      - Factsheet
+    must_not:
+      - bypass-policy-fabric
+      - bypass-agentplane
+
+dependency_direction_rules:
+  canonical_schemas_flow_from:
+    - SourceOS-Linux/sourceos-spec
+  platform_records_flow_from:
+    - SocioProphet/prophet-platform
+    - SocioProphet/prophet-platform-fabric-mlops-ts-suite
+  runtime_artifacts_flow_from:
+    - SocioProphet/lattice-forge
+  policy_decisions_flow_from:
+    - SocioProphet/policy-fabric
+  topology_governance_flow_from:
+    - SocioProphet/sociosphere
+  consumers:
+    - SocioProphet/sherlock-search
+    - SocioProphet/slash-topics
+    - SocioProphet/new-hope
+    - SocioProphet/agentplane
+    - SocioProphet/cloudshell-fog
+
+validation_requirements:
+  required_lanes:
+    - canonical-contracts
+    - platform-vertical-fixture
+    - runtime-production
+    - governed-mlops-execution
+    - policy-subjects
+    - topology-registration
+    - search-indexing
+    - topic-classification
+    - semantic-membrane
+    - execution-consumer
+    - developer-home
+  required_tracking_refs:
+    - SourceOS-Linux/sourceos-spec#75
+    - SocioProphet/prophet-platform#299
+    - SocioProphet/lattice-forge#10
+    - SocioProphet/prophet-platform-fabric-mlops-ts-suite#33
+    - SocioProphet/policy-fabric#39
+    - SocioProphet/sociosphere#237
+    - SocioProphet/sherlock-search#29
+    - SocioProphet/slash-topics#22
+    - SocioProphet/new-hope#6
+    - SocioProphet/agentplane#75
+    - SocioProphet/cloudshell-fog#29
+  forbid_parallel_metadata_spines: true
+  require_policy_before_publication: true
+  require_runtime_before_execution: true
+  require_platform_record_before_search: true
