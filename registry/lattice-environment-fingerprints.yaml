@@ -1,0 +1,167 @@
+version: "0.1.0"
+updated_at: "2026-05-02"
+kind: LatticeEnvironmentFingerprintRegistration
+
+umbrella:
+  repo: SocioProphet/prophet-platform
+  issue: 291
+  product_program_ref: registry/lattice-product-readiness-program.yaml
+  operating_model_ref: registry/lattice-operating-model.yaml
+  deployment_topology_ref: registry/lattice-deployment-topology.yaml
+  security_isolation_ref: registry/lattice-security-isolation-model.yaml
+  release_rollback_controls_ref: registry/lattice-release-rollback-controls.yaml
+  work_order: work-order-0
+  purpose: "Defines environment fingerprint schema and provenance binding for Lattice Studio/Data/GovernAI product readiness."
+
+fingerprint_kinds:
+  - id: SystemFingerprint
+    owner_repo: SocioProphet/lattice-forge
+    required_fields:
+      - system_fingerprint_id
+      - system_target_ref
+      - ostree_commit_ref
+      - kernel_ref
+      - boot_release_set_ref
+      - secure_boot_state
+      - measured_boot_digest
+      - hardware_profile_ref
+      - generated_at
+      - digest
+  - id: UserEnvironmentFingerprint
+    owner_repo: SocioProphet/prophet-platform
+    required_fields:
+      - user_environment_fingerprint_id
+      - workspace_ref
+      - user_closure_ref
+      - nix_generation_ref
+      - runtime_profile_refs
+      - policy_bundle_ref
+      - generated_at
+      - digest
+  - id: AgentEnvironmentFingerprint
+    owner_repo: SocioProphet/agentplane
+    required_fields:
+      - agent_environment_fingerprint_id
+      - agent_closure_ref
+      - capability_manifest_ref
+      - isolation_profile_ref
+      - policy_decision_ref
+      - runtime_refs
+      - generated_at
+      - digest
+  - id: ReleaseSetFingerprint
+    owner_repo: SocioProphet/prophet-platform
+    required_fields:
+      - release_set_fingerprint_id
+      - release_set_ref
+      - boot_release_set_ref
+      - policy_bundle_ref
+      - bom_ref
+      - manifest_digest
+      - signature_ref
+      - generated_at
+      - digest
+  - id: ArtifactFingerprint
+    owner_repo: SocioProphet/prophet-platform
+    required_fields:
+      - artifact_fingerprint_id
+      - artifact_ref
+      - artifact_kind
+      - content_digest
+      - producer_ref
+      - policy_ref
+      - evidence_ref
+      - generated_at
+  - id: PolicyFingerprint
+    owner_repo: SocioProphet/policy-fabric
+    required_fields:
+      - policy_fingerprint_id
+      - policy_bundle_ref
+      - policy_subject_refs
+      - rule_digest
+      - decision_model_ref
+      - generated_at
+      - digest
+  - id: TenantWorkspaceFingerprint
+    owner_repo: SocioProphet/prophet-platform
+    required_fields:
+      - tenant_workspace_fingerprint_id
+      - tenant_ref
+      - workspace_ref
+      - data_residency_ref
+      - rbac_policy_ref
+      - catalog_scope_ref
+      - generated_at
+      - digest
+  - id: RollbackFingerprint
+    owner_repo: SocioProphet/sociosphere
+    required_fields:
+      - rollback_fingerprint_id
+      - rollback_receipt_ref
+      - previous_release_ref
+      - target_release_ref
+      - policy_decision_ref
+      - post_rollback_health_ref
+      - generated_at
+      - digest
+
+fingerprint_rules:
+  content_address_required: true
+  canonical_json_required: true
+  actor_ref_required_for_mutating_fingerprints: true
+  generated_at_required: true
+  policy_decision_ref_required_for_execution_and_release: true
+  topology_ref_required_for_release_and_rollback: true
+  digest_algorithm: sha256
+  digest_prefix: sha256:
+
+provenance_bindings:
+  release:
+    required_fingerprints:
+      - SystemFingerprint
+      - UserEnvironmentFingerprint
+      - AgentEnvironmentFingerprint
+      - ReleaseSetFingerprint
+      - PolicyFingerprint
+  execution:
+    required_fingerprints:
+      - UserEnvironmentFingerprint
+      - AgentEnvironmentFingerprint
+      - PolicyFingerprint
+      - ArtifactFingerprint
+  catalog_ingestion:
+    required_fingerprints:
+      - TenantWorkspaceFingerprint
+      - ArtifactFingerprint
+      - PolicyFingerprint
+  rollback:
+    required_fingerprints:
+      - RollbackFingerprint
+      - ReleaseSetFingerprint
+      - PolicyFingerprint
+
+receipt_links:
+  required_receipt_fields:
+    - fingerprint_ref
+    - fingerprint_digest
+    - policy_decision_ref
+    - topology_ref
+    - actor_ref
+    - timestamp
+  receipt_types:
+    - deployment-receipt
+    - execution-receipt
+    - rollback-receipt
+    - evidence-bundle-receipt
+    - compliance-receipt
+
+validation_requirements:
+  require_fingerprint_kinds: true
+  require_required_fields: true
+  require_fingerprint_rules: true
+  require_provenance_bindings: true
+  require_receipt_links: true
+  require_sha256_digest_prefix: true
+  require_policy_decision_binding: true
+  require_topology_binding_for_release_and_rollback: true
+  forbid_mutating_receipts_without_actor: true
