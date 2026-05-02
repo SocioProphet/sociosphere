@@ -1,4 +1,4 @@
-version: "0.3.0"
+version: "0.4.0"
 updated_at: "2026-05-02"
 kind: LatticeDemoReadinessRegistration
 
@@ -8,10 +8,12 @@ umbrella:
   readiness_pr: SocioProphet/prophet-platform#307
   command_bundle_pr: SocioProphet/cloudshell-fog#32
   mlops_replay_evidence_pr: SocioProphet/prophet-platform-fabric-mlops-ts-suite#35
+  replay_evidence_index_pr: SocioProphet/sherlock-search#33
+  replay_evidence_topic_pr: SocioProphet/slash-topics#26
   parent_registries:
     - registry/lattice-data-governai-lanes.yaml
     - registry/lattice-runtime-profile-consumer-parity.yaml
-  purpose: "Registers the end-to-end Lattice Studio/Data/GovernAI demo readiness report, executable Fog Shell command bundle, and replayable Ray/Beam evidence contracts across product, runtime, execution, search, topic, membrane, policy, shell, and topology surfaces."
+  purpose: "Registers the end-to-end Lattice Studio/Data/GovernAI demo readiness report, executable Fog Shell command bundle, replayable Ray/Beam evidence contracts, Sherlock replay evidence index, and Slash Topics replay evidence classifications across product, runtime, execution, search, topic, membrane, policy, shell, and topology surfaces."
 
 readiness_report:
   kind: LatticeDemoReadinessReport
@@ -42,6 +44,8 @@ mlops_replay_evidence:
   producer_repo: SocioProphet/prophet-platform-fabric-mlops-ts-suite
   tracking_ref: SocioProphet/prophet-platform-fabric-mlops-ts-suite#35
   bundle_ref: urn:srcos:evidence-bundle:lattice-governed-execution-0001
+  discovery_ref: SocioProphet/sherlock-search#33
+  topic_ref: SocioProphet/slash-topics#26
   required_artifacts:
     - urn:srcos:artifact:community_truth_demo_ray_metrics
     - urn:srcos:artifact:community_truth_demo_beam_quality
@@ -61,6 +65,17 @@ mlops_replay_evidence:
   replay_commands:
     - /lattice mlops ray run community_truth_demo --runtime prophet-ray-ml --dry-run
     - /lattice dataops beam run community_truth_demo --runtime prophet-beam-dataops --dry-run
+  required_consumer_surfaces:
+    - sherlock-search
+    - slash-topics
+    - policy-fabric
+    - agentplane
+    - cloudshell-fog
+    - new-hope
+  topic_refs:
+    replay_evidence_bundle: /lattice/mlops/replay-evidence-bundle
+    lineage_receipt: /lattice/mlops/lineage-receipt
+    metric_expectation: /lattice/mlops/metric-expectation
   safety:
     network: none
     secrets: none
@@ -75,7 +90,9 @@ required_estate_refs:
   mlops_replay_evidence: SocioProphet/prophet-platform-fabric-mlops-ts-suite#35
   agentplane_runtime_refs: SocioProphet/agentplane#77
   sherlock_runtime_index: SocioProphet/sherlock-search#32
+  sherlock_replay_evidence_index: SocioProphet/sherlock-search#33
   slash_runtime_topics: SocioProphet/slash-topics#25
+  slash_replay_evidence_topics: SocioProphet/slash-topics#26
   newhope_runtime_membrane: SocioProphet/new-hope#9
   policy_runtime_promotion: SocioProphet/policy-fabric#42
   cloudshell_runtime_routes: SocioProphet/cloudshell-fog#31
@@ -83,6 +100,7 @@ required_estate_refs:
   topology_runtime_promotion: SocioProphet/sociosphere#243
   topology_demo_readiness: SocioProphet/sociosphere#244
   topology_demo_command_bundle: SocioProphet/sociosphere#245
+  topology_replay_evidence: SocioProphet/sociosphere#246
 
 runtime_refs:
   notebook_runtime_ref: runtime-asset:prophet-python-ml:0.1.0
@@ -117,6 +135,8 @@ required_checks:
   - policy-governance
   - developer-home
   - replay-evidence-bundle
+  - replay-evidence-discovery
+  - replay-evidence-topic-governance
 
 shell_commands:
   - /lattice data search community_truth_demo
@@ -143,7 +163,9 @@ validation_requirements:
     - SocioProphet/prophet-platform-fabric-mlops-ts-suite#35
     - SocioProphet/agentplane#77
     - SocioProphet/sherlock-search#32
+    - SocioProphet/sherlock-search#33
     - SocioProphet/slash-topics#25
+    - SocioProphet/slash-topics#26
     - SocioProphet/new-hope#9
     - SocioProphet/policy-fabric#42
     - SocioProphet/cloudshell-fog#31
@@ -151,6 +173,7 @@ validation_requirements:
     - SocioProphet/sociosphere#243
     - SocioProphet/sociosphere#244
     - SocioProphet/sociosphere#245
+    - SocioProphet/sociosphere#246
   require_all_demo_path_steps: true
   require_all_readiness_checks: true
   require_shell_command_surface: true
@@ -159,6 +182,8 @@ validation_requirements:
   require_replay_evidence_bundle: true
   require_lineage_receipts: true
   require_ray_and_beam_metric_expectations: true
+  require_replay_evidence_search_index: true
+  require_replay_evidence_topic_governance: true
   require_dev_runtime_promotion_allowed: true
   require_stable_runtime_promotion_blocked: true
   require_no_network_secrets_or_host_mutation: true
