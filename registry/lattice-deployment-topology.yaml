@@ -1,0 +1,187 @@
+version: "0.1.0"
+updated_at: "2026-05-02"
+kind: LatticeDeploymentTopologyRegistration
+
+umbrella:
+  repo: SocioProphet/prophet-platform
+  issue: 291
+  product_program_ref: registry/lattice-product-readiness-program.yaml
+  operating_model_ref: registry/lattice-operating-model.yaml
+  work_order: work-order-0
+  purpose: "Defines the baseline deployment topology for Lattice Studio/Data/GovernAI product readiness."
+
+deployment_modes:
+  - id: local-m2-demo
+    purpose: single-node lifecycle proof on Apple Silicon M2
+    control_plane: website-local
+    device_scope: single-device
+    execution_scope: dry-run-plus-controlled-local
+    status: first-implementation-target
+  - id: tenant-sandbox
+    purpose: isolated evaluator or project sandbox
+    control_plane: website-managed
+    device_scope: one-or-more-registered-devices
+    execution_scope: governed-dry-run-or-controlled-live
+    status: planned
+  - id: org-fleet
+    purpose: organization fleet management
+    control_plane: website-managed
+    device_scope: registered-fleet
+    execution_scope: governed-live
+    status: planned
+
+planes:
+  system_plane:
+    owner_repo: SocioProphet/lattice-forge
+    substrate: silverblue-coreos-ostree-style
+    mutation_policy: ostree-commit-only
+    accepts:
+      - signed-system-release-target
+      - approved-host-integration-surface
+      - rollback-target
+    emits:
+      - booted-system-ref
+      - system-fingerprint
+      - rollback-receipt
+  lifecycle_plane:
+    owner_repo: SocioProphet/prophet-platform
+    substrate: nix-managed-release-sets
+    mutation_policy: policy-approved-builds-only
+    accepts:
+      - experience-profile
+      - policy-bundle
+      - config-source
+      - release-request
+    emits:
+      - release-set
+      - boot-release-set
+      - bom
+      - signed-manifest
+  user_plane:
+    owner_repo: SocioProphet/prophet-platform
+    substrate: nix-user-closures
+    mutation_policy: profile-generation
+    accepts:
+      - experience-profile
+      - user-closure
+    emits:
+      - user-environment-fingerprint
+  agent_plane:
+    owner_repo: SocioProphet/agentplane
+    substrate: policy-gated-execution-space
+    mutation_policy: capability-manifest-required
+    accepts:
+      - agent-closure
+      - isolation-profile
+      - capability-manifest
+      - policy-decision
+    emits:
+      - execution-receipt
+      - evidence-bundle
+      - replay-receipt
+  shell_plane:
+    owner_repo: SocioProphet/cloudshell-fog
+    substrate: developer-home-command-surface
+    mutation_policy: command-bundle-validation
+    accepts:
+      - command-bundle
+      - release-command-bundle
+    emits:
+      - command-receipt
+      - dry-run-output
+
+control_plane_site:
+  owner_repo: mdheller/socioprophet-web
+  role: product-management-interface
+  required_surfaces:
+    - device-registration
+    - experience-profile-selection
+    - release-set-build-request
+    - artifact-download
+    - enrollment-token-issue
+    - compliance-dashboard
+    - rollback-dashboard
+  emits:
+    - enrollment-token
+    - build-request
+    - assignment-record
+    - compliance-view
+
+artifact_services:
+  release_store:
+    owner_repo: SocioProphet/prophet-platform
+    required_objects:
+      - ReleaseSet
+      - BootReleaseSet
+      - PolicyBundle
+      - BillOfMaterials
+      - Fingerprint
+      - AuditLog
+  cache_store:
+    owner_repo: SocioProphet/prophet-platform
+    required_objects:
+      - nix-closure-cache
+      - build-artifact-cache
+      - boot-artifact-cache
+  proof_store:
+    owner_repo: SocioProphet/sociosphere
+    required_objects:
+      - topology-registration
+      - validation-run
+      - compliance-receipt
+      - rollback-receipt
+
+enrollment_and_boot:
+  registration_primitive: self-generated-device-key
+  enrollment_model: opt-in-token-gated
+  boot_release_set_required: true
+  apple_silicon_path:
+    strategy: asahi-compatible-installer-entry-plus-sourceos-recovery-entry
+    boot_menu_goal:
+      - SourceOS
+      - SourceOS Recovery
+      - macOS
+    recovery_capabilities:
+      - fetch-authorized-release-set
+      - inspect-release-set
+      - apply-system-target
+      - repin-user-agent-closures
+      - rollback-system-plane
+      - rotate-device-keys
+  generic_pc_path:
+    strategy: secure-pxe-like-uefi-ipxe-or-small-bootstrap-device
+    required_transport:
+      - signed-boot-manifest
+      - https-or-mutual-tls-where-available
+      - per-device-authorization
+
+networking_and_secrets:
+  default_network_posture: deny-by-default-for-agent-space
+  enrollment_network_posture: control-plane-only
+  secrets_model: secret-door-required
+  secrets_forbidden_locations:
+    - git-repository
+    - nix-store
+    - build-logs
+    - command-output
+
+storage_and_rollback:
+  system_rollback: ostree-deployment-rollback
+  user_rollback: nix-generation-rollback
+  agent_rollback: agent-closure-generation-rollback
+  release_rollback: release-set-reassignment
+  rollback_receipt_required: true
+
+validation_requirements:
+  require_deployment_modes: true
+  require_planes: true
+  require_control_plane_site: true
+  require_artifact_services: true
+  require_enrollment_and_boot: true
+  require_networking_and_secrets: true
+  require_storage_and_rollback: true
+  require_apple_silicon_path: true
+  require_generic_pc_path: true
+  require_no_secret_in_repo_store_or_logs: true
+  require_policy_for_agent_execution: true
+  require_agentplane_for_execution: true
