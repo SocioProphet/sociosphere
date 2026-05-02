@@ -26,7 +26,9 @@ REQUIRED_REFS = {
     "SocioProphet/new-hope#9",
     "SocioProphet/policy-fabric#42",
     "SocioProphet/cloudshell-fog#31",
+    "SocioProphet/cloudshell-fog#32",
     "SocioProphet/sociosphere#243",
+    "SocioProphet/sociosphere#244",
 }
 REQUIRED_DEMO_PATH = [
     "catalog-search",
@@ -61,17 +63,20 @@ REQUIRED_RUNTIME_REFS = {
     "runtime_profile_binding_ref": "runtime-profile-binding:lattice-data-governai:0.1.0",
     "runtime_promotion_manifest_ref": "runtime-promotion-manifest:lattice-runtime-promotion-manifest:0.1.0",
 }
-REQUIRED_COMMANDS = {
+REQUIRED_COMMANDS = [
     "/lattice data search community_truth_demo",
     "/lattice runtime pick prophet-python-ml",
     "/lattice runtime pick prophet-ray-ml",
     "/lattice runtime pick prophet-beam-dataops",
+    "/lattice runtime bindings inspect",
     "/lattice notebook launch community_truth_demo --runtime prophet-python-ml",
+    "/lattice data inspect urn:srcos:data-product:community_truth_demo",
     "/lattice mlops ray run community_truth_demo --runtime prophet-ray-ml --dry-run",
     "/lattice dataops beam run community_truth_demo --runtime prophet-beam-dataops --dry-run",
     "/lattice govern review urn:srcos:evaluation-bundle:community_truth_demo_model_eval",
     "/lattice publication inspect urn:srcos:publication-artifact:community_truth_demo_report",
-}
+    "/lattice publication export urn:srcos:publication-artifact:community_truth_demo_report",
+]
 
 
 def fail(message: str) -> int:
@@ -99,12 +104,13 @@ def main() -> int:
         data = yaml.safe_load(REGISTRY.read_text(encoding="utf-8"))
         require(isinstance(data, dict), "registry must be mapping")
         require(data.get("kind") == "LatticeDemoReadinessRegistration", "kind mismatch")
-        require(data.get("version") == "0.1.0", "version mismatch")
+        require(data.get("version") == "0.2.0", "version mismatch")
         umbrella = data.get("umbrella")
         require(isinstance(umbrella, dict), "umbrella must be mapping")
         require(umbrella.get("repo") == "SocioProphet/prophet-platform", "umbrella.repo mismatch")
         require(umbrella.get("issue") == 291, "umbrella.issue mismatch")
         require(umbrella.get("readiness_pr") == "SocioProphet/prophet-platform#307", "readiness PR mismatch")
+        require(umbrella.get("command_bundle_pr") == "SocioProphet/cloudshell-fog#32", "command bundle PR mismatch")
 
         report = data.get("readiness_report")
         require(isinstance(report, dict), "readiness_report must be mapping")
@@ -118,6 +124,19 @@ def main() -> int:
         require(safety.get("network") == "none", "network must be none")
         require(safety.get("secrets") == "none", "secrets must be none")
         require(safety.get("host_mutation") is False, "host_mutation must be false")
+
+        bundle = data.get("command_bundle")
+        require(isinstance(bundle, dict), "command_bundle must be mapping")
+        require(bundle.get("kind") == "LatticeDemoCommandBundleFixture", "command bundle kind mismatch")
+        require(bundle.get("producer_repo") == "SocioProphet/cloudshell-fog", "command bundle producer mismatch")
+        require(bundle.get("tracking_ref") == "SocioProphet/cloudshell-fog#32", "command bundle tracking ref mismatch")
+        require(bundle.get("expected_step_count") == 12, "command bundle expected_step_count must be 12")
+        require(bundle.get("execution_mode") == "dry-run", "command bundle execution_mode must be dry-run")
+        bundle_safety = bundle.get("safety")
+        require(isinstance(bundle_safety, dict), "command bundle safety must be mapping")
+        require(bundle_safety.get("network") == "none", "bundle network must be none")
+        require(bundle_safety.get("secrets") == "none", "bundle secrets must be none")
+        require(bundle_safety.get("host_mutation") is False, "bundle host_mutation must be false")
 
         refs = data.get("required_estate_refs")
         require(isinstance(refs, dict), "required_estate_refs must be mapping")
@@ -135,9 +154,8 @@ def main() -> int:
         checks = set(as_list(data.get("required_checks"), "required_checks"))
         missing_checks = sorted(REQUIRED_CHECKS - checks)
         require(not missing_checks, f"missing readiness checks: {missing_checks}")
-        commands = set(as_list(data.get("shell_commands"), "shell_commands"))
-        missing_commands = sorted(REQUIRED_COMMANDS - commands)
-        require(not missing_commands, f"missing shell commands: {missing_commands}")
+        commands = as_list(data.get("shell_commands"), "shell_commands")
+        require(commands == REQUIRED_COMMANDS, "shell_commands must match ordered executable demo bundle")
 
         validation = data.get("validation_requirements")
         require(isinstance(validation, dict), "validation_requirements must be mapping")
@@ -148,6 +166,8 @@ def main() -> int:
             "require_all_demo_path_steps",
             "require_all_readiness_checks",
             "require_shell_command_surface",
+            "require_executable_command_bundle",
+            "require_ordered_demo_commands",
             "require_dev_runtime_promotion_allowed",
             "require_stable_runtime_promotion_blocked",
             "require_no_network_secrets_or_host_mutation",
