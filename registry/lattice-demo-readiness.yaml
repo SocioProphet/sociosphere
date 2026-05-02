@@ -1,4 +1,4 @@
-version: "0.2.0"
+version: "0.3.0"
 updated_at: "2026-05-02"
 kind: LatticeDemoReadinessRegistration
 
@@ -7,10 +7,11 @@ umbrella:
   issue: 291
   readiness_pr: SocioProphet/prophet-platform#307
   command_bundle_pr: SocioProphet/cloudshell-fog#32
+  mlops_replay_evidence_pr: SocioProphet/prophet-platform-fabric-mlops-ts-suite#35
   parent_registries:
     - registry/lattice-data-governai-lanes.yaml
     - registry/lattice-runtime-profile-consumer-parity.yaml
-  purpose: "Registers the end-to-end Lattice Studio/Data/GovernAI demo readiness report and executable Fog Shell command bundle across product, runtime, execution, search, topic, membrane, policy, shell, and topology surfaces."
+  purpose: "Registers the end-to-end Lattice Studio/Data/GovernAI demo readiness report, executable Fog Shell command bundle, and replayable Ray/Beam evidence contracts across product, runtime, execution, search, topic, membrane, policy, shell, and topology surfaces."
 
 readiness_report:
   kind: LatticeDemoReadinessReport
@@ -36,12 +37,42 @@ command_bundle:
     secrets: none
     host_mutation: false
 
+mlops_replay_evidence:
+  kind: ReplayEvidenceBundle
+  producer_repo: SocioProphet/prophet-platform-fabric-mlops-ts-suite
+  tracking_ref: SocioProphet/prophet-platform-fabric-mlops-ts-suite#35
+  bundle_ref: urn:srcos:evidence-bundle:lattice-governed-execution-0001
+  required_artifacts:
+    - urn:srcos:artifact:community_truth_demo_ray_metrics
+    - urn:srcos:artifact:community_truth_demo_beam_quality
+    - urn:srcos:model:community_truth_demo_candidate
+  required_lineage_receipts:
+    - urn:srcos:lineage-receipt:ray-community-truth-demo-0001
+    - urn:srcos:lineage-receipt:beam-community-truth-demo-0001
+  required_metrics:
+    ray:
+      - factuality_f1
+      - grounding_precision
+      - training_records
+    beam:
+      - quality_completeness
+      - annotation_coverage
+      - duplicate_rate
+  replay_commands:
+    - /lattice mlops ray run community_truth_demo --runtime prophet-ray-ml --dry-run
+    - /lattice dataops beam run community_truth_demo --runtime prophet-beam-dataops --dry-run
+  safety:
+    network: none
+    secrets: none
+    host_mutation: false
+
 required_estate_refs:
   schema: SourceOS-Linux/sourceos-spec#75
   runtime_profiles: SocioProphet/lattice-forge#11
   runtime_promotion_manifest: SocioProphet/lattice-forge#12
   runtime_profile_catalog: SocioProphet/prophet-platform#306
   mlops_runtime_execution: SocioProphet/prophet-platform-fabric-mlops-ts-suite#34
+  mlops_replay_evidence: SocioProphet/prophet-platform-fabric-mlops-ts-suite#35
   agentplane_runtime_refs: SocioProphet/agentplane#77
   sherlock_runtime_index: SocioProphet/sherlock-search#32
   slash_runtime_topics: SocioProphet/slash-topics#25
@@ -51,6 +82,7 @@ required_estate_refs:
   cloudshell_demo_command_bundle: SocioProphet/cloudshell-fog#32
   topology_runtime_promotion: SocioProphet/sociosphere#243
   topology_demo_readiness: SocioProphet/sociosphere#244
+  topology_demo_command_bundle: SocioProphet/sociosphere#245
 
 runtime_refs:
   notebook_runtime_ref: runtime-asset:prophet-python-ml:0.1.0
@@ -84,6 +116,7 @@ required_checks:
   - trust-reputation
   - policy-governance
   - developer-home
+  - replay-evidence-bundle
 
 shell_commands:
   - /lattice data search community_truth_demo
@@ -107,6 +140,7 @@ validation_requirements:
     - SocioProphet/lattice-forge#12
     - SocioProphet/prophet-platform#306
     - SocioProphet/prophet-platform-fabric-mlops-ts-suite#34
+    - SocioProphet/prophet-platform-fabric-mlops-ts-suite#35
     - SocioProphet/agentplane#77
     - SocioProphet/sherlock-search#32
     - SocioProphet/slash-topics#25
@@ -116,11 +150,15 @@ validation_requirements:
     - SocioProphet/cloudshell-fog#32
     - SocioProphet/sociosphere#243
     - SocioProphet/sociosphere#244
+    - SocioProphet/sociosphere#245
   require_all_demo_path_steps: true
   require_all_readiness_checks: true
   require_shell_command_surface: true
   require_executable_command_bundle: true
   require_ordered_demo_commands: true
+  require_replay_evidence_bundle: true
+  require_lineage_receipts: true
+  require_ray_and_beam_metric_expectations: true
   require_dev_runtime_promotion_allowed: true
   require_stable_runtime_promotion_blocked: true
   require_no_network_secrets_or_host_mutation: true
