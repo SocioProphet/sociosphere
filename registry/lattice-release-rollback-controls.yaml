@@ -1,0 +1,162 @@
+version: "0.1.0"
+updated_at: "2026-05-02"
+kind: LatticeReleaseRollbackControlsRegistration
+
+umbrella:
+  repo: SocioProphet/prophet-platform
+  issue: 291
+  product_program_ref: registry/lattice-product-readiness-program.yaml
+  operating_model_ref: registry/lattice-operating-model.yaml
+  deployment_topology_ref: registry/lattice-deployment-topology.yaml
+  observability_sre_ref: registry/lattice-observability-sre.yaml
+  work_order: work-order-0
+  purpose: "Defines baseline release, promotion, rollback, and receipt controls for Lattice Studio/Data/GovernAI product readiness."
+
+release_objects:
+  - id: ReleaseSet
+    owner_repo: SocioProphet/prophet-platform
+    required_fields:
+      - release_set_id
+      - channel
+      - system_target_ref
+      - user_closure_refs
+      - agent_closure_refs
+      - policy_bundle_ref
+      - bom_ref
+      - manifest_digest
+      - signature_ref
+  - id: BootReleaseSet
+    owner_repo: SocioProphet/prophet-platform
+    required_fields:
+      - boot_release_set_id
+      - release_set_ref
+      - boot_channel
+      - platform_entrypoint
+      - signed_boot_manifest_ref
+      - recovery_capabilities
+      - offline_fallback_ref
+  - id: RollbackReceipt
+    owner_repo: SocioProphet/sociosphere
+    required_fields:
+      - rollback_receipt_id
+      - previous_release_ref
+      - target_release_ref
+      - policy_decision_ref
+      - change_or_incident_ref
+      - actor_ref
+      - timestamp
+      - rollback_result
+
+channels:
+  - id: dev
+    promotion_requires:
+      - fixture-validation
+      - policy-validation
+      - topology-registration
+  - id: demo
+    promotion_requires:
+      - demo-readiness
+      - command-bundle-validation
+      - dry-run-evidence
+  - id: staging
+    promotion_requires:
+      - release-candidate-validation
+      - controlled-live-candidate-check
+      - rollback-path-healthy
+  - id: stable
+    promotion_requires:
+      - signed-release-set
+      - runtime-release-evidence
+      - policy-fabric-allow-decision
+      - rollback-receipt-template-present
+      - owner-approval-present
+
+promotion_flow:
+  states:
+    - draft
+    - built
+    - signed
+    - assigned
+    - deployed
+    - attested
+    - compliant
+    - promoted
+    - held
+    - rolled-back
+  blockers:
+    - ci-failure
+    - policy-deny
+    - topology-missing
+    - rollback-path-unhealthy
+    - release-evidence-missing
+    - owner-approval-missing
+  required_receipts:
+    - build-receipt
+    - validation-receipt
+    - signature-receipt
+    - assignment-receipt
+    - deployment-receipt
+    - attestation-receipt
+    - compliance-receipt
+    - promotion-receipt
+
+rollback_flow:
+  triggers:
+    - failed-health-check
+    - failed-policy-check
+    - failed-attestation
+    - artifact-integrity-failure
+    - security-incident
+    - operator-rollback-request
+  rollback_targets:
+    system_plane: ostree-previous-deployment
+    user_plane: nix-previous-generation
+    agent_plane: previous-agent-closure-generation
+    release_assignment: previous-release-set
+  required_receipts:
+    - rollback-receipt
+    - previous-release-ref
+    - target-release-ref
+    - policy-decision-ref
+    - incident-or-change-ref
+    - post-rollback-health-receipt
+  rollback_health_required_before_promotion: true
+
+receipt_controls:
+  immutable_once_written: true
+  content_address_required: true
+  actor_ref_required: true
+  timestamp_required: true
+  policy_decision_ref_required: true
+  topology_ref_required: true
+  proof_store_required: true
+
+cybernetic_release_loop:
+  observes:
+    - validation-status
+    - health-status
+    - attestation-status
+    - compliance-status
+    - rollback-path-health
+  decides:
+    - promote
+    - hold
+    - rollback
+    - require-review
+  acts:
+    - assign-release-set
+    - block-release-set
+    - rollback-release-set
+    - open-incident
+
+validation_requirements:
+  require_release_objects: true
+  require_channels: true
+  require_promotion_flow: true
+  require_rollback_flow: true
+  require_receipt_controls: true
+  require_cybernetic_release_loop: true
+  require_rollback_health_before_promotion: true
+  require_policy_decision_ref_for_release_action: true
+  require_previous_release_ref_for_rollback: true
+  require_proof_store_for_receipts: true
