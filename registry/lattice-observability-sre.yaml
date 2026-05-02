@@ -1,0 +1,240 @@
+version: "0.1.0"
+updated_at: "2026-05-02"
+kind: LatticeObservabilitySRERegistration
+
+umbrella:
+  repo: SocioProphet/prophet-platform
+  issue: 291
+  product_program_ref: registry/lattice-product-readiness-program.yaml
+  operating_model_ref: registry/lattice-operating-model.yaml
+  deployment_topology_ref: registry/lattice-deployment-topology.yaml
+  security_isolation_ref: registry/lattice-security-isolation-model.yaml
+  work_order: work-order-0
+  purpose: "Defines baseline observability, SRE, and cybernetic control loops for Lattice Studio/Data/GovernAI product readiness."
+
+observability_scope:
+  applies_to:
+    - control-plane-site
+    - release-store
+    - artifact-cache
+    - proof-store
+    - system-plane
+    - lifecycle-plane
+    - user-plane
+    - agent-plane
+    - shell-plane
+    - policy-fabric
+    - search-topic-membrane-path
+  primary_goal: make product operation measurable, auditable, and feedback-controlled
+
+signals:
+  logs:
+    required: true
+    minimum_fields:
+      - timestamp
+      - service
+      - environment
+      - tenant_or_workspace_ref
+      - actor_ref
+      - request_id
+      - release_set_ref
+      - policy_decision_ref
+      - severity
+  metrics:
+    required: true
+    minimum_metric_families:
+      - availability
+      - latency
+      - error_rate
+      - policy_decision_latency
+      - build_duration
+      - artifact_cache_hit_rate
+      - notebook_launch_latency
+      - agent_execution_duration
+      - release_deploy_duration
+      - rollback_duration
+  traces:
+    required: true
+    required_spans:
+      - enrollment
+      - build-request
+      - release-set-build
+      - policy-decision
+      - artifact-fetch
+      - notebook-launch
+      - agent-execution
+      - replay-evidence-generation
+      - compliance-check
+      - rollback
+  receipts:
+    required: true
+    required_receipt_kinds:
+      - health-receipt
+      - policy-decision-receipt
+      - release-receipt
+      - deployment-receipt
+      - rollback-receipt
+      - incident-receipt
+      - compliance-receipt
+      - evidence-bundle-receipt
+
+health_checks:
+  required_checks:
+    - control-plane-api-health
+    - release-store-health
+    - artifact-cache-health
+    - proof-store-health
+    - policy-fabric-health
+    - agentplane-health
+    - shell-command-surface-health
+    - notebook-launch-health
+    - topology-validator-health
+  required_statuses:
+    - healthy
+    - degraded
+    - unhealthy
+    - unknown
+
+slos:
+  release_set_build:
+    objective: "95% of demo ReleaseSet builds complete within target window"
+    signal: build_duration
+    burn_action: investigate-build-queue-or-cache
+  notebook_launch:
+    objective: "95% of governed notebook launches complete within target window"
+    signal: notebook_launch_latency
+    burn_action: inspect-agentplane-and-runtime-profile
+  policy_decision:
+    objective: "99% of policy decisions return within target window"
+    signal: policy_decision_latency
+    burn_action: inspect-policy-fabric
+  rollback:
+    objective: "99% of rollback requests emit rollback receipt"
+    signal: rollback_receipt_presence
+    burn_action: block-promotion-until-rollback-path-healthy
+
+alerts:
+  required_alerts:
+    - policy-fabric-unavailable
+    - agentplane-execution-failure-spike
+    - release-store-unavailable
+    - artifact-cache-integrity-failure
+    - proof-store-write-failure
+    - topology-validation-failure
+    - high-risk-execution-without-required-isolation
+    - secret-door-access-denied-spike
+    - rollback-receipt-missing
+  notification_routes:
+    - operator-console
+    - incident-queue
+    - audit-log
+
+runbooks:
+  required_runbooks:
+    - policy-fabric-degraded
+    - agentplane-execution-degraded
+    - release-build-failure
+    - artifact-cache-integrity-failure
+    - notebook-launch-failure
+    - rollback-failure
+    - security-incident
+    - topology-drift
+  required_sections:
+    - symptoms
+    - impact
+    - immediate-containment
+    - diagnostic-commands
+    - evidence-to-capture
+    - rollback-or-repair
+    - post-incident-review
+
+control_loops:
+  - id: release-health-loop
+    observes:
+      - build_duration
+      - validation_status
+      - release_receipt
+    decides:
+      - allow-promotion
+      - block-promotion
+      - require-review
+    acts:
+      - promote-release-set
+      - hold-release-set
+      - rollback-release-set
+  - id: execution-health-loop
+    observes:
+      - agent_execution_duration
+      - execution_receipt
+      - evidence_bundle_receipt
+      - error_rate
+    decides:
+      - allow-execution
+      - degrade-to-dry-run
+      - require-higher-isolation
+    acts:
+      - route-through-agentplane
+      - raise-isolation-profile
+      - block-execution
+  - id: policy-health-loop
+    observes:
+      - policy_decision_latency
+      - policy_decision_receipt
+      - policy_error_rate
+    decides:
+      - allow-authoritative-action
+      - hold-authoritative-action
+      - require-manual-review
+    acts:
+      - enforce-policy-decision
+      - block-policy-bypass
+      - open-incident
+  - id: topology-health-loop
+    observes:
+      - topology_validation_status
+      - registry_validation_status
+      - contract_lock_status
+    decides:
+      - accept-topology
+      - reject-topology
+      - require-registration-fix
+    acts:
+      - register-topology
+      - block-merge
+      - open-remediation
+
+incident_model:
+  severity_levels:
+    - sev0
+    - sev1
+    - sev2
+    - sev3
+    - sev4
+  required_state_sequence:
+    - detected
+    - triaged
+    - contained
+    - remediated
+    - reviewed
+    - closed
+  required_artifacts:
+    - incident-receipt
+    - timeline
+    - impacted-assets
+    - policy-impact-receipt
+    - runtime-impact-receipt
+    - tenant-impact-receipt
+    - post-incident-review
+
+validation_requirements:
+  require_observability_scope: true
+  require_logs_metrics_traces_receipts: true
+  require_health_checks: true
+  require_slos: true
+  require_alerts: true
+  require_runbooks: true
+  require_control_loops: true
+  require_incident_model: true
+  require_policy_health_loop: true
+  require_execution_health_loop: true
+  require_topology_health_loop: true
