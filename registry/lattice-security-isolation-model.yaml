@@ -1,0 +1,195 @@
+version: "0.1.0"
+updated_at: "2026-05-02"
+kind: LatticeSecurityIsolationModelRegistration
+
+umbrella:
+  repo: SocioProphet/prophet-platform
+  issue: 291
+  product_program_ref: registry/lattice-product-readiness-program.yaml
+  operating_model_ref: registry/lattice-operating-model.yaml
+  deployment_topology_ref: registry/lattice-deployment-topology.yaml
+  work_order: work-order-0
+  purpose: "Defines baseline security, isolation, threat, and evidence controls for Lattice Studio/Data/GovernAI product readiness."
+
+security_scope:
+  applies_to:
+    - system-plane
+    - lifecycle-plane
+    - user-plane
+    - agent-plane
+    - shell-plane
+    - control-plane-site
+    - artifact-services
+  primary_goal: risk-proportional containment with auditable capability grants
+
+threat_classes:
+  - id: prompt-injection-to-tool-misuse
+    minimum_control: policy-mediated-tool-invocation
+    required_evidence: tool-call-receipt
+  - id: untrusted-artifact-processing
+    minimum_control: vm-or-microvm-isolation
+    required_evidence: artifact-analysis-receipt
+  - id: secret-exposure
+    minimum_control: secret-door-only
+    required_evidence: secret-access-receipt
+  - id: lateral-movement-across-workspaces
+    minimum_control: tenant-and-workspace-boundary
+    required_evidence: boundary-decision-receipt
+  - id: runtime-escape
+    minimum_control: vm-or-microvm-for-high-risk-execution
+    required_evidence: isolation-profile-receipt
+  - id: supply-chain-drift
+    minimum_control: signed-release-set-and-bom
+    required_evidence: release-verification-receipt
+  - id: policy-bypass
+    minimum_control: policy-fabric-required
+    required_evidence: policy-decision-receipt
+  - id: unauthorized-network-egress
+    minimum_control: deny-by-default-egress
+    required_evidence: network-policy-receipt
+
+isolation_profiles:
+  - id: container
+    allowed_for:
+      - low-risk-read-only-tools
+      - synthetic-fixture-workloads
+    minimum_controls:
+      - rootless-where-possible
+      - capability-drop-default
+      - read-only-system-mounts
+      - scoped-write-mounts
+      - network-policy-required
+      - output-gating-required
+  - id: vm
+    allowed_for:
+      - medium-risk-code-execution
+      - controlled-live-candidate-workloads
+    minimum_controls:
+      - isolated-guest-boundary
+      - scoped-artifact-exchange
+      - policy-gated-network
+      - no-host-secret-mounts
+      - run-receipt-required
+  - id: layered-vm-container
+    allowed_for:
+      - multi-tool-agent-workflows
+      - development-build-testing
+    minimum_controls:
+      - vm-boundary
+      - container-boundary-inside-vm
+      - scoped-cache-mounts
+      - policy-gated-build-cache
+      - replayable-execution-receipt
+  - id: microvm-mesh
+    allowed_for:
+      - hostile-input-analysis
+      - high-risk-agent-workflows
+      - secret-adjacent-analysis
+    minimum_controls:
+      - per-task-microvm
+      - no-shared-writable-root
+      - no-network-by-default
+      - explicit-artifact-egress-only
+      - evidence-bundle-required
+
+risk_to_isolation:
+  low:
+    minimum_profile: container
+    network_default: restricted
+    filesystem_default: scoped-read-write
+  medium:
+    minimum_profile: vm
+    network_default: restricted
+    filesystem_default: scoped-artifact-exchange
+  high:
+    minimum_profile: microvm-mesh
+    network_default: none
+    filesystem_default: artifact-egress-only
+  extreme:
+    minimum_profile: microvm-mesh
+    network_default: none
+    filesystem_default: ephemeral-only
+    additional_controls:
+      - manual-review-required
+      - no-secrets
+      - no-persistent-cache
+
+security_controls:
+  secrets:
+    model: secret-door-required
+    forbidden_locations:
+      - git-repository
+      - nix-store
+      - build-logs
+      - command-output
+      - image-layers
+    required_receipts:
+      - secret-access-receipt
+      - secret-redaction-receipt
+  network:
+    default_posture: deny-by-default-for-agent-space
+    allowed_modes:
+      - none
+      - control-plane-only
+      - restricted-egress
+      - full-egress-with-policy-exception
+    required_receipts:
+      - network-policy-receipt
+      - egress-decision-receipt
+  filesystem:
+    default_posture: scoped-mounts
+    forbidden_mounts:
+      - host-root
+      - docker-socket
+      - unmanaged-secret-store
+    required_receipts:
+      - mount-policy-receipt
+      - artifact-egress-receipt
+  runtime:
+    default_posture: least-capability
+    required_receipts:
+      - environment-fingerprint
+      - capability-manifest
+      - isolation-profile-receipt
+  supply_chain:
+    required_artifacts:
+      - ReleaseSet
+      - BillOfMaterials
+      - signed-manifest
+      - runtime-promotion-manifest
+      - verification-receipt
+
+policy_enforcement:
+  policy_owner: SocioProphet/policy-fabric
+  execution_owner: SocioProphet/agentplane
+  topology_owner: SocioProphet/sociosphere
+  rules:
+    policy_required_before_authoritative_action: true
+    agentplane_required_before_execution: true
+    topology_required_before_production_registration: true
+    generated_only_release_to_stable_forbidden: true
+    secret_access_requires_secret_door: true
+    high_risk_workloads_require_microvm_mesh: true
+
+incident_security_receipts:
+  required_for_security_incident:
+    - incident-receipt
+    - policy-impact-receipt
+    - runtime-impact-receipt
+    - tenant-impact-receipt
+    - secret-impact-receipt
+    - network-impact-receipt
+    - post-incident-review
+
+validation_requirements:
+  require_security_scope: true
+  require_threat_classes: true
+  require_isolation_profiles: true
+  require_risk_to_isolation: true
+  require_security_controls: true
+  require_policy_enforcement: true
+  require_incident_security_receipts: true
+  require_no_secrets_in_repo_store_logs_or_images: true
+  require_policy_before_authoritative_action: true
+  require_agentplane_before_execution: true
+  require_microvm_for_high_risk: true
