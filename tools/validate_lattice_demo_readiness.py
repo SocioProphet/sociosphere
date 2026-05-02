@@ -20,6 +20,7 @@ REQUIRED_REFS = {
     "SocioProphet/lattice-forge#12",
     "SocioProphet/prophet-platform#306",
     "SocioProphet/prophet-platform-fabric-mlops-ts-suite#34",
+    "SocioProphet/prophet-platform-fabric-mlops-ts-suite#35",
     "SocioProphet/agentplane#77",
     "SocioProphet/sherlock-search#32",
     "SocioProphet/slash-topics#25",
@@ -29,6 +30,7 @@ REQUIRED_REFS = {
     "SocioProphet/cloudshell-fog#32",
     "SocioProphet/sociosphere#243",
     "SocioProphet/sociosphere#244",
+    "SocioProphet/sociosphere#245",
 }
 REQUIRED_DEMO_PATH = [
     "catalog-search",
@@ -55,6 +57,7 @@ REQUIRED_CHECKS = {
     "trust-reputation",
     "policy-governance",
     "developer-home",
+    "replay-evidence-bundle",
 }
 REQUIRED_RUNTIME_REFS = {
     "notebook_runtime_ref": "runtime-asset:prophet-python-ml:0.1.0",
@@ -77,6 +80,17 @@ REQUIRED_COMMANDS = [
     "/lattice publication inspect urn:srcos:publication-artifact:community_truth_demo_report",
     "/lattice publication export urn:srcos:publication-artifact:community_truth_demo_report",
 ]
+REQUIRED_ARTIFACTS = {
+    "urn:srcos:artifact:community_truth_demo_ray_metrics",
+    "urn:srcos:artifact:community_truth_demo_beam_quality",
+    "urn:srcos:model:community_truth_demo_candidate",
+}
+REQUIRED_RECEIPTS = {
+    "urn:srcos:lineage-receipt:ray-community-truth-demo-0001",
+    "urn:srcos:lineage-receipt:beam-community-truth-demo-0001",
+}
+REQUIRED_RAY_METRICS = {"factuality_f1", "grounding_precision", "training_records"}
+REQUIRED_BEAM_METRICS = {"quality_completeness", "annotation_coverage", "duplicate_rate"}
 
 
 def fail(message: str) -> int:
@@ -104,13 +118,14 @@ def main() -> int:
         data = yaml.safe_load(REGISTRY.read_text(encoding="utf-8"))
         require(isinstance(data, dict), "registry must be mapping")
         require(data.get("kind") == "LatticeDemoReadinessRegistration", "kind mismatch")
-        require(data.get("version") == "0.2.0", "version mismatch")
+        require(data.get("version") == "0.3.0", "version mismatch")
         umbrella = data.get("umbrella")
         require(isinstance(umbrella, dict), "umbrella must be mapping")
         require(umbrella.get("repo") == "SocioProphet/prophet-platform", "umbrella.repo mismatch")
         require(umbrella.get("issue") == 291, "umbrella.issue mismatch")
         require(umbrella.get("readiness_pr") == "SocioProphet/prophet-platform#307", "readiness PR mismatch")
         require(umbrella.get("command_bundle_pr") == "SocioProphet/cloudshell-fog#32", "command bundle PR mismatch")
+        require(umbrella.get("mlops_replay_evidence_pr") == "SocioProphet/prophet-platform-fabric-mlops-ts-suite#35", "MLOps replay evidence PR mismatch")
 
         report = data.get("readiness_report")
         require(isinstance(report, dict), "readiness_report must be mapping")
@@ -127,16 +142,32 @@ def main() -> int:
 
         bundle = data.get("command_bundle")
         require(isinstance(bundle, dict), "command_bundle must be mapping")
-        require(bundle.get("kind") == "LatticeDemoCommandBundleFixture", "command bundle kind mismatch")
-        require(bundle.get("producer_repo") == "SocioProphet/cloudshell-fog", "command bundle producer mismatch")
         require(bundle.get("tracking_ref") == "SocioProphet/cloudshell-fog#32", "command bundle tracking ref mismatch")
         require(bundle.get("expected_step_count") == 12, "command bundle expected_step_count must be 12")
-        require(bundle.get("execution_mode") == "dry-run", "command bundle execution_mode must be dry-run")
-        bundle_safety = bundle.get("safety")
-        require(isinstance(bundle_safety, dict), "command bundle safety must be mapping")
-        require(bundle_safety.get("network") == "none", "bundle network must be none")
-        require(bundle_safety.get("secrets") == "none", "bundle secrets must be none")
-        require(bundle_safety.get("host_mutation") is False, "bundle host_mutation must be false")
+
+        replay = data.get("mlops_replay_evidence")
+        require(isinstance(replay, dict), "mlops_replay_evidence must be mapping")
+        require(replay.get("kind") == "ReplayEvidenceBundle", "replay evidence kind mismatch")
+        require(replay.get("tracking_ref") == "SocioProphet/prophet-platform-fabric-mlops-ts-suite#35", "replay evidence tracking ref mismatch")
+        require(replay.get("bundle_ref") == "urn:srcos:evidence-bundle:lattice-governed-execution-0001", "replay bundle ref mismatch")
+        missing_artifacts = sorted(REQUIRED_ARTIFACTS - set(as_list(replay.get("required_artifacts"), "mlops_replay_evidence.required_artifacts")))
+        require(not missing_artifacts, f"missing replay artifacts: {missing_artifacts}")
+        missing_receipts = sorted(REQUIRED_RECEIPTS - set(as_list(replay.get("required_lineage_receipts"), "mlops_replay_evidence.required_lineage_receipts")))
+        require(not missing_receipts, f"missing lineage receipts: {missing_receipts}")
+        metrics = replay.get("required_metrics")
+        require(isinstance(metrics, dict), "required_metrics must be mapping")
+        missing_ray = sorted(REQUIRED_RAY_METRICS - set(as_list(metrics.get("ray"), "required_metrics.ray")))
+        missing_beam = sorted(REQUIRED_BEAM_METRICS - set(as_list(metrics.get("beam"), "required_metrics.beam")))
+        require(not missing_ray, f"missing Ray metrics: {missing_ray}")
+        require(not missing_beam, f"missing Beam metrics: {missing_beam}")
+        replay_commands = set(as_list(replay.get("replay_commands"), "mlops_replay_evidence.replay_commands"))
+        require("/lattice mlops ray run community_truth_demo --runtime prophet-ray-ml --dry-run" in replay_commands, "missing Ray replay command")
+        require("/lattice dataops beam run community_truth_demo --runtime prophet-beam-dataops --dry-run" in replay_commands, "missing Beam replay command")
+        replay_safety = replay.get("safety")
+        require(isinstance(replay_safety, dict), "replay safety must be mapping")
+        require(replay_safety.get("network") == "none", "replay network must be none")
+        require(replay_safety.get("secrets") == "none", "replay secrets must be none")
+        require(replay_safety.get("host_mutation") is False, "replay host_mutation must be false")
 
         refs = data.get("required_estate_refs")
         require(isinstance(refs, dict), "required_estate_refs must be mapping")
@@ -168,6 +199,9 @@ def main() -> int:
             "require_shell_command_surface",
             "require_executable_command_bundle",
             "require_ordered_demo_commands",
+            "require_replay_evidence_bundle",
+            "require_lineage_receipts",
+            "require_ray_and_beam_metric_expectations",
             "require_dev_runtime_promotion_allowed",
             "require_stable_runtime_promotion_blocked",
             "require_no_network_secrets_or_host_mutation",
