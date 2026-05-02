@@ -1,0 +1,130 @@
+version: "0.1.0"
+updated_at: "2026-05-02"
+kind: LatticeOperatingModelRegistration
+
+umbrella:
+  repo: SocioProphet/prophet-platform
+  issue: 291
+  product_program_ref: registry/lattice-product-readiness-program.yaml
+  work_order: work-order-0
+  purpose: "Defines the baseline product operating model for Lattice Studio/Data/GovernAI before live product rollout."
+
+environments:
+  - id: local-dev
+    purpose: local developer iteration
+    data_posture: synthetic-fixture-only
+    execution_posture: dry-run
+    promotion_allowed: false
+  - id: ci-fixture
+    purpose: deterministic validation of fixtures, schemas, topology, and policy gates
+    data_posture: synthetic-fixture-only
+    execution_posture: dry-run
+    promotion_allowed: false
+  - id: demo
+    purpose: evaluator-visible dry-run demo path
+    data_posture: seeded-demo-data
+    execution_posture: dry-run
+    promotion_allowed: dev-only
+  - id: staging
+    purpose: pre-production integration validation
+    data_posture: controlled-test-data
+    execution_posture: controlled-live-candidate
+    promotion_allowed: release-candidate
+  - id: production
+    purpose: customer-facing product operation
+    data_posture: tenant-scoped-data
+    execution_posture: live-governed
+    promotion_allowed: stable-with-required-evidence
+  - id: tenant-sandbox
+    purpose: isolated customer or evaluator sandbox
+    data_posture: tenant-seeded-data
+    execution_posture: governed-dry-run-or-controlled-live
+    promotion_allowed: tenant-local-only
+
+lifecycle_states:
+  - fixture
+  - demo-ready
+  - staging-candidate
+  - release-candidate
+  - stable
+  - deprecated
+  - rollback-required
+  - retired
+
+release_flow:
+  sequence:
+    - fixture-validation
+    - policy-validation
+    - topology-registration
+    - demo-readiness
+    - staging-candidate
+    - release-candidate
+    - stable-release
+  required_gates:
+    - ci-success
+    - policy-fabric-decision
+    - sociosphere-topology-registration
+    - runtime-evidence-present
+    - rollback-plan-present
+    - owner-approval-present
+
+rollback_flow:
+  triggers:
+    - failed-health-check
+    - failed-policy-check
+    - release-evidence-invalid
+    - security-incident
+    - operator-rollback-request
+  required_artifacts:
+    - rollback-receipt
+    - previous-release-ref
+    - policy-decision-ref
+    - incident-or-change-ref
+  owner_repo: SocioProphet/sociosphere
+
+incident_path:
+  states:
+    - detected
+    - triaged
+    - contained
+    - remediated
+    - reviewed
+    - closed
+  required_receipts:
+    - incident-receipt
+    - policy-impact-receipt
+    - runtime-impact-receipt
+    - tenant-impact-receipt
+    - post-incident-review
+
+ownership:
+  product_owner: SocioProphet/prophet-platform
+  topology_owner: SocioProphet/sociosphere
+  policy_owner: SocioProphet/policy-fabric
+  execution_owner: SocioProphet/agentplane
+  runtime_owner: SocioProphet/lattice-forge
+  shell_owner: SocioProphet/cloudshell-fog
+  search_owner: SocioProphet/sherlock-search
+  topic_owner: SocioProphet/slash-topics
+  membrane_owner: SocioProphet/new-hope
+
+operating_rules:
+  policy_fabric_required_for_authoritative_actions: true
+  agentplane_required_for_execution: true
+  sociosphere_required_for_topology: true
+  runtime_release_requires_manifest: true
+  stable_release_requires_external_evidence: true
+  dry_run_may_use_fixture_evidence: true
+  production_requires_tenant_scope: true
+  no_parallel_metadata_spines: true
+
+validation_requirements:
+  require_environments: true
+  require_lifecycle_states: true
+  require_release_flow: true
+  require_rollback_flow: true
+  require_incident_path: true
+  require_ownership: true
+  require_operating_rules: true
+  require_policy_before_authoritative_action: true
+  require_agentplane_before_execution: true
