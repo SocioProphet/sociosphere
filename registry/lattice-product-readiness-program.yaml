@@ -1,0 +1,208 @@
+version: "0.1.0"
+updated_at: "2026-05-02"
+kind: LatticeProductReadinessProgramRegistration
+
+umbrella:
+  repo: SocioProphet/prophet-platform
+  issue: 291
+  parent_registries:
+    - registry/lattice-data-governai-lanes.yaml
+    - registry/lattice-demo-readiness.yaml
+    - registry/lattice-runtime-release-readiness.yaml
+  purpose: "Registers the next-phase Lattice Studio/Data/GovernAI product readiness program across operating model, product surface, enterprise governance, execution, programmable access, and market proof."
+
+turn_budget:
+  estimate_total_turns: "45-65"
+  phase_0_and_a_turns: "10-14"
+  assumptions:
+    - one_or_more_ci_gated_prs_per_turn
+    - no_large_unplanned_repo_migration
+    - live_infrastructure_contracts_before_live_infrastructure_rollout
+    - topology_registration_after_each_major_lane
+
+work_orders:
+  - id: work-order-0
+    name: operating-model-security-deployment-baseline
+    priority: 0
+    status: approved-for-execution
+    objective: "Define deployable operating model, environment lifecycle, security baseline, release and rollback posture, and observability baseline before broad live product rollout."
+    owner_repos:
+      - SocioProphet/sociosphere
+      - SocioProphet/policy-fabric
+      - SocioProphet/agentplane
+      - SocioProphet/cloudshell-fog
+      - SocioProphet/prophet-platform
+      - SourceOS-Linux/sourceos-spec
+    required_lanes:
+      - product-operating-model
+      - deployment-topology
+      - security-isolation-threat-model
+      - observability-sre-control-loops
+      - release-rollback-control
+    acceptance_gates:
+      - environments-defined
+      - tenant-sandbox-defined
+      - release-candidate-flow-defined
+      - rollback-flow-defined
+      - security-baseline-defined
+      - observability-baseline-defined
+      - topology-registered
+      - ci-validated
+
+  - id: work-order-a
+    name: product-surface-and-notebook-execution
+    priority: 1
+    status: approved-for-execution
+    objective: "Make Lattice Studio visible and touchable through hosted product surfaces and governed notebook execution."
+    owner_repos:
+      - SocioProphet/prophet-platform
+      - SocioProphet/cloudshell-fog
+      - SocioProphet/lattice-forge
+      - SocioProphet/agentplane
+      - SocioProphet/sociosphere
+    required_lanes:
+      - hosted-product-surface
+      - jupyterhub-jupyterlab-deployment-contract
+      - runtime-selector-ux
+      - command-launcher-surface
+      - notebook-session-receipts
+    acceptance_gates:
+      - product-shell-renders
+      - runtime-cards-visible
+      - notebook-launch-contract-present
+      - notebook-session-receipt-present
+      - policy-gated-launch
+      - agentplane-execution-routing
+      - ci-validated
+
+  - id: work-order-b
+    name: enterprise-governance-and-catalog
+    priority: 2
+    status: planned
+    objective: "Add tenant, workspace, RBAC, catalog ingestion, connector certification, and privacy/legal data governance controls."
+    owner_repos:
+      - SourceOS-Linux/sourceos-spec
+      - SocioProphet/prophet-platform
+      - SocioProphet/policy-fabric
+      - SocioProphet/sherlock-search
+      - SocioProphet/slash-topics
+      - SocioProphet/new-hope
+      - SocioProphet/sociosphere
+    required_lanes:
+      - tenant-workspace-rbac
+      - production-catalog-ingestion
+      - connector-registry-certification
+      - privacy-legal-controls
+      - ckan-compatible-metadata
+    acceptance_gates:
+      - tenant-workspace-schema-present
+      - rbac-policy-subjects-present
+      - catalog-ingestion-contract-present
+      - connector-health-receipts-present
+      - pii-license-retention-controls-present
+      - ci-validated
+
+  - id: work-order-c
+    name: runtime-mlops-and-production-execution
+    priority: 3
+    status: planned
+    objective: "Move from fixture-level execution to controlled live Ray/Beam execution, runtime release authority, model lifecycle, and endpoint lifecycle."
+    owner_repos:
+      - SocioProphet/lattice-forge
+      - SocioProphet/agentplane
+      - SocioProphet/prophet-platform-fabric-mlops-ts-suite
+      - SocioProphet/prophet-platform
+      - SocioProphet/policy-fabric
+      - SocioProphet/sociosphere
+    required_lanes:
+      - provider-backed-runtime-release-authority
+      - live-ray-execution-contract
+      - live-beam-execution-contract
+      - model-candidate-lifecycle
+      - endpoint-lifecycle
+      - quota-and-cost-controls
+    acceptance_gates:
+      - live-execution-contracts-present
+      - job-status-receipts-present
+      - rollback-kill-switch-present
+      - quota-policy-present
+      - artifact-retention-policy-present
+      - ci-validated
+
+  - id: work-order-d
+    name: api-sdk-cli-chatops
+    priority: 4
+    status: planned
+    objective: "Expose Lattice Studio through stable programmable interfaces beyond UI and shell fixtures."
+    owner_repos:
+      - SocioProphet/prophet-platform
+      - SocioProphet/cloudshell-fog
+      - SocioProphet/agentplane
+      - SocioProphet/sociosphere
+    required_lanes:
+      - openapi-contract
+      - python-sdk-contract
+      - cli-command-contract
+      - matrix-chatops-contract
+      - webhook-event-surface
+    acceptance_gates:
+      - api-contract-present
+      - sdk-fixture-present
+      - cli-contract-present
+      - chatops-contract-present
+      - event-contract-present
+      - ci-validated
+
+  - id: work-order-e
+    name: market-readiness-and-proof
+    priority: 5
+    status: planned
+    objective: "Make the product externally legible, evaluable, benchmarkable, and fundable."
+    owner_repos:
+      - SocioProphet/prophet-platform
+      - SocioProphet/sociosphere
+      - mdheller/socioprophet-web
+    required_lanes:
+      - product-documentation
+      - evaluator-sandbox
+      - executable-benchmark-harness
+      - competitor-proof-matrix
+      - pricing-sku-support-model
+    acceptance_gates:
+      - product-brief-present
+      - demo-script-present
+      - evaluator-guide-present
+      - benchmark-harness-contract-present
+      - claim-confidence-matrix-present
+      - ci-validated
+
+execution_rules:
+  next_approved_scope:
+    - work-order-0
+    - work-order-a
+  topology_registration_required_after_each_lane: true
+  ci_required_before_merge: true
+  fixture_before_live_infrastructure: true
+  no_parallel_metadata_spines: true
+  policy_fabric_required_for_authoritative_actions: true
+  agentplane_required_for_execution: true
+  slash_topics_public_surface: true
+  new_hope_semantic_membrane: true
+
+validation_requirements:
+  required_work_orders:
+    - work-order-0
+    - work-order-a
+    - work-order-b
+    - work-order-c
+    - work-order-d
+    - work-order-e
+  required_next_scope:
+    - work-order-0
+    - work-order-a
+  require_turn_budget: true
+  require_acceptance_gates: true
+  require_owner_repos: true
+  require_topology_registration: true
+  require_ci_before_merge: true
+  forbid_live_execution_without_policy_and_agentplane: true
