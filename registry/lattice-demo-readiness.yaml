@@ -1,15 +1,16 @@
-version: "0.1.0"
-updated_at: "2026-05-01"
+version: "0.2.0"
+updated_at: "2026-05-02"
 kind: LatticeDemoReadinessRegistration
 
 umbrella:
   repo: SocioProphet/prophet-platform
   issue: 291
   readiness_pr: SocioProphet/prophet-platform#307
+  command_bundle_pr: SocioProphet/cloudshell-fog#32
   parent_registries:
     - registry/lattice-data-governai-lanes.yaml
     - registry/lattice-runtime-profile-consumer-parity.yaml
-  purpose: "Registers the end-to-end Lattice Studio/Data/GovernAI demo readiness report and required demo path across product, runtime, execution, search, topic, membrane, policy, shell, and topology surfaces."
+  purpose: "Registers the end-to-end Lattice Studio/Data/GovernAI demo readiness report and executable Fog Shell command bundle across product, runtime, execution, search, topic, membrane, policy, shell, and topology surfaces."
 
 readiness_report:
   kind: LatticeDemoReadinessReport
@@ -18,6 +19,18 @@ readiness_report:
   state: demo-ready
   stable_runtime_promotion: blocked-pending-external-evidence
   dev_runtime_promotion: allowed-with-generated-evidence
+  safety:
+    network: none
+    secrets: none
+    host_mutation: false
+
+command_bundle:
+  kind: LatticeDemoCommandBundleFixture
+  producer_repo: SocioProphet/cloudshell-fog
+  tracking_ref: SocioProphet/cloudshell-fog#32
+  expected_step_count: 12
+  validation_workflow: lattice-demo-command-bundle
+  execution_mode: dry-run
   safety:
     network: none
     secrets: none
@@ -35,7 +48,9 @@ required_estate_refs:
   newhope_runtime_membrane: SocioProphet/new-hope#9
   policy_runtime_promotion: SocioProphet/policy-fabric#42
   cloudshell_runtime_routes: SocioProphet/cloudshell-fog#31
+  cloudshell_demo_command_bundle: SocioProphet/cloudshell-fog#32
   topology_runtime_promotion: SocioProphet/sociosphere#243
+  topology_demo_readiness: SocioProphet/sociosphere#244
 
 runtime_refs:
   notebook_runtime_ref: runtime-asset:prophet-python-ml:0.1.0
@@ -75,11 +90,14 @@ shell_commands:
   - /lattice runtime pick prophet-python-ml
   - /lattice runtime pick prophet-ray-ml
   - /lattice runtime pick prophet-beam-dataops
+  - /lattice runtime bindings inspect
   - /lattice notebook launch community_truth_demo --runtime prophet-python-ml
+  - /lattice data inspect urn:srcos:data-product:community_truth_demo
   - /lattice mlops ray run community_truth_demo --runtime prophet-ray-ml --dry-run
   - /lattice dataops beam run community_truth_demo --runtime prophet-beam-dataops --dry-run
   - /lattice govern review urn:srcos:evaluation-bundle:community_truth_demo_model_eval
   - /lattice publication inspect urn:srcos:publication-artifact:community_truth_demo_report
+  - /lattice publication export urn:srcos:publication-artifact:community_truth_demo_report
 
 validation_requirements:
   required_tracking_refs:
@@ -95,10 +113,14 @@ validation_requirements:
     - SocioProphet/new-hope#9
     - SocioProphet/policy-fabric#42
     - SocioProphet/cloudshell-fog#31
+    - SocioProphet/cloudshell-fog#32
     - SocioProphet/sociosphere#243
+    - SocioProphet/sociosphere#244
   require_all_demo_path_steps: true
   require_all_readiness_checks: true
   require_shell_command_surface: true
+  require_executable_command_bundle: true
+  require_ordered_demo_commands: true
   require_dev_runtime_promotion_allowed: true
   require_stable_runtime_promotion_blocked: true
   require_no_network_secrets_or_host_mutation: true
