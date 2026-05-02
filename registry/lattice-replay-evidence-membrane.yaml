@@ -1,0 +1,45 @@
+version: "0.1.0"
+updated_at: "2026-05-02"
+kind: LatticeReplayEvidenceMembraneRegistration
+
+umbrella:
+  repo: SocioProphet/prophet-platform
+  issue: 291
+  parent_registry: registry/lattice-demo-readiness.yaml
+  purpose: "Registers New Hope semantic membrane admission for the Lattice ReplayEvidenceBundle."
+
+refs:
+  mlops_replay_evidence: SocioProphet/prophet-platform-fabric-mlops-ts-suite#35
+  sherlock_replay_evidence_index: SocioProphet/sherlock-search#33
+  slash_replay_evidence_topics: SocioProphet/slash-topics#26
+  newhope_replay_evidence_membrane: SocioProphet/new-hope#10
+  demo_readiness_topology: SocioProphet/sociosphere#247
+
+asset:
+  replay_evidence_bundle_ref: urn:srcos:evidence-bundle:lattice-governed-execution-0001
+  topic_ref: slash-topic://lattice/data-governai/replay-evidence
+  runtime_refs:
+    - runtime-asset:prophet-ray-ml:0.1.0
+    - runtime-asset:prophet-beam-dataops:0.1.0
+  artifact_refs:
+    - urn:srcos:artifact:community_truth_demo_ray_metrics
+    - urn:srcos:artifact:community_truth_demo_beam_quality
+    - urn:srcos:model:community_truth_demo_candidate
+  lineage_receipt_refs:
+    - urn:srcos:lineage-receipt:ray-community-truth-demo-0001
+    - urn:srcos:lineage-receipt:beam-community-truth-demo-0001
+  replay_command_refs:
+    - /lattice mlops ray run community_truth_demo --runtime prophet-ray-ml --dry-run
+    - /lattice dataops beam run community_truth_demo --runtime prophet-beam-dataops --dry-run
+
+membrane_decisions:
+  demo_review: allow
+  promotion_review: require-review
+
+validation_requirements:
+  require_replay_evidence_search_index: true
+  require_replay_evidence_topic_governance: true
+  require_replay_evidence_membrane: true
+  require_policy_fabric_decision_before_authoritative_use: true
+  require_no_network_secrets_or_host_mutation: true
+  forbid_runtime_ref_rewrite: true

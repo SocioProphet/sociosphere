@@ -23,9 +23,9 @@ ui-dev: ui-preflight
 # --- end ui-workbench targets ---
 
 # --- standards validation targets ---
-.PHONY: validate validate-standards multidomain-geospatial-standards-compliance-validate program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate lattice-runtime-profile-consumer-parity-validate lattice-demo-readiness-validate
+.PHONY: validate validate-standards multidomain-geospatial-standards-compliance-validate program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate lattice-runtime-profile-consumer-parity-validate lattice-demo-readiness-validate lattice-replay-evidence-membrane-validate
 
-validate: validate-standards program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate lattice-runtime-profile-consumer-parity-validate lattice-demo-readiness-validate
+validate: validate-standards program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate lattice-runtime-profile-consumer-parity-validate lattice-demo-readiness-validate lattice-replay-evidence-membrane-validate
 	@echo "OK: validate"
 
 validate-standards:
@@ -48,6 +48,10 @@ lattice-runtime-profile-consumer-parity-validate:
 lattice-demo-readiness-validate:
 	python3 -m pip install --user pyyaml >/dev/null
 	python3 tools/validate_lattice_demo_readiness.py
+
+lattice-replay-evidence-membrane-validate:
+	python3 -m pip install --user pyyaml >/dev/null
+	python3 tools/validate_lattice_replay_evidence_membrane_registration.py
 
 multidomain-geospatial-standards-compliance-validate:
 	python3 tools/check_multidomain_geospatial_standards_compliance.py
