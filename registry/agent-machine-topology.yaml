@@ -1,0 +1,237 @@
+# registry/agent-machine-topology.yaml
+# Machine-readable topology lane for SourceOS Agent Machine.
+# This file records repo roles, dependency direction, storage semantics,
+# mount policy invariants, and validation expectations for local and cluster modes.
+
+version: "0.1.0"
+updated_at: "2026-05-02"
+capability_lane: sourceos-agent-machine
+status: active
+
+summary: >-
+  SourceOS Agent Machine is the cross-host local workspace lane for Mac,
+  Windows, and Linux operator machines. It exposes local terminal, browser,
+  editor, and governed agent-tool surfaces to an internal Podman-backed or
+  native agent workspace through explicit contracts, grants, mounts, and
+  evidence artifacts.
+
+planes:
+  contracts:
+    authority: SourceOS-Linux/sourceos-spec
+    owns:
+      - AgentMachineProfile
+      - AgentMachineLocalDataPlane
+      - AgentMachineMountPolicy
+      - SecureHostInterfaceProfile
+      - HostInterfaceGrant
+      - TopoLVMPlacementProfile
+    current_paths:
+      - schemas/AgentMachineLocalDataPlane.json
+      - schemas/AgentMachineMountPolicy.json
+      - schemas/TopoLVMPlacementProfile.json
+      - examples/agent_machine_local_data_plane_macos.json
+      - examples/agent_machine_mount_policy_default.json
+      - examples/topolvm_placement_profile_agent_machine.json
+      - docs/contract-additions/agent-machine-local-data-plane.md
+
+  local_cli:
+    authority: SourceOS-Linux/sourceos-devtools
+    owns:
+      - sourceosctl agent-machine mounts plan
+      - sourceosctl agent-machine mounts init --dry-run
+      - sourceosctl agent-machine mounts inspect
+      - sourceosctl agent-machine mounts evidence inspect
+    must_not_own:
+      - canonical schema definitions
+      - Agent Registry authority
+      - AgentPlane run/replay semantics
+      - cluster storage controllers
+
+  execution_evidence:
+    authority: SocioProphet/agentplane
+    owns:
+      - backendIntent agent-machine
+      - AgentMachineMountEvidence
+      - placement/run/replay evidence references
+    current_paths:
+      - schemas/agent-machine-mount-evidence.schema.v0.1.json
+      - examples/agent-machine-mount-evidence/example.json
+      - docs/integration/agent-machine.md
+
+  agent_authority:
+    authority: SocioProphet/agent-registry
+    owns:
+      - non-human agent identity
+      - tool grants
+      - terminal/browser/editor/agent-tool door grants
+      - revocation and expiration
+
+  operator_shell:
+    authority: SourceOS-Linux/agent-term
+    owns:
+      - Matrix-first operator event surface
+      - slash-command UX for Agent Machine lifecycle
+      - operator attach event logging
+    must_not_own:
+      - Podman engine implementation
+      - Agent Registry authority
+      - AgentPlane evidence formats
+
+  product_shell:
+    authority: SourceOS-Linux/sourceos-shell
+    owns:
+      - user-visible four-door UX posture
+      - terminal/browser/editor/agent-tool design surfaces
+    current_constraint: PDF-first runtime scope remains active; broader shell UX is design-first until unlocked.
+
+  facade_cli:
+    authority: SocioProphet/prophet-cli
+    owns:
+      - prophet sourceos agent-machine command delegation
+    must_delegate_to:
+      - SourceOS-Linux/sourceos-devtools
+      - SourceOS-Linux/agent-term
+
+  installer_surface:
+    authority: SocioProphet/homebrew-prophet
+    owns:
+      - Homebrew formulae for sourceos-devtools and agent-term
+    must_not_own:
+      - Podman machine initialization side effects
+      - host mount creation during install
+
+  storage_backend:
+    local_mode:
+      authority: SourceOS-Linux/sourceos-devtools
+      backend_classes:
+        - podman-machine-bind
+        - podman-bind
+        - wsl-bind
+        - native-bind
+    cluster_mode:
+      authority: SocioProphet/topolvm
+      backend_classes:
+        - topolvm-local-pv
+      semantics: topology-aware node-local persistent volumes; not cross-node shared storage
+
+canonical_mounts:
+  - id: dev-root
+    path_class: code
+    host_path: "~/dev"
+    agent_path: "/workspace/dev"
+    default_access: read-write
+    purpose: code and repository worktrees
+
+  - id: docs-output
+    path_class: documents
+    host_path: "~/Documents/SourceOS/agent-output"
+    agent_path: "/workspace/output"
+    default_access: read-write
+    purpose: generated documents, reports, specs, and agent-authored artifacts
+
+  - id: browser-downloads
+    path_class: downloads
+    host_path: "~/Downloads/SourceOS/agent-downloads"
+    agent_path: "/workspace/downloads"
+    default_access: browser-read-write-agent-read-only
+    purpose: scoped browser downloads; whole host Downloads directory is not mounted
+
+security_invariants:
+  deny_by_default: true
+  forbidden_default_mounts:
+    - "$HOME"
+    - "~/.ssh"
+    - "~/.gnupg"
+    - "~/Library/Keychains"
+    - browser profiles
+    - keychains
+    - cloud credential directories
+    - token stores
+    - password stores
+    - app databases for Notes, Reminders, Photos, Voice Memos, or similar apps
+  downloads_policy:
+    hash_downloads: true
+    no_direct_execution_by_default: true
+    promotion_to_code_or_documents_requires_evidence: true
+  app_bridges:
+    notes: future App Door, not default raw mount
+    reminders: future App Door, not default raw mount
+    photos: future App Door, not default raw mount
+    voice_memos: future App Door, not default raw mount
+    textedit_like_documents: future App Door or documents output integration, not app database mount
+
+repo_edges:
+  - from: SourceOS-Linux/sourceos-spec
+    to: SourceOS-Linux/sourceos-devtools
+    type: contract_to_implementation
+    reason: sourceosctl consumes Agent Machine contracts.
+
+  - from: SourceOS-Linux/sourceos-spec
+    to: SocioProphet/agentplane
+    type: contract_to_evidence
+    reason: AgentPlane references LocalDataPlane, MountPolicy, SecureHostInterface, and TopoLVM placement contracts.
+
+  - from: SourceOS-Linux/sourceos-devtools
+    to: SocioProphet/agentplane
+    type: implementation_to_evidence
+    reason: sourceosctl emits/imports Agent Machine mount evidence consumed by AgentPlane.
+
+  - from: SocioProphet/agent-registry
+    to: SourceOS-Linux/agent-term
+    type: authority_to_operator_surface
+    reason: AgentTerm must resolve non-human participants and grants through Agent Registry.
+
+  - from: SocioProphet/agent-registry
+    to: SourceOS-Linux/sourceos-devtools
+    type: authority_to_local_broker
+    reason: local broker grants must be registry-derived when agent/tool surfaces are used.
+
+  - from: SourceOS-Linux/agent-term
+    to: SocioProphet/agentplane
+    type: operator_surface_to_execution
+    reason: governed execution requests should route to AgentPlane evidence lanes.
+
+  - from: SocioProphet/prophet-cli
+    to: SourceOS-Linux/sourceos-devtools
+    type: facade_to_local_cli
+    reason: prophet CLI delegates Agent Machine engine operations to sourceosctl.
+
+  - from: SocioProphet/homebrew-prophet
+    to: SourceOS-Linux/sourceos-devtools
+    type: installer_to_local_cli
+    reason: Homebrew installs sourceosctl for Mac-first proof path.
+
+  - from: SocioProphet/homebrew-prophet
+    to: SourceOS-Linux/agent-term
+    type: installer_to_operator_shell
+    reason: Homebrew installs AgentTerm for operator shell flows.
+
+  - from: SocioProphet/topolvm
+    to: SocioProphet/agentplane
+    type: storage_backend_to_execution_evidence
+    reason: cluster-local PVC/PV placement evidence is attached to AgentPlane artifacts.
+
+validation_expectations:
+  - id: no-whole-home-mount
+    severity: error
+    description: Agent Machine configs must not mount $HOME wholesale.
+
+  - id: deny-sensitive-host-paths
+    severity: error
+    description: Agent Machine configs must not default-mount SSH keys, GPG keys, browser profiles, keychains, cloud credentials, token stores, or password stores.
+
+  - id: browser-downloads-scoped
+    severity: error
+    description: Browser downloads must use a scoped downloads root, not the entire host Downloads directory.
+
+  - id: topolvm-node-local-semantics
+    severity: error
+    description: TopoLVM profiles must not claim cross-node shared filesystem semantics.
+
+  - id: app-doors-not-raw-app-databases
+    severity: warn
+    description: Notes, Reminders, Photos, Voice Memos, and similar integrations should be App Doors, not raw database mounts.
+
+  - id: agentplane-evidence-required
+    severity: error
+    description: Agent Machine runs must emit or import AgentMachineMountEvidence when local data-plane mounts are active.
