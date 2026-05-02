@@ -1,0 +1,59 @@
+version: "0.1.0"
+updated_at: "2026-05-02"
+kind: LatticeRuntimeReleaseReadinessRegistration
+
+umbrella:
+  repo: SocioProphet/prophet-platform
+  issue: 291
+  purpose: "Registers the runtime release readiness closure for the Lattice Studio/Data/GovernAI path."
+
+refs:
+  runtime_evidence: SocioProphet/lattice-forge#13
+  runtime_policy: SocioProphet/policy-fabric#43
+  platform_readiness: SocioProphet/prophet-platform#308
+  shell_commands: SocioProphet/cloudshell-fog#33
+  previous_runtime_topology: SocioProphet/sociosphere#243
+
+manifest:
+  ref: runtime-promotion-manifest:lattice-runtime-promotion-manifest:0.2.0
+  required_evidence:
+    - RuntimeAsset
+    - SBOM
+    - scan-report
+    - attestation
+    - signature
+    - external-scanner-evidence
+    - external-signing-authority-evidence
+    - human-approval
+
+runtime_refs:
+  - runtime-asset:prophet-python-ml:0.1.0
+  - runtime-asset:prophet-ray-ml:0.1.0
+  - runtime-asset:prophet-beam-dataops:0.1.0
+
+policy_posture:
+  dev_release: allow
+  stable_release: allow-with-required-evidence
+  generated_only_stable_release: deny
+  policy_fabric_required: true
+
+shell_commands:
+  - /lattice runtime release manifest inspect --manifest lattice-runtime-promotion-manifest:0.2.0
+  - /lattice runtime release policy inspect --manifest lattice-runtime-promotion-manifest:0.2.0
+  - /lattice runtime release readiness inspect
+
+validation_requirements:
+  require_runtime_evidence_ref: true
+  require_runtime_policy_ref: true
+  require_platform_readiness_ref: true
+  require_shell_command_ref: true
+  require_manifest_v020: true
+  require_all_runtime_refs: true
+  require_generated_and_external_evidence: true
+  require_policy_fabric_for_release_decision: true
+  require_no_network_secrets_or_host_mutation: true
+
+safety:
+  network: none
+  secrets: none
+  host_mutation: false
