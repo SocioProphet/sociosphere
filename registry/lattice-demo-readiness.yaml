@@ -1,0 +1,105 @@
+version: "0.1.0"
+updated_at: "2026-05-01"
+kind: LatticeDemoReadinessRegistration
+
+umbrella:
+  repo: SocioProphet/prophet-platform
+  issue: 291
+  readiness_pr: SocioProphet/prophet-platform#307
+  parent_registries:
+    - registry/lattice-data-governai-lanes.yaml
+    - registry/lattice-runtime-profile-consumer-parity.yaml
+  purpose: "Registers the end-to-end Lattice Studio/Data/GovernAI demo readiness report and required demo path across product, runtime, execution, search, topic, membrane, policy, shell, and topology surfaces."
+
+readiness_report:
+  kind: LatticeDemoReadinessReport
+  producer_repo: SocioProphet/prophet-platform
+  tracking_ref: SocioProphet/prophet-platform#307
+  state: demo-ready
+  stable_runtime_promotion: blocked-pending-external-evidence
+  dev_runtime_promotion: allowed-with-generated-evidence
+  safety:
+    network: none
+    secrets: none
+    host_mutation: false
+
+required_estate_refs:
+  schema: SourceOS-Linux/sourceos-spec#75
+  runtime_profiles: SocioProphet/lattice-forge#11
+  runtime_promotion_manifest: SocioProphet/lattice-forge#12
+  runtime_profile_catalog: SocioProphet/prophet-platform#306
+  mlops_runtime_execution: SocioProphet/prophet-platform-fabric-mlops-ts-suite#34
+  agentplane_runtime_refs: SocioProphet/agentplane#77
+  sherlock_runtime_index: SocioProphet/sherlock-search#32
+  slash_runtime_topics: SocioProphet/slash-topics#25
+  newhope_runtime_membrane: SocioProphet/new-hope#9
+  policy_runtime_promotion: SocioProphet/policy-fabric#42
+  cloudshell_runtime_routes: SocioProphet/cloudshell-fog#31
+  topology_runtime_promotion: SocioProphet/sociosphere#243
+
+runtime_refs:
+  notebook_runtime_ref: runtime-asset:prophet-python-ml:0.1.0
+  ray_runtime_ref: runtime-asset:prophet-ray-ml:0.1.0
+  beam_runtime_ref: runtime-asset:prophet-beam-dataops:0.1.0
+  runtime_profile_binding_ref: runtime-profile-binding:lattice-data-governai:0.1.0
+  runtime_promotion_manifest_ref: runtime-promotion-manifest:lattice-runtime-promotion-manifest:0.1.0
+
+demo_path:
+  - catalog-search
+  - data-product-inspection
+  - runtime-profile-selection
+  - notebook-launch-dry-run
+  - annotation-to-training
+  - ray-model-dry-run
+  - beam-quality-dry-run
+  - model-zoo-review
+  - prompt-rag-evaluation
+  - publication-review-and-reproduction
+  - active-metadata-indexing
+  - trust-posture-review
+
+required_checks:
+  - data-product
+  - runtime-profile-catalog
+  - annotation-to-training
+  - model-zoo
+  - prompt-rag-eval
+  - publication-review
+  - active-metadata
+  - trust-reputation
+  - policy-governance
+  - developer-home
+
+shell_commands:
+  - /lattice data search community_truth_demo
+  - /lattice runtime pick prophet-python-ml
+  - /lattice runtime pick prophet-ray-ml
+  - /lattice runtime pick prophet-beam-dataops
+  - /lattice notebook launch community_truth_demo --runtime prophet-python-ml
+  - /lattice mlops ray run community_truth_demo --runtime prophet-ray-ml --dry-run
+  - /lattice dataops beam run community_truth_demo --runtime prophet-beam-dataops --dry-run
+  - /lattice govern review urn:srcos:evaluation-bundle:community_truth_demo_model_eval
+  - /lattice publication inspect urn:srcos:publication-artifact:community_truth_demo_report
+
+validation_requirements:
+  required_tracking_refs:
+    - SocioProphet/prophet-platform#307
+    - SourceOS-Linux/sourceos-spec#75
+    - SocioProphet/lattice-forge#11
+    - SocioProphet/lattice-forge#12
+    - SocioProphet/prophet-platform#306
+    - SocioProphet/prophet-platform-fabric-mlops-ts-suite#34
+    - SocioProphet/agentplane#77
+    - SocioProphet/sherlock-search#32
+    - SocioProphet/slash-topics#25
+    - SocioProphet/new-hope#9
+    - SocioProphet/policy-fabric#42
+    - SocioProphet/cloudshell-fog#31
+    - SocioProphet/sociosphere#243
+  require_all_demo_path_steps: true
+  require_all_readiness_checks: true
+  require_shell_command_surface: true
+  require_dev_runtime_promotion_allowed: true
+  require_stable_runtime_promotion_blocked: true
+  require_no_network_secrets_or_host_mutation: true
+  forbid_demo_ready_with_blockers: true
