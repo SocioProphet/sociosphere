@@ -65,7 +65,7 @@ name = "socioprophet_web"
 role = "component"
 local_path = "components/socioprophet-web"
 url = "https://github.com/SocioProphet/socioprophet"
-ref = "main"
+ref = "master"
 license_hint = "MIT"
 
 [[repos]]

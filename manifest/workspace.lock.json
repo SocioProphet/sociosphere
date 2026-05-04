@@ -40,7 +40,7 @@
       "name": "socioprophet_web",
       "role": "component",
       "url": "https://github.com/SocioProphet/socioprophet",
-      "ref": "main",
+      "ref": "master",
       "rev": "04614b5fe876999abeb1e92348d47e453f981537",
       "local_path": "components/socioprophet-web",
       "tree_hash": null,
