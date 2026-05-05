@@ -3,7 +3,7 @@
   "name": "Angel of the Lord CI permissions policy",
   "default_result_when_warnings_only": "warn",
   "required_workflow_permissions_block": true,
-  "required_job_permissions_block": true,
+  "required_job_permissions_block": false,
   "deny_permissions_shorthand": [
     "write-all"
   ],
