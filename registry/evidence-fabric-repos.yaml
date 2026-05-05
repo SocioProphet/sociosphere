@@ -1,0 +1,171 @@
+version: "0.1.0"
+updated_at: "2026-05-04"
+program: evidence-fabric
+status: planned
+
+purpose: >-
+  Register the planned SocioProphet evidence fabric repo family before
+  implementation repos are created. These repos will own evidence contracts,
+  brokered ingest, storage infrastructure, source connectors, and validation.
+
+upstream_sources:
+  standards_storage:
+    repo: SocioProphet/socioprophet-standards-storage
+    role: storage standards, evidence bootstrap contracts, ingest architecture
+    merged_prs: [51, 65, 68]
+  sourceos_spec:
+    repo: SourceOS-Linux/sourceos-spec
+    role: umbrella metadata plane, SourceChannel, sync, policy, audit contracts
+  standards_knowledge:
+    repo: SocioProphet/socioprophet-standards-knowledge
+    role: Knowledge Context, SHACL, semantic validation, executable fixtures
+  ontogenesis:
+    repo: SocioProphet/ontogenesis
+    role: SHIR and ontology projection target
+  tritrpc:
+    repo: SocioProphet/TriTRPC
+    role: deterministic transport and policy/evidence AUX carriage
+  prophet_platform:
+    repo: SocioProphet/prophet-platform
+    role: runtime proof, receipt, parity, and preflight evidence patterns
+  socios_linux_source_os:
+    repo: SociOS-Linux/source-os
+    role: Linux realization, scoped local paths, workstation and office shell surfaces
+
+planned_repositories:
+  - id: evidence-contracts
+    name: evidence-contracts
+    org: SocioProphet
+    layer: standards
+    status: planned
+    role: contracts
+    purpose: >-
+      Canonical evidence object schemas, examples, Avro twins, and compatibility
+      gates for ConnectorProfile, AcquisitionRun, EvidenceBlob, EvidenceItem,
+      EvidenceEntity, EvidenceEvent, ParserRun, and ValidationResult.
+    source_of_truth: true
+    temporary_landing: SocioProphet/socioprophet-standards-storage:schemas/evidence
+    depends_on:
+      - SocioProphet/socioprophet-standards-storage
+      - SourceOS-Linux/sourceos-spec
+    produces:
+      - json-schema
+      - avro
+      - examples
+      - compatibility-notes
+
+  - id: evidence-broker
+    name: evidence-broker
+    org: SocioProphet
+    layer: data-plane
+    status: planned
+    role: ingest-broker
+    purpose: >-
+      Brokered evidence ingest service for local files and source connectors.
+      It stages raw blobs immutably, computes hashes, emits manifests, records
+      parser runs, and registers metadata in Postgres.
+    depends_on:
+      - SocioProphet/evidence-contracts
+      - SocioProphet/evidence-storage-infra
+      - SourceOS-Linux/sourceos-spec
+      - SocioProphet/TriTRPC
+    produces:
+      - acquisition-runs
+      - evidence-blobs
+      - parser-runs
+      - validation-results
+      - content-root-manifests
+
+  - id: evidence-storage-infra
+    name: evidence-storage-infra
+    org: SocioProphet
+    layer: infrastructure
+    status: planned
+    role: storage-infra
+    purpose: >-
+      Deployment and operations package for the phase-1 raw object store plus
+      Postgres metadata/control plane. The phase-1 target is SeaweedFS plus
+      Postgres, with Ceph RGW reserved as the heavier later option.
+    depends_on:
+      - SocioProphet/socioprophet-standards-storage
+      - SourceOS-Linux/sourceos-spec
+    produces:
+      - object-store-config
+      - postgres-schema
+      - backup-policy
+      - lifecycle-policy
+      - local-dev-compose
+
+  - id: evidence-connectors-gdrive
+    name: evidence-connectors-gdrive
+    org: SocioProphet
+    layer: adapter
+    status: planned
+    role: source-connector
+    purpose: >-
+      Google Drive ingress adapter around rclone first, with optional desktop
+      GOA/GVfs integration later. Google Drive remains an ingress surface and
+      is not core authority.
+    depends_on:
+      - SocioProphet/evidence-broker
+      - SocioProphet/evidence-contracts
+    external_surface: Google Drive
+    provider_posture: ingress-only
+
+  - id: evidence-connectors-icloud
+    name: evidence-connectors-icloud
+    org: SocioProphet
+    layer: adapter
+    status: planned
+    role: source-connector
+    purpose: >-
+      iCloud Drive ingress adapter around rclone after the local-file and
+      Google Drive paths are stable. iCloud remains an ingress surface and is
+      not core authority.
+    depends_on:
+      - SocioProphet/evidence-broker
+      - SocioProphet/evidence-contracts
+    external_surface: iCloud Drive
+    provider_posture: ingress-only
+    risk_notes:
+      - session-volatility
+      - two-factor-authentication
+      - advanced-data-protection-web-access-limits
+
+  - id: evidence-validator
+    name: evidence-validator
+    org: SocioProphet
+    layer: governance
+    status: planned
+    role: validator
+    purpose: >-
+      Evidence validation package for schema checks, hash consistency,
+      timestamp sanity, source alias integrity, parser-run consistency, and
+      later SHIR/Knowledge Context projection checks.
+    depends_on:
+      - SocioProphet/evidence-contracts
+      - SocioProphet/socioprophet-standards-knowledge
+      - SocioProphet/ontogenesis
+    produces:
+      - validation-results
+      - fixture-gates
+      - projection-checks
+
+architecture_rules:
+  - source systems are ingress only
+  - raw object identity is content-addressed by SHA-256
+  - source aliases are preserved, not collapsed away
+  - Postgres owns metadata, provenance, routing, and processing state
+  - chunking and enrichment are derivative, never primary custody
+  - graph and semantic projection target SHIR and standards-knowledge later
+  - TriTRPC provides deterministic transport only, not evidence semantics
+  - Sociosphere registers topology and workspace control
+  - SourceOS/SociOS enforce local path and mount boundaries
+
+phase_1_acceptance:
+  - local-file ingest produces one EvidenceBlob and one content-root manifest
+  - re-ingest of the same file is idempotent by hash
+  - parser failure preserves raw blob custody
+  - source aliases remain attached to deduped blobs
+  - Postgres records acquisition, blob, source, item, parser, and validation state
+  - Google Drive rclone ingest uses the same broker path as local-file ingest

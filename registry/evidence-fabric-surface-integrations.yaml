@@ -1,0 +1,209 @@
+version: "0.1.0"
+updated_at: "2026-05-05"
+program: evidence-fabric
+status: planned
+
+purpose: >-
+  Plan evidence-fabric integration across user-facing workspace, email,
+  office/document, browser, terminal, cloud-drive, local-file, mobile/device,
+  and Exodus migration surfaces. The goal is to accelerate user exodus from
+  closed vendor control surfaces while preserving custody, metadata, and
+  proof-grade migration evidence.
+
+principles:
+  - source systems are ingress only
+  - user-facing migration must be guided, explainable, and reversible
+  - raw evidence custody must precede parsing, chunking, and semantic projection
+  - email, documents, notes, media, console logs, browser exports, and cloud-drive objects use one broker path
+  - duplicate content collapses by hash while all source aliases remain preserved
+  - provider APIs and accounts are quarantine/ingress surfaces, not platform authority
+  - workspace UX should expose status, next actions, blockers, and proof packs
+  - no source-system deletion occurs before mirror parity, manifest parity, and cooling-off checks
+
+surface_integrations:
+  - id: exodus-dashboard
+    owning_repo: SocioProphet/exodus
+    surface_type: migration-dashboard
+    status: planned
+    user_value: >-
+      Primary user-facing dashboard for provider topology, exit readiness,
+      control-surface scoring, migration waves, blockers, and proof of progress.
+    evidence_fabric_role:
+      - display acquisition progress
+      - display dedupe and mirror parity
+      - display ingestion wave plans
+      - display provider lock-in blockers
+      - export proof packs and status reports
+    phase: 1
+
+  - id: sociosphere-workspace
+    owning_repo: SocioProphet/sociosphere
+    surface_type: workspace-control
+    status: planned
+    user_value: >-
+      Registers and orchestrates evidence-fabric repos, manifests, validation,
+      workspace state, and cross-repo execution order.
+    evidence_fabric_role:
+      - repo-family registration
+      - validation and topology checks
+      - work-order tracking
+      - CI/PR state visibility
+    phase: 1
+
+  - id: email-ingest
+    owning_repo: SocioProphet/evidence-connectors-email
+    surface_type: email
+    status: proposed
+    user_value: >-
+      Ingest, archive, dedupe, and normalize email exports and mailbox evidence
+      from Gmail, Apple Mail/iCloud Mail, Outlook, IMAP, MBOX, Maildir, and EML.
+    evidence_fabric_role:
+      - source alias capture
+      - message/thread attachment preservation
+      - header and timestamp normalization
+      - attachment blob dedupe
+      - migration readiness scoring
+    planned_connectors:
+      - gmail-export
+      - google-takeout-mail
+      - apple-mail-export
+      - icloud-mail-imap
+      - outlook-pst-or-eml
+      - generic-imap
+      - mbox
+      - maildir
+    phase: 1
+
+  - id: cloud-drive-ingest
+    owning_repo: SocioProphet/evidence-connectors-gdrive
+    companion_repo: SocioProphet/evidence-connectors-icloud
+    surface_type: cloud-drive
+    status: planned
+    user_value: >-
+      Consolidate Google Drive and iCloud Drive into the canonical raw object
+      store while preserving provider IDs, revisions, paths, and aliases.
+    evidence_fabric_role:
+      - rclone-based source traversal
+      - hash-first landing
+      - source path and provider metadata preservation
+      - duplicate collapse by blob hash
+      - parity and cooling-off checks before deletion
+    phase: 1
+
+  - id: local-file-ingest
+    owning_repo: SocioProphet/evidence-broker
+    surface_type: local-files
+    status: planned
+    user_value: >-
+      Pull user-selected local folders, USB exports, notes dumps, device console
+      captures, browser console captures, screenshots, and text logs into the
+      same custody path as cloud-drive content.
+    evidence_fabric_role:
+      - local-file acquisition run
+      - immutable staging
+      - content-root manifest generation
+      - parser-failure custody preservation
+    phase: 1
+
+  - id: sourceos-office-shell
+    owning_repo: SociOS-Linux/source-os
+    surface_type: office-documents
+    status: planned
+    user_value: >-
+      Let users create, open, verify, search, and export documents through the
+      SourceOS office shell while preserving open-format migration outputs.
+    evidence_fabric_role:
+      - document export capture
+      - writeback and version record linkage
+      - proof-pack friendly report generation
+      - default output path integration
+    default_paths:
+      - ~/Documents/SourceOS/agent-output
+      - ~/Downloads/SourceOS/agent-downloads
+    phase: 2
+
+  - id: browser-and-terminal-capture
+    owning_repo: SociOS-Linux/source-os
+    companion_repos:
+      - SocioProphet/cloudshell-fog
+      - SocioProphet/prophet-platform
+    surface_type: browser-terminal
+    status: planned
+    user_value: >-
+      Capture browser exports, web-console text, terminal/device-console logs,
+      screenshots, and command outputs into the evidence broker without granting
+      whole-home or ambient host access.
+    evidence_fabric_role:
+      - scoped capture directories
+      - console-log parser dispatch
+      - screenshot/media metadata capture
+      - shell/browser action receipts
+    phase: 2
+
+  - id: notes-and-mobile-device-exports
+    owning_repo: SocioProphet/exodus
+    surface_type: notes-mobile
+    status: planned
+    user_value: >-
+      Migrate Apple Notes, Google Keep-like exports, voice memos, photos,
+      mobile backups, and text-note archives into open raw and derived stores.
+    evidence_fabric_role:
+      - source export manifest capture
+      - raw media preservation
+      - transcript/OCR derivative routing
+      - note/document normalization
+    phase: 2
+
+  - id: search-and-knowledge-projection
+    owning_repo: SocioProphet/socioprophet-standards-knowledge
+    companion_repo: SocioProphet/ontogenesis
+    surface_type: search-knowledge
+    status: planned
+    user_value: >-
+      Make migrated content searchable and later semantically projectable while
+      keeping raw custody separate from search, vector, and graph projections.
+    evidence_fabric_role:
+      - Knowledge Context projection
+      - SHIR projection
+      - SHACL/shape validation
+      - query/search enrichment after custody
+    phase: 3
+
+  - id: proof-pack-export
+    owning_repo: SocioProphet/evidence-validator
+    companion_repo: SocioProphet/exodus
+    surface_type: proof-export
+    status: planned
+    user_value: >-
+      Export user-readable and machine-readable proof packs for migration waves,
+      duplicate collapse, provider parity, custody, and readiness to delete or
+      downgrade source-provider accounts.
+    evidence_fabric_role:
+      - validation results
+      - content-root manifests
+      - mirror parity summaries
+      - provider-exit proof reports
+    phase: 3
+
+exodus_acceleration_metrics:
+  - provider_control_surface_score
+  - exit_readiness_index
+  - migrated_blob_count
+  - migrated_unique_bytes
+  - duplicate_bytes_eliminated
+  - source_aliases_preserved
+  - blocked_objects_count
+  - open_format_conversion_count
+  - proof_pack_count
+  - source_deletion_eligible_count
+
+minimum_user_workflows:
+  - connect source account or select local export
+  - preview provider topology and estimated size
+  - choose migration wave
+  - land raw content into canonical object store
+  - review dedupe and source aliases
+  - process text/log/document/media derivatives
+  - review blockers and next best actions
+  - export proof pack
+  - mark source provider as retained, downgraded, or deletion-eligible after cooling-off
