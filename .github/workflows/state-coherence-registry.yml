@@ -1,0 +1,26 @@
+name: state-coherence-registry
+
+on:
+  pull_request:
+    paths:
+      - "registry/state-coherence/**"
+      - "tools/validate_state_coherence_registry.py"
+      - ".github/workflows/state-coherence-registry.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "registry/state-coherence/**"
+      - "tools/validate_state_coherence_registry.py"
+      - ".github/workflows/state-coherence-registry.yml"
+
+jobs:
+  validate-state-coherence-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate state coherence registry
+        run: python3 tools/validate_state_coherence_registry.py
