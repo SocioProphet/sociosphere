@@ -1,5 +1,5 @@
-version: 0.2.0
-updated_at: '2026-04-11'
+version: 0.2.1
+updated_at: '2026-05-04'
 status: review
 source_of_truth:
   narrative_repo: SocioProphet/socioprophet
@@ -272,3 +272,62 @@ planes:
   risks:
   - organizations_packaging_gap
   - delex_remaining_invisible_infrastructure
+- id: SDP-8
+  name: Flow Physics, Congestion Control, and Fair Scheduling
+  thesis: A citizen fog commons is governable only when workload flow is measurable, class-isolated, congestion-aware, and auditable through lambda, mu, mean service time, servers, buffers, utilization, Little's Law checks, bounded overflow, and fair scheduling.
+  primary_anchor:
+    repo: sociosphere
+    type: portfolio_control_registry
+  supporting_anchors:
+  - repo: socioprophet-standards-storage
+    role: normative_flow_physics_standard_and_measurement_contracts
+  - repo: policy-fabric
+    role: class_isolation_fairness_retry_and_overflow_policy_bundles
+  - repo: prophet-platform
+    role: runtime_admission_controller_scheduler_telemetry_and_reference_services
+  - repo: agentplane
+    role: admission_overflow_execution_timing_evidence_and_replay_artifacts
+  - repo: SourceOS-Linux/sourceos-spec
+    role: edge_node_and_local_execution_binding
+  - repo: SourceOS-Linux/sourceos-shell
+    role: local_citizen_and_operator_queue_status_receipt_surface
+  - repo: SourceOS-Linux/agent-machine
+    role: agent_side_retry_idempotency_admission_token_and_degrade_compliance
+  - surface: citizen-commons-dashboard
+    role: signal_to_noise_queue_status_wait_explanation_and_receipt_view
+  owner_role: flow_physics_steward
+  maturity:
+    current: observability_and_execution_timing_exist_but_queue_physics_class_isolation_and_overflow_receipts_are_not_yet_portfolio_canonical
+    target_90d: canonical_flow_standard_policy_bundle_agentplane_evidence_extension_and_prophet_platform_local_admission_reference
+    target_12m: cross_org_conformance_with_little_law_audits_fair_scheduling_and_citizen_visible_congestion_explanations
+  release_source_of_truth:
+    repo: sociosphere
+    path: registry/decision-planes.yaml
+  gates:
+  - id: flow-standard-defined
+    description: Canonical standard defines Job, ServicePool, service classes, metrics, units, Little's Law invariant, and overflow receipt requirements.
+  - id: queueing-semconv-present
+    description: Observability registration and runtime services emit required queueing metric families with stable units and bounded labels.
+  - id: admission-overflow-receipts-emitted
+    description: Admission, rejection, deferral, degradation, spillover, and human escalation decisions emit signed receipt artifacts.
+  - id: little-law-audit-green
+    description: Per-class and per-node flow audits validate L approximately equals lambda_out multiplied by W within declared tolerance windows.
+  - id: class-isolation-policy-green
+    description: Policy Fabric bundles define K classes, utilization targets, buffer caps, retry budgets, fairness rules, and overflow policies.
+  - id: spillover-disabled-until-attested
+    description: Fog-to-fog spillover remains disabled unless privacy scope, trust domain, and capacity attestation checks pass.
+  metrics:
+  - queueing_metric_coverage
+  - little_law_audit_pass_rate
+  - rho_estimate_divergence_rate
+  - admission_receipt_coverage
+  - overflow_receipt_coverage
+  - class_isolation_policy_coverage
+  - retry_after_compliance_rate
+  - citizen_queue_explanation_coverage
+  risks:
+  - hidden_scheduler_behavior_reintroducing_unfairness
+  - average_latency_masking_tail_and_variance_failures
+  - agent_retry_storms_and_bullwhip_amplification
+  - spillover_creating_invisible_centralization_or_privacy_leakage
+  - standards_policy_runtime_and_ui_drifting_apart
