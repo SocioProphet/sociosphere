@@ -11,6 +11,7 @@
 - [EMVI proof slice protocol v0](../protocol/emvi-proof-slice/v0/README.md)
 - [UI workbench app README](../apps/ui-workbench/README.md)
 - [Overview](architecture/overview.md)
+- [Estate control graph](architecture/estate-control-graph.md)
 - [Runtime, content, and orchestration placement](architecture/runtime-content-placement.md)
 - [Upstream bindings — edge capabilities](architecture/upstream-bindings-edge-capabilities.md)
 - [Validation contract](architecture/validation-contract.md)
