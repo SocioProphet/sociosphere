@@ -31,6 +31,8 @@ REQUIRED_SURFACES = {
     "guardrail-decision-abi-to-policy-boundary",
     "operator-surfaces-to-sourceos-node-profile",
     "semantic-contracts-to-governed-evidence-plane",
+    "state-coherence-summary-to-operator-artifacts",
+    "state-coherence-html-to-browser-index",
 }
 
 REQUIRED_CHECKS = {
@@ -46,6 +48,8 @@ REQUIRED_CHECKS = {
     "platform-wave1-stubs",
     "workspace-operation-runtime",
 }
+
+REQUIRED_FOLLOW_ON_PRS = {426, 428}
 
 
 def fail(path: Path, message: str) -> None:
@@ -64,6 +68,58 @@ def require_list(record: dict[str, Any], key: str, path: Path) -> list[Any]:
     if not isinstance(value, list) or not value:
         fail(path, f"missing non-empty list field: {key}")
     return value
+
+
+def require_operator_visibility(record: dict[str, Any], path: Path) -> None:
+    visibility = record.get("operator_visibility")
+    if not isinstance(visibility, dict):
+        fail(path, "operator_visibility must be an object")
+    if visibility.get("status") != "linked":
+        fail(path, "operator_visibility.status must be linked")
+    expected = {
+        "state_coherence_markdown": "build/fogstack-local-demo/fogstack-local-demo.state-coherence.md",
+        "state_coherence_html": "build/fogstack-local-demo/state-coherence.html",
+        "browser_index": "build/fogstack-local-demo/index.html",
+        "browser_index_link": "state-coherence.html",
+    }
+    for key, value in expected.items():
+        if visibility.get(key) != value:
+            fail(path, f"operator_visibility.{key} must be {value}")
+    checks = set(visibility.get("checks", []))
+    required = {"state_coherence_operator_artifacts_emitted", "state_coherence_index_linked"}
+    if not required.issubset(checks):
+        missing = sorted(required - checks)
+        fail(path, f"operator_visibility.checks missing: {missing}")
+
+
+def require_follow_on_evidence(record: dict[str, Any], path: Path) -> None:
+    follow_on = require_list(record, "follow_on_evidence", path)
+    by_pr: dict[int, dict[str, Any]] = {}
+    for entry in follow_on:
+        if not isinstance(entry, dict):
+            fail(path, "follow_on_evidence entries must be objects")
+        pr_number = entry.get("prophet_platform_pr")
+        if isinstance(pr_number, int):
+            by_pr[pr_number] = entry
+
+    missing = sorted(REQUIRED_FOLLOW_ON_PRS - set(by_pr))
+    if missing:
+        fail(path, f"follow_on_evidence missing PRs: {missing}")
+
+    expected_commits = {
+        426: "e6e38cf32e2cdb7cc281d9f69fde9ec81af351ff",
+        428: "97626e52adf3271072b44b21d3055120886be912",
+    }
+    for pr_number, expected_commit in expected_commits.items():
+        entry = by_pr[pr_number]
+        if entry.get("merged_commit") != expected_commit:
+            fail(path, f"follow_on_evidence PR {pr_number} merged_commit must be {expected_commit}")
+        if not isinstance(entry.get("purpose"), str) or not entry["purpose"]:
+            fail(path, f"follow_on_evidence PR {pr_number} purpose must be non-empty")
+        checks = set(entry.get("checks", []))
+        if not REQUIRED_CHECKS.issubset(checks):
+            missing_checks = sorted(REQUIRED_CHECKS - checks)
+            fail(path, f"follow_on_evidence PR {pr_number} missing checks: {missing_checks}")
 
 
 def validate_record(path: Path) -> None:
@@ -103,6 +159,9 @@ def validate_record(path: Path) -> None:
         fail(path, "canonical_demo_command must be make fogstack-local-demo-full")
     if record["emitted_section"] != "state_coherence":
         fail(path, "emitted_section must be state_coherence")
+
+    require_operator_visibility(record, path)
+    require_follow_on_evidence(record, path)
 
     repo_refs = set(require_list(record, "repo_refs", path))
     if not REQUIRED_REPO_REFS.issubset(repo_refs):
