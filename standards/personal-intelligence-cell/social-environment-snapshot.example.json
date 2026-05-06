@@ -1,0 +1,36 @@
+{
+  "cell_id": "cell://demo",
+  "snapshot_at": "2026-05-06T00:00:00Z",
+  "peer_count": 3,
+  "stale_tie_count": 1,
+  "emerging_community_count": 1,
+  "attention_sink_count": 1,
+  "coordinated_amplification_flags": [
+    "claim:claim://same:count:3"
+  ],
+  "stale_ties": [
+    "human://stale"
+  ],
+  "emerging_communities": [
+    "community://runtime"
+  ],
+  "attention_sinks": [
+    {
+      "target_ref": "source://alpha",
+      "negative_count": 2,
+      "reason": "repeated negative feedback"
+    }
+  ],
+  "relationship_hygiene": [
+    {
+      "action": "review_stale_tie",
+      "target_ref": "human://stale",
+      "reason": "no recent interaction inside freshness window"
+    },
+    {
+      "action": "mute_or_refine",
+      "target_ref": "source://alpha",
+      "reason": "repeated negative feedback"
+    }
+  ]
+}
