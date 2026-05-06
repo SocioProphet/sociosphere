@@ -1,0 +1,62 @@
+{
+  "fixture_id": "agent.manifest.valid.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "agent-manifest.v0.1",
+  "policy_version": "regis.agent.manifest.core@0.1.0",
+  "description": "A valid registered agent manifest for the MeshRush-to-Holmes-to-Sherlock identity evidence lane.",
+  "agent": {
+    "agent_id": "meshrush-holmes-sherlock-evidence-agent",
+    "version": "0.1.0",
+    "role": "evidence_lane_agent",
+    "inputs": [
+      "RegisGraphView",
+      "IdentityState",
+      "TokenLane",
+      "ProofCertificate"
+    ],
+    "outputs": [
+      "MeshRushSimulationTrace",
+      "InvestigationCase",
+      "SearchIndexRecord",
+      "SearchResult"
+    ],
+    "policy_scopes": [
+      "regis.transition.admissibility.core@0.1.0",
+      "regis.token.non_escape.core@0.1.0",
+      "regis.search.evidence_pointer.core@0.1.0"
+    ],
+    "graph_permissions": [
+      "read:regis_graph_view",
+      "write:proposed_graph_annotation"
+    ],
+    "search_permissions": [
+      "write:sherlock_index_record",
+      "read:sherlock_query_result"
+    ],
+    "evidence_outputs": [
+      "ledger_pointer",
+      "certificate_pointer",
+      "trace_pointer"
+    ],
+    "tritrpc_services": [
+      "identityprime.v1.EvaluateIdentityMixture",
+      "regis.proof.v1.VerifyCertificate",
+      "meshrush.simulation.v1.RunGraphExploration",
+      "holmes.case.v1.OpenInvestigationCase",
+      "sherlock.search.v1.IndexEvidenceRecord"
+    ],
+    "cannot_write": [
+      "canonical_entity_truth",
+      "golden_record_truth_without_acr",
+      "regis_graph_truth_without_policy_reducer"
+    ]
+  },
+  "expected": {
+    "result": "VERIFIED",
+    "artifact_type": "AgentManifest",
+    "requires_policy_scope": true,
+    "requires_graph_permission": true,
+    "requires_search_permission": true,
+    "forbids_direct_canonical_truth_write": true
+  }
+}
