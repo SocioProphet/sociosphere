@@ -1,0 +1,38 @@
+{
+  "fixture_id": "meshrush.graph_exploration.simulation.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "meshrush-simulation.v0.1",
+  "policy_version": "regis.transition.admissibility.core@0.1.0",
+  "simulation_version": "meshrush.reference@0.1.0",
+  "description": "MeshRush explores a Regis identity/evidence graph and crystallizes an admissible evidence cluster without crossing forbidden patient-to-adtech paths.",
+  "graph_view": {
+    "view_id": "regis_identity_evidence_view_example",
+    "nodes": [
+      {"id": "state_patient_fog", "type": "IdentityState", "primes": ["patient"], "scopes": ["citizen_fog"]},
+      {"id": "event_hospital_portal", "type": "WorldlineEvent", "primes": ["patient"], "scopes": ["hospital_portal"]},
+      {"id": "token_patient_hsm", "type": "TokenLane", "token_class": "patient_scoped"},
+      {"id": "state_adtech", "type": "IdentityState", "scopes": ["ad_tech"]},
+      {"id": "cert_non_escape", "type": "NonEscapeCertificate"}
+    ],
+    "edges": [
+      {"from": "state_patient_fog", "to": "event_hospital_portal", "type": "TRANSITIONS_TO", "admissible": true, "cost": 2.0},
+      {"from": "token_patient_hsm", "to": "event_hospital_portal", "type": "OBSERVED_TOKEN", "admissible": true, "cost": 1.0},
+      {"from": "token_patient_hsm", "to": "state_adtech", "type": "OBSERVED_TOKEN", "admissible": false, "cost": 999.0, "reason_codes": ["TOKEN_NON_ESCAPE_VIOLATION"]},
+      {"from": "cert_non_escape", "to": "token_patient_hsm", "type": "PROVES"}
+    ]
+  },
+  "simulation": {
+    "entry_nodes": ["state_patient_fog"],
+    "exploration_mode": "bounded_diffusion",
+    "stop_conditions": ["max_depth:3", "forbidden_edge", "certificate_boundary"],
+    "crystallization_target": "evidence_cluster",
+    "max_depth": 3
+  },
+  "expected": {
+    "result": "VERIFIED",
+    "visited_nodes": ["state_patient_fog", "event_hospital_portal", "token_patient_hsm", "cert_non_escape"],
+    "blocked_edges": ["token_patient_hsm->state_adtech"],
+    "reason_codes": ["FORBIDDEN_EDGE_BLOCKED", "TOKEN_NON_ESCAPE_VIOLATION"],
+    "artifact_type": "MeshRushSimulationTrace"
+  }
+}
