@@ -1,10 +1,11 @@
-# Identity Is Prime / Regis / ACR conformance workspace overlay.
+# Identity Is Prime / Regis / ACR / Holmes / Sherlock conformance workspace overlay.
 #
 # This overlay records the additional materialized repository dependencies for
 # the Sociosphere conformance lane introduced by issue #284 and PR #285.
 # The canonical workspace manifest already contains identity-is-prime-reference
-# and regis-entity-graph. This overlay adds the Agent Registry materialization
-# requirement without disturbing the broad canonical manifest in this scaffold PR.
+# and regis-entity-graph. This overlay adds the Agent Registry, Holmes, and
+# Sherlock Search materialization requirements without disturbing the broad
+# canonical manifest in this scaffold PR.
 
 [[repos]]
 name = "agent_registry"
@@ -50,4 +51,34 @@ required_capabilities = [
   "concordance_link",
   "decision_ledger",
   "proof_certificate",
+]
+
+[[repos]]
+name = "holmes"
+role = "component"
+url = "https://github.com/SocioProphet/holmes"
+ref = "main"
+local_path = "components/holmes"
+license_hint = "MIT"
+required_capabilities = [
+  "case_reasoning",
+  "evidence_finding",
+  "contradiction_detection",
+  "ledger_pointer",
+  "proof_explanation",
+]
+
+[[repos]]
+name = "sherlock_search"
+role = "component"
+url = "https://github.com/SocioProphet/sherlock-search"
+ref = "main"
+local_path = "components/sherlock_search"
+license_hint = "MIT"
+required_capabilities = [
+  "index_record",
+  "search_query",
+  "delta_indexing",
+  "source_pointer",
+  "ledger_pointer",
 ]
