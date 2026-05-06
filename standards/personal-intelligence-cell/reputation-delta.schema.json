@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.io/schemas/sociosphere/personal-intelligence-cell-reputation-delta.schema.json",
+  "title": "PersonalIntelligenceCellReputationDelta",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "cell_id",
+    "subject_ref",
+    "subject_kind",
+    "context",
+    "evidence_refs",
+    "delta",
+    "decay_policy",
+    "dispute_state",
+    "policy_effect",
+    "anti_manipulation",
+    "confidence_interval",
+    "score_components",
+    "event_at"
+  ],
+  "properties": {
+    "cell_id": { "type": "string", "minLength": 1 },
+    "subject_ref": { "type": "string", "minLength": 1 },
+    "subject_kind": { "enum": ["human", "agent", "source", "model", "workflow", "community", "claim"] },
+    "context": { "type": "string", "minLength": 1 },
+    "evidence_refs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+    "delta": { "type": "number", "minimum": -1, "maximum": 1 },
+    "decay_policy": { "type": "string", "minLength": 1 },
+    "dispute_state": { "enum": ["none", "open", "resolved", "rejected"] },
+    "policy_effect": { "enum": ["observe", "review_required", "increase_trust", "decrease_trust"] },
+    "anti_manipulation": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["subject_ref", "sybil_score", "collusion_score", "provenance_weight", "anti_gaming_weight", "flags", "repeated_claim_refs"]
+    },
+    "confidence_interval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["low", "high"],
+      "properties": {
+        "low": { "type": "number", "minimum": -1, "maximum": 1 },
+        "high": { "type": "number", "minimum": -1, "maximum": 1 }
+      }
+    },
+    "score_components": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trust", "authority", "popularity", "expertise"],
+      "properties": {
+        "trust": { "type": "number", "minimum": 0, "maximum": 1 },
+        "authority": { "type": "number", "minimum": 0, "maximum": 1 },
+        "popularity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "expertise": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    },
+    "event_at": { "type": "string", "minLength": 1 }
+  }
+}
