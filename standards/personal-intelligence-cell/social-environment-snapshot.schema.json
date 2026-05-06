@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://socioprophet.io/schemas/sociosphere/personal-intelligence-cell-social-environment-snapshot.schema.json",
+  "title": "PersonalIntelligenceCellSocialEnvironmentSnapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "cell_id",
+    "snapshot_at",
+    "peer_count",
+    "stale_tie_count",
+    "emerging_community_count",
+    "attention_sink_count",
+    "coordinated_amplification_flags",
+    "stale_ties",
+    "emerging_communities",
+    "attention_sinks",
+    "relationship_hygiene"
+  ],
+  "properties": {
+    "cell_id": { "type": "string", "minLength": 1 },
+    "snapshot_at": { "type": "string", "minLength": 1 },
+    "peer_count": { "type": "integer", "minimum": 0 },
+    "stale_tie_count": { "type": "integer", "minimum": 0 },
+    "emerging_community_count": { "type": "integer", "minimum": 0 },
+    "attention_sink_count": { "type": "integer", "minimum": 0 },
+    "coordinated_amplification_flags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "stale_ties": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "emerging_communities": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "attention_sinks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["target_ref", "negative_count", "reason"]
+      }
+    },
+    "relationship_hygiene": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["action", "target_ref", "reason"]
+      }
+    }
+  }
+}
