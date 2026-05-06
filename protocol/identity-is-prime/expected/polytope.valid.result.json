@@ -1,0 +1,7 @@
+{
+  "fixture_id": "identity-prime.polytope.valid.v0.1",
+  "result": "VERIFIED",
+  "violations": [],
+  "policy_version": "regis.identity.polytope.core@0.1.0",
+  "schema_version": "identity-mixture.v0.1"
+}
