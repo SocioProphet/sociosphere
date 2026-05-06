@@ -17,6 +17,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURE_DIR = ROOT / "protocol" / "identity-is-prime" / "fixtures"
 EXPECTED_DIR = ROOT / "protocol" / "identity-is-prime" / "expected"
+TRITRPC_DIR = ROOT / "protocol" / "identity-is-prime" / "tritrpc"
 
 RESULTS = {"VERIFIED", "REFUTED", "UNDECIDABLE", "STALE", "REQUIRES_REVIEW"}
 REQUIRED_FIXTURES = {
@@ -32,6 +33,14 @@ REQUIRED_FIXTURES = {
     "transition.admissible.json",
     "transition.no_admissible_path.json",
     "zeta.audit.window.json",
+}
+REQUIRED_TRITRPC_FIXTURES = {
+    "identityprime.v1.evaluate_identity_mixture.json",
+    "regis.proof.v1.prove_no_admissible_path.json",
+    "meshrush.simulation.v1.run_graph_exploration.json",
+    "holmes.case.v1.open_investigation_case.json",
+    "sherlock.search.v1.index_evidence_record.json",
+    "acr.concordance.v1.prove_golden_record_at_time.json",
 }
 
 
@@ -81,6 +90,29 @@ def validate_common(path: Path, fixture: dict[str, Any]) -> dict[str, Any]:
     if result not in RESULTS:
         fail(path, f"expected.result must be one of {sorted(RESULTS)}")
     return expected
+
+
+def validate_rpc_common(path: Path, fixture: dict[str, Any]) -> dict[str, Any]:
+    require_str(fixture, "fixture_id", path)
+    require_str(fixture, "fixture_version", path)
+    require_str(fixture, "schema_version", path)
+    require_str(fixture, "policy_version", path)
+    require_str(fixture, "service", path)
+    require_str(fixture, "method", path)
+    request = require_obj(fixture, "request", path)
+    response = require_obj(fixture, "response", path)
+    require_str(request, "request_id", path)
+    result = require_str(response, "result", path)
+    if result not in RESULTS:
+        fail(path, f"response.result must be one of {sorted(RESULTS)}")
+    for key in ("schema_version", "policy_version", "fixture_version"):
+        require_str(response, key, path)
+    if response["policy_version"] != fixture["policy_version"]:
+        fail(path, "response.policy_version must match fixture.policy_version")
+    if response["fixture_version"] != fixture["fixture_version"]:
+        fail(path, "response.fixture_version must match fixture.fixture_version")
+    require_str(response, "certificate_hash", path)
+    return response
 
 
 def eval_linear_expr(expr: str, values: dict[str, int]) -> bool:
@@ -414,6 +446,33 @@ def validate_agent_manifest(path: Path, fixture: dict[str, Any]) -> None:
                 fail(path, f"agent expected.{key} must be true")
 
 
+def validate_tritrpc_fixture(path: Path) -> None:
+    fixture = load_json(path)
+    response = validate_rpc_common(path, fixture)
+    service = fixture["service"]
+    if service.startswith("acr."):
+        for key in ("template_version", "resolver_version", "ledger_pointers"):
+            if key == "ledger_pointers":
+                require_list(response, key, path)
+            else:
+                require_str(response, key, path)
+    if service.startswith("meshrush."):
+        require_str(response, "simulation_version", path)
+        require_str(response, "trace_pointer", path)
+    if service.startswith("holmes."):
+        require_str(response, "case_model_version", path)
+        require_str(response, "holmes_case", path)
+    if service.startswith("sherlock."):
+        require_str(response, "index_version", path)
+        if response.get("claims_canonical_truth") is not False:
+            fail(path, "Sherlock TRIT response must not claim canonical truth")
+    if service.startswith("regis.proof."):
+        require_str(response, "ledger_pointer", path)
+        require_str(response, "refutation_type", path)
+    if service.startswith("identityprime."):
+        require_list(response, "reason_codes", path)
+
+
 def validate_expected_files() -> None:
     path = EXPECTED_DIR / "polytope.valid.result.json"
     expected = load_json(path)
@@ -421,6 +480,14 @@ def validate_expected_files() -> None:
         fail(path, "polytope valid expected result must be VERIFIED")
     for key in ("fixture_id", "policy_version", "schema_version"):
         require_str(expected, key, path)
+
+
+def validate_tritrpc_files() -> None:
+    missing = sorted(name for name in REQUIRED_TRITRPC_FIXTURES if not (TRITRPC_DIR / name).exists())
+    if missing:
+        raise SystemExit(f"missing required Identity Is Prime TRIT RPC fixtures: {missing}")
+    for name in sorted(REQUIRED_TRITRPC_FIXTURES):
+        validate_tritrpc_fixture(TRITRPC_DIR / name)
 
 
 def main() -> None:
@@ -453,6 +520,7 @@ def main() -> None:
             fail(path, "no validator registered for fixture family")
 
     validate_expected_files()
+    validate_tritrpc_files()
     print("OK: identity-is-prime conformance fixtures validated")
 
 
