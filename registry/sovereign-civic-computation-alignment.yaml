@@ -1,0 +1,192 @@
+schema_version: 0.1.0
+registry_id: sovereign-civic-computation-alignment
+status: draft
+owner_repo: SocioProphet/sociosphere
+narrative_doc: docs/architecture/sovereign-civic-computation-alignment.md
+
+principle: >-
+  SocioSphere coordinates the estate; domain repositories implement their
+  own contracts, runtime behavior, ontology modules, policy packs, and
+  protocol fixtures.
+
+lanes:
+  entity_and_evidence_concordance:
+    canonical_home: SocioProphet/regis-entity-graph
+    role: identity
+    owns_contracts:
+      - CanonicalEntity
+      - SourceRecord
+      - ConcordanceLink
+      - EvidenceClaim
+      - DecisionLedgerEntry
+      - EnergyLedgerEntry
+      - PromotionPolicy
+      - RelationshipFormationHook
+    consumes_contracts:
+      - GenesisEvent
+      - ValidityInterval
+      - DerivationPath
+      - GovernanceAct
+    validation_targets:
+      - schema_validation
+      - example_validation
+      - concordance_fixture_replay
+      - merge_split_reversibility_check
+      - decision_ledger_policy_version_check
+
+  ontogenesis_lifecycle_semantics:
+    canonical_home: SocioProphet/ontogenesis
+    role: ontology_lifecycle
+    owns_contracts:
+      - GenesisEvent
+      - LifecycleState
+      - ValidityInterval
+      - DerivationPath
+      - EntityFormationRecord
+      - RelationshipFormationRecord
+      - ValueFlowEvent
+      - GovernanceAct
+      - ParticipationRole
+      - OntogenicRule
+    consumes_contracts:
+      - CanonicalEntity
+      - EvidenceClaim
+      - DecisionLedgerEntry
+      - CapabilityGrant
+    validation_targets:
+      - rdf_parse_validation
+      - shacl_validation
+      - jsonld_roundtrip
+      - lifecycle_fixture_replay
+      - ledger_verification
+
+  sovereign_local_first_runtime:
+    canonical_homes:
+      - SocioProphet/source-os
+      - SourceOS-Linux/sourceos-spec
+      - SourceOS-Linux/sourceos-syncd
+      - SourceOS-Linux/sourceos-boot
+    role: local_runtime
+    owns_contracts:
+      - ConsentReceipt
+      - SyncIntent
+      - LocalVaultRecord
+      - LocalProofArtifact
+      - DeviceClaim
+      - BootProofClaim
+      - CitizenNodeExport
+    consumes_contracts:
+      - EvidenceClaim
+      - DecisionLedgerEntry
+      - CapabilityGrant
+      - ProofArtifact
+    validation_targets:
+      - local_first_readiness_check
+      - sync_intent_consent_check
+      - boot_proof_binding_check
+      - citizen_export_replay_check
+
+  citizen_governance_and_policy_simulation:
+    canonical_homes:
+      - SocioProphet/prophet-platform
+      - SocioProphet/policy-fabric
+    role: governance_policy
+    owns_contracts:
+      - GovernanceDecision
+      - ReviewTask
+      - AppealRecord
+      - PolicyPack
+      - PolicyDecision
+      - PolicySimulationRun
+      - DecisionImpactReport
+    consumes_contracts:
+      - CanonicalEntity
+      - EvidenceClaim
+      - GenesisEvent
+      - ConsentReceipt
+      - CapabilityGrant
+    validation_targets:
+      - governance_decision_validation
+      - appeal_workflow_validation
+      - policy_pack_validation
+      - policy_diff_report_check
+      - simulation_replay_check
+
+  agent_and_protocol_capability_governance:
+    canonical_homes:
+      - SocioProphet/tritrpc
+      - SocioProphet/agentplane
+      - SocioProphet/mcp-a2a-zero-trust
+    role: protocol_agent
+    owns_contracts:
+      - ProofCarryingRequest
+      - CapabilityGrant
+      - DelegationGrant
+      - AgentIdentity
+      - CapabilityScope
+      - NonEscapeClaim
+    consumes_contracts:
+      - ConsentReceipt
+      - PolicyDecision
+      - ValidityInterval
+      - ProofArtifact
+    validation_targets:
+      - protocol_fixture_validation
+      - capability_scope_validation
+      - proof_carrying_request_validation
+      - non_escape_claim_validation
+
+  gaia_world_model_and_commons_semantics:
+    canonical_homes:
+      - SocioProphet/prophet-domain-gaia-ontology
+      - SocioProphet/prophet-domain-gaia-curation-vault
+    role: world_model
+    owns_contracts:
+      - CitizenOntology
+      - CommonsOntology
+      - JurisdictionOntology
+      - PublicServiceOntology
+      - ParticipationOntology
+      - ConsentOntology
+      - CuratedDatasetProvenance
+    consumes_contracts:
+      - GenesisEvent
+      - GovernanceAct
+      - ValueFlowEvent
+      - CanonicalEntity
+    validation_targets:
+      - ontology_validation
+      - curated_dataset_provenance_check
+      - civic_semantics_fixture_validation
+      - ontogenesis_binding_check
+
+cross_estate_invariants:
+  - id: sociosphere_coordinates_domain_repos_implement
+    statement: SocioSphere owns coordination, registry, topology, conformance, and standards; domain repos own implementation.
+  - id: replayable_canonical_state
+    statement: Canonical entities, relationships, lifecycle transitions, and governance decisions must be replayable from evidence, policy, and derivation metadata.
+  - id: sovereign_local_state_protection
+    statement: Citizen-local state cannot be overwritten by cloud projection without SyncIntent plus consent or explicit lawful/public-interest policy basis.
+  - id: scoped_agent_capability
+    statement: Agents use scoped capability grants and proof-carrying requests rather than ambient access.
+  - id: high_stakes_reviewability
+    statement: High-stakes governance decisions require evidence, policy version, actor or agent context, replay path, and review or appeal semantics.
+  - id: validated_promotion
+    statement: Ontology, contract, policy, and protocol changes must validate through examples, shapes, schemas, fixtures, or replay checks before promotion.
+
+implementation_queue:
+  - order: 1
+    repo: SocioProphet/sociosphere
+    task: Keep narrative alignment and this machine-readable registry indexed and enforceable.
+  - order: 2
+    repo: SocioProphet/regis-entity-graph
+    task: Land ACR entity/evidence/concordance contracts and Ontogenesis formation hooks.
+  - order: 3
+    repo: SourceOS-Linux/sourceos-spec
+    task: Land sovereign local-first runtime doctrine and consent/sync/proof contract map.
+  - order: 4
+    repo: SocioProphet/policy-fabric
+    task: Land policy gates for citizen governance, local-first sync, and agent capability checks.
+  - order: 5
+    repo: SocioProphet/tritrpc
+    task: Land proof-carrying request and capability-grant protocol fixtures.
