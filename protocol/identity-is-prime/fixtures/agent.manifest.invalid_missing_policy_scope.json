@@ -1,0 +1,25 @@
+{
+  "fixture_id": "agent.manifest.invalid_missing_policy_scope.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "agent-manifest.v0.1",
+  "policy_version": "regis.agent.manifest.core@0.1.0",
+  "description": "An invalid agent manifest that attempts to participate in the identity evidence lane without declaring required policy scopes.",
+  "agent": {
+    "agent_id": "unsafe-evidence-agent-without-policy-scope",
+    "version": "0.1.0",
+    "role": "evidence_lane_agent",
+    "inputs": ["RegisGraphView"],
+    "outputs": ["SearchResult"],
+    "policy_scopes": [],
+    "graph_permissions": ["read:regis_graph_view"],
+    "search_permissions": ["write:sherlock_index_record"],
+    "evidence_outputs": ["trace_pointer"],
+    "tritrpc_services": ["sherlock.search.v1.IndexEvidenceRecord"],
+    "cannot_write": ["canonical_entity_truth"]
+  },
+  "expected": {
+    "result": "REFUTED",
+    "artifact_type": "AgentManifest",
+    "violations": ["MISSING_POLICY_SCOPE"]
+  }
+}
