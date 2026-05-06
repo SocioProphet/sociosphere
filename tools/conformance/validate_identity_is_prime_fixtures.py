@@ -24,6 +24,7 @@ REQUIRED_FIXTURES = {
     "polytope.invalid.json",
     "token.non_escape.violation.json",
     "acr.golden_record.proof.json",
+    "meshrush.graph_exploration.simulation.json",
 }
 
 
@@ -174,6 +175,43 @@ def validate_acr(path: Path, fixture: dict[str, Any]) -> None:
         fail(path, "ACR proof fixture must require shared ledger pointer")
 
 
+def validate_meshrush(path: Path, fixture: dict[str, Any]) -> None:
+    expected = validate_common(path, fixture)
+    require_str(fixture, "simulation_version", path)
+    graph_view = require_obj(fixture, "graph_view", path)
+    simulation = require_obj(fixture, "simulation", path)
+    nodes = require_list(graph_view, "nodes", path)
+    edges = require_list(graph_view, "edges", path)
+    entry_nodes = set(require_list(simulation, "entry_nodes", path))
+    stop_conditions = require_list(simulation, "stop_conditions", path)
+    if not nodes:
+        fail(path, "graph_view.nodes must not be empty")
+    if not edges:
+        fail(path, "graph_view.edges must not be empty")
+    node_ids = {node.get("id") for node in nodes if isinstance(node, dict)}
+    if not entry_nodes.issubset(node_ids):
+        fail(path, "simulation.entry_nodes must all exist in graph_view.nodes")
+    if not stop_conditions:
+        fail(path, "simulation.stop_conditions must not be empty")
+    blocked_edges = []
+    for edge in edges:
+        if not isinstance(edge, dict):
+            fail(path, "graph_view.edges entries must be objects")
+        edge_from = require_str(edge, "from", path)
+        edge_to = require_str(edge, "to", path)
+        if edge_from not in node_ids or edge_to not in node_ids:
+            fail(path, "edge endpoints must exist in graph_view.nodes")
+        if edge.get("admissible") is False:
+            blocked_edges.append(f"{edge_from}->{edge_to}")
+    if expected["result"] != "VERIFIED":
+        fail(path, "current MeshRush simulation fixture must expect VERIFIED")
+    if sorted(expected.get("blocked_edges", [])) != sorted(blocked_edges):
+        fail(path, f"expected.blocked_edges must be {blocked_edges}")
+    reason_codes = set(expected.get("reason_codes", []))
+    if blocked_edges and "FORBIDDEN_EDGE_BLOCKED" not in reason_codes:
+        fail(path, "MeshRush fixture with blocked edges must include FORBIDDEN_EDGE_BLOCKED")
+
+
 def validate_expected_files() -> None:
     path = EXPECTED_DIR / "polytope.valid.result.json"
     expected = load_json(path)
@@ -197,6 +235,8 @@ def main() -> None:
             validate_token_non_escape(path, fixture)
         elif name.startswith("acr."):
             validate_acr(path, fixture)
+        elif name.startswith("meshrush."):
+            validate_meshrush(path, fixture)
         else:
             fail(path, "no validator registered for fixture family")
 
