@@ -11,6 +11,17 @@
   "canonical_demo_command": "make fogstack-local-demo-full",
   "emitted_summary": "build/fogstack-local-demo/fogstack-local-demo.full.summary.json",
   "emitted_section": "state_coherence",
+  "operator_visibility": {
+    "status": "linked",
+    "state_coherence_markdown": "build/fogstack-local-demo/fogstack-local-demo.state-coherence.md",
+    "state_coherence_html": "build/fogstack-local-demo/state-coherence.html",
+    "browser_index": "build/fogstack-local-demo/index.html",
+    "browser_index_link": "state-coherence.html",
+    "checks": [
+      "state_coherence_operator_artifacts_emitted",
+      "state_coherence_index_linked"
+    ]
+  },
   "repo_refs": [
     "github://SocioProphet/prophet-platform",
     "github://SocioProphet/sociosphere",
@@ -31,7 +42,9 @@
     "sourceos-state-integrity-to-supporting-evidence-plane",
     "guardrail-decision-abi-to-policy-boundary",
     "operator-surfaces-to-sourceos-node-profile",
-    "semantic-contracts-to-governed-evidence-plane"
+    "semantic-contracts-to-governed-evidence-plane",
+    "state-coherence-summary-to-operator-artifacts",
+    "state-coherence-html-to-browser-index"
   ],
   "validation_evidence": {
     "prophet_platform_pr": 420,
@@ -52,11 +65,56 @@
       "cloudshell-fog structural conformance v3"
     ]
   },
+  "follow_on_evidence": [
+    {
+      "prophet_platform_pr": 426,
+      "merged_commit": "e6e38cf32e2cdb7cc281d9f69fde9ec81af351ff",
+      "purpose": "render state-coherence Markdown and HTML artifacts from the full FogStack local demo",
+      "checks": [
+        "validate",
+        "ci",
+        "premerge-audit",
+        "FogStack Local Demo",
+        "FogStack Release Proof",
+        "FogStack Release Proof Canonical Refs",
+        "FogStack Wider Release Graph",
+        "platform-contracts-check",
+        "brokerage-validation",
+        "platform-wave1-stubs",
+        "workspace-operation-runtime",
+        "cloudshell-fog structural conformance v2",
+        "cloudshell-fog structural conformance v3"
+      ]
+    },
+    {
+      "prophet_platform_pr": 428,
+      "merged_commit": "97626e52adf3271072b44b21d3055120886be912",
+      "purpose": "link the served full FogStack demo index to the generated state-coherence HTML report and refresh index digest metadata",
+      "checks": [
+        "validate",
+        "ci",
+        "premerge-audit",
+        "FogStack Local Demo",
+        "FogStack Release Proof",
+        "FogStack Release Proof Canonical Refs",
+        "FogStack Wider Release Graph",
+        "platform-contracts-check",
+        "brokerage-validation",
+        "platform-wave1-stubs",
+        "workspace-operation-runtime",
+        "cloudshell-fog structural conformance v2",
+        "cloudshell-fog structural conformance v3"
+      ]
+    }
+  ],
   "acceptance": [
     "FogStack full local demo summary emits state_coherence",
     "state_coherence names the compressed estate repo refs",
     "state_coherence names the required integration surfaces",
     "focused test asserts the state_coherence posture and repo refs",
-    "superseded stale PR 417 is closed"
+    "superseded stale PR 417 is closed",
+    "state coherence is rendered as Markdown and HTML operator artifacts",
+    "served FogStack demo index links to state-coherence.html",
+    "artifact index digest for index.html is refreshed after link injection"
   ]
 }
