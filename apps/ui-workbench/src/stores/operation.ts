@@ -37,7 +37,9 @@ export const useOperationStore = defineStore('operation', {
     resolveDecision(operationId: string, decisionId: string, optionId: string) {
       const op = this.operations.find(o => o.id === operationId)
       if (!op) return
-      const dec = op.decisions.find(d => d.id === decisionId)
+      const decIdx = op.decisions.findIndex(d => d.id === decisionId)
+      if (decIdx < 0) return
+      const dec = op.decisions[decIdx]
       if (!dec) return
       dec.chosenOptionId = optionId
       dec.resolvedAt = new Date().toISOString()

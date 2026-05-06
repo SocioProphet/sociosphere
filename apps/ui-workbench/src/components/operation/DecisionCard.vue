@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { DecisionCard } from '../../schemas/operation'
 
 const props = defineProps<{ decision: DecisionCard }>()
 const emit = defineEmits<{ (e: 'choose', optionId: string): void }>()
 
-const resolved = props.decision.chosenOptionId !== null
+const resolved = computed(() => props.decision.chosenOptionId !== null)
 
 function choose(optionId: string) {
-  if (!resolved) emit('choose', optionId)
+  if (!resolved.value) emit('choose', optionId)
 }
 </script>
 

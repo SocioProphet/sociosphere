@@ -97,7 +97,7 @@ const STUB_OPERATIONS: Operation[] = [
     actor: 'user:alice',
     createdAt: '2026-05-06T14:00:00Z',
     updatedAt: '2026-05-06T14:30:00Z',
-    detail: 'Repository indexed successfully. 3 208 files processed.',
+    detail: 'Repository indexed successfully. 3,208 files processed.',
     policyBlock: null,
     decisions: [],
     errors: [],
