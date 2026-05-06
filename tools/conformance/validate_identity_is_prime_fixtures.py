@@ -25,6 +25,8 @@ REQUIRED_FIXTURES = {
     "token.non_escape.violation.json",
     "acr.golden_record.proof.json",
     "meshrush.graph_exploration.simulation.json",
+    "holmes.case.from_meshrush_trace.json",
+    "sherlock.search.from_holmes_meshrush.json",
 }
 
 
@@ -212,6 +214,61 @@ def validate_meshrush(path: Path, fixture: dict[str, Any]) -> None:
         fail(path, "MeshRush fixture with blocked edges must include FORBIDDEN_EDGE_BLOCKED")
 
 
+def validate_holmes(path: Path, fixture: dict[str, Any]) -> None:
+    expected = validate_common(path, fixture)
+    require_str(fixture, "case_model_version", path)
+    input_trace = require_obj(fixture, "input_trace", path)
+    case = require_obj(fixture, "case", path)
+    require_str(input_trace, "trace_id", path)
+    if input_trace.get("artifact_type") != "MeshRushSimulationTrace":
+        fail(path, "Holmes fixture input_trace.artifact_type must be MeshRushSimulationTrace")
+    findings = require_list(case, "findings", path)
+    if not findings:
+        fail(path, "Holmes case.findings must not be empty")
+    for finding in findings:
+        if not isinstance(finding, dict):
+            fail(path, "Holmes findings entries must be objects")
+        for key in ("regis_graph_pointers", "ledger_pointers", "certificate_pointers", "trace_pointers"):
+            if not require_list(finding, key, path):
+                fail(path, f"Holmes finding {key} must not be empty")
+    if expected["result"] != "VERIFIED":
+        fail(path, "current Holmes fixture must expect VERIFIED")
+    for key in ("requires_trace_pointer", "requires_ledger_pointer", "requires_certificate_pointer"):
+        if not expected.get(key):
+            fail(path, f"Holmes expected.{key} must be true")
+
+
+def validate_sherlock(path: Path, fixture: dict[str, Any]) -> None:
+    expected = validate_common(path, fixture)
+    require_str(fixture, "index_version", path)
+    index_record = require_obj(fixture, "index_record", path)
+    require_obj(fixture, "query", path)
+    results = require_list(fixture, "results", path)
+    indexed = require_list(index_record, "indexed_artifacts", path)
+    if not indexed:
+        fail(path, "Sherlock index_record.indexed_artifacts must not be empty")
+    if index_record.get("claims_canonical_truth") is not False:
+        fail(path, "Sherlock index_record must not claim canonical truth")
+    if not results:
+        fail(path, "Sherlock results must not be empty")
+    for result in results:
+        if not isinstance(result, dict):
+            fail(path, "Sherlock result entries must be objects")
+        if result.get("claims_canonical_truth") is not False:
+            fail(path, "Sherlock results must not claim canonical truth")
+        pointers = require_obj(result, "pointers", path)
+        required_pointer_keys = {"holmes_case", "meshrush_trace", "regis_graph", "ledger", "certificate"}
+        missing = sorted(required_pointer_keys - set(pointers))
+        if missing:
+            fail(path, f"Sherlock result pointers missing: {missing}")
+    if expected["result"] != "VERIFIED":
+        fail(path, "current Sherlock fixture must expect VERIFIED")
+    if not expected.get("requires_pointer_backing"):
+        fail(path, "Sherlock expected.requires_pointer_backing must be true")
+    if not expected.get("forbids_direct_canonical_truth_claim"):
+        fail(path, "Sherlock expected.forbids_direct_canonical_truth_claim must be true")
+
+
 def validate_expected_files() -> None:
     path = EXPECTED_DIR / "polytope.valid.result.json"
     expected = load_json(path)
@@ -237,6 +294,10 @@ def main() -> None:
             validate_acr(path, fixture)
         elif name.startswith("meshrush."):
             validate_meshrush(path, fixture)
+        elif name.startswith("holmes."):
+            validate_holmes(path, fixture)
+        elif name.startswith("sherlock."):
+            validate_sherlock(path, fixture)
         else:
             fail(path, "no validator registered for fixture family")
 
