@@ -1,0 +1,24 @@
+{
+  "fixture_id": "identity-prime.polytope.invalid.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "identity-mixture.v0.1",
+  "policy_version": "regis.identity.polytope.core@0.1.0",
+  "description": "Patient context mixed with ad-tech is structurally forbidden.",
+  "basis": {
+    "primes": ["founder_engineer", "patient", "parent", "citizen", "creator"],
+    "scopes": ["citizen_fog", "ad_tech", "employer_telemetry", "exact_gps", "external_egress"]
+  },
+  "mixture": {
+    "primes": {"patient": 1},
+    "scopes": {"ad_tech": 1}
+  },
+  "constraints": [
+    {"id": "no_health_adtech", "expr": "patient + ad_tech <= 1"},
+    {"id": "child_health_gps_no_egress", "expr": "parent + patient + exact_gps + external_egress <= 2"},
+    {"id": "citizen_no_employer_telemetry_mix", "expr": "citizen + employer_telemetry <= 1"}
+  ],
+  "expected": {
+    "result": "REFUTED",
+    "violations": ["no_health_adtech"]
+  }
+}
