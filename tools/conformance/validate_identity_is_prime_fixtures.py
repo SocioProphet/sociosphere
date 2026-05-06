@@ -27,6 +27,8 @@ REQUIRED_FIXTURES = {
     "meshrush.graph_exploration.simulation.json",
     "holmes.case.from_meshrush_trace.json",
     "sherlock.search.from_holmes_meshrush.json",
+    "agent.manifest.valid.json",
+    "agent.manifest.invalid_missing_policy_scope.json",
 }
 
 
@@ -79,7 +81,6 @@ def validate_common(path: Path, fixture: dict[str, Any]) -> dict[str, Any]:
 
 
 def eval_linear_expr(expr: str, values: dict[str, int]) -> bool:
-    # Minimal evaluator for fixtures shaped as: "a + b + c <= N".
     if "<=" not in expr:
         raise ValueError("only <= constraints are supported in fixture validator")
     left, right = expr.split("<=", 1)
@@ -269,6 +270,56 @@ def validate_sherlock(path: Path, fixture: dict[str, Any]) -> None:
         fail(path, "Sherlock expected.forbids_direct_canonical_truth_claim must be true")
 
 
+def validate_agent_manifest(path: Path, fixture: dict[str, Any]) -> None:
+    expected = validate_common(path, fixture)
+    agent = require_obj(fixture, "agent", path)
+    require_str(agent, "agent_id", path)
+    require_str(agent, "version", path)
+    inputs = require_list(agent, "inputs", path)
+    outputs = require_list(agent, "outputs", path)
+    policy_scopes = require_list(agent, "policy_scopes", path)
+    graph_permissions = require_list(agent, "graph_permissions", path)
+    search_permissions = require_list(agent, "search_permissions", path)
+    evidence_outputs = require_list(agent, "evidence_outputs", path)
+    tritrpc_services = require_list(agent, "tritrpc_services", path)
+    cannot_write = set(require_list(agent, "cannot_write", path))
+    violations = []
+    if not inputs:
+        violations.append("MISSING_INPUTS")
+    if not outputs:
+        violations.append("MISSING_OUTPUTS")
+    if not policy_scopes:
+        violations.append("MISSING_POLICY_SCOPE")
+    if not graph_permissions:
+        violations.append("MISSING_GRAPH_PERMISSION")
+    if not search_permissions:
+        violations.append("MISSING_SEARCH_PERMISSION")
+    if not evidence_outputs:
+        violations.append("MISSING_EVIDENCE_OUTPUT")
+    if not tritrpc_services:
+        violations.append("MISSING_TRITRPC_SERVICE")
+    forbidden_writes = {"canonical_entity_truth", "regis_graph_truth_without_policy_reducer"}
+    if not forbidden_writes.intersection(cannot_write):
+        violations.append("MISSING_CANONICAL_TRUTH_WRITE_GUARD")
+    expected_violations = sorted(expected.get("violations", []))
+    if violations:
+        if expected["result"] != "REFUTED":
+            fail(path, f"agent manifest violations {violations} require expected.result REFUTED")
+        if sorted(violations) != expected_violations:
+            fail(path, f"expected.violations must be {violations}")
+    else:
+        if expected["result"] != "VERIFIED":
+            fail(path, "valid agent manifest must expect VERIFIED")
+        for key in (
+            "requires_policy_scope",
+            "requires_graph_permission",
+            "requires_search_permission",
+            "forbids_direct_canonical_truth_write",
+        ):
+            if not expected.get(key):
+                fail(path, f"agent expected.{key} must be true")
+
+
 def validate_expected_files() -> None:
     path = EXPECTED_DIR / "polytope.valid.result.json"
     expected = load_json(path)
@@ -298,6 +349,8 @@ def main() -> None:
             validate_holmes(path, fixture)
         elif name.startswith("sherlock."):
             validate_sherlock(path, fixture)
+        elif name.startswith("agent."):
+            validate_agent_manifest(path, fixture)
         else:
             fail(path, "no validator registered for fixture family")
 
