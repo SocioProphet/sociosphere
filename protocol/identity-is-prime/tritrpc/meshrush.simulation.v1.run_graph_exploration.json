@@ -1,0 +1,27 @@
+{
+  "fixture_id": "tritrpc.meshrush.simulation.run_graph_exploration.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "tritrpc-fixture.v0.1",
+  "policy_version": "regis.transition.admissibility.core@0.1.0",
+  "service": "meshrush.simulation.v1.MeshRushSimulationService",
+  "method": "RunGraphExploration",
+  "request": {
+    "request_id": "REQ_MESHRUSH_PATIENT_TOKEN_TRACE_V001",
+    "graph_view": "regis://GraphView/regis_identity_evidence_view_example",
+    "entry_nodes": ["state_patient_fog"],
+    "exploration_mode": "bounded_diffusion",
+    "max_depth": 3
+  },
+  "response": {
+    "result": "VERIFIED",
+    "schema_version": "meshrush-simulation.v0.1",
+    "policy_version": "regis.transition.admissibility.core@0.1.0",
+    "simulation_version": "meshrush.reference@0.1.0",
+    "fixture_version": "0.1.0",
+    "artifact_type": "MeshRushSimulationTrace",
+    "trace_pointer": "meshrush://trace/meshrush.trace.patient_token_adtech_block.v0.1",
+    "blocked_edges": ["token_patient_hsm->state_adtech"],
+    "reason_codes": ["FORBIDDEN_EDGE_BLOCKED", "TOKEN_NON_ESCAPE_VIOLATION"],
+    "certificate_hash": "sha256:meshrush-graph-exploration-placeholder"
+  }
+}
