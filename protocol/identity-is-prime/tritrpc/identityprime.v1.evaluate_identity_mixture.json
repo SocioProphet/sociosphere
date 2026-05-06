@@ -1,0 +1,25 @@
+{
+  "fixture_id": "tritrpc.identityprime.evaluate_identity_mixture.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "tritrpc-fixture.v0.1",
+  "policy_version": "regis.identity.polytope.core@0.1.0",
+  "service": "identityprime.v1.IdentityPrimeService",
+  "method": "EvaluateIdentityMixture",
+  "request": {
+    "request_id": "REQ_IDENTITY_MIXTURE_PATIENT_ADTECH_V001",
+    "basis_version": "identity-prime-basis@0.1.0",
+    "mixture": {
+      "primes": {"patient": 1},
+      "scopes": {"ad_tech": 1}
+    }
+  },
+  "response": {
+    "result": "REFUTED",
+    "schema_version": "identity-mixture.v0.1",
+    "policy_version": "regis.identity.polytope.core@0.1.0",
+    "fixture_version": "0.1.0",
+    "reason_codes": ["FORBIDDEN_IDENTITY_MIXTURE"],
+    "violations": ["no_health_adtech"],
+    "certificate_hash": "sha256:identityprime-evaluate-mixture-placeholder"
+  }
+}
