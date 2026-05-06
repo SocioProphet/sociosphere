@@ -1,0 +1,27 @@
+{
+  "fixture_id": "tritrpc.acr.concordance.prove_golden_record_at_time.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "tritrpc-fixture.v0.1",
+  "policy_version": "acr.survivorship.core@0.1.0",
+  "service": "acr.concordance.v1.AcrConcordanceService",
+  "method": "ProveGoldenRecordAtTime",
+  "request": {
+    "request_id": "REQ_ACR_GOLDEN_TESCO_V001",
+    "ceid": "CEID_TESCO_EXAMPLE",
+    "as_of_time": "2026-05-06T00:00:00Z",
+    "template_version": "authority-template@0.1.0",
+    "resolver_version": "acr.resolver.reference@0.1.0"
+  },
+  "response": {
+    "result": "VERIFIED",
+    "schema_version": "acr-golden-record-proof.v0.1",
+    "policy_version": "acr.survivorship.core@0.1.0",
+    "template_version": "authority-template@0.1.0",
+    "resolver_version": "acr.resolver.reference@0.1.0",
+    "fixture_version": "0.1.0",
+    "artifact_type": "ConcordanceDecisionCertificate",
+    "golden_record_pointer": "acr://golden/CEID_TESCO_EXAMPLE?as_of=2026-05-06T00:00:00Z",
+    "ledger_pointers": ["DID_LINK_REFERENCE_DATA_C1055", "DID_LINK_CRM_C1055598", "DID_ATTRIBUTE_TICKER_TSCO"],
+    "certificate_hash": "sha256:acr-golden-record-placeholder"
+  }
+}
