@@ -1,0 +1,39 @@
+{
+  "cell_id": "cell://demo",
+  "subject_ref": "source://alpha",
+  "subject_kind": "source",
+  "context": "runtime-watch",
+  "evidence_refs": [
+    "evidence://1",
+    "evidence://2"
+  ],
+  "delta": -0.125,
+  "decay_policy": "time_decay:half_life_90d",
+  "dispute_state": "none",
+  "policy_effect": "review_required",
+  "anti_manipulation": {
+    "subject_ref": "source://alpha",
+    "sybil_score": 0.5,
+    "collusion_score": 0.3333,
+    "provenance_weight": 0.65,
+    "anti_gaming_weight": 0.625,
+    "flags": [
+      "possible_sybil_repetition",
+      "coordinated_claim_amplification"
+    ],
+    "repeated_claim_refs": [
+      "claim://same"
+    ]
+  },
+  "confidence_interval": {
+    "low": -0.175,
+    "high": -0.075
+  },
+  "score_components": {
+    "trust": 0,
+    "authority": 0.7,
+    "popularity": 0.8,
+    "expertise": 0.9
+  },
+  "event_at": "2026-05-06T00:00:00Z"
+}
