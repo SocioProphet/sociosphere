@@ -1,0 +1,35 @@
+{
+  "fixture_id": "transition.no_admissible_path.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "admissible-transition.v0.1",
+  "policy_version": "regis.transition.admissibility.core@0.1.0",
+  "description": "A proposed linkage from patient fog state to ad-tech state is structurally refuted because the only candidate edge is policy-blocked.",
+  "transition_graph": {
+    "nodes": [
+      {"id": "state_patient_fog", "type": "IdentityState", "primes": ["patient"], "scopes": ["citizen_fog"]},
+      {"id": "state_adtech", "type": "IdentityState", "scopes": ["ad_tech"]}
+    ],
+    "edges": [
+      {
+        "from": "state_patient_fog",
+        "to": "state_adtech",
+        "type": "TRANSITIONS_TO",
+        "admissible": false,
+        "cost": 999.0,
+        "reason_codes": ["POLICY_BLOCKED_TRANSITION", "NO_ADMISSIBLE_PATH", "TOKEN_NON_ESCAPE_VIOLATION"]
+      }
+    ]
+  },
+  "claim": {
+    "claim_type": "ProveLinkage",
+    "from": "state_patient_fog",
+    "to": "state_adtech"
+  },
+  "expected": {
+    "result": "REFUTED",
+    "path": [],
+    "blocked_edges": ["state_patient_fog->state_adtech"],
+    "reason_codes": ["POLICY_BLOCKED_TRANSITION", "NO_ADMISSIBLE_PATH", "TOKEN_NON_ESCAPE_VIOLATION"],
+    "artifact_type": "NoAdmissiblePathRefutation"
+  }
+}
