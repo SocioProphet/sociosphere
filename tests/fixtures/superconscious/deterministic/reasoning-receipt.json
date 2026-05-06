@@ -1,0 +1,17 @@
+{
+  "id": "urn:srcos:receipt:reasoning:sociosphere-fixture",
+  "type": "ReasoningReceipt",
+  "specVersion": "2.0.0",
+  "runRef": "urn:srcos:reasoning-run:sociosphere-fixture",
+  "taskRef": "urn:srcos:reasoning-task:sociosphere-fixture",
+  "status": "completed",
+  "traceHash": "sha256:sociosphere-fixture-trace",
+  "coordination": {
+    "policy": "allowed-safe-deterministic-mode",
+    "modelRoute": "deterministic-stub-route",
+    "memory": "proposal-only",
+    "approval": "not-required"
+  },
+  "replayClass": "exact",
+  "capturedAt": "2026-05-05T00:00:01Z"
+}
