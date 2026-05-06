@@ -29,6 +29,8 @@ REQUIRED_FIXTURES = {
     "sherlock.search.from_holmes_meshrush.json",
     "agent.manifest.valid.json",
     "agent.manifest.invalid_missing_policy_scope.json",
+    "transition.admissible.json",
+    "transition.no_admissible_path.json",
 }
 
 
@@ -215,6 +217,57 @@ def validate_meshrush(path: Path, fixture: dict[str, Any]) -> None:
         fail(path, "MeshRush fixture with blocked edges must include FORBIDDEN_EDGE_BLOCKED")
 
 
+def validate_transition(path: Path, fixture: dict[str, Any]) -> None:
+    expected = validate_common(path, fixture)
+    graph = require_obj(fixture, "transition_graph", path)
+    claim = require_obj(fixture, "claim", path)
+    nodes = require_list(graph, "nodes", path)
+    edges = require_list(graph, "edges", path)
+    if not nodes:
+        fail(path, "transition_graph.nodes must not be empty")
+    if not edges:
+        fail(path, "transition_graph.edges must not be empty")
+    node_ids = {node.get("id") for node in nodes if isinstance(node, dict)}
+    claim_from = require_str(claim, "from", path)
+    claim_to = require_str(claim, "to", path)
+    if claim_from not in node_ids or claim_to not in node_ids:
+        fail(path, "claim endpoints must exist in transition_graph.nodes")
+    admissible_edges = []
+    blocked_edges = []
+    total_cost = 0.0
+    for edge in edges:
+        if not isinstance(edge, dict):
+            fail(path, "transition_graph.edges entries must be objects")
+        edge_from = require_str(edge, "from", path)
+        edge_to = require_str(edge, "to", path)
+        if edge_from not in node_ids or edge_to not in node_ids:
+            fail(path, "transition edge endpoints must exist in transition_graph.nodes")
+        if edge.get("admissible") is True:
+            admissible_edges.append(f"{edge_from}->{edge_to}")
+            total_cost += float(edge.get("cost", 0.0))
+        elif edge.get("admissible") is False:
+            blocked_edges.append(f"{edge_from}->{edge_to}")
+    expected_result = expected["result"]
+    if expected_result == "VERIFIED":
+        expected_path = require_list(expected, "path", path)
+        if expected_path != [claim_from, claim_to]:
+            fail(path, "verified transition expected.path must match claim endpoints")
+        if f"{claim_from}->{claim_to}" not in admissible_edges:
+            fail(path, "verified transition requires an admissible claim edge")
+        if float(expected.get("total_cost", -1.0)) != total_cost:
+            fail(path, f"expected.total_cost must be {total_cost}")
+    elif expected_result == "REFUTED":
+        if f"{claim_from}->{claim_to}" not in blocked_edges:
+            fail(path, "refuted transition requires a blocked claim edge")
+        if sorted(expected.get("blocked_edges", [])) != sorted(blocked_edges):
+            fail(path, f"expected.blocked_edges must be {blocked_edges}")
+        reason_codes = set(expected.get("reason_codes", []))
+        if "NO_ADMISSIBLE_PATH" not in reason_codes:
+            fail(path, "refuted transition must include NO_ADMISSIBLE_PATH")
+    else:
+        fail(path, "transition fixture must expect VERIFIED or REFUTED")
+
+
 def validate_holmes(path: Path, fixture: dict[str, Any]) -> None:
     expected = validate_common(path, fixture)
     require_str(fixture, "case_model_version", path)
@@ -345,6 +398,8 @@ def main() -> None:
             validate_acr(path, fixture)
         elif name.startswith("meshrush."):
             validate_meshrush(path, fixture)
+        elif name.startswith("transition."):
+            validate_transition(path, fixture)
         elif name.startswith("holmes."):
             validate_holmes(path, fixture)
         elif name.startswith("sherlock."):
