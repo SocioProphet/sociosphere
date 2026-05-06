@@ -1,0 +1,39 @@
+{
+  "fixture_id": "holmes.case.from_meshrush_trace.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "holmes-investigation-case.v0.1",
+  "policy_version": "regis.transition.admissibility.core@0.1.0",
+  "case_model_version": "holmes.reference@0.1.0",
+  "description": "Holmes consumes a MeshRush simulation trace and opens an investigation case explaining a blocked patient-token-to-adtech edge.",
+  "input_trace": {
+    "trace_id": "meshrush.trace.patient_token_adtech_block.v0.1",
+    "artifact_type": "MeshRushSimulationTrace",
+    "fixture_ref": "meshrush.graph_exploration.simulation.v0.1",
+    "blocked_edges": ["token_patient_hsm->state_adtech"],
+    "reason_codes": ["FORBIDDEN_EDGE_BLOCKED", "TOKEN_NON_ESCAPE_VIOLATION"]
+  },
+  "case": {
+    "case_id": "HOLMES_CASE_PATIENT_TOKEN_ADTECH_BLOCK_V001",
+    "case_type": "TOKEN_NON_ESCAPE_INVESTIGATION",
+    "status": "OPEN",
+    "findings": [
+      {
+        "finding_id": "FINDING_TOKEN_NON_ESCAPE_ADTECH_V001",
+        "finding_type": "STRUCTURAL_REFUTATION",
+        "summary": "Patient-scoped token lane was blocked from ad-tech scope by MeshRush simulation and Regis token non-escape policy.",
+        "severity": "HIGH",
+        "regis_graph_pointers": ["regis://IdentityState/state_adtech", "regis://TokenLane/token_patient_hsm"],
+        "ledger_pointers": ["DID_TOKEN_NON_ESCAPE_PATIENT_HSM_ADTECH"],
+        "certificate_pointers": ["CERT_NON_ESCAPE_PATIENT_HSM_V001"],
+        "trace_pointers": ["meshrush://trace/meshrush.trace.patient_token_adtech_block.v0.1"]
+      }
+    ]
+  },
+  "expected": {
+    "result": "VERIFIED",
+    "requires_trace_pointer": true,
+    "requires_ledger_pointer": true,
+    "requires_certificate_pointer": true,
+    "artifact_type": "InvestigationCase"
+  }
+}
