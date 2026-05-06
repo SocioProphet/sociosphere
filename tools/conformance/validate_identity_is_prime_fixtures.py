@@ -31,6 +31,7 @@ REQUIRED_FIXTURES = {
     "agent.manifest.invalid_missing_policy_scope.json",
     "transition.admissible.json",
     "transition.no_admissible_path.json",
+    "zeta.audit.window.json",
 }
 
 
@@ -268,6 +269,46 @@ def validate_transition(path: Path, fixture: dict[str, Any]) -> None:
         fail(path, "transition fixture must expect VERIFIED or REFUTED")
 
 
+def validate_zeta(path: Path, fixture: dict[str, Any]) -> None:
+    expected = validate_common(path, fixture)
+    require_str(fixture, "metric_version", path)
+    audit_window = require_obj(fixture, "audit_window", path)
+    require_str(audit_window, "audit_window_id", path)
+    require_str(audit_window, "window_start", path)
+    require_str(audit_window, "window_end", path)
+    counts = require_list(audit_window, "counts", path)
+    forbidden_states = set(require_list(audit_window, "forbidden_states", path))
+    parameters = require_obj(audit_window, "parameters", path)
+    if not counts:
+        fail(path, "zeta audit counts must not be empty")
+    threshold = int(parameters.get("forbidden_count_threshold", 0))
+    near_threshold = int(parameters.get("near_forbidden_distance_threshold", 1))
+    forbidden_observed = []
+    near_forbidden_pressure = False
+    for item in counts:
+        if not isinstance(item, dict):
+            fail(path, "zeta counts entries must be objects")
+        state_id = require_str(item, "state_id", path)
+        count = int(item.get("count", 0))
+        distance = int(item.get("distance_to_forbidden", 999))
+        if state_id in forbidden_states and count > threshold:
+            forbidden_observed.append(state_id)
+        if distance <= near_threshold and count > threshold:
+            near_forbidden_pressure = True
+    flags = set(expected.get("flags", []))
+    if forbidden_observed:
+        if expected["result"] != "REFUTED":
+            fail(path, "forbidden zeta observations require expected.result REFUTED")
+        if "FORBIDDEN_STATE_OBSERVED" not in flags:
+            fail(path, "zeta expected.flags must include FORBIDDEN_STATE_OBSERVED")
+    if near_forbidden_pressure and "NEAR_FORBIDDEN_PRESSURE" not in flags:
+        fail(path, "zeta expected.flags must include NEAR_FORBIDDEN_PRESSURE")
+    if sorted(expected.get("forbidden_observations", [])) != sorted(forbidden_observed):
+        fail(path, f"zeta expected.forbidden_observations must be {forbidden_observed}")
+    if not expected.get("requires_metric_version"):
+        fail(path, "zeta expected.requires_metric_version must be true")
+
+
 def validate_holmes(path: Path, fixture: dict[str, Any]) -> None:
     expected = validate_common(path, fixture)
     require_str(fixture, "case_model_version", path)
@@ -400,6 +441,8 @@ def main() -> None:
             validate_meshrush(path, fixture)
         elif name.startswith("transition."):
             validate_transition(path, fixture)
+        elif name.startswith("zeta."):
+            validate_zeta(path, fixture)
         elif name.startswith("holmes."):
             validate_holmes(path, fixture)
         elif name.startswith("sherlock."):
