@@ -1,0 +1,36 @@
+{
+  "fixture_id": "identity-prime.token.non_escape.violation.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "token-lane.v0.1",
+  "policy_version": "regis.token.non_escape.core@0.1.0",
+  "description": "A patient-scoped token minted in the citizen fog is observed in ad-tech scope and must be refuted.",
+  "token_lane": {
+    "lane_id": "patient_hsm_lane",
+    "token_class": "patient_scoped",
+    "modulus": "2^128",
+    "allowed_scopes": ["citizen_fog", "hospital_portal"],
+    "forbidden_scopes": ["ad_tech", "employer_telemetry"],
+    "checks": ["residue_class_match", "epoch_monotonicity", "replay_window"]
+  },
+  "observations": [
+    {
+      "event_id": "evt_001",
+      "scope": "citizen_fog",
+      "action": "mint_token",
+      "token_class": "patient_scoped",
+      "residue_class": "patient_hsm_lane"
+    },
+    {
+      "event_id": "evt_002",
+      "scope": "ad_tech",
+      "action": "observe_token",
+      "token_class": "patient_scoped",
+      "residue_class": "patient_hsm_lane"
+    }
+  ],
+  "expected": {
+    "result": "REFUTED",
+    "reason_codes": ["TOKEN_NON_ESCAPE_VIOLATION", "FORBIDDEN_SCOPE_OBSERVATION"],
+    "certificate_type": "NonEscapeCertificate"
+  }
+}

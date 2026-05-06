@@ -1,0 +1,36 @@
+{
+  "fixture_id": "zeta.audit.window.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "identity-zeta-audit.v0.1",
+  "policy_version": "regis.identity.audit.core@0.1.0",
+  "metric_version": "identity-zeta.reference@0.1.0",
+  "description": "A rolling identity-state audit window flags elevated mass near forbidden patient+adtech composites.",
+  "audit_window": {
+    "audit_window_id": "AUDIT_WINDOW_PATIENT_ADTECH_PRESSURE_V001",
+    "window_start": "2026-05-06T00:00:00Z",
+    "window_end": "2026-05-06T01:00:00Z",
+    "basis": {
+      "primes": ["founder_engineer", "patient", "parent", "citizen", "creator"],
+      "scopes": ["citizen_fog", "hospital_portal", "ad_tech", "employer_telemetry", "external_egress"]
+    },
+    "counts": [
+      {"state_id": "patient_citizen_fog", "mixture": {"patient": 1, "citizen_fog": 1}, "count": 64, "distance_to_forbidden": 1},
+      {"state_id": "patient_hospital_portal", "mixture": {"patient": 1, "hospital_portal": 1}, "count": 18, "distance_to_forbidden": 2},
+      {"state_id": "patient_adtech_near_violation", "mixture": {"patient": 1, "ad_tech": 1}, "count": 7, "distance_to_forbidden": 0},
+      {"state_id": "citizen_only", "mixture": {"citizen": 1, "citizen_fog": 1}, "count": 41, "distance_to_forbidden": 3}
+    ],
+    "forbidden_states": ["patient_adtech_near_violation"],
+    "parameters": {
+      "s": 2.0,
+      "near_forbidden_distance_threshold": 1,
+      "forbidden_count_threshold": 0
+    }
+  },
+  "expected": {
+    "result": "REFUTED",
+    "artifact_type": "IdentityZetaAudit",
+    "flags": ["FORBIDDEN_STATE_OBSERVED", "NEAR_FORBIDDEN_PRESSURE"],
+    "forbidden_observations": ["patient_adtech_near_violation"],
+    "requires_metric_version": true
+  }
+}

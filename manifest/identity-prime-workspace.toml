@@ -1,0 +1,101 @@
+# Identity Is Prime / Regis / ACR / Holmes / Sherlock / MeshRush conformance workspace overlay.
+#
+# This overlay records the additional materialized repository dependencies for
+# the Sociosphere conformance lane introduced by issue #284 and PR #285.
+# The canonical workspace manifest already contains identity-is-prime-reference
+# and regis-entity-graph. This overlay adds the Agent Registry, Holmes,
+# Sherlock Search, and MeshRush materialization requirements without disturbing
+# the broad canonical manifest in this scaffold PR.
+
+[[repos]]
+name = "agent_registry"
+role = "component"
+url = "https://github.com/SocioProphet/agent-registry"
+ref = "main"
+local_path = "components/agent_registry"
+license_hint = "MIT"
+trust_zone = "control"
+trust_profile_ref = "protocol/agentic-workbench/v1/trust_profiles/control-plane.v0.1.json"
+required_capabilities = [
+  "agent_manifest",
+  "policy_scope",
+  "tritrpc_binding",
+  "evidence_output",
+]
+
+[[repos]]
+name = "identity_is_prime_reference"
+role = "component"
+url = "https://github.com/SocioProphet/identity-is-prime-reference"
+ref = "main"
+local_path = "components/identity_is_prime_reference"
+license_hint = "MIT"
+required_capabilities = [
+  "event_ir",
+  "prime_topic_labeling",
+  "policy_polytope",
+  "congruence_lane",
+  "proof_artifact",
+]
+
+[[repos]]
+name = "regis_entity_graph"
+role = "component"
+url = "https://github.com/SocioProphet/regis-entity-graph"
+ref = "main"
+local_path = "components/regis_entity_graph"
+license_hint = "MIT"
+required_capabilities = [
+  "canonical_entity",
+  "identity_state",
+  "concordance_link",
+  "decision_ledger",
+  "proof_certificate",
+]
+
+[[repos]]
+name = "holmes"
+role = "component"
+url = "https://github.com/SocioProphet/holmes"
+ref = "main"
+local_path = "components/holmes"
+license_hint = "MIT"
+required_capabilities = [
+  "case_reasoning",
+  "evidence_finding",
+  "contradiction_detection",
+  "ledger_pointer",
+  "proof_explanation",
+]
+
+[[repos]]
+name = "sherlock_search"
+role = "component"
+url = "https://github.com/SocioProphet/sherlock-search"
+ref = "main"
+local_path = "components/sherlock_search"
+license_hint = "MIT"
+required_capabilities = [
+  "index_record",
+  "search_query",
+  "delta_indexing",
+  "source_pointer",
+  "ledger_pointer",
+]
+
+[[repos]]
+name = "meshrush"
+role = "component"
+url = "https://github.com/SocioProphet/meshrush"
+ref = "main"
+local_path = "components/meshrush"
+license_hint = "MIT"
+required_capabilities = [
+  "graph_entry",
+  "graph_traversal",
+  "bounded_diffusion",
+  "stop_condition",
+  "crystallization",
+  "simulation_trace",
+  "evidence_trace",
+]

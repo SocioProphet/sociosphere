@@ -1,0 +1,45 @@
+{
+  "fixture_id": "acr.golden_record.proof.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "acr-golden-record-proof.v0.1",
+  "template_version": "authority-template@0.1.0",
+  "policy_version": "acr.survivorship.core@0.1.0",
+  "resolver_version": "acr.resolver.reference@0.1.0",
+  "description": "A source record resolves to a canonical entity and produces a point-in-time golden record proof.",
+  "source_records": [
+    {
+      "source_id": "reference_data",
+      "source_record_id": "C1055",
+      "assertions": {
+        "name": "Tesco",
+        "ticker": "TSCO",
+        "country": "UK"
+      }
+    },
+    {
+      "source_id": "crm",
+      "source_record_id": "C1055598",
+      "assertions": {
+        "name": "Tesco Stores",
+        "ticker": "TSC",
+        "country": "United Kingdom"
+      }
+    }
+  ],
+  "crosswalk": [
+    {"source_id": "reference_data", "source_record_id": "C1055", "ceid": "CEID_TESCO_EXAMPLE"},
+    {"source_id": "crm", "source_record_id": "C1055598", "ceid": "CEID_TESCO_EXAMPLE"}
+  ],
+  "golden_record": {
+    "ceid": "CEID_TESCO_EXAMPLE",
+    "name": "Tesco plc",
+    "ticker": "TSCO",
+    "country": "United Kingdom"
+  },
+  "ledger_pointers": ["DID_LINK_REFERENCE_DATA_C1055", "DID_LINK_CRM_C1055598", "DID_ATTRIBUTE_TICKER_TSCO"],
+  "expected": {
+    "result": "VERIFIED",
+    "certificate_type": "ConcordanceDecisionCertificate",
+    "requires_shared_ledger_pointer": true
+  }
+}

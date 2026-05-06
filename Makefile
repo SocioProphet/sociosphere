@@ -178,6 +178,12 @@ topology-check:
 proof-slice-smoke:
 	python3 tools/runner/proof_slice_smoke.py
 
+# --- identity conformance targets ---
+.PHONY: identity-prime-conformance
+
+identity-prime-conformance:
+	python3 tools/conformance/validate_identity_is_prime_fixtures.py
+
 # --- hygiene targets ---
 .PHONY: hygiene-check
 
@@ -190,5 +196,5 @@ hygiene-check:
 # --- full workspace check (run in CI) ---
 .PHONY: workspace-check
 
-workspace-check: validate registry-validate build-intelligence-validate deployment-topology-validate contract-lock-validate compliance-check source-exposure-check lock-verify topology-check hygiene-check
+workspace-check: validate registry-validate build-intelligence-validate deployment-topology-validate contract-lock-validate compliance-check source-exposure-check lock-verify topology-check hygiene-check identity-prime-conformance
 	@echo "OK: workspace-check passed"

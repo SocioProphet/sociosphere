@@ -1,0 +1,24 @@
+{
+  "fixture_id": "tritrpc.regis.proof.prove_no_admissible_path.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "tritrpc-fixture.v0.1",
+  "policy_version": "regis.transition.admissibility.core@0.1.0",
+  "service": "regis.proof.v1.RegisProofService",
+  "method": "ProveNoAdmissiblePath",
+  "request": {
+    "request_id": "REQ_NO_PATH_PATIENT_ADTECH_V001",
+    "from_state": "regis://IdentityState/state_patient_fog",
+    "to_state": "regis://IdentityState/state_adtech",
+    "graph_snapshot": "regis://GraphSnapshot/identity_prime_demo_v001"
+  },
+  "response": {
+    "result": "REFUTED",
+    "schema_version": "admissible-transition.v0.1",
+    "policy_version": "regis.transition.admissibility.core@0.1.0",
+    "fixture_version": "0.1.0",
+    "reason_codes": ["NO_ADMISSIBLE_PATH", "POLICY_BLOCKED_TRANSITION", "TOKEN_NON_ESCAPE_VIOLATION"],
+    "refutation_type": "NoAdmissiblePathRefutation",
+    "ledger_pointer": "did://DID_NO_PATH_PATIENT_ADTECH_V001",
+    "certificate_hash": "sha256:regis-no-admissible-path-placeholder"
+  }
+}

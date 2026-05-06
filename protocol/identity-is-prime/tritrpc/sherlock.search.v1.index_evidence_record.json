@@ -1,0 +1,30 @@
+{
+  "fixture_id": "tritrpc.sherlock.search.index_evidence_record.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "tritrpc-fixture.v0.1",
+  "policy_version": "regis.search.evidence_pointer.core@0.1.0",
+  "service": "sherlock.search.v1.SherlockSearchService",
+  "method": "IndexEvidenceRecord",
+  "request": {
+    "request_id": "REQ_SHERLOCK_INDEX_HOLMES_MESHRUSH_V001",
+    "artifact_pointer": "holmes://case/HOLMES_CASE_PATIENT_TOKEN_ADTECH_BLOCK_V001",
+    "indexed_pointers": [
+      "meshrush://trace/meshrush.trace.patient_token_adtech_block.v0.1",
+      "regis://TokenLane/token_patient_hsm",
+      "did://DID_TOKEN_NON_ESCAPE_PATIENT_HSM_ADTECH",
+      "cert://CERT_NON_ESCAPE_PATIENT_HSM_V001"
+    ]
+  },
+  "response": {
+    "result": "VERIFIED",
+    "schema_version": "sherlock-search-result.v0.1",
+    "policy_version": "regis.search.evidence_pointer.core@0.1.0",
+    "index_version": "sherlock.reference@0.1.0",
+    "fixture_version": "0.1.0",
+    "artifact_type": "SearchIndexRecord",
+    "search_record": "sherlock://record/SHERLOCK_INDEX_HOLMES_CASE_PATIENT_TOKEN_ADTECH_BLOCK_V001",
+    "claims_canonical_truth": false,
+    "ledger_pointer": "did://DID_TOKEN_NON_ESCAPE_PATIENT_HSM_ADTECH",
+    "certificate_hash": "sha256:sherlock-index-placeholder"
+  }
+}

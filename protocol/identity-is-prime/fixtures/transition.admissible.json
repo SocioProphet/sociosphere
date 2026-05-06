@@ -1,0 +1,34 @@
+{
+  "fixture_id": "transition.admissible.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "admissible-transition.v0.1",
+  "policy_version": "regis.transition.admissibility.core@0.1.0",
+  "description": "A patient-scoped transition from citizen fog to hospital portal is admissible when protected by a patient-scoped token and certificate boundary.",
+  "transition_graph": {
+    "nodes": [
+      {"id": "state_patient_fog", "type": "IdentityState", "primes": ["patient"], "scopes": ["citizen_fog"]},
+      {"id": "event_hospital_portal", "type": "WorldlineEvent", "primes": ["patient"], "scopes": ["hospital_portal"]}
+    ],
+    "edges": [
+      {
+        "from": "state_patient_fog",
+        "to": "event_hospital_portal",
+        "type": "TRANSITIONS_TO",
+        "admissible": true,
+        "cost": 2.0,
+        "required_capabilities": ["patient_scoped_token", "scope_permission_certificate"]
+      }
+    ]
+  },
+  "claim": {
+    "claim_type": "ProveScopePermission",
+    "from": "state_patient_fog",
+    "to": "event_hospital_portal"
+  },
+  "expected": {
+    "result": "VERIFIED",
+    "path": ["state_patient_fog", "event_hospital_portal"],
+    "total_cost": 2.0,
+    "artifact_type": "TransitionCertificate"
+  }
+}

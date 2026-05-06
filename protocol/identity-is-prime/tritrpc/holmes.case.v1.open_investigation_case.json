@@ -1,0 +1,25 @@
+{
+  "fixture_id": "tritrpc.holmes.case.open_investigation_case.v0.1",
+  "fixture_version": "0.1.0",
+  "schema_version": "tritrpc-fixture.v0.1",
+  "policy_version": "regis.transition.admissibility.core@0.1.0",
+  "service": "holmes.case.v1.HolmesCaseService",
+  "method": "OpenInvestigationCase",
+  "request": {
+    "request_id": "REQ_HOLMES_CASE_PATIENT_TOKEN_ADTECH_V001",
+    "trace_pointer": "meshrush://trace/meshrush.trace.patient_token_adtech_block.v0.1",
+    "reason_codes": ["FORBIDDEN_EDGE_BLOCKED", "TOKEN_NON_ESCAPE_VIOLATION"]
+  },
+  "response": {
+    "result": "VERIFIED",
+    "schema_version": "holmes-investigation-case.v0.1",
+    "policy_version": "regis.transition.admissibility.core@0.1.0",
+    "case_model_version": "holmes.reference@0.1.0",
+    "fixture_version": "0.1.0",
+    "artifact_type": "InvestigationCase",
+    "holmes_case": "holmes://case/HOLMES_CASE_PATIENT_TOKEN_ADTECH_BLOCK_V001",
+    "trace_pointer": "meshrush://trace/meshrush.trace.patient_token_adtech_block.v0.1",
+    "ledger_pointer": "did://DID_TOKEN_NON_ESCAPE_PATIENT_HSM_ADTECH",
+    "certificate_hash": "sha256:holmes-case-placeholder"
+  }
+}
