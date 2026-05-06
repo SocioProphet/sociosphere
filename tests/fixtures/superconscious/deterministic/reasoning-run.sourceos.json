@@ -1,0 +1,32 @@
+{
+  "id": "urn:srcos:reasoning-run:sociosphere-fixture",
+  "type": "ReasoningRun",
+  "specVersion": "2.0.0",
+  "status": "completed",
+  "task": {
+    "id": "urn:srcos:reasoning-task:sociosphere-fixture",
+    "title": "SocioSphere Superconscious validation fixture",
+    "objectiveHash": "sha256:sociosphere-fixture-objective"
+  },
+  "agentRef": "urn:socioprophet:agent:superconscious-demo",
+  "workspaceRef": "urn:socioprophet:workspace:superconscious-m1",
+  "safeTrace": {
+    "mode": "operational-trace-only",
+    "rawPrivateReasoning": "not-collected",
+    "eventCount": 2
+  },
+  "eventRefs": [
+    "urn:srcos:reasoning-event:sociosphere-fixture-created",
+    "urn:srcos:reasoning-event:sociosphere-fixture-completed"
+  ],
+  "artifactRefs": [
+    "reasoning-events.sourceos.jsonl",
+    "reasoning-run.sourceos.json",
+    "reasoning-receipt.json",
+    "reasoning-replay-plan.json",
+    "reasoning-benchmark.json"
+  ],
+  "adapterRecords": [],
+  "startedAt": "2026-05-05T00:00:00Z",
+  "completedAt": "2026-05-05T00:00:01Z"
+}
