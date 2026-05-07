@@ -1,0 +1,17 @@
+{
+  "id": "urn:srcos:reasoning-benchmark:sociosphere-fixture",
+  "type": "ReasoningBenchmark",
+  "runRef": "urn:srcos:reasoning-run:sociosphere-fixture",
+  "suite": "m1-deterministic-smoke",
+  "passed": true,
+  "assertions": [
+    {
+      "name": "run-completed",
+      "passed": true
+    },
+    {
+      "name": "safe-trace-only",
+      "passed": true
+    }
+  ]
+}
