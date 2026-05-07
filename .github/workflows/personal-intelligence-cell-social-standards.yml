@@ -2,7 +2,7 @@ name: personal-intelligence-cell-social-standards
 
 on:
   pull_request:
-    paths:
+    paths: &pic_social_standards_paths
       - 'standards/personal-intelligence-cell/social-environment-snapshot.schema.json'
       - 'standards/personal-intelligence-cell/social-environment-snapshot.example.json'
       - 'standards/personal-intelligence-cell/reputation-delta.schema.json'
@@ -11,14 +11,7 @@ on:
       - 'README.md'
       - 'docs/runbooks/ci.md'
   push:
-    paths:
-      - 'standards/personal-intelligence-cell/social-environment-snapshot.schema.json'
-      - 'standards/personal-intelligence-cell/social-environment-snapshot.example.json'
-      - 'standards/personal-intelligence-cell/reputation-delta.schema.json'
-      - 'standards/personal-intelligence-cell/reputation-delta.example.json'
-      - 'tools/validate_personal_intelligence_cell_social_environment.py'
-      - 'README.md'
-      - 'docs/runbooks/ci.md'
+    paths: *pic_social_standards_paths
 
 permissions:
   contents: read
