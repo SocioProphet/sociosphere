@@ -23,13 +23,16 @@ ui-dev: ui-preflight
 # --- end ui-workbench targets ---
 
 # --- standards validation targets ---
-.PHONY: validate validate-standards multidomain-geospatial-standards-compliance-validate program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate lattice-runtime-profile-consumer-parity-validate lattice-demo-readiness-validate lattice-replay-evidence-membrane-validate lattice-runtime-release-readiness-validate lattice-product-readiness-program-validate lattice-operating-model-validate lattice-deployment-topology-validate lattice-security-isolation-model-validate lattice-observability-sre-validate lattice-release-rollback-controls-validate lattice-environment-fingerprints-validate
+.PHONY: validate validate-standards agent-reliability-governance-queue-validate multidomain-geospatial-standards-compliance-validate program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate lattice-runtime-profile-consumer-parity-validate lattice-demo-readiness-validate lattice-replay-evidence-membrane-validate lattice-runtime-release-readiness-validate lattice-product-readiness-program-validate lattice-operating-model-validate lattice-deployment-topology-validate lattice-security-isolation-model-validate lattice-observability-sre-validate lattice-release-rollback-controls-validate lattice-environment-fingerprints-validate
 
-validate: validate-standards program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate lattice-runtime-profile-consumer-parity-validate lattice-demo-readiness-validate lattice-replay-evidence-membrane-validate lattice-runtime-release-readiness-validate lattice-product-readiness-program-validate lattice-operating-model-validate lattice-deployment-topology-validate lattice-security-isolation-model-validate lattice-observability-sre-validate lattice-release-rollback-controls-validate lattice-environment-fingerprints-validate
+validate: validate-standards agent-reliability-governance-queue-validate program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate lattice-runtime-profile-consumer-parity-validate lattice-demo-readiness-validate lattice-replay-evidence-membrane-validate lattice-runtime-release-readiness-validate lattice-product-readiness-program-validate lattice-operating-model-validate lattice-deployment-topology-validate lattice-security-isolation-model-validate lattice-observability-sre-validate lattice-release-rollback-controls-validate lattice-environment-fingerprints-validate
 	@echo "OK: validate"
 
 validate-standards:
 	@ok=1; if [ -f tools/validate_adaptation_program.py ]; then python3 tools/validate_adaptation_program.py standards/examples/adaptation/program.example.v1.json || ok=0; else echo "ERR: tools/validate_adaptation_program.py missing"; ok=0; fi; if [ -f standards/qes/tools/validate_qes_contracts.py ]; then python3 standards/qes/tools/validate_qes_contracts.py || ok=0; else echo "WARN: standards/qes/tools/validate_qes_contracts.py missing (skipping)"; fi; if [ -f tools/check_multidomain_geospatial_standards_compliance.py ]; then python3 tools/check_multidomain_geospatial_standards_compliance.py || ok=0; else echo "ERR: tools/check_multidomain_geospatial_standards_compliance.py missing"; ok=0; fi; test $$ok -eq 1
+
+agent-reliability-governance-queue-validate:
+	python3 tools/validate_agent_reliability_governance_queue.py
 
 program-dashboard-validate:
 	python3 tools/validate_program_dashboard.py

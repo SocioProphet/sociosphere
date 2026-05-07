@@ -1,0 +1,94 @@
+{
+  "apiVersion": "sociosphere.governance-queue/v1",
+  "kind": "AgentReliabilityGovernanceQueue",
+  "queueId": "urn:sociosphere:queue:sourceos-agent-reliability-example",
+  "createdAt": "2026-05-07T00:00:00Z",
+  "owner": "SocioProphet/sociosphere",
+  "sourceLane": "sourceos-agent-reliability-control-plane",
+  "items": [
+    {
+      "itemId": "urn:sociosphere:queue-item:break-glass-example",
+      "itemType": "break-glass-approval",
+      "status": "pending",
+      "priority": "high",
+      "title": "Review PolicyFabric break-glass override",
+      "summary": "A repository-scoped git break-glass override requires human review before a stop-gate waiver can be trusted by AgentPlane.",
+      "sourceArtifact": {
+        "system": "policy-fabric",
+        "repo": "SocioProphet/policy-fabric",
+        "artifactKind": "BreakGlassOverride",
+        "artifactRef": "examples/policy_fabric_break_glass_override_example.json",
+        "displayRef": "SocioProphet/policy-fabric#64"
+      },
+      "risk": {
+        "severity": "high",
+        "actionClass": "git",
+        "resource": "SocioProphet/agentplane:work/example-break-glass",
+        "reason": "Break-glass overrides waive normal stop-gate failure behavior and must be scoped, expiring, auditable, and human-approved."
+      },
+      "review": {
+        "required": true,
+        "reviewerRefs": [
+          "human:repo-maintainer"
+        ],
+        "approvalRef": null,
+        "decisionRef": null,
+        "dueAt": null,
+        "reviewNotes": "Confirm scope, expiry, approver, audit ref, and allowed action class before approval."
+      },
+      "evidenceRefs": [
+        "contracts/policy_fabric_break_glass_override_v1.schema.json",
+        "examples/policy_fabric_break_glass_override_example.json"
+      ],
+      "policyDecisionRefs": [
+        "policyfabric/break-glass/validate-active-human-approved"
+      ],
+      "links": [
+        "https://github.com/SocioProphet/policy-fabric/pull/64"
+      ]
+    },
+    {
+      "itemId": "urn:sociosphere:queue-item:memory-learning-example",
+      "itemType": "memory-learning-review",
+      "status": "pending",
+      "priority": "medium",
+      "title": "Review MemoryMesh agent learning proposal",
+      "summary": "A guarded AgentPlane session proposed a repo-local playbook update. MemoryMesh must keep it review-only until a human approves durable writeback.",
+      "sourceArtifact": {
+        "system": "memory-mesh",
+        "repo": "SocioProphet/memory-mesh",
+        "artifactKind": "AgentLearningProposal",
+        "artifactRef": "examples/agent-learning/proposal.example.json",
+        "displayRef": "SocioProphet/memory-mesh#27"
+      },
+      "risk": {
+        "severity": "medium",
+        "actionClass": "memory",
+        "resource": "SocioProphet/agentplane:AGENTS.md",
+        "reason": "Durable repo memory changes alter future agent behavior and require review before writeback."
+      },
+      "review": {
+        "required": true,
+        "reviewerRefs": [
+          "human:repo-maintainer",
+          "memory-steward:memory-mesh"
+        ],
+        "approvalRef": null,
+        "decisionRef": null,
+        "dueAt": null,
+        "reviewNotes": "Verify evidence refs, policy decision refs, destination path, and proposed diff before approving writeback."
+      },
+      "evidenceRefs": [
+        "schemas/agent-learning-proposal.schema.json",
+        "examples/agent-learning/proposal.example.json"
+      ],
+      "policyDecisionRefs": [
+        "memorymesh/agent-learning/review-only",
+        "memorymesh/agent-learning/no-raw-sensitive-payload"
+      ],
+      "links": [
+        "https://github.com/SocioProphet/memory-mesh/pull/27"
+      ]
+    }
+  ]
+}
