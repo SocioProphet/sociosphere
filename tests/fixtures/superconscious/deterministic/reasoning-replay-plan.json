@@ -1,0 +1,12 @@
+{
+  "id": "urn:srcos:reasoning-replay-plan:sociosphere-fixture",
+  "type": "ReasoningReplayPlan",
+  "runRef": "urn:srcos:reasoning-run:sociosphere-fixture",
+  "replayClass": "exact",
+  "inputs": {
+    "mode": "deterministic-local"
+  },
+  "constraints": {
+    "mode": "closed"
+  }
+}
