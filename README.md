@@ -72,6 +72,26 @@ component repositories.
 | `standards/source-exposure/README.md` | Source Exposure Governance Standard |
 | `standards/source-exposure/policy.v0.json` | Machine-readable source-exposure policy |
 | `standards/source-exposure/schemas/source_exposure_report.v1.json` | Source exposure report schema |
+| `standards/personal-intelligence-cell/social-environment-snapshot.schema.json` | Personal Intelligence Cell social-environment snapshot schema |
+| `standards/personal-intelligence-cell/reputation-delta.schema.json` | Personal Intelligence Cell contextual reputation delta schema |
+
+### Personal Intelligence Cell social standards
+
+SocioSphere now owns the governance-level schemas for cell social-environment assessment and anti-manipulation-aware reputation deltas:
+
+- `standards/personal-intelligence-cell/social-environment-snapshot.schema.json`
+- `standards/personal-intelligence-cell/social-environment-snapshot.example.json`
+- `standards/personal-intelligence-cell/reputation-delta.schema.json`
+- `standards/personal-intelligence-cell/reputation-delta.example.json`
+- `tools/validate_personal_intelligence_cell_social_environment.py`
+
+Validate locally:
+
+```bash
+python3 tools/validate_personal_intelligence_cell_social_environment.py
+```
+
+These standards map `prophet-platform` Personal Intelligence Cell outputs into SocioSphere governance concepts: temporal social-environment snapshots, stale ties, emerging communities, attention sinks, coordinated amplification flags, relationship hygiene recommendations, contextual reputation deltas, confidence intervals, and anti-manipulation flags.
 
 ### CLI tools
 
@@ -83,6 +103,9 @@ python cli/validate-deps.py
 
 # Upstream drift checks
 python3 tools/check_upstream_edge_capabilities.py
+
+# Personal Intelligence Cell social standards
+python3 tools/validate_personal_intelligence_cell_social_environment.py
 
 # Source exposure publication safety
 python3 tools/check_source_exposure.py
