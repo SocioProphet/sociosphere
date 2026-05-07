@@ -17,6 +17,7 @@ RULES = ROOT / "registry" / "broker-reasoning-propagation-rules.yaml"
 REQUIRED_RULE_IDS = {
     "broker-standard-change",
     "provider-binding-contract-change",
+    "provider-binding-evidence-profile-change",
     "broker-reasoning-output-change",
 }
 

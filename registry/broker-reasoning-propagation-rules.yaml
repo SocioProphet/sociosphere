@@ -1,8 +1,8 @@
 # Broker reasoning propagation rules
 # Companion registry for the cross-cloud services broker reasoning loop.
 
-version: "0.1.0"
-updated_at: "2026-04-26"
+version: "0.2.0"
+updated_at: "2026-05-07"
 
 rules:
   - id: broker-standard-change
@@ -51,6 +51,31 @@ rules:
       - repo: sociosphere
         action: validate_topology
         reason: broker contract changes must be checked against dependency-direction rules
+
+  - id: provider-binding-evidence-profile-change
+    trigger:
+      repo: prophet-platform
+      paths:
+        - specs/brokerage/schemas/provider-binding-evidence-profile.schema.json
+        - specs/brokerage/events/examples/provider-binding-evidence-profile.example.json
+        - docs/reference/next-gen-tom/provider-binding-evidence-refs.md
+        - tools/validate_provider_binding_evidence_profile.py
+    propagate_to:
+      - repo: policy-fabric
+        action: review_evidence_requirements
+        reason: policy decisions must enforce evidence profiles and exception posture
+      - repo: agentplane
+        action: review_execution_evidence_inputs
+        reason: execution bundles must emit evidence required by ProviderBinding profiles
+      - repo: global-devsecops-intelligence
+        action: review_evidence_graph_projection
+        reason: operational intelligence must reason over required and missing evidence refs
+      - repo: alexandrian-academy
+        action: review_training_gates
+        reason: broker training and evaluations must include evidence-profile review cases
+      - repo: sociosphere
+        action: validate_broker_evidence_propagation
+        reason: evidence-profile changes must trigger downstream review across broker reasoning repos
 
   - id: broker-reasoning-output-change
     trigger:
