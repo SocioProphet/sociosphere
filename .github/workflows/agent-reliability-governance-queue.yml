@@ -1,0 +1,28 @@
+name: agent-reliability-governance-queue
+
+on:
+  pull_request:
+    paths:
+      - "standards/agent-reliability/**"
+      - "tools/validate_agent_reliability_governance_queue.py"
+      - ".github/workflows/agent-reliability-governance-queue.yml"
+      - "Makefile"
+  push:
+    branches:
+      - main
+    paths:
+      - "standards/agent-reliability/**"
+      - "tools/validate_agent_reliability_governance_queue.py"
+      - ".github/workflows/agent-reliability-governance-queue.yml"
+      - "Makefile"
+
+jobs:
+  validate-agent-reliability-governance-queue:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Validate Agent Reliability governance queue
+        run: make agent-reliability-governance-queue-validate
