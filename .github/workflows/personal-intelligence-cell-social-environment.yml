@@ -6,8 +6,7 @@ on:
       - "standards/personal-intelligence-cell/**"
       - "tools/validate_personal_intelligence_cell_social_environment.py"
       - "README.md"
-      - "docs/**/*personal*intelligence*cell*"
-      - "docs/**/*social*environment*"
+      - "docs/**/*.md"
       - ".github/workflows/personal-intelligence-cell-social-environment.yml"
   push:
     branches:
@@ -16,8 +15,7 @@ on:
       - "standards/personal-intelligence-cell/**"
       - "tools/validate_personal_intelligence_cell_social_environment.py"
       - "README.md"
-      - "docs/**/*personal*intelligence*cell*"
-      - "docs/**/*social*environment*"
+      - "docs/**/*.md"
       - ".github/workflows/personal-intelligence-cell-social-environment.yml"
 
 permissions:
