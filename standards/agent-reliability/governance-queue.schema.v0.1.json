@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.socioprophet.org/sociosphere/agent-reliability/governance-queue.schema.v0.1.json",
+  "title": "SocioSphere Agent Reliability Governance Queue v0.1",
+  "type": "object",
+  "required": [
+    "apiVersion",
+    "kind",
+    "queueId",
+    "createdAt",
+    "owner",
+    "sourceLane",
+    "items"
+  ],
+  "properties": {
+    "apiVersion": { "const": "sociosphere.governance-queue/v1" },
+    "kind": { "const": "AgentReliabilityGovernanceQueue" },
+    "queueId": { "type": "string", "minLength": 1 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "owner": { "type": "string", "minLength": 1 },
+    "sourceLane": { "const": "sourceos-agent-reliability-control-plane" },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "itemId",
+          "itemType",
+          "status",
+          "priority",
+          "title",
+          "summary",
+          "sourceArtifact",
+          "risk",
+          "review",
+          "evidenceRefs",
+          "policyDecisionRefs"
+        ],
+        "properties": {
+          "itemId": { "type": "string", "minLength": 1 },
+          "itemType": { "enum": ["break-glass-approval", "memory-learning-review", "stop-gate-waiver", "external-action-review"] },
+          "status": { "enum": ["pending", "approved", "rejected", "superseded"] },
+          "priority": { "enum": ["low", "medium", "high", "critical"] },
+          "title": { "type": "string", "minLength": 1 },
+          "summary": { "type": "string", "minLength": 1 },
+          "sourceArtifact": {
+            "type": "object",
+            "required": ["system", "repo", "artifactKind", "artifactRef"],
+            "properties": {
+              "system": { "enum": ["policy-fabric", "memory-mesh", "agentplane", "guardrail-fabric"] },
+              "repo": { "type": "string", "minLength": 1 },
+              "artifactKind": { "enum": ["BreakGlassOverride", "AgentLearningProposal", "StopGateArtifact", "GuardedInvocationArtifact", "PolicyDecisionArtifact", "ExternalActionDraft"] },
+              "artifactRef": { "type": "string", "minLength": 1 },
+              "displayRef": { "type": ["string", "null"] }
+            },
+            "additionalProperties": false
+          },
+          "risk": {
+            "type": "object",
+            "required": ["severity", "actionClass", "resource", "reason"],
+            "properties": {
+              "severity": { "enum": ["low", "medium", "high", "critical"] },
+              "actionClass": { "enum": ["shell", "filesystem", "git", "network", "model", "browser", "infra", "database", "package", "runtime", "memory", "external", "unknown"] },
+              "resource": { "type": "string", "minLength": 1 },
+              "reason": { "type": "string", "minLength": 1 }
+            },
+            "additionalProperties": false
+          },
+          "review": {
+            "type": "object",
+            "required": ["required", "reviewerRefs", "approvalRef", "decisionRef"],
+            "properties": {
+              "required": { "type": "boolean" },
+              "reviewerRefs": { "type": "array", "items": { "type": "string" } },
+              "approvalRef": { "type": ["string", "null"] },
+              "decisionRef": { "type": ["string", "null"] },
+              "dueAt": { "type": ["string", "null"], "format": "date-time" },
+              "reviewNotes": { "type": ["string", "null"] }
+            },
+            "additionalProperties": false
+          },
+          "evidenceRefs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "policyDecisionRefs": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+          "links": { "type": "array", "items": { "type": "string" } }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
