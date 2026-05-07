@@ -1,0 +1,8 @@
+{
+  "id": "urn:srcos:receipt:reasoning:sociosphere-fixture",
+  "type": "ReasoningReceipt",
+  "runRef": "urn:srcos:reasoning-run:sociosphere-fixture",
+  "status": "completed",
+  "traceHash": "sha256:sociosphere-fixture-trace",
+  "replayClass": "exact"
+}
