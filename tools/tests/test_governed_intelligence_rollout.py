@@ -26,6 +26,7 @@ def test_governed_intelligence_rollout_status_projection_values() -> None:
     data = yaml.safe_load(REGISTRY.read_text(encoding="utf-8"))
     allowed = set(data["adoption_status_projection"]["allowed_statuses"])
     repos = data["adoption_status_projection"]["repos"]
+    repo_names = {item["repo"] for item in repos}
     assert allowed == {
         "not_started",
         "schema_stubbed",
@@ -33,4 +34,15 @@ def test_governed_intelligence_rollout_status_projection_values() -> None:
         "contract_tests_present",
         "vertical_slice_ready",
     }
+    assert {
+        "SocioProphet/sociosphere",
+        "SocioProphet/ontogenesis",
+        "SocioProphet/holmes",
+        "SocioProphet/sherlock-search",
+        "SocioProphet/gaia-world-model",
+        "SocioProphet/guardrail-fabric",
+        "SocioProphet/agentplane",
+        "SocioProphet/model-governance-ledger",
+        "SocioProphet/slash-topics",
+    } <= repo_names
     assert all(item["status"] in allowed for item in repos)

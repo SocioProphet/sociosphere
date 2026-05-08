@@ -56,6 +56,17 @@ REQUIRED_REPOS = {
     "SocioProphet/gaia-world-model",
     "SocioProphet/guardrail-fabric",
     "SocioProphet/agentplane",
+    "SocioProphet/model-governance-ledger",
+    "SocioProphet/slash-topics",
+}
+REQUIRED_CHILD_ISSUE_REPOS = {
+    "SocioProphet/ontogenesis",
+    "SocioProphet/holmes",
+    "SocioProphet/sherlock-search",
+    "SocioProphet/gaia-world-model",
+    "SocioProphet/guardrail-fabric",
+    "SocioProphet/agentplane",
+    "SocioProphet/model-governance-ledger",
 }
 REQUIRED_MEMBRANES = {
     "/architecture/governed-intelligence",
@@ -144,7 +155,7 @@ def main() -> int:
             require(isinstance(repo, str) and repo.startswith("SocioProphet/"), "invalid child issue repo")
             require(isinstance(issue, int) and issue > 0, f"invalid child issue id for {repo}")
             child_repos.add(repo)
-        require((REQUIRED_REPOS - {"SocioProphet/sociosphere"}) <= child_repos, "missing required child rollout issues")
+        require(REQUIRED_CHILD_ISSUE_REPOS <= child_repos, "missing required child rollout issues")
 
         rollup = data.get("workspace_mesh_rollup")
         require(isinstance(rollup, dict), "workspace_mesh_rollup must be mapping")

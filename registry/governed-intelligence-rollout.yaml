@@ -64,6 +64,10 @@ adoption_status_projection:
       role: learning_traceability
       child_issue: 16
       status: not_started
+    - repo: SocioProphet/slash-topics
+      role: slash_topic_profiles
+      child_issue: null
+      status: not_started
 
 canonical_object_matrix:
   - object: Entity
@@ -127,14 +131,14 @@ child_rollout_issues:
 
 workspace_mesh_rollup:
   status_counts:
-    not_started: 7
+    not_started: 8
     schema_stubbed: 1
     adapter_in_progress: 0
     contract_tests_present: 0
     vertical_slice_ready: 0
   membrane_rollups:
     - membrane: /architecture/governed-intelligence
-      participating_repos: [SocioProphet/sociosphere, SocioProphet/ontogenesis, SocioProphet/holmes, SocioProphet/sherlock-search, SocioProphet/gaia-world-model, SocioProphet/guardrail-fabric, SocioProphet/agentplane, SocioProphet/model-governance-ledger]
+      participating_repos: [SocioProphet/sociosphere, SocioProphet/ontogenesis, SocioProphet/holmes, SocioProphet/sherlock-search, SocioProphet/gaia-world-model, SocioProphet/guardrail-fabric, SocioProphet/agentplane, SocioProphet/model-governance-ledger, SocioProphet/slash-topics]
       projected_status: schema_stubbed
     - membrane: /sherlock/evidence-answers
       participating_repos: [SocioProphet/sherlock-search, SocioProphet/holmes, SocioProphet/gaia-world-model]

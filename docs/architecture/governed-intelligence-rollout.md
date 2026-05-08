@@ -34,6 +34,7 @@ Allowed repo adoption states: `not_started`, `schema_stubbed`, `adapter_in_progr
 | `SocioProphet/guardrail-fabric` | [#23](https://github.com/SocioProphet/guardrail-fabric/issues/23) | `not_started` |
 | `SocioProphet/agentplane` | [#152](https://github.com/SocioProphet/agentplane/issues/152) | `not_started` |
 | `SocioProphet/model-governance-ledger` | [#16](https://github.com/SocioProphet/model-governance-ledger/issues/16) | `not_started` |
+| `SocioProphet/slash-topics` | none (tracked via membrane ownership in this rollout) | `not_started` |
 
 ## Canonical object governance matrix
 
@@ -68,7 +69,7 @@ Allowed repo adoption states: `not_started`, `schema_stubbed`, `adapter_in_progr
 
 | Rollup surface | Covered repos | Operational projection |
 | --- | --- | --- |
-| `/architecture/governed-intelligence` | sociosphere, ontogenesis, holmes, sherlock-search, gaia-world-model, guardrail-fabric, agentplane, model-governance-ledger | `schema_stubbed` (tracked in Sociosphere registry) |
+| `/architecture/governed-intelligence` | sociosphere, ontogenesis, holmes, sherlock-search, gaia-world-model, guardrail-fabric, agentplane, model-governance-ledger, slash-topics | `schema_stubbed` (tracked in Sociosphere registry) |
 | Evidence and claim mesh | sherlock-search, holmes, gaia-world-model, guardrail-fabric | `not_started` |
 | Action admission mesh | guardrail-fabric, agentplane | `not_started` |
 
