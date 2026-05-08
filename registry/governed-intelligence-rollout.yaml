@@ -1,0 +1,153 @@
+kind: GovernedIntelligenceRolloutRegistration
+version: 0.1.0
+updated: 2026-05-08
+owner: SocioProphet/sociosphere
+
+canonical_platform_loop:
+  - Observe
+  - Anchor
+  - Normalize
+  - Propose
+  - Explain
+  - Verify
+  - Govern
+  - Act
+  - Receipt
+  - Learn
+
+slash_topic_membranes:
+  - /architecture/governed-intelligence
+  - /sherlock/evidence-answers
+  - /holmes/proof-claims
+  - /gaia/world-claims
+  - /agents/action-admission
+  - /policy/claim-action-admission
+  - /ontogenesis/schema-contracts
+
+adoption_status_projection:
+  allowed_statuses:
+    - not_started
+    - schema_stubbed
+    - adapter_in_progress
+    - contract_tests_present
+    - vertical_slice_ready
+  repos:
+    - repo: SocioProphet/sociosphere
+      role: coordination_surface
+      child_issue: null
+      status: schema_stubbed
+    - repo: SocioProphet/ontogenesis
+      role: schema_authority
+      child_issue: 77
+      status: not_started
+    - repo: SocioProphet/holmes
+      role: proof_claims
+      child_issue: 7
+      status: not_started
+    - repo: SocioProphet/sherlock-search
+      role: evidence_answers
+      child_issue: 51
+      status: not_started
+    - repo: SocioProphet/gaia-world-model
+      role: world_claims
+      child_issue: 25
+      status: not_started
+    - repo: SocioProphet/guardrail-fabric
+      role: policy_governance
+      child_issue: 23
+      status: not_started
+    - repo: SocioProphet/agentplane
+      role: action_execution
+      child_issue: 152
+      status: not_started
+    - repo: SocioProphet/model-governance-ledger
+      role: learning_traceability
+      child_issue: 16
+      status: not_started
+    - repo: SocioProphet/slash-topics
+      role: slash_topic_profiles
+      child_issue: null
+      status: not_started
+
+canonical_object_matrix:
+  - object: Entity
+    source_of_truth_repo: SocioProphet/ontogenesis
+    consuming_repos: [SocioProphet/holmes, SocioProphet/sherlock-search, SocioProphet/gaia-world-model, SocioProphet/agentplane, SocioProphet/sociosphere]
+  - object: Anchor
+    source_of_truth_repo: SocioProphet/ontogenesis
+    consuming_repos: [SocioProphet/sherlock-search, SocioProphet/holmes, SocioProphet/gaia-world-model, SocioProphet/sociosphere]
+  - object: Evidence
+    source_of_truth_repo: SocioProphet/sherlock-search
+    consuming_repos: [SocioProphet/holmes, SocioProphet/gaia-world-model, SocioProphet/guardrail-fabric, SocioProphet/sociosphere]
+  - object: Claim
+    source_of_truth_repo: SocioProphet/holmes
+    consuming_repos: [SocioProphet/gaia-world-model, SocioProphet/guardrail-fabric, SocioProphet/agentplane, SocioProphet/sociosphere]
+  - object: ProofCertificate
+    source_of_truth_repo: SocioProphet/holmes
+    consuming_repos: [SocioProphet/guardrail-fabric, SocioProphet/agentplane, SocioProphet/sociosphere]
+  - object: ExplanationTrace
+    source_of_truth_repo: SocioProphet/holmes
+    consuming_repos: [SocioProphet/guardrail-fabric, SocioProphet/agentplane, SocioProphet/model-governance-ledger, SocioProphet/sociosphere]
+  - object: VectorCandidate
+    source_of_truth_repo: SocioProphet/sherlock-search
+    consuming_repos: [SocioProphet/holmes, SocioProphet/gaia-world-model, SocioProphet/sociosphere]
+  - object: PolicyDecision
+    source_of_truth_repo: SocioProphet/guardrail-fabric
+    consuming_repos: [SocioProphet/agentplane, SocioProphet/sociosphere, SocioProphet/model-governance-ledger]
+  - object: ActionProposal
+    source_of_truth_repo: SocioProphet/agentplane
+    consuming_repos: [SocioProphet/guardrail-fabric, SocioProphet/sociosphere]
+  - object: ActionAdmission
+    source_of_truth_repo: SocioProphet/guardrail-fabric
+    consuming_repos: [SocioProphet/agentplane, SocioProphet/sociosphere]
+  - object: RuntimeReceipt
+    source_of_truth_repo: SocioProphet/agentplane
+    consuming_repos: [SocioProphet/model-governance-ledger, SocioProphet/sociosphere]
+  - object: LearningEvent
+    source_of_truth_repo: SocioProphet/model-governance-ledger
+    consuming_repos: [SocioProphet/ontogenesis, SocioProphet/holmes, SocioProphet/guardrail-fabric, SocioProphet/sociosphere]
+  - object: Revocation
+    source_of_truth_repo: SocioProphet/guardrail-fabric
+    consuming_repos: [SocioProphet/agentplane, SocioProphet/holmes, SocioProphet/sociosphere]
+  - object: SlashTopicProfile
+    source_of_truth_repo: SocioProphet/slash-topics
+    consuming_repos: [SocioProphet/sherlock-search, SocioProphet/gaia-world-model, SocioProphet/sociosphere]
+
+child_rollout_issues:
+  - repo: SocioProphet/ontogenesis
+    issue: 77
+  - repo: SocioProphet/holmes
+    issue: 7
+  - repo: SocioProphet/sherlock-search
+    issue: 51
+  - repo: SocioProphet/gaia-world-model
+    issue: 25
+  - repo: SocioProphet/guardrail-fabric
+    issue: 23
+  - repo: SocioProphet/agentplane
+    issue: 152
+  - repo: SocioProphet/model-governance-ledger
+    issue: 16
+
+workspace_mesh_rollup:
+  status_counts:
+    not_started: 8
+    schema_stubbed: 1
+    adapter_in_progress: 0
+    contract_tests_present: 0
+    vertical_slice_ready: 0
+  membrane_rollups:
+    - membrane: /architecture/governed-intelligence
+      participating_repos: [SocioProphet/sociosphere, SocioProphet/ontogenesis, SocioProphet/holmes, SocioProphet/sherlock-search, SocioProphet/gaia-world-model, SocioProphet/guardrail-fabric, SocioProphet/agentplane, SocioProphet/model-governance-ledger, SocioProphet/slash-topics]
+      projected_status: schema_stubbed
+    - membrane: /sherlock/evidence-answers
+      participating_repos: [SocioProphet/sherlock-search, SocioProphet/holmes, SocioProphet/gaia-world-model]
+      projected_status: not_started
+    - membrane: /policy/claim-action-admission
+      participating_repos: [SocioProphet/guardrail-fabric, SocioProphet/agentplane]
+      projected_status: not_started
+
+non_goals:
+  - Sociosphere coordinates and projects operating state, but does not own all canonical schemas.
+  - Ontogenesis-generated contracts remain authoritative and must not be bypassed.
+  - VectorCandidate remains candidate_only until evidence/proof/policy gates validate admission.
