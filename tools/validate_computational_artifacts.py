@@ -183,7 +183,8 @@ def main() -> int:
         return fail(str(exc))
 
     entry_count = len(entries)
-    print(f"OK: validated computational-artifacts registry ({entry_count} entry/entries)")
+    noun = "entry" if entry_count == 1 else "entries"
+    print(f"OK: validated computational-artifacts registry ({entry_count} {noun})")
     return 0
 
 

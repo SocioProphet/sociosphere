@@ -29,7 +29,8 @@ _runner_spec = importlib.util.spec_from_file_location(
     ROOT / "tools" / "runner" / "runner.py",
 )
 _runner = importlib.util.module_from_spec(_runner_spec)  # type: ignore[arg-type]
-sys.modules.setdefault("runner", _runner)
+if "runner" not in sys.modules:
+    sys.modules["runner"] = _runner
 _runner_spec.loader.exec_module(_runner)  # type: ignore[union-attr]
 
 
