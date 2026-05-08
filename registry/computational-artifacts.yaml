@@ -1,0 +1,93 @@
+apiVersion: sociosphere.socioprophet.org/v1alpha1
+kind: ComputationalArtifactRegistry
+metadata:
+  name: sociosphere-computational-artifacts
+  version: 0.1.0
+spec:
+  purpose: >-
+    Registry seed for executable, governed computational knowledge artifacts
+    consumed by Prophet Platform, Ontogenesis, GAIA, Lattice Forge,
+    Sherlock/Holmes, Delivery Excellence, and SourceOS.
+  artifactContract:
+    apiVersion: socioprophet.org/v1alpha1
+    kind: ProphetArtifact
+    schemaRef: SocioProphet/ontogenesis:schemas/prophet-artifact.schema.json
+  canonicalActions:
+    - detect
+    - fetch
+    - prepare
+    - build
+    - run
+    - validate
+    - benchmark
+    - tune
+    - publish
+    - attest
+  safetyClasses:
+    advisory:
+      description: Read-only analysis, documentation, or evidence production.
+      defaultReview: automated
+    bounded:
+      description: Fixture-backed or explicitly bounded workflow with reversible outputs.
+      defaultReview: automated-with-policy-gate
+    privileged:
+      description: Host, cluster, identity, deployment, runtime admission, or effects-linked mutation.
+      defaultReview: human-required
+    prohibited:
+      description: Unsafe, illegal, destructive, or ungoverned action.
+      defaultReview: blocked
+  registryEntries:
+    - id: gaia.bounded-osm-ingest
+      ownerRepo: SocioProphet/gaia-world-model
+      artifactPath: artifacts/gaia-bounded-osm-ingest/prophet-artifact.yaml
+      runtimeProfile: lattice-forge/gaia-osm-ingest:0.1.0
+      safetyClass: bounded
+      slashTopics:
+        - /gaia/osm
+        - /gaia/ingest
+        - /world-model/provenance
+      downstreamConsumers:
+        - SocioProphet/prophet-platform
+        - SocioProphet/sherlock-search
+        - SocioProphet/holmes
+        - SocioProphet/delivery-excellence
+      status: seed
+      requiredEvidence:
+        - run-record
+        - source-receipts
+        - validation-report
+        - benchmark-report
+        - checksums
+        - lineage
+        - sbom
+  propagationRules:
+    - when: artifactContractChanged
+      notifyRepos:
+        - SocioProphet/prophet-platform
+        - SocioProphet/gaia-world-model
+        - SocioProphet/lattice-forge
+        - SocioProphet/sherlock-search
+        - SocioProphet/holmes
+        - SocioProphet/delivery-excellence
+    - when: runtimeProfileChanged
+      notifyRepos:
+        - SocioProphet/prophet-platform
+        - SocioProphet/gaia-world-model
+        - SocioProphet/delivery-excellence
+    - when: safetyClassPrivileged
+      requireHumanReview: true
+      blockAutoPromotion: true
+  healthModel:
+    freshnessStates:
+      - fresh
+      - stale
+      - drifted
+      - blocked
+      - deprecated
+    requiredSignals:
+      - schema-valid
+      - policy-valid
+      - evidence-present
+      - runtime-resolved
+      - search-indexed
+      - scoreboard-published
