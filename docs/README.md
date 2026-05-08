@@ -16,6 +16,7 @@
 - [Runtime, content, and orchestration placement](architecture/runtime-content-placement.md)
 - [Upstream bindings — edge capabilities](architecture/upstream-bindings-edge-capabilities.md)
 - [Validation contract](architecture/validation-contract.md)
+- [Governed-intelligence rollout](architecture/governed-intelligence-rollout.md)
 - [Standards: adaptation v1](architecture/standards-adaptation.md)
 - [UI workbench](architecture/ui-workbench.md)
 
