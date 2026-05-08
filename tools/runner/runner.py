@@ -4,18 +4,19 @@
 Canonical workspace runner for manifest+lock orchestration.
 
 Commands:
-  - list:            show manifest repos + whether materialized
-  - fetch:           materialize missing repos (git clone) and checkout lock rev
-  - lock-verify:     verify role validity plus manifest/lock/drift state
-  - lock-update:     update lock revisions from currently-materialized repos
-  - inventory:       print repo / revision / license supply-chain report
-  - protocol:test:   execute protocol compatibility surface (fixture stub until vectors land)
-  - validate-policy: validate workspace policy refs and hashes
-  - validate-trust:  validate trust repo presence and trust metadata
-  - trust-report:    emit a structured trust report for the workspace
-  - run:             run a task (build/test/lint/etc.) across selected repos and emit structured artifacts
-  - check-manifest:  validate manifest role/path naming conventions
-  - sbom:            emit a CycloneDX 1.4 JSON SBOM for the workspace
+  - list:                    show manifest repos + whether materialized
+  - fetch:                   materialize missing repos (git clone) and checkout lock rev
+  - lock-verify:             verify role validity plus manifest/lock/drift state
+  - lock-update:             update lock revisions from currently-materialized repos
+  - inventory:               print repo / revision / license supply-chain report
+  - protocol:test:           execute protocol compatibility surface (fixture stub until vectors land)
+  - validate-policy:         validate workspace policy refs and hashes
+  - validate-trust:          validate trust repo presence and trust metadata
+  - trust-report:            emit a structured trust report for the workspace
+  - run:                     run a task (build/test/lint/etc.) across selected repos and emit structured artifacts
+  - check-manifest:          validate manifest role/path naming conventions
+  - sbom:                    emit a CycloneDX 1.4 JSON SBOM for the workspace
+  - artifact-health-report:  emit a deterministic health report for the computational artifact registry
 
 Stdlib-only: no Python deps beyond Python 3.11+.
 """
@@ -870,6 +871,124 @@ def cmd_run(args: argparse.Namespace) -> int:
     return rc
 
 
+def _load_computational_artifacts() -> dict[str, Any]:
+    """Load registry/computational-artifacts.yaml.  Returns {} if unavailable."""
+    registry_path = ROOT / "registry" / "computational-artifacts.yaml"
+    if not registry_path.exists():
+        return {}
+    try:
+        import importlib.util as _ilu
+
+        if _ilu.find_spec("yaml") is None:
+            return {}
+        import yaml as _yaml  # type: ignore[import-not-found]
+
+        data = _yaml.safe_load(registry_path.read_text(encoding="utf-8"))
+        return data if isinstance(data, dict) else {}
+    except Exception:
+        return {}
+
+
+def _artifact_health_state(entry: dict[str, Any]) -> str:
+    """Derive a health state from a registry entry.
+
+    Rules (in priority order):
+    - safetyClass prohibited  -> blocked
+    - status deprecated        -> deprecated
+    - status seed              -> stale   (not yet promoted / evidence pending)
+    - status drifted           -> drifted
+    - status blocked           -> blocked
+    - status fresh / active    -> fresh
+    - fallback                 -> stale
+    """
+    safety = entry.get("safetyClass", "")
+    if safety == "prohibited":
+        return "blocked"
+    status = entry.get("status", "")
+    if status == "deprecated":
+        return "deprecated"
+    if status in ("seed",):
+        return "stale"
+    if status == "drifted":
+        return "drifted"
+    if status == "blocked":
+        return "blocked"
+    if status in ("fresh", "active", "promoted"):
+        return "fresh"
+    return "stale"
+
+
+def artifact_health_report_payload(registry: dict[str, Any]) -> dict[str, Any]:
+    spec = registry.get("spec") or {}
+    entries = spec.get("registryEntries") or []
+    blocked_auto_promote = {"privileged", "prohibited"}
+
+    rows: list[dict[str, Any]] = []
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        safety_cls = entry.get("safetyClass", "")
+        health = _artifact_health_state(entry)
+        rows.append(
+            {
+                "id": entry.get("id"),
+                "ownerRepo": entry.get("ownerRepo"),
+                "runtimeProfile": entry.get("runtimeProfile"),
+                "safetyClass": safety_cls,
+                "evidenceStatus": entry.get("status", "unknown"),
+                "requiredEvidence": entry.get("requiredEvidence") or [],
+                "downstreamConsumers": entry.get("downstreamConsumers") or [],
+                "slashTopics": entry.get("slashTopics") or [],
+                "healthState": health,
+                "autoPromotionBlocked": safety_cls in blocked_auto_promote,
+            }
+        )
+
+    return {
+        "kind": "ComputationalArtifactHealthReport",
+        "generatedAt": now_iso(),
+        "registryVersion": (registry.get("metadata") or {}).get("version", "unknown"),
+        "artifacts": rows,
+    }
+
+
+def cmd_artifact_health_report(args: argparse.Namespace) -> int:
+    registry = _load_computational_artifacts()
+    if not registry:
+        print(
+            "ERR: could not load registry/computational-artifacts.yaml "
+            "(ensure PyYAML is installed: pip install pyyaml)",
+            file=sys.stderr,
+        )
+        return 2
+
+    payload = artifact_health_report_payload(registry)
+    out: str = getattr(args, "output", "-")
+
+    if getattr(args, "table", False):
+        artifacts = payload["artifacts"]
+        header = f"{'id':32s} {'ownerRepo':36s} {'safetyClass':12s} {'healthState':10s} {'evidenceStatus':14s}"
+        print(header)
+        print("-" * len(header))
+        for a in artifacts:
+            blocked_flag = " [NO-AUTO-PROMOTE]" if a["autoPromotionBlocked"] else ""
+            print(
+                f"{str(a['id'] or '-'):32s} "
+                f"{str(a['ownerRepo'] or '-'):36s} "
+                f"{str(a['safetyClass'] or '-'):12s} "
+                f"{str(a['healthState'] or '-'):10s} "
+                f"{str(a['evidenceStatus'] or '-'):14s}"
+                f"{blocked_flag}"
+            )
+    elif out == "-":
+        print(json.dumps(payload, indent=2, sort_keys=True))
+    else:
+        write_json(Path(out), payload)
+        print(f"[artifact-health-report] wrote {out}")
+
+    return 0
+
+
 def cmd_check_manifest(args: argparse.Namespace) -> int:
     _, repos = load_workspace_and_repos()
     warnings: list[str] = []
@@ -952,6 +1071,14 @@ def main() -> int:
     sp = sub.add_parser("sbom", help="Emit CycloneDX 1.4 JSON SBOM for the workspace")
     sp.add_argument("--output", default="-", metavar="FILE", help="Output file path (default: stdout)")
     sp.set_defaults(fn=cmd_sbom)
+
+    sp = sub.add_parser(
+        "artifact-health-report",
+        help="Emit deterministic health report for computational artifact registry",
+    )
+    sp.add_argument("--output", default="-", metavar="FILE", help="Output file path (default: stdout)")
+    sp.add_argument("--table", action="store_true", help="Print as human-readable table instead of JSON")
+    sp.set_defaults(fn=cmd_artifact_health_report)
 
     args = p.parse_args()
     return int(args.fn(args))
