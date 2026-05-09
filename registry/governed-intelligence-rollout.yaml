@@ -1,0 +1,149 @@
+version: 0.1.0
+updated_at: '2026-05-09'
+status: draft
+parent_issue: SocioProphet/sociosphere#310
+canonical_loop:
+  - observe
+  - anchor
+  - normalize
+  - propose
+  - explain
+  - verify
+  - govern
+  - act
+  - receipt
+  - learn
+invariants:
+  - raw_model_output_is_proposal_not_truth
+  - graph_candidates_are_proposals_not_truth
+  - vector_candidates_remain_candidate_only
+  - holmes_verifies_and_explains_but_does_not_admit
+  - policy_fabric_decides_allow_deny_review_or_provisional
+  - agentplane_acts_only_after_admission_and_emits_receipts
+slash_topic_membranes:
+  - id: /architecture/governed-intelligence
+    owner_repo: SocioProphet/sociosphere
+    purpose: Reference architecture rollout and adoption state.
+  - id: /sherlock/evidence-answers
+    owner_repo: SocioProphet/sherlock-search
+    purpose: Evidence-bearing answer candidates, anchors, proposed claims, and display handoff.
+  - id: /holmes/proof-claims
+    owner_repo: SocioProphet/holmes
+    purpose: Proof claims, reasoning traces, contradiction reports, and explanation contracts.
+  - id: /gaia/world-claims
+    owner_repo: SocioProphet/gaia-world-model
+    purpose: Spatial-temporal world claims, geospatial anchors, fusion evidence, uncertainty, and map display.
+  - id: /agents/action-admission
+    owner_repo: SocioProphet/agentplane
+    purpose: Action proposals, admission handoff, runtime boundary records, and receipts.
+  - id: /policy/claim-action-admission
+    owner_repo: SocioProphet/guardrail-fabric
+    purpose: Claim/action admission policy, evidence sufficiency, review gates, and revocation.
+  - id: /ontogenesis/schema-contracts
+    owner_repo: SocioProphet/ontogenesis
+    purpose: Canonical schemas, ontology, SHACL, JSON-LD, and vector encoding manifests.
+  - id: /models/governance-ledger
+    owner_repo: SocioProphet/model-governance-ledger
+    purpose: Model lineage, inference traces, evaluation reports, drift events, and learning events.
+canonical_objects:
+  - name: Entity
+    schema_owner: SocioProphet/ontogenesis
+    primary_runtime_owner: SocioProphet/regis-entity-graph
+    consumers: [SocioProphet/sherlock-search, SocioProphet/holmes, SocioProphet/gaia-world-model, SocioProphet/sociosphere]
+  - name: Anchor
+    schema_owner: SocioProphet/ontogenesis
+    primary_runtime_owner: SocioProphet/sherlock-search
+    consumers: [SocioProphet/gaia-world-model, SocioProphet/model-governance-ledger, SocioProphet/holmes]
+  - name: Evidence
+    schema_owner: SocioProphet/ontogenesis
+    primary_runtime_owner: SocioProphet/sherlock-search
+    consumers: [SocioProphet/holmes, SocioProphet/guardrail-fabric, SocioProphet/gaia-world-model]
+  - name: Claim
+    schema_owner: SocioProphet/ontogenesis
+    primary_runtime_owner: SocioProphet/holmes
+    consumers: [SocioProphet/sherlock-search, SocioProphet/gaia-world-model, SocioProphet/guardrail-fabric, SocioProphet/sociosphere]
+  - name: ProofCertificate
+    schema_owner: SocioProphet/ontogenesis
+    primary_runtime_owner: SocioProphet/holmes
+    consumers: [SocioProphet/guardrail-fabric, SocioProphet/sociosphere]
+  - name: ExplanationTrace
+    schema_owner: SocioProphet/ontogenesis
+    primary_runtime_owner: SocioProphet/holmes
+    consumers: [SocioProphet/sherlock-search, SocioProphet/guardrail-fabric, SocioProphet/gaia-world-model, SocioProphet/model-governance-ledger]
+  - name: VectorCandidate
+    schema_owner: SocioProphet/ontogenesis
+    primary_runtime_owner: SocioProphet/sherlock-search
+    required_status: candidate_only
+    consumers: [SocioProphet/holmes, SocioProphet/gaia-world-model, SocioProphet/agentplane]
+  - name: PolicyDecision
+    schema_owner: SocioProphet/ontogenesis
+    primary_runtime_owner: SocioProphet/guardrail-fabric
+    allowed_states: [allow, deny, require_review, provisional]
+    consumers: [SocioProphet/holmes, SocioProphet/sherlock-search, SocioProphet/gaia-world-model, SocioProphet/agentplane, SocioProphet/sociosphere]
+  - name: ActionProposal
+    schema_owner: SocioProphet/ontogenesis
+    primary_runtime_owner: SocioProphet/agentplane
+    consumers: [SocioProphet/guardrail-fabric, SocioProphet/sociosphere]
+  - name: ActionAdmission
+    schema_owner: SocioProphet/ontogenesis
+    primary_runtime_owner: SocioProphet/guardrail-fabric
+    consumers: [SocioProphet/agentplane, SocioProphet/sociosphere]
+  - name: RuntimeReceipt
+    schema_owner: SocioProphet/ontogenesis
+    primary_runtime_owner: SocioProphet/agentplane
+    consumers: [SocioProphet/sociosphere, SocioProphet/model-governance-ledger]
+  - name: LearningEvent
+    schema_owner: SocioProphet/ontogenesis
+    primary_runtime_owner: SocioProphet/model-governance-ledger
+    consumers: [SocioProphet/sociosphere, SocioProphet/holmes, SocioProphet/guardrail-fabric]
+  - name: Revocation
+    schema_owner: SocioProphet/ontogenesis
+    primary_runtime_owner: SocioProphet/guardrail-fabric
+    consumers: [SocioProphet/sociosphere, SocioProphet/holmes, SocioProphet/sherlock-search, SocioProphet/gaia-world-model, SocioProphet/agentplane]
+  - name: SlashTopicProfile
+    schema_owner: SocioProphet/ontogenesis
+    primary_runtime_owner: SocioProphet/sociosphere
+    consumers: [SocioProphet/sherlock-search, SocioProphet/holmes, SocioProphet/gaia-world-model, SocioProphet/agentplane]
+repo_adoption:
+  - repo: SocioProphet/sociosphere
+    issue: 310
+    role: rollout_registry_and_slash_topic_projection
+    adoption_state: schema_stubbed
+  - repo: SocioProphet/ontogenesis
+    issue: 77
+    role: canonical_schema_generation
+    adoption_state: not_started
+  - repo: SocioProphet/holmes
+    issue: 7
+    role: proof_claim_and_reasoning_contracts
+    adoption_state: not_started
+  - repo: SocioProphet/sherlock-search
+    issue: 51
+    role: evidence_answer_contracts
+    adoption_state: not_started
+  - repo: SocioProphet/gaia-world-model
+    issue: 25
+    role: governed_world_claim_contracts
+    adoption_state: not_started
+  - repo: SocioProphet/guardrail-fabric
+    issue: 23
+    role: claim_action_admission_policy
+    adoption_state: not_started
+  - repo: SocioProphet/agentplane
+    issue: 152
+    role: action_proposal_admission_and_runtime_receipts
+    adoption_state: not_started
+  - repo: SocioProphet/model-governance-ledger
+    issue: 16
+    role: model_lineage_inference_trace_and_learning_events
+    adoption_state: not_started
+vertical_slices:
+  - id: sherlock_holmes_policy_answer
+    status: planned
+    flow: Sherlock query -> Anchor -> Evidence -> ProposedClaim -> Holmes ExplanationTrace -> PolicyDecision -> Answer display
+  - id: gaia_world_claim
+    status: planned
+    flow: Bounded source evidence -> GeoAnchor -> WorldClaim -> FusionExplanation -> Uncertainty -> PolicyDecision -> /map evidence display
+  - id: agentplane_action_receipt
+    status: planned
+    flow: AgentIntent -> ActionProposal -> PolicyDecision/ActionAdmission -> RuntimeBoundary -> RuntimeReceipt -> Sociosphere/LearningEvent
