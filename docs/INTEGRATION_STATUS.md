@@ -25,6 +25,17 @@ facts that were previously repeated in multiple places.
 - Fast-LLM baseline: `ServiceNow/Fast-LLM main @ 7a7129d7775cea459cb19a48be0d831ccc7b4e7d`
 - Status: captured in repo; policy disposition lives in the architecture note and operational baseline lives in the registry + drift check tool
 
+### Agent harness delivery routing
+- Routing doc: `docs/integration/agent-harness-delivery-routing.md`
+- Delivery/performance authority: `SocioProphet/delivery-excellence`
+- Delivery automation authority: `SocioProphet/delivery-excellence-automation`
+- Runtime evidence producer: `SocioProphet/agentplane`
+- Policy/guardrail producers: `SocioProphet/policy-fabric`, `SocioProphet/guardrail-fabric`
+- Memory/context producer: `SocioProphet/memory-mesh`
+- Browser and terminal producers: `SourceOS-Linux/BearBrowser`, `SourceOS-Linux/TurtleTerm`, `SourceOS-Linux/agent-term`
+- Security validation producer: `SocioProphet/SCOPE-D`
+- Status: routing captured in repo; Delivery Excellence owns scoreboards, KPI/OKR definitions, customer-proof readouts, and operating cadence; SocioSphere owns topology and must not duplicate scoreboards
+
 ## Resolved migration timeline
 
 | Stage | Snapshot |
@@ -44,3 +55,7 @@ treat that content as historical context. Current behavior is defined by
 For edge-capability upstreams, treat the registry file plus drift-check tool as
 the operational baseline, and treat the narrative binding doc as the policy /
 disposition explanation.
+
+For agent harness delivery routing, treat `docs/integration/agent-harness-delivery-routing.md`
+as the topology and boundary source. Delivery Excellence remains the performance,
+scoreboard, KPI/OKR, work packaging, and customer-proof authority.
