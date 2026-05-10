@@ -1,0 +1,15 @@
+{
+  "id": "urn:srcos:reasoning-run:sociosphere-fixture",
+  "type": "ReasoningRun",
+  "status": "completed",
+  "workspaceRef": "urn:socioprophet:workspace:superconscious-m1",
+  "safeTrace": {
+    "mode": "operational-trace-only",
+    "rawPrivateReasoning": "not-collected",
+    "eventCount": 2
+  },
+  "eventRefs": [
+    "urn:srcos:reasoning-event:sociosphere-fixture-created",
+    "urn:srcos:reasoning-event:sociosphere-fixture-completed"
+  ]
+}
