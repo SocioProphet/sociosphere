@@ -8,6 +8,7 @@
     "adapter_version",
     "repo",
     "domain",
+    "controller_protocol",
     "claims",
     "gates",
     "non_claims"
