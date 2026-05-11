@@ -93,7 +93,13 @@ jobs:
         run: python3 tools/materialize_proof_workspace.py --force
 
       - name: Strictly validate materialized proof adapters
-        run: python3 tools/validate_proof_apparatus.py --strict-adapters
+        run: |
+          mkdir -p status/proof-apparatus
+          set +e
+          python3 tools/validate_proof_apparatus.py --strict-adapters 2>&1 | tee status/proof-apparatus/strict-adapter-validation.log
+          status=${PIPESTATUS[0]}
+          echo "$status" > status/proof-apparatus/strict-adapter-validation.exitcode
+          exit "$status"
 
       - name: Run proof workspace controller gates
         run: python3 tools/run_proof_workspace_gates.py
@@ -105,6 +111,7 @@ jobs:
         if: failure()
         run: |
           mkdir -p status/proof-apparatus
+          cp proof/bsd-proof-program/proof-adapter.json status/proof-apparatus/materialized-domain-proof-adapter.json 2>/dev/null || true
           cat > status/proof-apparatus/failure-context.md <<'EOF'
           # Proof Apparatus Failure Context
 
@@ -117,10 +124,12 @@ jobs:
           - domain_repo: ${{ inputs.domain_repo || github.event.client_payload.repository || github.repository }}
           - domain_ref: ${{ inputs.domain_ref || github.event.client_payload.ref || github.ref_name }}
           - domain_sha: ${{ inputs.domain_sha || github.event.client_payload.sha || github.sha }}
+          - run_id: ${{ github.run_id }}
+          - run_attempt: ${{ github.run_attempt }}
 
-          ## Interpretation
+          ## Failure evidence
 
-          Inspect job logs for the first failing step. If the failure occurred during strict adapter validation, the failure is expected for negative-test PRs and should name the rejected adapter field, claim, gate, or non-claim.
+          See `strict-adapter-validation.log` for the first adapter validation error. See `materialized-domain-proof-adapter.json` for the adapter content checked at the triggering SHA when available.
           EOF
 
       - name: Upload proof apparatus controller outputs
