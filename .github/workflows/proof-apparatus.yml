@@ -111,7 +111,10 @@ jobs:
         if: failure()
         run: |
           mkdir -p status/proof-apparatus
-          cp proof/bsd-proof-program/proof-adapter.json status/proof-apparatus/materialized-domain-proof-adapter.json 2>/dev/null || true
+          domain_repo="${{ inputs.domain_repo || github.event.client_payload.repository || github.repository }}"
+          domain_name="${domain_repo#*/}"
+          adapter_path="proof/${domain_name}/proof-adapter.json"
+          cp "$adapter_path" status/proof-apparatus/materialized-domain-proof-adapter.json 2>/dev/null || true
           cat > status/proof-apparatus/failure-context.md <<'EOF'
           # Proof Apparatus Failure Context
 
@@ -131,6 +134,35 @@ jobs:
 
           See `strict-adapter-validation.log` for the first adapter validation error. See `materialized-domain-proof-adapter.json` for the adapter content checked at the triggering SHA when available.
           EOF
+
+      - name: Print failure artifact summary
+        if: failure()
+        run: |
+          echo '--- proof apparatus failure artifact manifest ---'
+          find status/proof-apparatus -type f -maxdepth 1 -print | sort
+          echo '--- strict-adapter-validation.exitcode ---'
+          cat status/proof-apparatus/strict-adapter-validation.exitcode 2>/dev/null || true
+          echo '--- strict-adapter-validation.log ---'
+          cat status/proof-apparatus/strict-adapter-validation.log 2>/dev/null || true
+          echo '--- failure-context.md ---'
+          cat status/proof-apparatus/failure-context.md 2>/dev/null || true
+          echo '--- materialized adapter M6 state snippet ---'
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path('status/proof-apparatus/materialized-domain-proof-adapter.json')
+          if path.exists():
+              data = json.loads(path.read_text())
+              for claim in data.get('claims', []):
+                  if claim.get('claim_id') == 'BSD-M6-002-four-descent-named-primes':
+                      print(json.dumps({
+                          'claim_id': claim.get('claim_id'),
+                          'state': claim.get('state'),
+                          'severity': claim.get('severity'),
+                          'non_claim_refs': claim.get('non_claim_refs'),
+                          'boundary': claim.get('boundary'),
+                      }, indent=2))
+          PY
 
       - name: Upload proof apparatus controller outputs
         if: always()
