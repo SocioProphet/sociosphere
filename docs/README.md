@@ -9,6 +9,8 @@
 - [Agentic workbench protocol v0](../protocol/agentic-workbench/v0/README.md)
 - [EMVI operator shell architecture](architecture/emvi/README.md)
 - [EMVI proof slice protocol v0](../protocol/emvi-proof-slice/v0/README.md)
+- [Proof apparatus workspace protocol v0](../protocol/proof-apparatus-workspace/v0/README.md)
+- [Proof apparatus workspace controller](architecture/proof-apparatus-workspace-controller.md)
 - [UI workbench app README](../apps/ui-workbench/README.md)
 - [Overview](architecture/overview.md)
 - [Sovereign civic computation estate alignment](architecture/sovereign-civic-computation-alignment.md)
@@ -28,6 +30,7 @@
 - [QES (Quality Evidence Standard)](../standards/qes/README.md)
 - [Angel of the Lord Hardening Regime](../standards/angel-of-the-lord/README.md)
 - [Source Exposure Governance Standard](../standards/source-exposure/README.md)
+- [Proof Apparatus Standard](../standards/proof-apparatus/README.md)
 - [Adaptation README](standards/adaptation/README.md)
 
 ## Governance
@@ -46,6 +49,7 @@
 
 ## Canonical-document policy
 - **Current workspace behavior**: `../README.md`, `architecture/overview.md`, `SCOPE_PURPOSE_STATUS_BACKLOG.md`
+- **Current proof workspace behavior**: `../manifest/proof-workspace.toml`, `../protocol/proof-apparatus-workspace/v0/README.md`, `architecture/proof-apparatus-workspace-controller.md`
 - **Current integration facts**: `INTEGRATION_STATUS.md`
 - **Archival history only**: `ECOSYSTEM-BRIEF.md`
 
