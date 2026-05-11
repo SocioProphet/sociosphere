@@ -20,7 +20,6 @@ import argparse
 import hashlib
 import json
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -35,6 +34,7 @@ PROOF_MANIFEST = ROOT / "manifest" / "proof-workspace.toml"
 OUTPUT_DIR = ROOT / "status" / "proof-apparatus"
 CLAIM_TABLE = OUTPUT_DIR / "claim-boundary-table.md"
 LEDGER_EVENTS = OUTPUT_DIR / "claim-ledger-events.jsonl"
+DETERMINISTIC_TIMESTAMP = "proof-workspace-materialized-adapter-snapshot"
 
 
 def fail(message: str) -> None:
@@ -141,7 +141,6 @@ def write_claim_table(collected: list[tuple[dict[str, Any], dict[str, Any], Path
 
 
 def write_ledger_events(collected: list[tuple[dict[str, Any], dict[str, Any], Path, str]]) -> None:
-    now = datetime.now(timezone.utc).replace(microsecond=0).isoformat()
     events: list[dict[str, Any]] = []
 
     for repo, adapter, adapter_path, digest in collected:
@@ -152,7 +151,7 @@ def write_ledger_events(collected: list[tuple[dict[str, Any], dict[str, Any], Pa
                 {
                     "event_id": hashlib.sha256(event_id_seed.encode("utf-8")).hexdigest()[:24],
                     "event_type": "evidence_recorded",
-                    "timestamp": now,
+                    "timestamp": DETERMINISTIC_TIMESTAMP,
                     "repo": adapter.get("repo", repo["name"]),
                     "ref": repo.get("ref", "main"),
                     "claim_id": "adapter-only",
@@ -184,7 +183,7 @@ def write_ledger_events(collected: list[tuple[dict[str, Any], dict[str, Any], Pa
                 {
                     "event_id": hashlib.sha256(event_id_seed.encode("utf-8")).hexdigest()[:24],
                     "event_type": "claim_registered",
-                    "timestamp": now,
+                    "timestamp": DETERMINISTIC_TIMESTAMP,
                     "repo": adapter.get("repo", repo["name"]),
                     "ref": repo.get("ref", "main"),
                     "claim_id": claim.get("claim_id"),
@@ -196,8 +195,16 @@ def write_ledger_events(collected: list[tuple[dict[str, Any], dict[str, Any], Pa
                     "severity": claim.get("severity"),
                     "claim_statement": claim.get("statement"),
                     "claim_boundary": claim.get("boundary", []),
-                    "non_claims": [n.get("statement", "") for n in adapter.get("non_claims", []) if n.get("non_claim_id") in set(claim.get("non_claim_refs", []))],
-                    "gates": [g for g in adapter.get("gates", []) if g.get("gate_id") in set(claim.get("owned_gates", []))],
+                    "non_claims": [
+                        n.get("statement", "")
+                        for n in adapter.get("non_claims", [])
+                        if n.get("non_claim_id") in set(claim.get("non_claim_refs", []))
+                    ],
+                    "gates": [
+                        g
+                        for g in adapter.get("gates", [])
+                        if g.get("gate_id") in set(claim.get("owned_gates", []))
+                    ],
                     "artifact_digests": [
                         {
                             "path": str(adapter_path.relative_to(ROOT)),
