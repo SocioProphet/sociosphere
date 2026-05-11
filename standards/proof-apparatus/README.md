@@ -4,6 +4,14 @@ This standard defines the governed object model for proof programs that use type
 
 The standard exists so SocioSphere can orchestrate proof tests, evidence capture, cross-validation, and claim promotion across multiple mathematics repositories without collapsing their different domains into one undifferentiated proof narrative.
 
+## Files
+
+| File | Purpose |
+|---|---|
+| `README.md` | Human-readable proof apparatus standard |
+| `claim-ledger.schema.json` | Controller-side evidence, promotion, obstruction, and snapshot event schema |
+| `proof-adapter.schema.json` | Domain-repository manifest schema for exposing claims, gates, non-claims, and obstruction walls to SocioSphere |
+
 ## Apparatus shape
 
 A proof apparatus record has four primary coordinates:
