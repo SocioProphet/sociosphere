@@ -6,14 +6,22 @@ on:
       - 'manifest/proof-workspace.toml'
       - 'protocol/proof-apparatus-workspace/**'
       - 'standards/proof-apparatus/**'
+      - 'registry/proof-adjacency-ranking.v0.yaml'
       - 'tools/validate_proof_apparatus.py'
+      - 'tools/materialize_proof_workspace.py'
+      - 'tools/run_proof_workspace_gates.py'
+      - 'tools/generate_proof_workspace_outputs.py'
       - '.github/workflows/proof-apparatus.yml'
   pull_request:
     paths:
       - 'manifest/proof-workspace.toml'
       - 'protocol/proof-apparatus-workspace/**'
       - 'standards/proof-apparatus/**'
+      - 'registry/proof-adjacency-ranking.v0.yaml'
       - 'tools/validate_proof_apparatus.py'
+      - 'tools/materialize_proof_workspace.py'
+      - 'tools/run_proof_workspace_gates.py'
+      - 'tools/generate_proof_workspace_outputs.py'
       - '.github/workflows/proof-apparatus.yml'
 
 jobs:
@@ -28,5 +36,17 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Validate proof apparatus control plane
+      - name: Validate controller-only proof apparatus metadata
         run: python3 tools/validate_proof_apparatus.py
+
+      - name: Materialize proof workspace repos
+        run: python3 tools/materialize_proof_workspace.py --force
+
+      - name: Strictly validate materialized proof adapters
+        run: python3 tools/validate_proof_apparatus.py --strict-adapters
+
+      - name: Run proof workspace controller gates
+        run: python3 tools/run_proof_workspace_gates.py
+
+      - name: Generate proof workspace controller outputs
+        run: python3 tools/generate_proof_workspace_outputs.py
