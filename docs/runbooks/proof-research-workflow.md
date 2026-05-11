@@ -8,7 +8,7 @@ This runbook describes what happens when new proof research is produced in a pro
 
 | Layer | Owner | Responsibility |
 |---|---|---|
-| Domain repo | BSD, Heller-Godel, Yang-Mills, Heller-Winters, HPHD | Research artifacts, repo-local tests, proof drafts, computations, fixtures, non-claims |
+| Domain repo | Mathematics, physics, mathematical-physics, proof, computational, or experimental research repo | Research artifacts, repo-local tests, proof drafts, computations, fixtures, non-claims |
 | Adapter manifest | Each domain repo | `proof-adapter.json` exposing claims, gates, non-claims, and obstruction walls |
 | Controller | SocioSphere | Manifest, materialization, strict adapter validation, controller gates, claim-boundary table, ledger events |
 
@@ -69,18 +69,18 @@ Prose alone cannot promote a claim.
 
 ## Continuous validation path
 
-Each proof repo now contains `.github/workflows/proof-apparatus-continuous-validation.yml`. On push, pull request, or manual dispatch, that workflow calls:
+Each onboarded proof/research repo contains `.github/workflows/proof-apparatus-continuous-validation.yml`. On push, pull request, or manual dispatch, that workflow calls:
 
 ```text
 SocioProphet/sociosphere/.github/workflows/proof-apparatus.yml@main
 ```
 
-It passes:
+For push and manual dispatch it passes the current branch/ref and commit SHA. For pull requests it passes the pull request head ref and head SHA:
 
 ```text
 domain_repo = github.repository
-domain_ref  = github.ref_name
-domain_sha  = github.sha
+domain_ref  = refs/pull/<number>/head for PRs, otherwise github.ref_name
+domain_sha  = pull_request.head.sha for PRs, otherwise github.sha
 ```
 
 SocioSphere's reusable workflow then runs:
@@ -101,13 +101,37 @@ The SocioSphere controller workflow also still supports:
 - daily scheduled validation;
 - direct validation when SocioSphere control-plane files change.
 
-## Domain repos with immediate validation
+## Currently onboarded repos with immediate validation
 
 - `SocioProphet/bsd-proof-program`
 - `SocioProphet/Heller-Godel`
 - `SocioProphet/yang-mills`
 - `SocioProphet/Heller-Winters-Theorem`
 - `SocioProphet/hphd-zeta-mirror-lattice`
+
+## Reusing this for new mathematics or physics research
+
+Use `docs/runbooks/onboard-math-physics-research-repo.md`.
+
+Copy these templates from SocioSphere into the new research repo:
+
+```text
+templates/proof-research/proof-adapter.json
+-> proof-adapter.json
+
+templates/proof-research/proof-apparatus-continuous-validation.yml
+-> .github/workflows/proof-apparatus-continuous-validation.yml
+```
+
+Then add the repo to `manifest/proof-workspace.toml` with the correct role:
+
+- `mathematics-engine`
+- `physics-engine`
+- `mathematical-physics-engine`
+- `proof-engine`
+- `research-engine`
+- `computational-engine`
+- `experimental-engine`
 
 ## Local command path
 
