@@ -22,7 +22,8 @@
       ],
       "owned_gates": [
         "claim-boundary",
-        "non-claim"
+        "non-claim",
+        "fixture-or-proof-check"
       ],
       "obstruction_walls": ["certificate_wall"]
     }
@@ -38,19 +39,22 @@
       "gate_id": "non-claim",
       "kind": "non_claim_check",
       "status": "planned",
-      "expected": "Non-claim box blocks overstatement."
+      "expected": "Non-claim box blocks overstatement and is preserved in controller outputs."
     },
     {
       "gate_id": "fixture-or-proof-check",
       "kind": "test",
       "status": "planned",
-      "expected": "Replace with repo-local executable or reviewable check."
+      "command": "replace with exact repo-local command when available",
+      "fixture": "replace with fixture/proof artifact path when available",
+      "expected": "Replace with repo-local executable or reviewable check. Add input_digest/output_digest when status becomes pass."
     }
   ],
   "non_claims": [
     {
       "non_claim_id": "repo.no-main-theorem-claim",
-      "statement": "This adapter does not claim the main theorem or final physical result until domain evidence and SocioSphere controller promotion gates pass."
+      "statement": "This adapter does not claim the main theorem or final physical result until domain evidence and SocioSphere controller promotion gates pass.",
+      "applies_to": ["REPLACE-CLAIM-001"]
     }
   ]
 }
