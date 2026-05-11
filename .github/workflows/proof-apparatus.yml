@@ -101,9 +101,32 @@ jobs:
       - name: Generate proof workspace controller outputs
         run: python3 tools/generate_proof_workspace_outputs.py
 
+      - name: Write failure context artifact
+        if: failure()
+        run: |
+          mkdir -p status/proof-apparatus
+          cat > status/proof-apparatus/failure-context.md <<'EOF'
+          # Proof Apparatus Failure Context
+
+          This run failed before normal controller output generation completed.
+
+          ## Trigger
+
+          - event: ${{ github.event_name }}
+          - caller_repo: ${{ github.repository }}
+          - domain_repo: ${{ inputs.domain_repo || github.event.client_payload.repository || github.repository }}
+          - domain_ref: ${{ inputs.domain_ref || github.event.client_payload.ref || github.ref_name }}
+          - domain_sha: ${{ inputs.domain_sha || github.event.client_payload.sha || github.sha }}
+
+          ## Interpretation
+
+          Inspect job logs for the first failing step. If the failure occurred during strict adapter validation, the failure is expected for negative-test PRs and should name the rejected adapter field, claim, gate, or non-claim.
+          EOF
+
       - name: Upload proof apparatus controller outputs
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: proof-apparatus-controller-outputs
           path: status/proof-apparatus/**
-          if-no-files-found: error
+          if-no-files-found: warn
