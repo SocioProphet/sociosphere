@@ -24,11 +24,14 @@ on:
       - 'protocol/proof-apparatus-workspace/**'
       - 'standards/proof-apparatus/**'
       - 'registry/proof-adjacency-ranking.v0.yaml'
+      - 'templates/proof-research/**'
       - 'tools/validate_proof_apparatus.py'
+      - 'tools/test_proof_adapter_negative_cases.py'
       - 'tools/materialize_proof_workspace.py'
       - 'tools/run_proof_workspace_gates.py'
       - 'tools/generate_proof_workspace_outputs.py'
       - 'docs/runbooks/proof-research-workflow.md'
+      - 'docs/runbooks/onboard-math-physics-research-repo.md'
       - '.github/workflows/proof-apparatus.yml'
   pull_request:
     paths:
@@ -36,11 +39,14 @@ on:
       - 'protocol/proof-apparatus-workspace/**'
       - 'standards/proof-apparatus/**'
       - 'registry/proof-adjacency-ranking.v0.yaml'
+      - 'templates/proof-research/**'
       - 'tools/validate_proof_apparatus.py'
+      - 'tools/test_proof_adapter_negative_cases.py'
       - 'tools/materialize_proof_workspace.py'
       - 'tools/run_proof_workspace_gates.py'
       - 'tools/generate_proof_workspace_outputs.py'
       - 'docs/runbooks/proof-research-workflow.md'
+      - 'docs/runbooks/onboard-math-physics-research-repo.md'
       - '.github/workflows/proof-apparatus.yml'
 
 jobs:
@@ -73,6 +79,9 @@ jobs:
 
       - name: Validate controller-only proof apparatus metadata
         run: python3 tools/validate_proof_apparatus.py
+
+      - name: Run proof adapter negative tests
+        run: python3 tools/test_proof_adapter_negative_cases.py
 
       - name: Materialize proof workspace repos
         env:
