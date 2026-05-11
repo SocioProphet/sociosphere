@@ -1,0 +1,56 @@
+{
+  "adapter_version": "0.1",
+  "repo": "SocioProphet/REPLACE_WITH_REPO_NAME",
+  "domain": "replace-with-mathematics-or-physics-domain",
+  "controller_protocol": "protocol/proof-apparatus-workspace/v0",
+  "claims": [
+    {
+      "claim_id": "REPLACE-CLAIM-001",
+      "state": "draft",
+      "severity": "E7",
+      "substrate": "replace with mathematical/physical substrate",
+      "shell_level": "replace with shell, regime, cutoff, scale, or model level",
+      "projection": "replace with projection, observable, invariant, approximation, or evidence channel",
+      "statement": "Draft claim statement. Keep this scoped and falsifiable.",
+      "boundary": [
+        "State exactly what is claimed.",
+        "State the hypotheses, regime, cutoff, or substrate limitations.",
+        "State what evidence would be required for promotion."
+      ],
+      "non_claim_refs": [
+        "repo.no-main-theorem-claim"
+      ],
+      "owned_gates": [
+        "claim-boundary",
+        "non-claim"
+      ],
+      "obstruction_walls": ["certificate_wall"]
+    }
+  ],
+  "gates": [
+    {
+      "gate_id": "claim-boundary",
+      "kind": "claim_boundary_check",
+      "status": "planned",
+      "expected": "Claim boundary is explicit and not inflated."
+    },
+    {
+      "gate_id": "non-claim",
+      "kind": "non_claim_check",
+      "status": "planned",
+      "expected": "Non-claim box blocks overstatement."
+    },
+    {
+      "gate_id": "fixture-or-proof-check",
+      "kind": "test",
+      "status": "planned",
+      "expected": "Replace with repo-local executable or reviewable check."
+    }
+  ],
+  "non_claims": [
+    {
+      "non_claim_id": "repo.no-main-theorem-claim",
+      "statement": "This adapter does not claim the main theorem or final physical result until domain evidence and SocioSphere controller promotion gates pass."
+    }
+  ]
+}
