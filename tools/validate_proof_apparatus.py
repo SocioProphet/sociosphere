@@ -57,6 +57,13 @@ VALID_ROLES = {
     "metatheory-engine",
     "finite-channel-engine",
     "analytic-number-theory-engine",
+    "mathematics-engine",
+    "physics-engine",
+    "mathematical-physics-engine",
+    "proof-engine",
+    "research-engine",
+    "computational-engine",
+    "experimental-engine",
 }
 VALID_WALLS = {
     "certificate_wall",
