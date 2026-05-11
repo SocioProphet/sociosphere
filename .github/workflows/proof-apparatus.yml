@@ -2,6 +2,9 @@ name: Proof apparatus validation
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types:
+      - proof_apparatus_domain_repo_changed
   schedule:
     - cron: '17 9 * * *'
   push:
@@ -33,6 +36,14 @@ jobs:
   validate-proof-apparatus:
     runs-on: ubuntu-latest
     steps:
+      - name: Log trigger context
+        run: |
+          echo "event=${{ github.event_name }}"
+          echo "sender=${{ github.event.sender.login || 'n/a' }}"
+          echo "domain_repo=${{ github.event.client_payload.repository || 'n/a' }}"
+          echo "domain_ref=${{ github.event.client_payload.ref || 'n/a' }}"
+          echo "domain_sha=${{ github.event.client_payload.sha || 'n/a' }}"
+
       - name: Checkout
         uses: actions/checkout@v4
 
