@@ -1,0 +1,276 @@
+version: "0.1"
+controller: SocioProphet/sociosphere
+status: integrated
+source_backlog: workbench/backlog/proof-adjacency-ranking-tranche-2026-05-11.md
+
+adjacency_axes:
+  object:
+    description: Same machinery or same kind of mathematical object.
+    controller_use: Direct object-level proximity for Mode 1 computation or Mode 3 diagnostic.
+  methodology:
+    description: Same problem shape; SocioProphet evidence discipline transfers even when mathematical objects differ.
+    controller_use: Proof-governance transfer, obstruction typing, non-claim discipline, and evidence-gate reuse.
+  outcome:
+    description: Same kind of finite-order, torsion, regulator, comparison-isomorphism, or residual phenomenon in another corridor.
+    controller_use: Diagnostic or technique-transfer lane, not theorem promotion.
+  vocabulary:
+    description: Similar mathematical vocabulary but no active apparatus reach.
+    controller_use: Map-only or glossary-only corridor unless new object-level evidence appears.
+  none:
+    description: No meaningful proof-apparatus adjacency at current scope.
+    controller_use: Keep on global map only; do not create active proof lanes.
+
+modes:
+  mode_1:
+    description: Direct computation or finite executable check on current apparatus objects.
+  mode_2:
+    description: Technique transfer, comparison template, or cross-program structural alignment.
+  mode_3:
+    description: Diagnostic: identify missing objects, bridges, certificates, or obstruction walls.
+
+review_repairs:
+  math_placeholders_repaired: true
+  repaired_terms:
+    - chi_p finite phase characters
+    - chi_13 finite phase character
+    - mu_2 triple-point setup
+    - n mod 8 BSD root-number datum
+    - Deligne level-1 unit
+    - Deligne level-2 cup-product symbol
+    - Bockstein carry cocycle
+    - branch-killing cyclic cover
+    - tame symbol
+    - Q for Hilbert tenth over the rationals
+  claim_status_default: diagnosed_or_speculative
+  theorem_promotion_allowed: false
+
+ranking:
+  - rank: 1
+    problem: Atiyah-Hirzebruch / Soule-Voisin torsion template
+    tier: 1
+    adjacency: [object]
+    mode: mode_1
+    owner_repo: SocioProphet/Heller-Godel
+    controller_state: scoped
+    fallout: New torsion examples or negative structural distinction tests from chain/Catalan/Motzkin Deligne classes.
+    non_claims:
+      - Does not claim Hodge, generalized Hodge, or algebraic-cycle realization.
+      - Does not claim a full Atiyah-Hirzebruch integral-Chern bridge.
+    required_gates:
+      - finite-deligne-class-table
+      - torsion-order-check
+      - standard-ah-comparison
+      - claim-boundary-check
+  - rank: 2
+    problem: Beilinson regulator on toy families
+    tier: 1
+    adjacency: [object]
+    mode: mode_1
+    owner_repo: SocioProphet/Heller-Godel
+    controller_state: scoped
+    fallout: Regulator outputs for level-2 Deligne cup-products on toy proof-class families; period/L-value diagnostics only.
+    non_claims:
+      - Does not claim Beilinson conjectures.
+      - Does not claim nontrivial L-value formula or transcendence unless independently certified.
+    required_gates:
+      - level1-unit-normalization
+      - cup-product-symbol-check
+      - tame-symbol-boundary-check
+      - regulator-output-digest
+      - claim-boundary-check
+  - rank: 3
+    problem: Tate conjecture for K3-type comparison settings
+    tier: 1
+    adjacency: [object, methodology]
+    mode: mode_2
+    owner_repo: SocioProphet/Heller-Godel
+    controller_state: scoped
+    fallout: Technique-transfer map comparing K3 comparison-isomorphism proof pattern against the mu_2 triple-point setup.
+    non_claims:
+      - Does not reopen the settled K3 Tate case.
+      - Does not claim general Tate conjecture.
+      - Does not claim a Galois lift or algebraic-cycle preimage.
+    required_gates:
+      - k3-technique-inventory
+      - mu2-triple-point-comparison
+      - obstruction-wall-map
+      - claim-boundary-check
+  - rank: 4
+    problem: Finite-level Mumford-Tate
+    tier: 2
+    adjacency: [object]
+    mode: mode_1
+    owner_repo: SocioProphet/Heller-Godel
+    controller_state: diagnosed
+    fallout: Constraint or negative-result check on chi_p character products.
+  - rank: 5
+    problem: Bloch-Kato Selmer structure
+    tier: 2
+    adjacency: [object]
+    mode: mode_3
+    owner_repo: SocioProphet/bsd-proof-program
+    controller_state: diagnosed
+    fallout: Missing arithmetic-Galois input diagnosis for Selmer/Tamagawa/regulator compatibility.
+  - rank: 6
+    problem: Fontaine-Mazur lifting
+    tier: 2
+    adjacency: [object]
+    mode: mode_3
+    owner_repo: SocioProphet/Heller-Godel
+    controller_state: diagnosed
+    fallout: Residual-representation lift diagnosis only.
+  - rank: 7
+    problem: Bloch-Beilinson filtration
+    tier: 2
+    adjacency: [object]
+    mode: mode_3
+    owner_repo: SocioProphet/Heller-Godel
+    controller_state: diagnosed
+    fallout: Missing Chow-input diagnosis.
+  - rank: 8
+    problem: Yang-Mills mass gap
+    tier: 3
+    adjacency: [methodology]
+    mode: mode_2
+    owner_repo: SocioProphet/yang-mills
+    controller_state: active_parallel_program
+    fallout: Continue theorem track, obstruction survey, claim-boundary CI, severity grading, and v0.18.1 integration.
+    non_claims:
+      - Not Paper I fallout.
+      - Not a Clay solution without continuum construction and reviewed proof boundary.
+  - rank: 9
+    problem: Birch and Swinnerton-Dyer
+    tier: 3
+    adjacency: [methodology]
+    mode: mode_2
+    owner_repo: SocioProphet/bsd-proof-program
+    controller_state: active_parallel_program
+    fallout: Continue BSD evidence-gated program; no direct Paper I object fallout assumed.
+  - rank: 10
+    problem: RH / GRH / automorphic L-function RH
+    tier: 3
+    adjacency: [methodology]
+    mode: mode_3
+    owner_repo: SocioProphet/hphd-zeta-mirror-lattice
+    controller_state: diagnostic
+    fallout: Diagnostic check for constraints on L-zeros from regulator outputs, expected likely trivial.
+  - rank: 11
+    problem: Generalized Hodge conjecture
+    tier: 4
+    adjacency: [object]
+    mode: mode_3
+    owner_repo: SocioProphet/Heller-Godel
+    controller_state: non_claim
+    fallout: Not productive without algebraic-cycle input.
+  - rank: 12
+    problem: Standard conjectures on algebraic cycles
+    tier: 4
+    adjacency: [object]
+    mode: mode_3
+    owner_repo: SocioProphet/Heller-Godel
+    controller_state: non_claim
+    fallout: Not productive without motivic projector and algebraic-cycle input.
+  - rank: 13
+    problem: Grothendieck period conjecture
+    tier: 4
+    adjacency: [object]
+    mode: mode_1
+    owner_repo: SocioProphet/Heller-Godel
+    controller_state: diagnostic
+    fallout: Period/transcendence diagnostics for explicit regulator outputs only.
+  - rank: 14
+    problem: Tate-Shafarevich finiteness
+    tier: 4
+    adjacency: [object]
+    mode: mode_3
+    owner_repo: SocioProphet/bsd-proof-program
+    controller_state: diagnostic
+    fallout: BSD-side connection only.
+  - rank: 15
+    problem: Parity conjecture
+    tier: 4
+    adjacency: [object]
+    mode: mode_2
+    owner_repo: SocioProphet/bsd-proof-program
+    controller_state: diagnostic
+    fallout: BSD-side parity gate connection only.
+  - rank: 16
+    problem: Tate conjecture general
+    tier: 5
+    adjacency: [object]
+    mode: mode_3
+    owner_repo: SocioProphet/Heller-Godel
+    controller_state: technique_template_only
+    fallout: General technique-template adjacency only.
+  - rank: 17
+    problem: Hodge conjecture proper
+    tier: 5
+    adjacency: [object]
+    mode: mode_3
+    owner_repo: SocioProphet/Heller-Godel
+    controller_state: non_claim
+    fallout: Explicit non-claim; adjacent corridor only.
+  - rank: 18
+    problem: abc / Szpiro / Vojta
+    tier: 5
+    adjacency: [methodology]
+    mode: mode_3
+    owner_repo: SocioProphet/sociosphere
+    controller_state: methodology_only
+    fallout: Discipline transfers; apparatus does not.
+  - rank: 19
+    problem: Langlands functoriality
+    tier: 5
+    adjacency: [vocabulary]
+    mode: mode_3
+    owner_repo: SocioProphet/sociosphere
+    controller_state: vocabulary_only
+    fallout: Finite-level pieces only; no active proof lane.
+  - rank: 20
+    problem: Sato-Tate generalizations
+    tier: 5
+    adjacency: [vocabulary]
+    mode: mode_3
+    owner_repo: SocioProphet/bsd-proof-program
+    controller_state: vocabulary_only
+    fallout: Finite-level statistical pieces only.
+  - rank: 21
+    problem: Goldbach / twin prime / k-tuples / Bateman-Horn / Schinzel cluster
+    tier: 6
+    adjacency: [none]
+    mode: mode_3
+    owner_repo: SocioProphet/sociosphere
+    controller_state: map_only
+    fallout: Different corridor.
+  - rank: 22
+    problem: Hilbert tenth over Q / decidability
+    tier: 6
+    adjacency: [none]
+    mode: mode_3
+    owner_repo: SocioProphet/sociosphere
+    controller_state: map_only
+    fallout: Different corridor.
+  - rank: 23
+    problem: Jacobian conjecture / Zariski cancellation
+    tier: 6
+    adjacency: [none]
+    mode: mode_3
+    owner_repo: SocioProphet/sociosphere
+    controller_state: map_only
+    fallout: Different corridor.
+  - rank: 24
+    problem: Smooth 4D Poincare / Schoenflies
+    tier: 6
+    adjacency: [none]
+    mode: mode_3
+    owner_repo: SocioProphet/sociosphere
+    controller_state: map_only
+    fallout: Different corridor.
+  - rank: 25
+    problem: Hadwiger / Erdos-Hajnal / union-closed / Frankl
+    tier: 6
+    adjacency: [none]
+    mode: mode_3
+    owner_repo: SocioProphet/sociosphere
+    controller_state: map_only
+    fallout: Different corridor.
