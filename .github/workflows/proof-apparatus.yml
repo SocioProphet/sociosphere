@@ -1,6 +1,17 @@
 name: Proof apparatus validation
 
 on:
+  workflow_call:
+    inputs:
+      domain_repo:
+        required: false
+        type: string
+      domain_ref:
+        required: false
+        type: string
+      domain_sha:
+        required: false
+        type: string
   workflow_dispatch:
   repository_dispatch:
     types:
@@ -39,13 +50,21 @@ jobs:
       - name: Log trigger context
         run: |
           echo "event=${{ github.event_name }}"
-          echo "sender=${{ github.event.sender.login || 'n/a' }}"
-          echo "domain_repo=${{ github.event.client_payload.repository || 'n/a' }}"
-          echo "domain_ref=${{ github.event.client_payload.ref || 'n/a' }}"
-          echo "domain_sha=${{ github.event.client_payload.sha || 'n/a' }}"
+          echo "caller_repo=${{ github.repository }}"
+          echo "domain_repo=${{ inputs.domain_repo || github.event.client_payload.repository || github.repository }}"
+          echo "domain_ref=${{ inputs.domain_ref || github.event.client_payload.ref || github.ref_name }}"
+          echo "domain_sha=${{ inputs.domain_sha || github.event.client_payload.sha || github.sha }}"
 
-      - name: Checkout
+      - name: Checkout SocioSphere controller workspace
+        if: github.repository == 'SocioProphet/sociosphere'
         uses: actions/checkout@v4
+
+      - name: Checkout SocioSphere controller workspace from caller repo
+        if: github.repository != 'SocioProphet/sociosphere'
+        uses: actions/checkout@v4
+        with:
+          repository: SocioProphet/sociosphere
+          ref: main
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -56,6 +75,10 @@ jobs:
         run: python3 tools/validate_proof_apparatus.py
 
       - name: Materialize proof workspace repos
+        env:
+          PROOF_WORKSPACE_DOMAIN_REPO: ${{ inputs.domain_repo || github.event.client_payload.repository || github.repository }}
+          PROOF_WORKSPACE_DOMAIN_REF: ${{ inputs.domain_ref || github.event.client_payload.ref || github.ref_name }}
+          PROOF_WORKSPACE_DOMAIN_SHA: ${{ inputs.domain_sha || github.event.client_payload.sha || github.sha }}
         run: python3 tools/materialize_proof_workspace.py --force
 
       - name: Strictly validate materialized proof adapters
