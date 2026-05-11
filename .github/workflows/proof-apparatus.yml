@@ -1,6 +1,9 @@
 name: Proof apparatus validation
 
 on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 9 * * *'
   push:
     paths:
       - 'manifest/proof-workspace.toml'
@@ -11,6 +14,7 @@ on:
       - 'tools/materialize_proof_workspace.py'
       - 'tools/run_proof_workspace_gates.py'
       - 'tools/generate_proof_workspace_outputs.py'
+      - 'docs/runbooks/proof-research-workflow.md'
       - '.github/workflows/proof-apparatus.yml'
   pull_request:
     paths:
@@ -22,6 +26,7 @@ on:
       - 'tools/materialize_proof_workspace.py'
       - 'tools/run_proof_workspace_gates.py'
       - 'tools/generate_proof_workspace_outputs.py'
+      - 'docs/runbooks/proof-research-workflow.md'
       - '.github/workflows/proof-apparatus.yml'
 
 jobs:
