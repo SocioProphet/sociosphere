@@ -32,6 +32,7 @@ on:
       - 'tools/generate_proof_workspace_outputs.py'
       - 'docs/runbooks/proof-research-workflow.md'
       - 'docs/runbooks/onboard-math-physics-research-repo.md'
+      - 'docs/runbooks/proof-apparatus-first-green-verification.md'
       - '.github/workflows/proof-apparatus.yml'
   pull_request:
     paths:
@@ -47,6 +48,7 @@ on:
       - 'tools/generate_proof_workspace_outputs.py'
       - 'docs/runbooks/proof-research-workflow.md'
       - 'docs/runbooks/onboard-math-physics-research-repo.md'
+      - 'docs/runbooks/proof-apparatus-first-green-verification.md'
       - '.github/workflows/proof-apparatus.yml'
 
 jobs:
@@ -98,3 +100,10 @@ jobs:
 
       - name: Generate proof workspace controller outputs
         run: python3 tools/generate_proof_workspace_outputs.py
+
+      - name: Upload proof apparatus controller outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: proof-apparatus-controller-outputs
+          path: status/proof-apparatus/**
+          if-no-files-found: error
