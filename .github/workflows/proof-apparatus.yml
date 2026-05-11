@@ -107,15 +107,41 @@ jobs:
       - name: Generate proof workspace controller outputs
         run: python3 tools/generate_proof_workspace_outputs.py
 
+      - name: Print success artifact summary
+        if: success()
+        run: |
+          echo '--- proof apparatus success artifact manifest ---'
+          find status/proof-apparatus -maxdepth 1 -type f -print | sort
+          echo '--- claim-boundary table summary ---'
+          sed -n '1,40p' status/proof-apparatus/claim-boundary-table.md 2>/dev/null || true
+          echo '--- ledger event count ---'
+          wc -l status/proof-apparatus/claim-ledger-events.jsonl 2>/dev/null || true
+          echo '--- gate report ---'
+          cat status/proof-apparatus/gate-report.md 2>/dev/null || true
+
       - name: Write failure context artifact
         if: failure()
         run: |
           mkdir -p status/proof-apparatus
           domain_repo="${{ inputs.domain_repo || github.event.client_payload.repository || github.repository }}"
-          domain_name="${domain_repo#*/}"
-          adapter_path="proof/${domain_name}/proof-adapter.json"
-          cp "$adapter_path" status/proof-apparatus/materialized-domain-proof-adapter.json 2>/dev/null || true
-          cat > status/proof-apparatus/failure-context.md <<'EOF'
+          python3 - <<'PY'
+          import os
+          import shutil
+          import tomllib
+          from pathlib import Path
+          domain_repo = os.environ.get('DOMAIN_REPO', '')
+          manifest = tomllib.loads(Path('manifest/proof-workspace.toml').read_text())
+          for repo in manifest.get('repos', []):
+              if repo.get('url', '').rstrip('/').endswith(domain_repo):
+                  src = Path(repo['local_path']) / 'proof-adapter.json'
+                  dst = Path('status/proof-apparatus/materialized-domain-proof-adapter.json')
+                  if src.exists():
+                      shutil.copyfile(src, dst)
+                  break
+          PY
+          first_error="$(grep -m 1 'proof-apparatus validation failed:' status/proof-apparatus/strict-adapter-validation.log 2>/dev/null || true)"
+          exit_code="$(cat status/proof-apparatus/strict-adapter-validation.exitcode 2>/dev/null || true)"
+          cat > status/proof-apparatus/failure-context.md <<EOF
           # Proof Apparatus Failure Context
 
           This run failed before normal controller output generation completed.
@@ -130,16 +156,23 @@ jobs:
           - run_id: ${{ github.run_id }}
           - run_attempt: ${{ github.run_attempt }}
 
+          ## Failure rule
+
+          - strict_adapter_validation_exitcode: ${exit_code:-unknown}
+          - first_validator_error: ${first_error:-not captured}
+
           ## Failure evidence
 
-          See `strict-adapter-validation.log` for the first adapter validation error. See `materialized-domain-proof-adapter.json` for the adapter content checked at the triggering SHA when available.
+          See \`strict-adapter-validation.log\` for the adapter validation output. See \`materialized-domain-proof-adapter.json\` for the adapter content checked at the triggering SHA when available.
           EOF
+        env:
+          DOMAIN_REPO: ${{ inputs.domain_repo || github.event.client_payload.repository || github.repository }}
 
       - name: Print failure artifact summary
         if: failure()
         run: |
           echo '--- proof apparatus failure artifact manifest ---'
-          find status/proof-apparatus -type f -maxdepth 1 -print | sort
+          find status/proof-apparatus -maxdepth 1 -type f -print | sort
           echo '--- strict-adapter-validation.exitcode ---'
           cat status/proof-apparatus/strict-adapter-validation.exitcode 2>/dev/null || true
           echo '--- strict-adapter-validation.log ---'
@@ -162,6 +195,8 @@ jobs:
                           'non_claim_refs': claim.get('non_claim_refs'),
                           'boundary': claim.get('boundary'),
                       }, indent=2))
+          else:
+              print('materialized-domain-proof-adapter.json missing')
           PY
 
       - name: Upload proof apparatus controller outputs
