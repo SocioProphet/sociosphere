@@ -41,11 +41,12 @@ def fail(message: str) -> None:
     raise SystemExit(1)
 
 
-def run(cmd: list[str], cwd: Path | None = None) -> None:
+def run(cmd: list[str], cwd: Path | None = None, *, check: bool = True) -> subprocess.CompletedProcess[str]:
     print("$ " + " ".join(cmd))
     completed = subprocess.run(cmd, cwd=cwd, text=True)
-    if completed.returncode != 0:
+    if check and completed.returncode != 0:
         fail(f"command failed with exit code {completed.returncode}: {' '.join(cmd)}")
+    return completed
 
 
 def load_manifest() -> dict[str, Any]:
@@ -69,11 +70,28 @@ def repo_full_name_from_url(url: str) -> str:
 
 
 def checkout_repo(local_path: Path, *, ref: str, sha: str | None) -> None:
+    """Fetch the triggering ref first, then checkout the exact SHA when present.
+
+    Fetching a raw SHA from GitHub is not reliable for all refs. Fetching the
+    branch/PR ref first makes the requested commit reachable, then checkout by
+    SHA gives exact validation of the triggering domain state.
+    """
+
+    fetch_ref = ref
+    if fetch_ref.startswith("refs/"):
+        run(["git", "fetch", "--depth", "1", "origin", f"{fetch_ref}:refs/tmp/proof-workspace-trigger"], cwd=local_path)
+    else:
+        run(["git", "fetch", "--depth", "1", "origin", fetch_ref], cwd=local_path)
+
     if sha:
+        checkout = run(["git", "checkout", "--detach", sha], cwd=local_path, check=False)
+        if checkout.returncode == 0:
+            return
+        print("exact SHA checkout failed after ref fetch; attempting direct SHA fetch fallback")
         run(["git", "fetch", "--depth", "1", "origin", sha], cwd=local_path)
         run(["git", "checkout", "--detach", sha], cwd=local_path)
         return
-    run(["git", "fetch", "--depth", "1", "origin", ref], cwd=local_path)
+
     run(["git", "checkout", "FETCH_HEAD"], cwd=local_path)
 
 
@@ -112,7 +130,7 @@ def materialize_repo(repo: dict[str, Any], *, force: bool, override_repo: str | 
         print(f"cloning proof repo {name} into {local_path}")
         local_path.parent.mkdir(parents=True, exist_ok=True)
         if effective_sha:
-            run(["git", "clone", "--depth", "1", url, str(local_path)])
+            run(["git", "clone", "--no-checkout", "--depth", "1", url, str(local_path)])
             checkout_repo(local_path, ref=effective_ref, sha=effective_sha)
         else:
             run(["git", "clone", "--depth", "1", "--branch", effective_ref, url, str(local_path)])
