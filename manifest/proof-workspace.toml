@@ -1,0 +1,128 @@
+[proof_workspace]
+name = "sociosphere-proof-apparatus"
+version = "0.1"
+controller_repo = "SocioProphet/sociosphere"
+controller_protocol = "protocol/proof-apparatus-workspace/v0"
+extends = ["protocol/emvi-proof-slice/v0", "standards/qes"]
+ledger_mode = "required"
+attestation_required = true
+default_claim_state = "diagnosed"
+default_new_synthesis_state = "speculative"
+claim_schema = "standards/proof-apparatus/claim-ledger.schema.json"
+
+[proof_workspace.policy]
+promotion_requires = [
+  "claim_boundary",
+  "non_claims",
+  "artifact_digests",
+  "gate_status",
+  "severity_delta",
+  "controller_decision"
+]
+failure_wall_required_when_blocked = true
+prose_only_promotion_allowed = false
+speculation_can_promote_to_theorem = false
+
+[proof_workspace.evidence]
+severity_levels = ["E0", "E1", "E2", "E3", "E4", "E5", "E6", "E7"]
+failure_walls = [
+  "certificate_wall",
+  "counting_wall",
+  "shell_map_preservation_wall",
+  "quotient_wall",
+  "preimage_wall",
+  "continuum_reconstruction_wall",
+  "integer_chern_wall",
+  "height_bound_wall",
+  "set_theoretic_wall",
+  "combinatorial_extremal_wall"
+]
+
+[[repos]]
+name = "bsd-proof-program"
+role = "domain-engine"
+domain = "elliptic-curves-congruent-number-bsd"
+url = "https://github.com/SocioProphet/bsd-proof-program"
+ref = "main"
+local_path = "proof/bsd-proof-program"
+owned_gates = [
+  "tunnell-engine",
+  "root-number-grid",
+  "cm-consistency",
+  "bounded-height-search",
+  "descent-image-filtering",
+  "four-descent-ladder"
+]
+primary_walls = ["certificate_wall", "height_bound_wall"]
+
+[[repos]]
+name = "Heller-Godel"
+role = "metatheory-engine"
+domain = "proof-boundary-incompleteness-formal-governance"
+url = "https://github.com/SocioProphet/Heller-Godel"
+ref = "main"
+local_path = "proof/heller-godel"
+owned_gates = [
+  "claim-boundary",
+  "non-claim",
+  "formalization-readiness",
+  "incompleteness-boundary",
+  "proof-ledger-consistency"
+]
+primary_walls = ["set_theoretic_wall", "preimage_wall"]
+
+[[repos]]
+name = "yang-mills"
+role = "domain-engine"
+domain = "gauge-theory-mass-gap-obstruction"
+url = "https://github.com/SocioProphet/yang-mills"
+ref = "main"
+local_path = "proof/yang-mills"
+owned_gates = [
+  "gram-gate",
+  "symmetry-equality",
+  "null-model-control",
+  "kp-certificate",
+  "operator-rg",
+  "log-sobolev",
+  "continuum-obstruction"
+]
+primary_walls = [
+  "certificate_wall",
+  "counting_wall",
+  "shell_map_preservation_wall",
+  "quotient_wall",
+  "preimage_wall",
+  "continuum_reconstruction_wall"
+]
+
+[[repos]]
+name = "Heller-Winters-Theorem"
+role = "finite-channel-engine"
+domain = "su2-finite-channel-representation-theory"
+url = "https://github.com/SocioProphet/Heller-Winters-Theorem"
+ref = "main"
+local_path = "proof/heller-winters-theorem"
+owned_gates = [
+  "channel-product",
+  "jmax-gram",
+  "u1-null-model",
+  "wigner-table-reproduction",
+  "symbolic-small-jmax"
+]
+primary_walls = ["certificate_wall", "quotient_wall", "preimage_wall"]
+
+[[repos]]
+name = "hphd-zeta-mirror-lattice"
+role = "analytic-number-theory-engine"
+domain = "zeta-rh-smoothed-observable-mirror-lattice"
+url = "https://github.com/SocioProphet/hphd-zeta-mirror-lattice"
+ref = "main"
+local_path = "proof/hphd-zeta-mirror-lattice"
+owned_gates = [
+  "smoothed-observable-decomposition",
+  "main-nt-mirror-comp-error",
+  "zero-localization-nonclaim",
+  "finite-degree-artin-transfer"
+]
+primary_walls = ["certificate_wall", "counting_wall", "shell_map_preservation_wall"]
