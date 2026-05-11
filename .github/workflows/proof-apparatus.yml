@@ -1,0 +1,32 @@
+name: Proof apparatus validation
+
+on:
+  push:
+    paths:
+      - 'manifest/proof-workspace.toml'
+      - 'protocol/proof-apparatus-workspace/**'
+      - 'standards/proof-apparatus/**'
+      - 'tools/validate_proof_apparatus.py'
+      - '.github/workflows/proof-apparatus.yml'
+  pull_request:
+    paths:
+      - 'manifest/proof-workspace.toml'
+      - 'protocol/proof-apparatus-workspace/**'
+      - 'standards/proof-apparatus/**'
+      - 'tools/validate_proof_apparatus.py'
+      - '.github/workflows/proof-apparatus.yml'
+
+jobs:
+  validate-proof-apparatus:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate proof apparatus control plane
+        run: python3 tools/validate_proof_apparatus.py
