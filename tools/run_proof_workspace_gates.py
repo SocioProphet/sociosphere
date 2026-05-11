@@ -31,6 +31,14 @@ TOP_THREE_CLAIMS = {
     "HG-ADJ-002-beilinson-regulator-toy-families",
     "HG-ADJ-003-k3-tate-comparison-template",
 }
+ALLOWED_ADAPTER_STATES = {
+    "draft",
+    "checked",
+    "cross_checked",
+    "diagnosed",
+    "quarantined",
+    "archived",
+}
 
 
 def fail(message: str) -> None:
@@ -61,6 +69,30 @@ def escape_md(value: Any) -> str:
 
 def gate(gates: list[dict[str, Any]], gate_id: str, passed: bool, detail: str) -> None:
     gates.append({"gate_id": gate_id, "status": "pass" if passed else "fail", "detail": detail})
+
+
+def active_program_violations(adapter: dict[str, Any]) -> list[str]:
+    """Return metadata violations for active methodology-adjacent programs.
+
+    BSD and Yang-Mills may declare active program claims. The controller gate must
+    prevent theorem inflation and Paper-I-fallout confusion, not require these
+    repos to have zero claims. Detailed shape checks are handled by strict adapter
+    validation; this gate checks the active-program posture remains fail-closed.
+    """
+
+    violations: list[str] = []
+    for claim in adapter.get("claims", []):
+        claim_id = claim.get("claim_id", "<missing-claim-id>")
+        state = claim.get("state")
+        if state not in ALLOWED_ADAPTER_STATES:
+            violations.append(f"{adapter.get('repo')}:{claim_id}:invalid-state={state}")
+        if state == "promoted":
+            violations.append(f"{adapter.get('repo')}:{claim_id}:repo-local-promotion")
+        if not claim.get("boundary"):
+            violations.append(f"{adapter.get('repo')}:{claim_id}:missing-boundary")
+        if not claim.get("owned_gates"):
+            violations.append(f"{adapter.get('repo')}:{claim_id}:missing-owned-gates")
+    return violations
 
 
 def write_reports(gates: list[dict[str, Any]]) -> None:
@@ -155,11 +187,17 @@ def main() -> int:
 
     bsd = adapters.get("SocioProphet/bsd-proof-program", {})
     ym = adapters.get("SocioProphet/yang-mills", {})
+    active_violations = active_program_violations(bsd) + active_program_violations(ym)
+    active_summary = (
+        f"BSD claims={len(bsd.get('claims', []))}; "
+        f"Yang-Mills claims={len(ym.get('claims', []))}; "
+        "active methodology-adjacent claims are allowed when bounded and fail-closed."
+    )
     gate(
         gates,
         "active-programs-not-paper-i-fallout",
-        len(bsd.get("claims", [])) == 0 and len(ym.get("claims", [])) == 0,
-        "BSD and Yang-Mills remain active methodology-adjacent programs, not Paper I fallout claims.",
+        not active_violations,
+        active_summary if not active_violations else "; ".join(active_violations),
     )
 
     write_reports(gates)
