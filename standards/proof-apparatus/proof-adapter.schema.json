@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SocioProphet/sociosphere/standards/proof-apparatus/proof-adapter.schema.json",
+  "title": "Proof Apparatus Repository Adapter Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "adapter_version",
+    "repo",
+    "domain",
+    "claims",
+    "gates",
+    "non_claims"
+  ],
+  "properties": {
+    "adapter_version": {
+      "type": "string",
+      "const": "0.1"
+    },
+    "repo": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    },
+    "domain": {
+      "type": "string",
+      "minLength": 1
+    },
+    "controller_protocol": {
+      "type": "string",
+      "default": "protocol/proof-apparatus-workspace/v0"
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "claim_id",
+          "state",
+          "severity",
+          "statement",
+          "boundary",
+          "owned_gates"
+        ],
+        "properties": {
+          "claim_id": { "type": "string" },
+          "state": {
+            "type": "string",
+            "enum": [
+              "draft",
+              "checked",
+              "cross_checked",
+              "diagnosed",
+              "quarantined",
+              "promoted",
+              "archived"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "enum": ["E0", "E1", "E2", "E3", "E4", "E5", "E6", "E7"]
+          },
+          "substrate": { "type": "string" },
+          "shell_level": { "type": "string" },
+          "projection": { "type": "string" },
+          "statement": { "type": "string" },
+          "boundary": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "non_claim_refs": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": []
+          },
+          "owned_gates": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "obstruction_walls": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "certificate_wall",
+                "counting_wall",
+                "shell_map_preservation_wall",
+                "quotient_wall",
+                "preimage_wall",
+                "continuum_reconstruction_wall",
+                "integer_chern_wall",
+                "height_bound_wall",
+                "set_theoretic_wall",
+                "combinatorial_extremal_wall"
+              ]
+            },
+            "default": []
+          }
+        }
+      },
+      "default": []
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gate_id", "kind", "status"],
+        "properties": {
+          "gate_id": { "type": "string" },
+          "kind": {
+            "type": "string",
+            "enum": ["test", "proof_review", "fixture_check", "symbolic_check", "numeric_check", "claim_boundary_check", "non_claim_check", "obstruction_check"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pass", "fail", "skip", "blocked", "planned"]
+          },
+          "command": { "type": "string" },
+          "fixture": { "type": "string" },
+          "expected": { "type": "string" },
+          "evidence_output": { "type": "string" }
+        }
+      },
+      "default": []
+    },
+    "non_claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["non_claim_id", "statement"],
+        "properties": {
+          "non_claim_id": { "type": "string" },
+          "statement": { "type": "string" },
+          "applies_to": {
+            "type": "array",
+            "items": { "type": "string" },
+            "default": []
+          }
+        }
+      },
+      "default": []
+    }
+  }
+}
