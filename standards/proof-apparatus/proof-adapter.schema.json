@@ -27,7 +27,7 @@
     },
     "controller_protocol": {
       "type": "string",
-      "default": "protocol/proof-apparatus-workspace/v0"
+      "const": "protocol/proof-apparatus-workspace/v0"
     },
     "claims": {
       "type": "array",
@@ -43,7 +43,7 @@
           "owned_gates"
         ],
         "properties": {
-          "claim_id": { "type": "string" },
+          "claim_id": { "type": "string", "minLength": 1 },
           "state": {
             "type": "string",
             "enum": [
@@ -52,7 +52,6 @@
               "cross_checked",
               "diagnosed",
               "quarantined",
-              "promoted",
               "archived"
             ]
           },
@@ -63,10 +62,11 @@
           "substrate": { "type": "string" },
           "shell_level": { "type": "string" },
           "projection": { "type": "string" },
-          "statement": { "type": "string" },
+          "statement": { "type": "string", "minLength": 1 },
           "boundary": {
             "type": "array",
-            "items": { "type": "string" }
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
           },
           "non_claim_refs": {
             "type": "array",
@@ -75,6 +75,7 @@
           },
           "owned_gates": {
             "type": "array",
+            "minItems": 1,
             "items": { "type": "string" }
           },
           "obstruction_walls": {
@@ -107,7 +108,7 @@
         "additionalProperties": false,
         "required": ["gate_id", "kind", "status"],
         "properties": {
-          "gate_id": { "type": "string" },
+          "gate_id": { "type": "string", "minLength": 1 },
           "kind": {
             "type": "string",
             "enum": ["test", "proof_review", "fixture_check", "symbolic_check", "numeric_check", "claim_boundary_check", "non_claim_check", "obstruction_check"]
@@ -119,7 +120,9 @@
           "command": { "type": "string" },
           "fixture": { "type": "string" },
           "expected": { "type": "string" },
-          "evidence_output": { "type": "string" }
+          "evidence_output": { "type": "string" },
+          "input_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+          "output_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" }
         }
       },
       "default": []
@@ -131,8 +134,8 @@
         "additionalProperties": false,
         "required": ["non_claim_id", "statement"],
         "properties": {
-          "non_claim_id": { "type": "string" },
-          "statement": { "type": "string" },
+          "non_claim_id": { "type": "string", "minLength": 1 },
+          "statement": { "type": "string", "minLength": 1 },
           "applies_to": {
             "type": "array",
             "items": { "type": "string" },
