@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SocioProphet/sociosphere/standards/proof-apparatus/claim-ledger.schema.json",
+  "title": "Proof Apparatus Claim Ledger Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "event_type",
+    "repo",
+    "ref",
+    "claim_id",
+    "claim_state",
+    "severity",
+    "claim_boundary",
+    "artifact_digests",
+    "controller"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "minLength": 8
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "claim_registered",
+        "gate_started",
+        "gate_completed",
+        "evidence_recorded",
+        "promotion_decision",
+        "demotion_decision",
+        "quarantine_decision",
+        "obstruction_recorded",
+        "snapshot_frozen"
+      ]
+    },
+    "repo": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+    },
+    "ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "claim_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "domain": {
+      "type": "string"
+    },
+    "substrate": {
+      "type": "string"
+    },
+    "shell_level": {
+      "type": "string"
+    },
+    "projection": {
+      "type": "string"
+    },
+    "claim_state": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "checked",
+        "cross_checked",
+        "diagnosed",
+        "quarantined",
+        "promoted",
+        "archived"
+      ]
+    },
+    "previous_claim_state": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "checked",
+        "cross_checked",
+        "diagnosed",
+        "quarantined",
+        "promoted",
+        "archived"
+      ]
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["E0", "E1", "E2", "E3", "E4", "E5", "E6", "E7"]
+    },
+    "previous_severity": {
+      "type": "string",
+      "enum": ["E0", "E1", "E2", "E3", "E4", "E5", "E6", "E7"]
+    },
+    "claim_statement": {
+      "type": "string"
+    },
+    "claim_boundary": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "non_claims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "gates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gate_id", "status"],
+        "properties": {
+          "gate_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pass", "fail", "skip", "blocked"]
+          },
+          "command": {
+            "type": "string"
+          },
+          "fixture": {
+            "type": "string"
+          },
+          "expected": {
+            "type": "string"
+          },
+          "observed": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "artifact_digests": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "digest"],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "media_type": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "obstruction_walls": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "certificate_wall",
+          "counting_wall",
+          "shell_map_preservation_wall",
+          "quotient_wall",
+          "preimage_wall",
+          "continuum_reconstruction_wall",
+          "integer_chern_wall",
+          "height_bound_wall",
+          "set_theoretic_wall",
+          "combinatorial_extremal_wall"
+        ]
+      },
+      "default": []
+    },
+    "controller": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repo", "protocol", "decision"],
+      "properties": {
+        "repo": {
+          "type": "string",
+          "const": "SocioProphet/sociosphere"
+        },
+        "protocol": {
+          "type": "string"
+        },
+        "decision": {
+          "type": "string"
+        },
+        "snapshot_id": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
