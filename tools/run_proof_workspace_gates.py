@@ -55,6 +55,10 @@ def load_json(path: Path) -> dict[str, Any]:
         fail(f"cannot load JSON {path}: {exc}")
 
 
+def escape_md(value: Any) -> str:
+    return str(value).replace("|", "\\|").replace("\n", "<br>")
+
+
 def gate(gates: list[dict[str, Any]], gate_id: str, passed: bool, detail: str) -> None:
     gates.append({"gate_id": gate_id, "status": "pass" if passed else "fail", "detail": detail})
 
@@ -74,7 +78,7 @@ def write_reports(gates: list[dict[str, Any]]) -> None:
         "|---|---|---|",
     ]
     for item in gates:
-        lines.append(f"| {item['gate_id']} | {item['status']} | {str(item['detail']).replace('|', '\\|')} |")
+        lines.append(f"| {escape_md(item['gate_id'])} | {escape_md(item['status'])} | {escape_md(item['detail'])} |")
     GATE_REPORT_MD.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
