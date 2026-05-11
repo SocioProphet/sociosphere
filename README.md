@@ -77,6 +77,7 @@ component repositories.
 | `standards/source-exposure/schemas/source_exposure_report.v1.json` | Source exposure report schema |
 | `standards/proof-apparatus/README.md` | Proof apparatus claim, gate, evidence, and promotion standard |
 | `standards/proof-apparatus/claim-ledger.schema.json` | Proof apparatus claim ledger event schema |
+| `standards/proof-apparatus/proof-adapter.schema.json` | Proof apparatus repository adapter manifest schema |
 | `standards/personal-intelligence-cell/social-environment-snapshot.schema.json` | Personal Intelligence Cell social-environment snapshot schema |
 | `standards/personal-intelligence-cell/reputation-delta.schema.json` | Personal Intelligence Cell contextual reputation delta schema |
 
@@ -118,6 +119,7 @@ make source-exposure-check
 
 # Proof apparatus workspace
 cat manifest/proof-workspace.toml
+python3 tools/validate_proof_apparatus.py
 
 # Success and dedup reporting
 python cli/measure-success.py
