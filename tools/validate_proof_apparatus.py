@@ -38,7 +38,6 @@ CLAIM_STATES = {
     "cross_checked",
     "diagnosed",
     "quarantined",
-    "promoted",
     "archived",
 }
 GATE_STATUSES = {"pass", "fail", "skip", "blocked", "planned"}
@@ -179,6 +178,7 @@ def validate_adapter(path: Path, adapter: dict[str, Any]) -> None:
 
     require(adapter["adapter_version"] == "0.1", f"{path} adapter_version must be 0.1")
     require(isinstance(adapter["repo"], str) and "/" in adapter["repo"], f"{path} repo must be owner/name")
+    require(adapter.get("controller_protocol") == "protocol/proof-apparatus-workspace/v0", f"{path} controller_protocol must be protocol/proof-apparatus-workspace/v0")
     require(isinstance(adapter["domain"], str) and adapter["domain"], f"{path} domain must be nonempty")
     require(isinstance(adapter["claims"], list), f"{path} claims must be a list")
     require(isinstance(adapter["gates"], list), f"{path} gates must be a list")
@@ -190,24 +190,37 @@ def validate_adapter(path: Path, adapter: dict[str, Any]) -> None:
             require(field in gate, f"{path} gate missing {field}")
         require(gate["kind"] in GATE_KINDS, f"{path} gate {gate['gate_id']} has invalid kind")
         require(gate["status"] in GATE_STATUSES, f"{path} gate {gate['gate_id']} has invalid status")
+        if gate["status"] == "pass":
+            require("input_digest" in gate and "output_digest" in gate, f"{path} passed gate {gate['gate_id']} must declare input_digest and output_digest")
+            require(str(gate["input_digest"]).startswith("sha256:"), f"{path} passed gate {gate['gate_id']} input_digest must be sha256")
+            require(str(gate["output_digest"]).startswith("sha256:"), f"{path} passed gate {gate['gate_id']} output_digest must be sha256")
         gate_ids.add(gate["gate_id"])
 
     non_claim_ids = set()
+    non_claim_applies_to = set()
     for non_claim in adapter["non_claims"]:
         for field in ("non_claim_id", "statement"):
             require(field in non_claim, f"{path} non_claim missing {field}")
         non_claim_ids.add(non_claim["non_claim_id"])
+        non_claim_applies_to.update(non_claim.get("applies_to", []))
 
     for claim in adapter["claims"]:
         for field in ("claim_id", "state", "severity", "statement", "boundary", "owned_gates"):
             require(field in claim, f"{path} claim missing {field}")
         require(claim["state"] in CLAIM_STATES, f"{path} claim {claim['claim_id']} has invalid state")
+        require(claim["state"] != "promoted", f"{path} claim {claim['claim_id']} cannot self-promote in repo adapter")
         require(claim["severity"] in SEVERITY, f"{path} claim {claim['claim_id']} has invalid severity")
         require(isinstance(claim["boundary"], list) and claim["boundary"], f"{path} claim {claim['claim_id']} boundary must be nonempty list")
-        require(isinstance(claim["owned_gates"], list), f"{path} claim {claim['claim_id']} owned_gates must be list")
+        require(isinstance(claim["owned_gates"], list) and claim["owned_gates"], f"{path} claim {claim['claim_id']} owned_gates must be nonempty list")
         require(set(claim["owned_gates"]).issubset(gate_ids), f"{path} claim {claim['claim_id']} references undeclared gates")
         require(set(claim.get("non_claim_refs", [])).issubset(non_claim_ids), f"{path} claim {claim['claim_id']} references undeclared non-claims")
         require(set(claim.get("obstruction_walls", [])).issubset(VALID_WALLS), f"{path} claim {claim['claim_id']} has invalid obstruction walls")
+        if claim["state"] in {"checked", "cross_checked"}:
+            missing_passed = [gate_id for gate_id in claim["owned_gates"] if not any(g.get("gate_id") == gate_id and g.get("status") == "pass" for g in adapter["gates"])]
+            require(not missing_passed, f"{path} checked claim {claim['claim_id']} has non-passing gates: {missing_passed}")
+        if claim.get("non_claim_refs"):
+            continue
+        require(claim["claim_id"] in non_claim_applies_to, f"{path} claim {claim['claim_id']} must be covered by non_claim_refs or non_claim.applies_to")
 
 
 def parse_args() -> argparse.Namespace:
