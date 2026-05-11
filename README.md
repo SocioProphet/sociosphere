@@ -39,6 +39,9 @@ component repositories.
 - Namespace ownership map: `governance/CANONICAL_SOURCES.yaml`
 - Angel of the Lord hardening regime: `standards/angel-of-the-lord/README.md`
 - Source exposure standard: `standards/source-exposure/README.md`
+- Proof apparatus workspace protocol: `protocol/proof-apparatus-workspace/v0/README.md`
+- Proof apparatus standard: `standards/proof-apparatus/README.md`
+- Proof workspace manifest: `manifest/proof-workspace.toml`
 
 ## Repository intelligence assets
 
@@ -72,6 +75,8 @@ component repositories.
 | `standards/source-exposure/README.md` | Source Exposure Governance Standard |
 | `standards/source-exposure/policy.v0.json` | Machine-readable source-exposure policy |
 | `standards/source-exposure/schemas/source_exposure_report.v1.json` | Source exposure report schema |
+| `standards/proof-apparatus/README.md` | Proof apparatus claim, gate, evidence, and promotion standard |
+| `standards/proof-apparatus/claim-ledger.schema.json` | Proof apparatus claim ledger event schema |
 | `standards/personal-intelligence-cell/social-environment-snapshot.schema.json` | Personal Intelligence Cell social-environment snapshot schema |
 | `standards/personal-intelligence-cell/reputation-delta.schema.json` | Personal Intelligence Cell contextual reputation delta schema |
 
@@ -110,6 +115,9 @@ python3 tools/validate_personal_intelligence_cell_social_environment.py
 # Source exposure publication safety
 python3 tools/check_source_exposure.py
 make source-exposure-check
+
+# Proof apparatus workspace
+cat manifest/proof-workspace.toml
 
 # Success and dedup reporting
 python cli/measure-success.py
