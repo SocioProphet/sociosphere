@@ -1,8 +1,11 @@
-# Proof Adjacency Ranking Tranche — Review Backlog
+# Proof Adjacency Ranking Tranche — Integrated
 
-Status: pending review and integration
+Status: integrated into SocioSphere controller doctrine
 Controller: SocioSphere
 Date captured: 2026-05-11
+Date integrated: 2026-05-11
+Review issue: `SocioProphet/sociosphere#318`
+Controller registry: `registry/proof-adjacency-ranking.v0.yaml`
 
 ## Purpose
 
@@ -10,13 +13,24 @@ This tranche reworks the ranking of adjacent Clay/math/proof-problem corridors a
 
 The key correction is that adjacency is not only object-level adjacency. The corpus also has a strong methodological signature: image/preimage discipline, shell taxonomy, evidence-object framing, severity grading, claim-boundary CI guards, and explicit non-claim boxes. That methodological signature transfers to several active or adjacent proof corridors even when the underlying mathematical objects differ.
 
-This tranche should be reviewed and integrated before resuming lower-level runner/materialization work on the proof-apparatus workspace.
+This tranche has been reviewed and integrated into SocioSphere controller doctrine. Lower-level runner/materialization work has resumed through the proof workspace materializer, strict adapter validator, controller gate runner, and controller output generator.
 
-## Review caveat
+## Review result
 
-The source tranche contains unresolved math-render placeholders from chat export. Review must repair these placeholders before any claim-facing promotion.
+The source tranche contained unresolved math-render placeholders from chat export. The integrated registry repairs them into explicit controller terms:
 
-No item in this tranche is a theorem claim. Default controller state: `diagnosed` or `speculative`.
+- `chi_p` finite phase characters;
+- `chi_13` finite phase character;
+- `mu_2` triple-point setup;
+- `n mod 8` BSD root-number datum;
+- Deligne level-1 unit;
+- Deligne level-2 cup-product symbol;
+- Bockstein carry cocycle;
+- branch-killing cyclic cover;
+- tame symbol;
+- `Q` for Hilbert's tenth over the rationals.
+
+No item in this tranche is a theorem claim. Default controller state remains `diagnosed` or `speculative` unless a domain repo emits gated evidence and SocioSphere records a promotion decision.
 
 ## Three adjacency axes
 
@@ -26,7 +40,7 @@ No item in this tranche is a theorem claim. Default controller state: `diagnosed
 | Methodology-adjacent | Same problem shape; SocioProphet discipline transfers even when objects differ | Yang–Mills, BSD, RH, abc/Szpiro/Vojta |
 | Outcome-adjacent | Same kind of finite-order, torsion, comparison-isomorphism, or regulator phenomenon in another corridor | Some L-function and Galois-representation conjectures |
 
-The ranking is by total adjacency to the SocioProphet proof apparatus, not by mathematical importance alone.
+The canonical machine-readable form is `registry/proof-adjacency-ranking.v0.yaml`.
 
 ## What changed from the prior pass
 
@@ -42,23 +56,29 @@ Adjacency: object.
 
 Concrete fallout: test whether chain, Catalan, and Motzkin Deligne classes produce torsion examples with structural features distinguishing them from the standard Atiyah–Hirzebruch construction.
 
-Mode: Mode 1, computable in current harness after math-placeholder repair.
+Mode: Mode 1.
+
+Integrated work item: `SocioProphet/Heller-Godel#19`.
 
 ### 2. Beilinson regulator on toy families
 
 Adjacency: object.
 
-Concrete fallout: compute regulator output for the level-2 Deligne cup product on toy families. Check for period structure, L-value adjacency, or irrationality witness.
+Concrete fallout: compute regulator output for the level-2 Deligne cup product on toy families. Check for period structure, L-value adjacency, or irrationality witness as diagnostics only.
 
-Mode: Mode 1, computable after regulator input normalization.
+Mode: Mode 1.
+
+Integrated work item: `SocioProphet/Heller-Godel#20`.
 
 ### 3. Tate conjecture for K3-type comparison settings
 
 Adjacency: object + methodology.
 
-Concrete fallout: compare the K3 comparison-isomorphism template against the SocioProphet triple-point setup. This is a technique-transfer diagnostic, not an attempt to reopen the settled K3 Tate case.
+Concrete fallout: compare the K3 comparison-isomorphism template against the SocioProphet `mu_2` triple-point setup. This is a technique-transfer diagnostic, not an attempt to reopen the settled K3 Tate case.
 
 Mode: Mode 2.
+
+Integrated work item: `SocioProphet/Heller-Godel#21`.
 
 ## Tier 2 — Strong object adjacency, harder bridge
 
@@ -102,11 +122,15 @@ Adjacency: methodology.
 
 Concrete fallout: continue theorem track, obstruction survey, claim-boundary CI, and severity grading. The active deliverable is the v0.18.1 audit/integration corridor.
 
+Controller status: active parallel program, not Paper I fallout.
+
 ### 9. BSD
 
 Adjacency: methodology.
 
 Concrete fallout: continue SocioProphet BSD program under the same severity, evidence, and non-claim discipline. Possible diagnostic connection to finite-order comparison structures, but no direct Paper I object fallout is assumed.
+
+Controller status: active parallel program, not Paper I fallout.
 
 ### 10. RH / GRH / automorphic L-function RH
 
@@ -139,7 +163,7 @@ Concrete fallout: diagnostic only. Ask whether finite-level or comparison-isomor
 | Rank | Problem cluster | Reason |
 |---|---|---|
 | 21 | Goldbach / twin prime / k-tuples / Bateman–Horn / Schinzel | Additive number theory; different corridor. |
-| 22 | Hilbert’s tenth over Q / decidability | Logic/Diophantine; different corridor. |
+| 22 | Hilbert's tenth over Q / decidability | Logic/Diophantine; different corridor. |
 | 23 | Jacobian conjecture / Zariski cancellation | Affine algebraic geometry; different corridor. |
 | 24 | Smooth 4D Poincaré / Schoenflies | 4-manifold topology; different corridor. |
 | 25 | Hadwiger / Erdős–Hajnal / union-closed / Frankl | Combinatorics; different corridor. |
@@ -150,7 +174,7 @@ Concrete fallout: diagnostic only. Ask whether finite-level or comparison-isomor
 |---:|---|---|---|
 | 1 | Atiyah–Hirzebruch / Soulé–Voisin torsion | Object | New torsion examples from chain/Catalan/Motzkin Deligne classes |
 | 2 | Beilinson regulator | Object | Regulator output on toy families; check L-value/period structure |
-| 3 | Tate conjecture for K3-type comparison settings | Object + Method | Map K3 comparison-isomorphism template against triple-point setup |
+| 3 | Tate conjecture for K3-type comparison settings | Object + Method | Map K3 comparison-isomorphism template against `mu_2` triple-point setup |
 | 4 | Finite-level Mumford–Tate | Object | Examine constraints on finite-character products |
 | 5 | Bloch–Kato Selmer structure | Object | Structural diagnosis of missing arithmetic input |
 | 6 | Fontaine–Mazur lifting | Object | Finite-level residual representation diagnosis |
@@ -169,25 +193,27 @@ Concrete fallout: diagnostic only. Ask whether finite-level or comparison-isomor
 | 19 | Langlands functoriality | Vocabulary | Finite-level pieces only |
 | 20 | Sato–Tate generalizations | Vocabulary | Finite-level statistical pieces |
 | 21 | Goldbach / twin prime / k-tuples cluster | None | Different corridor |
-| 22 | Hilbert’s tenth over Q | None | Different corridor |
+| 22 | Hilbert's tenth over Q | None | Different corridor |
 | 23 | Jacobian conjecture / Zariski cancellation | None | Different corridor |
 | 24 | Smooth 4D Poincaré / Schoenflies | None | Different corridor |
 | 25 | Hadwiger / Erdős–Hajnal / union-closed | None | Different corridor |
 
-## Integration order
+## Integration result
 
-1. Review and repair math placeholders.
-2. Convert the adjacency axes into SocioSphere proof-apparatus metadata.
-3. Add claim-boundary/non-claim records for the ranked items that touch active repos.
-4. Create Mode 1/2/3 scoped work items for ranks 1–3 only.
-5. Leave runner strict materialization and adapter enforcement backlog work blocked until this tranche is reviewed and integrated.
+The original integration order is complete:
 
-## Post-review backlog items
+1. Math placeholders repaired in canonical registry.
+2. Adjacency axes converted into SocioSphere proof-apparatus metadata.
+3. Claim-boundary/non-claim records added for the ranked items that touch active repos through `Heller-Godel/proof-adapter.json`.
+4. Mode 1/2 scoped work items created for ranks 1–3.
+5. Runner/materialization work resumed through SocioSphere scripts and CI.
 
-These are deliberately deferred until after review/integration of this tranche:
+## Post-review implementation now resumed
 
-- make SocioSphere runner materialize proof repos from `manifest/proof-workspace.toml`;
-- run strict adapter validation against each materialized repo;
-- generate claim-boundary tables from materialized adapters;
-- emit claim-ledger events from proof adapter reads;
-- wire cross-repo gates into runner execution.
+The former post-review backlog is no longer blocked. The implementation surface now includes:
+
+- `tools/materialize_proof_workspace.py` for materializing proof repos from `manifest/proof-workspace.toml`;
+- `tools/validate_proof_apparatus.py --strict-adapters` for strict adapter validation;
+- `tools/generate_proof_workspace_outputs.py` for claim-boundary table and claim-ledger events;
+- `tools/run_proof_workspace_gates.py` for controller gate execution;
+- `.github/workflows/proof-apparatus.yml` for CI wiring.
