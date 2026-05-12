@@ -1,0 +1,130 @@
+schema_version: 0.1.0
+standard: epistemic-governance
+status: draft
+owner: sociosphere
+
+purpose: >-
+  Estate ownership map for Epistemic Governance. SocioSphere owns the canonical
+  standard, protocol, migration ledger, and cross-repo orchestration map. Downstream
+  repositories own their implementation surfaces.
+
+canonical_namespaces:
+  standards/epistemic-governance:
+    canonical_repo: sociosphere
+    responsibility: standard text, lifecycle model, promotion law, detector map, migration ledger
+
+  protocol/epistemic-governance/v1:
+    canonical_repo: sociosphere
+    responsibility: topic catalog, run spec, fixture contract, compatibility expectations
+
+  policy/epistemic-intervention:
+    canonical_repo: policy-fabric
+    responsibility: severity mapping, detector thresholds, generation gates, promotion gates, appeal policy, drift freeze policy
+
+  execution/epistemic-detectors:
+    canonical_repo: agentplane
+    responsibility: detector bundles, counter-test bundles, replay bundles, policy backtests, fixture evaluation runs
+
+  sourceos/discourse-events:
+    canonical_repo: sourceos-syncd
+    responsibility: local-first event integrity, SourceOS lane mapping, tombstones, repair events, replayable state
+
+  identity/reasoning-calibration:
+    canonical_repo: HolographMe
+    upstream_related_repo: human-digital-twin
+    responsibility: self-owned reasoning calibration projections, consent scope, profile transition receipts
+
+  delivery/epistemic-metrics:
+    canonical_repo: delivery-excellence
+    responsibility: evidence coverage, repair success, false-positive appeal rate, contradiction half-life, review fatigue, release-readiness metrics
+
+  ontology/epistemic-governance:
+    canonical_repo: ontogenesis
+    responsibility: claim ontology, evidence classes, detector vocabulary, counter-test vocabulary, contradiction semantics
+
+  ui/epistemic-governance:
+    canonical_repo: socioprophet
+    responsibility: reference UI surfaces, graph views, hygiene flags, repair suggestions, audit/replay views
+
+  trust/epistemic-authority:
+    canonical_repo: mcp-a2a-zero-trust
+    responsibility: authority grants, reviewer permissions, tenant boundaries, policy-scoped tool/action authority
+
+repo_alignment:
+  sociosphere:
+    layer: control-plane
+    role: standard-owner
+    files:
+      - standards/epistemic-governance/
+      - protocol/epistemic-governance/v1/
+      - registry/epistemic-governance.yaml
+
+  ProCybernetica:
+    layer: doctrine
+    role: cybernetic-control-law-owner
+    planned_files:
+      - docs/doctrine/epistemic-control-law.md
+      - docs/doctrine/discursive-control-node.md
+      - docs/doctrine/claim-promotion-and-reversal-law.md
+
+  policy-fabric:
+    layer: governance
+    role: policy-as-code-owner
+    planned_files:
+      - contracts/epistemic-intervention-policy.schema.json
+      - contracts/epistemic-profile-projection-policy.schema.json
+      - contracts/epistemic-retention-policy.schema.json
+      - examples/epistemic/
+
+  agentplane:
+    layer: execution-plane
+    role: executable-evidence-owner
+    planned_files:
+      - bundles/epigov-hygiene-detector-smoke/
+      - bundles/epigov-countertest-smoke/
+      - schemas/hygiene-run-artifact.schema.json
+      - schemas/countertest-run-artifact.schema.json
+
+  sourceos-syncd:
+    layer: sourceos-control-plane
+    role: local-first-event-integrity-owner
+    planned_files:
+      - schemas/sourceos.discourse-event.v0.1.schema.json
+      - examples/events/discourse/
+
+  HolographMe:
+    layer: human-digital-twin
+    role: reasoning-calibration-projection-owner
+    planned_files:
+      - schemas/reasoning-calibration-projection.schema.json
+      - examples/reasoning-calibration/
+
+  delivery-excellence:
+    layer: governance-metrics
+    role: metrics-and-release-readiness-owner
+    planned_files:
+      - metrics/epistemic-governance-signals.yaml
+      - docs/epistemic-delivery-metrics.md
+
+mvs1:
+  title: MVS-1 strawman detector smoke path
+  owner: sociosphere for contract; agentplane/sourceos/policy-fabric for execution follow-up
+  steps:
+    - claim ingress
+    - claim parser
+    - LOGFALL.STRAWMAN.V2 deterministic detector
+    - CTEST.STEELMAN.CONFIRM.V2 stub
+    - repair suggestion
+    - audit append
+    - JSON Schema validation
+    - one AgentPlane replay bundle
+    - one SourceOS event-store write
+
+release_gates:
+  - standard anchor exists
+  - topic catalog exists
+  - run spec exists
+  - detector map exists
+  - migration ledger exists
+  - estate ownership map exists
+  - follow-up issues created for downstream repos
