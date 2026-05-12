@@ -1,0 +1,226 @@
+schema_version: 0.1.0
+standard: epistemic-governance
+ruleset_semver: 1.3.0
+status: draft
+owner: sociosphere
+
+principles:
+  detector_findings_are_hypotheses: true
+  repair_before_punishment: true
+  counter_tests_required_for_warn_or_block: true
+  small_n_discipline_required: true
+  user_facing_profile_name: Reasoning Calibration Projection
+
+severity_tiers:
+  info:
+    meaning: log or gently surface; no interruption by default
+  warn:
+    meaning: surface span, rationale, counter-test, and repair path
+  block:
+    meaning: halt generation, promotion, publication, or action until resolved or waived under policy
+
+namespaces:
+  logical_fallacies: LOGFALL
+  cognitive_biases: COGBIAS
+  technical_claims: TECHCLAIM
+  counter_tests: CTEST
+  technical_tests: TTEST
+
+detectors:
+  - rule_id: LOGFALL.STRAWMAN.V2
+    default_severity: warn
+    primary_signals:
+      - nli_contradiction_or_neutrality
+      - proposition_drift
+      - quantifier_flip
+      - hyperbole_tokens
+    required_counter_tests:
+      - CTEST.STEELMAN.CONFIRM.V2
+    default_repairs:
+      - steelman_rewrite
+      - scope_narrowing
+    promotion_effect: cannot_use_rebuttal_as_grounded_until_counter_test_clears_or_repair_applied
+
+  - rule_id: LOGFALL.ADHOM.V2
+    default_severity: block
+    primary_signals:
+      - person_targeting_predicate
+      - interlocutor_subject
+      - proposition_absent_or_secondary
+    required_counter_tests:
+      - CTEST.REFOCUS.PROPOSITION.V1
+    default_repairs:
+      - refocus_on_claim
+      - remove_person_attack
+    promotion_effect: publication_block_until_repaired_or_moderator_override
+
+  - rule_id: LOGFALL.EMOTION.V2
+    default_severity: warn
+    primary_signals:
+      - high_arousal_sentiment
+      - evidence_scarcity_index_below_domain_threshold
+    required_counter_tests:
+      - CTEST.BASELINE.DATA.V1
+    default_repairs:
+      - evidence_request
+      - baseline_request
+    promotion_effect: requires_evidence_or_qualifier_before_claim_promotion
+
+  - rule_id: LOGFALL.FALSECAUSE.V2
+    default_severity: warn
+    primary_signals:
+      - causal_verbs
+      - temporal_sequence_without_counterfactual_warrant
+      - missing_confounder_handling
+    required_counter_tests:
+      - CTEST.CAUSAL.DO/COUNTERFACTUAL.V1
+    default_repairs:
+      - causal_dag_request
+      - confidence_widening
+      - temporal_qualification
+    promotion_effect: causal_claim_cannot_be_verified_without_causal_gate
+
+  - rule_id: LOGFALL.GISH.V1
+    default_severity: warn
+    primary_signals:
+      - claims_per_100w_above_domain_threshold
+      - rebuttal_bandwidth_shortage
+      - dependency_order_missing
+    required_counter_tests:
+      - CTEST.ACYCLIC.PROOF.V1
+    default_repairs:
+      - claim_split
+      - batch_rebuttal_allocation
+      - priority_ordering
+    promotion_effect: batch_claims_must_be_split_before_individual_promotion
+
+  - rule_id: LOGFALL.SHARPSHOOT.V2
+    default_severity: warn
+    primary_signals:
+      - post_hoc_cluster_selection
+      - missing_preregistration
+      - multiverse_selection_risk
+    required_counter_tests:
+      - CTEST.PREREG/MTP.V2
+    default_repairs:
+      - criteria_pre_registration
+      - multiple_testing_disclosure
+    promotion_effect: statistical_claim_requires_mtp_or_exploratory_label
+
+  - rule_id: LOGFALL.LOADED.V1
+    default_severity: block
+    primary_signals:
+      - wh_question_with_unproven_presupposition
+    required_counter_tests:
+      - CTEST.PRESUP.EXPOSE.V1
+    default_repairs:
+      - presupposition_extraction
+      - neutral_question_rewrite
+    promotion_effect: loaded_question_cannot_be_used_as_evidence_or_challenge_until_rewritten
+
+  - rule_id: LOGFALL.BURDEN.V1
+    default_severity: block
+    primary_signals:
+      - prove_me_wrong_pattern
+      - claim_without_initial_evidence
+    required_counter_tests:
+      - CTEST.BURDEN.REASSIGN.V1
+    default_repairs:
+      - burden_reassignment
+      - backing_required
+    promotion_effect: claimant_must_supply_minimum_backing
+
+  - rule_id: LOGFALL.EQUIV.V1
+    default_severity: warn
+    primary_signals:
+      - lexical_sense_switch
+      - term_scope_shift
+    required_counter_tests:
+      - CTEST.TERMS.LOCK.V1
+    default_repairs:
+      - term_lock
+      - definition_table
+    promotion_effect: ambiguous_term_must_be_locked_for_formal_decision_use
+
+  - rule_id: LOGFALL.MOTTEBAILEY.V1
+    default_severity: warn
+    primary_signals:
+      - pressure_dependent_claim_switching
+      - weak_truism_to_strong_claim_alternation
+    required_counter_tests:
+      - CTEST.CRITERIA.PRE-REGISTER.V1
+    default_repairs:
+      - claim_split
+      - criteria_pre_registration
+    promotion_effect: defended_claim_must_be_frozen_before_rebuttal_or_promotion
+
+  - rule_id: COGBIAS.ANCHORING.V2
+    default_severity: info
+    primary_signals:
+      - low_estimate_elasticity_to_counter_anchor
+    required_counter_tests:
+      - CTEST.COUNTER-ANCHOR.V1
+    default_repairs:
+      - counter_anchor_prompt
+      - confidence_widening
+    projection_policy: self_private_by_default
+
+  - rule_id: COGBIAS.CONFIRM.V1
+    default_severity: warn
+    primary_signals:
+      - support_to_disconfirm_ratio_above_threshold
+      - disconfirming_evidence_ignored
+    required_counter_tests:
+      - CTEST.DEVIL-S.LIST.V1
+    default_repairs:
+      - counterexample_request
+      - disconfirming_source_request
+    projection_policy: self_private_by_default
+
+  - rule_id: COGBIAS.OVERCONF.V1
+    default_severity: info
+    primary_signals:
+      - narrow_ci
+      - calibration_miss
+      - overprecise_language
+    required_counter_tests:
+      - CTEST.CALIBRATION-20Q.V1
+    default_repairs:
+      - confidence_widening
+      - calibration_prompt
+    projection_policy: self_private_by_default
+
+  - rule_id: COGBIAS.REACTDEV.V1
+    default_severity: warn
+    primary_signals:
+      - source_label_devaluation
+      - attribution_sensitive_judgment_shift
+    required_counter_tests:
+      - CTEST.ATTRIBUTION-BLIND.A/B.V1
+    default_repairs:
+      - source_content_separation
+      - attribution_blind_review
+    projection_policy: self_private_by_default
+
+technical_claim_detectors:
+  - rule_id: TECHCLAIM.UNREPRODUCIBLE.V1
+    default_severity: warn
+    required_counter_tests: [TTEST.REPRODUCE.RUN.V1]
+    default_repairs: [replay_artifact_request]
+  - rule_id: TECHCLAIM.BENCH_CHERRYPICK.V1
+    default_severity: warn
+    required_counter_tests: [TTEST.BENCH.BASELINE.V1]
+    default_repairs: [baseline_request, workload_specification]
+  - rule_id: TECHCLAIM.NO_FAILING_TEST.V1
+    default_severity: warn
+    required_counter_tests: [TTEST.FAILING.TEST.REQUIRED.V1]
+    default_repairs: [failing_test_request]
+  - rule_id: TECHCLAIM.NO_THREAT_MODEL.V1
+    default_severity: warn
+    required_counter_tests: [TTEST.THREAT.MODEL.MINIMUM.V1]
+    default_repairs: [threat_model_request]
+
+small_n_policy:
+  n_ge_30: central_metrics_allowed_with_ci
+  n_gt_10_lt_30: limited_evidence_partial_pooling_required
+  n_lte_10: enumerate_examples_no_generalization
