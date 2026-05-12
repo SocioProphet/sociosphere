@@ -5,6 +5,23 @@ facts that were previously repeated in multiple places.
 
 ## Current state
 
+### Epistemic Governance
+- Canonical standard anchor: `standards/epistemic-governance/`
+- Protocol surface: `protocol/epistemic-governance/v1/`
+- Estate ownership map: `registry/epistemic-governance.yaml`
+- Reference application lineage: Debater 2.0 / Argument Hygiene / Ruleset v1.3.0
+- Status: proposed cross-repo standard and protocol surface
+- Current scope: documentation, lifecycle law, promotion law, detector/counter-test bindings, topic catalog, run spec, migration ledger, and estate ownership map
+- Non-scope in SocioSphere: downstream detector implementation, UI implementation, policy compiler implementation, SourceOS event-store implementation, HolographMe projection runtime, and DeliveryExcellence dashboards
+- Downstream targets:
+  - `SocioProphet/ProCybernetica` for epistemic control doctrine and discursive control node law
+  - `SocioProphet/policy-fabric` for epistemic intervention, profile projection, retention, drift, and promotion policy as code
+  - `SocioProphet/agentplane` for executable detector, counter-test, replay, fixture evaluation, and policy-backtest bundles
+  - `SourceOS-Linux/sourceos-syncd` for local-first discourse events, SourceOS lane mapping, tombstones, repair events, and replayable state integrity
+  - `SocioProphet/HolographMe` and/or `human-digital-twin` for consent-scoped Reasoning Calibration Projections
+  - `SocioProphet/delivery-excellence` for evidence coverage, repair success, false-positive appeal rate, contradiction half-life, review fatigue, and release-readiness metrics
+  - `SocioProphet/ontogenesis` for claim ontology, evidence classes, detector vocabulary, counter-test vocabulary, contradiction semantics, and repair-action semantics
+
 ### TritRPC
 - Canonical upstream: `SocioProphet/TriTRPC`
 - Workspace declaration: `manifest/workspace.toml` repo `tritrpc`
@@ -44,3 +61,8 @@ treat that content as historical context. Current behavior is defined by
 For edge-capability upstreams, treat the registry file plus drift-check tool as
 the operational baseline, and treat the narrative binding doc as the policy /
 disposition explanation.
+
+For Epistemic Governance, treat `standards/epistemic-governance/` plus
+`registry/epistemic-governance.yaml` as the SocioSphere standard/ownership
+baseline. Downstream repos own implementation according to their canonical
+namespace responsibilities.
