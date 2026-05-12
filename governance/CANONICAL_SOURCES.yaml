@@ -29,12 +29,24 @@ namespaces:
   standards/market-data: { canonical_repo: prophet-platform-standards, upstream_standard: socioprophet-standards-storage, note: "runtime market-data profile authority; storage semantics remain upstream" }
   standards/knowledge: { canonical_repo: socioprophet-standards-knowledge }
   standards/sourceos-spec: { canonical_repo: sourceos-spec, note: "Typed contracts spec (SourceOS-Linux/sourceos-spec)" }
+  standards/epistemic-governance: { canonical_repo: sociosphere, note: "Claim, evidence, critique, repair, promotion, decision/action, appeal, and replay governance standard" }
 
   # Transport & protocol
   protocol/tritrpc: { canonical_repo: TriTRPC }
   protocol/execution: { canonical_repo: agentplane }
   protocol/serdes: { canonical_repo: semantic-serdes }
   protocol/replay: { canonical_repo: cairnpath-mesh }
+  protocol/epistemic-governance/v1: { canonical_repo: sociosphere, note: "Epistemic Governance topic catalog, run spec, fixture contracts, and compatibility expectations" }
+
+  # Epistemic Governance implementation ownership
+  policy/epistemic-intervention: { canonical_repo: policy-fabric, note: "Severity, thresholds, promotion gates, profile projection, retention, drift, and appeal policy as code" }
+  execution/epistemic-detectors: { canonical_repo: agentplane, note: "Detector, counter-test, replay, fixture evaluation, and policy backtest bundles" }
+  sourceos/discourse-events: { canonical_repo: sourceos-syncd, note: "Local-first discourse events, SourceOS lane mapping, tombstones, repair events, and replayable state integrity" }
+  identity/reasoning-calibration: { canonical_repo: HolographMe, upstream_standard: human-digital-twin, note: "Self-owned consent-scoped Reasoning Calibration Projection surface" }
+  delivery/epistemic-metrics: { canonical_repo: delivery-excellence, note: "Evidence coverage, repair success, false-positive appeal rate, contradiction half-life, review fatigue, and release-readiness metrics" }
+  ontology/epistemic-governance: { canonical_repo: ontogenesis, note: "Claim ontology, evidence classes, detector vocabulary, counter-test vocabulary, contradiction semantics, and repair actions" }
+  ui/epistemic-governance: { canonical_repo: socioprophet, note: "Reference UI surfaces for graph views, hygiene flags, repair suggestions, and audit/replay views" }
+  trust/epistemic-authority: { canonical_repo: mcp-a2a-zero-trust, note: "Authority grants, reviewer permissions, tenant boundaries, and policy-scoped tool/action authority" }
 
   # Human Digital Twin
   hdt/core: { canonical_repo: human-digital-twin }
