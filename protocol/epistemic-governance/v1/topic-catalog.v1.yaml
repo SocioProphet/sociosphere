@@ -1,0 +1,195 @@
+schema_version: 0.1.0
+standard: epistemic-governance
+protocol_version: v1
+status: draft
+owner: sociosphere
+compatibility_policy: semver
+
+description: >-
+  Topic catalog for Epistemic Governance event streams. The catalog follows
+  the QES pattern: versioned topics, deterministic replay inputs, and evidence
+  events with provenance. Full CloudEvents schemas are deferred to the schema
+  pack; this file establishes topic identity and compatibility expectations.
+
+envelope:
+  expected_shape: cloudevents_1_0_compatible
+  required_fields:
+    - id
+    - source
+    - specversion
+    - type
+    - subject
+    - time
+    - datacontenttype
+    - data
+  required_trace_fields:
+    - trace_id
+    - span_id
+    - schema_version
+    - privacy_tier
+    - tenant_id
+
+topics:
+  - name: ingress.discourse.v1
+    owner: reference_app_or_connector
+    purpose: raw or redacted discourse event ingress
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: claim.parsed.v1
+    owner: argument_mining_service
+    purpose: parsed claim, warrant, evidence, qualifier, and counterexample candidates
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: claim.classified.v1
+    owner: argument_mining_service
+    purpose: claim type, domain, language, register, modality, and speaker/agent context
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: moderation.decision.v1
+    owner: moderation_policy_service
+    purpose: safety, abuse, PII, prompt-injection, and manipulation decisions
+    compatibility: additive_optional_fields_only
+    privacy_default: sensitive
+
+  - name: hygiene.detect.v1
+    owner: hygiene_profiler
+    purpose: detector finding hypothesis with score, span, rationale, and required counter-test
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: hygiene.ctest.v1
+    owner: counter_test_runner
+    purpose: counter-test result with measurement quality and policy effect
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: evidence.authority.v1
+    owner: evidence_authority_service
+    purpose: evidence source class, provenance, hash, jurisdiction, freshness, and authority metadata
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: verification.result.v1
+    owner: verifier_service
+    purpose: entailment, contradiction, quote-exactness, numeric, date, actor, and source checks
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: claim.repair.v1
+    owner: repair_engine
+    purpose: repair suggestions, accepted repairs, rejected repairs, and retest status
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: claim.promotion.v1
+    owner: promotion_authority
+    purpose: claim lifecycle promotion, canonization, and accepted-for-context movement
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: claim.reversal.v1
+    owner: reversal_authority
+    purpose: deprecation, reversal, failed replay, successful appeal, or contradiction-driven demotion
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: contradiction.record.v1
+    owner: contradiction_ledger
+    purpose: scoped conflicts between claims, resolution status, synthesis attempts, and uncertainty
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: decision.record.v1
+    owner: decision_authority
+    purpose: governance decision that cites claims, values, policy, jurisdiction, uncertainty, and appeal path
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: action.record.v1
+    owner: action_authority
+    purpose: authorized action, execution state, verification, rollback, and remediation status
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: appeal.case.v1
+    owner: review_queue
+    purpose: appeal, dispute, correction, reviewer assignment, decision, and downstream correction path
+    compatibility: additive_optional_fields_only
+    privacy_default: sensitive
+
+  - name: reasoning.calibration.projection.v1
+    owner: holographme_or_human_digital_twin
+    purpose: consent-scoped reasoning calibration projection with MQI and profile safety limits
+    compatibility: additive_optional_fields_only
+    privacy_default: sensitive
+
+  - name: drift.alert.v1
+    owner: drift_monitor
+    purpose: detector, policy, threshold, false-positive, false-negative, or calibration drift alert
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: governance.policy-update.v1
+    owner: policy_authority
+    purpose: signed policy/ruleset threshold update with backtest and approval metadata
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: audit.append.v1
+    owner: audit_ledger
+    purpose: append-only audit event for material governance, detector, policy, claim, decision, action, appeal, and profile events
+    compatibility: additive_optional_fields_only
+    privacy_default: internal
+
+  - name: export.manifest.v1
+    owner: export_service
+    purpose: export bundle manifest with redactions, hash commitments, evidence references, replay inputs, and permissions
+    compatibility: additive_optional_fields_only
+    privacy_default: sensitive
+
+  - name: threat.detected.v1
+    owner: abuse_or_threat_monitor
+    purpose: Goodharting, citation stuffing, source laundering, brigading, label poisoning, policy capture, and detector evasion events
+    compatibility: additive_optional_fields_only
+    privacy_default: sensitive
+
+sourceos_lane_mapping:
+  normal:
+    - claim.parsed.v1
+    - claim.classified.v1
+  audit:
+    - audit.append.v1
+  policy:
+    - moderation.decision.v1
+    - governance.policy-update.v1
+  repair:
+    - claim.repair.v1
+    - appeal.case.v1
+  memory:
+    - claim.promotion.v1
+    - decision.record.v1
+  tombstone:
+    - claim.reversal.v1
+  archive:
+    - export.manifest.v1
+  secure:
+    - reasoning.calibration.projection.v1
+    - threat.detected.v1
+
+compatibility_rules:
+  patch:
+    - wording changes
+    - examples
+    - non-breaking metadata
+  minor:
+    - new optional field
+    - new topic
+    - new detector binding
+  major:
+    - required field change
+    - topic semantic change
+    - lifecycle transition change
+    - detector threshold semantics change
