@@ -1,0 +1,67 @@
+{
+  "composition_id": "sociosphere.authority_dependency_graph",
+  "composition_kind": "estate_authority_dependency_graph_composition",
+  "binding_doctrine_version": "v0.1",
+  "authority_dependency_refs": [
+    {
+      "ref_kind": "authority_dependency",
+      "ref_id": "authority.superconscious-to-policy-fabric",
+      "opaque_hash": "sha256:b123456789abcdefb123456789abcdefb123456789abcdefb123456789abcdef"
+    },
+    {
+      "ref_kind": "authority_dependency",
+      "ref_id": "authority.policy-fabric-to-agentplane",
+      "opaque_hash": "sha256:c23456789abcdef1c23456789abcdef1c23456789abcdef1c23456789abcdef1"
+    }
+  ],
+  "control_effect_refs": [
+    {
+      "ref_kind": "control_effect",
+      "ref_id": "control.cancellation-governs-agent-action",
+      "opaque_hash": "sha256:d3456789abcdef12d3456789abcdef12d3456789abcdef12d3456789abcdef12"
+    }
+  ],
+  "cancellation_binding_refs": [
+    {
+      "ref_kind": "cancellation_binding",
+      "ref_id": "cancel.policy-fabric-agentplane-demo",
+      "opaque_hash": "sha256:e456789abcdef123e456789abcdef123e456789abcdef123e456789abcdef123"
+    }
+  ],
+  "plane_owner_refs": [
+    {
+      "plane_id": "superconscious",
+      "owner_repo": "SocioProphet/superconscious",
+      "opaque_hash": "sha256:f56789abcdef1234f56789abcdef1234f56789abcdef1234f56789abcdef1234"
+    },
+    {
+      "plane_id": "policy-fabric",
+      "owner_repo": "SocioProphet/policy-fabric",
+      "opaque_hash": "sha256:a6789abcdef12345a6789abcdef12345a6789abcdef12345a6789abcdef12345"
+    },
+    {
+      "plane_id": "agentplane",
+      "owner_repo": "SocioProphet/agentplane",
+      "opaque_hash": "sha256:b789abcdef123456b789abcdef123456b789abcdef123456b789abcdef123456"
+    }
+  ],
+  "bound_modes": {
+    "receipt_integration": "hash_bound_reference",
+    "authority_scope_analysis": "declared_scope_lattice_v1",
+    "non_claim_analysis": "explicit_propagate_or_resolve_v1",
+    "monitor_independence_analysis": "declared_monitor_independence_v1",
+    "evidence_freshness_analysis": "declared_evidence_freshness_v1"
+  },
+  "non_claims": [
+    "no_runtime_receipt_lookup",
+    "no_runtime_non_claim_verification",
+    "no_runtime_monitor_attestation",
+    "no_timestamp_authenticity",
+    "opaque_hashes_not_resolved",
+    "no_runtime_authority_resolution",
+    "no_runtime_cancellation_propagation",
+    "no_estate_topology_verification",
+    "no_authority_chain_traversal",
+    "no_cross_plane_runtime_attestation"
+  ]
+}
