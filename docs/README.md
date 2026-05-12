@@ -13,6 +13,7 @@
 - [Proof apparatus workspace controller](architecture/proof-apparatus-workspace-controller.md)
 - [UI workbench app README](../apps/ui-workbench/README.md)
 - [Overview](architecture/overview.md)
+- [Governed DevSecOps as the first hypergraph use case](architecture/governed-devsecops-first-usecase.md)
 - [Sovereign civic computation estate alignment](architecture/sovereign-civic-computation-alignment.md)
 - [Estate control graph](architecture/estate-control-graph.md)
 - [Runtime, content, and orchestration placement](architecture/runtime-content-placement.md)
@@ -50,6 +51,7 @@
 ## Canonical-document policy
 - **Current workspace behavior**: `../README.md`, `architecture/overview.md`, `SCOPE_PURPOSE_STATUS_BACKLOG.md`
 - **Current proof workspace behavior**: `../manifest/proof-workspace.toml`, `../protocol/proof-apparatus-workspace/v0/README.md`, `architecture/proof-apparatus-workspace-controller.md`
+- **Current governed DevSecOps use case**: `architecture/governed-devsecops-first-usecase.md`
 - **Current integration facts**: `INTEGRATION_STATUS.md`
 - **Archival history only**: `ECOSYSTEM-BRIEF.md`
 
