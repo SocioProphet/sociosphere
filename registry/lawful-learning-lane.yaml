@@ -1,0 +1,103 @@
+schema_version: "0.1"
+registry_kind: lawful_learning_lane_registration
+lane_id: lawful-learning
+status: phase8_registration_seed
+registered_at: "2026-05-13"
+
+owner:
+  doctrine_repo: SocioProphet/superconscious
+  doctrine_role: lawful-learning doctrine, claim-ledger discipline, certificate schemas, and trust-surface composition constraints
+
+promotion:
+  stable_schema_target: SourceOS-Linux/sourceos-spec
+  promotion_status: pending_stability_review
+  promotion_rule: >-
+    Local schemas and draft contract surfaces remain in superconscious until stable.
+    Promoted canonical forms belong in sourceos-spec.
+
+cross_repo_surface:
+  evidence_runtime:
+    repo: SocioProphet/agentplane
+    role: execution, evidence, replay surface, and AgentPlane-compatible receipts
+  workspace_registry:
+    repo: SocioProphet/sociosphere
+    role: workspace/registry registration, lane discovery, routing, and governance index
+  admission:
+    repo: SocioProphet/policy-fabric
+    role: cancellation, admission, denial, modification, escalation, and policy decisions
+  model_governance:
+    repo: SocioProphet/model-governance-ledger
+    role: consent, model governance, attribution, intervention receipts, and audit records
+  routing:
+    repo: SocioProphet/model-router
+    role: provider/model route decisions
+  semantic_vocabulary:
+    repo: SocioProphet/ontogenesis
+    role: semantic vocabulary and draft contract work before promotion
+  source_corpus:
+    repo: SocioProphet/systems-learning-loops
+    role: source registry, claims registry, invariant patterns, and research evidence corpus
+
+required_governance_documents:
+  - id: tier2_composition_invariants
+    repo: SocioProphet/superconscious
+    path: docs/composition/TIER2_INVARIANT_BINDINGS.md
+    role: constrains lawful-learning composition claims and Tier-2 invariant modes
+    required_for: [composition_claims, certificate_binding, trust_surface_composition]
+  - id: adapter_boundary_matrix
+    repo: SocioProphet/superconscious
+    path: docs/adapter-boundary-matrix.md
+    role: constrains adapter invocation and final-authority ownership across repos
+    required_for: [adapter_invocation, trust_surface_review, cross_repo_registration]
+  - id: lawful_learning_trust_surface_example
+    repo: SocioProphet/superconscious
+    path: examples/TRUST_SURFACE.lawful-learning.yaml
+    role: declares lawful-learning trust surface composition and non-claims
+    required_for: [trust_surface_validation]
+
+phase_status:
+  phase_1_to_6:
+    repo: SocioProphet/superconscious
+    state: doctrine, schemas, checker, and hardened fixtures captured
+  phase_7:
+    repo: SocioProphet/systems-learning-loops
+    state: source registry, claims registry, invariant patterns, and ontology seeded
+  phase_8:
+    repo: SocioProphet/sociosphere
+    state: this registration seed
+  phase_9:
+    repo: SocioProphet/agentplane
+    state: pending runtime evidence integration
+
+allowed_claims:
+  - Sociosphere may discover the lawful-learning lane and route governance review.
+  - Sociosphere may point to superconscious as doctrine owner.
+  - Sociosphere may point to sourceos-spec as future canonical schema owner after promotion.
+  - Sociosphere may point to systems-learning-loops as research evidence source corpus.
+
+non_claims:
+  - no_runtime_receipt_lookup
+  - no_runtime_non_claim_verification
+  - no_runtime_monitor_attestation
+  - no_schema_promotion_by_registration
+  - no_frontier_claim_promotion
+  - no_adapter_authority_transfer
+  - no_policy_admission_bypass
+  - no_model_governance_bypass
+  - no_evidence_authenticity_claim
+  - no_sourceos_spec_promotion_without_review
+
+gates:
+  registration_gate:
+    requires:
+      - required_governance_documents present or referenced
+      - doctrine owner named
+      - promotion target named
+      - final authority repos named
+      - non-claims explicit
+  implementation_gate:
+    requires:
+      - policy-fabric admission for runtime actions
+      - agentplane evidence/replay receipt path
+      - model-governance-ledger audit or consent record when model governance is implicated
+      - sourceos-spec promotion for canonical schemas before broad runtime adoption
