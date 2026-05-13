@@ -1,0 +1,51 @@
+# Lawful-learning Phase 8 dependency edges
+#
+# Additive edge pack corresponding to registry/dependency-graph.yaml without
+# rewriting the large aggregate graph file.
+
+schema_version: "1.0.0"
+status: active
+updated_at: "2026-05-13"
+edge_pack_id: lawful-learning.phase8.dependency_edges
+
+edges:
+  - from: superconscious
+    to: sourceos-spec
+    type: schema_promotion_path
+    state: pre_promotion
+    lane: lawful-learning
+    comment: "Lawful-learning repo-local schemas promote to SourceOS-Linux/sourceos-spec only after checker-backed stabilization and sourceos-spec review."
+
+  - from: superconscious
+    to: systems-learning-loops
+    type: research_evidence_reference
+    state: active
+    lane: lawful-learning
+    comment: "Lawful-learning doctrine/checker lane references systems-learning-loops Phase 7 source, claim, pattern, and ontology pack."
+
+  - from: systems-learning-loops
+    to: sociosphere
+    type: estate_registration_reference
+    state: active
+    lane: lawful-learning
+    comment: "The lawful-learning research pack is registered into SocioSphere for estate discovery in Phase 8."
+
+  - from: sociosphere
+    to: superconscious
+    type: doctrine_owner_reference
+    state: active
+    lane: lawful-learning
+    comment: "SocioSphere records superconscious as lawful-learning doctrine/checker owner; it does not replace that ownership."
+
+  - from: superconscious
+    to: agentplane
+    type: future_runtime_evidence_integration
+    state: deferred
+    lane: lawful-learning
+    comment: "Phase 9 runtime evidence integration is deferred; no runtime execution is claimed by Phase 8."
+
+non_claims:
+  - does_not_create_runtime_dependency
+  - does_not_promote_schemas_to_sourceos_spec
+  - does_not_claim_phase9_runtime_integration
+  - does_not_change_dependency_graph_aggregate

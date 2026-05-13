@@ -1,0 +1,73 @@
+# Lawful-learning Phase 8 estate registration
+#
+# This additive registry file records the lawful-learning lane in SocioSphere
+# without rewriting the large aggregate repository ontology file.
+
+schema_version: "1.0.0"
+status: active
+updated_at: "2026-05-13"
+registration_id: lawful-learning.phase8.registration
+
+lane:
+  id: lawful-learning
+  title: "Lawful Learning"
+  owner_repo: SocioProphet/superconscious
+  owner_plane: superconscious
+  role: doctrine-and-checker-lane
+  status: phase8_registered
+
+surfaces:
+  doctrine:
+    repo: SocioProphet/superconscious
+    paths:
+      - docs/lawful-learning/01-framework-substrates-structures-circuits.md
+      - docs/lawful-learning/02-categorical-foundations.md
+      - docs/lawful-learning/03-lawful-learning-invariants.md
+  schemas:
+    repo: SocioProphet/superconscious
+    path: schemas/lawful-learning/
+    promotion_state: repo_local_draft
+    promotion_target: SourceOS-Linux/sourceos-spec
+    promotion_condition: "stabilize after checker-backed use and sourceos-spec review"
+  checker:
+    repo: SocioProphet/superconscious
+    path: scripts/check-lawful-learning.py
+    ci_target: make lawful-learning-ci
+  fixtures:
+    repo: SocioProphet/superconscious
+    path: tests/fixtures/lawful-learning/
+  trust_surface:
+    repo: SocioProphet/superconscious
+    path: examples/TRUST_SURFACE.lawful-learning.yaml
+  tier2_binding:
+    repo: SocioProphet/superconscious
+    path: schemas/composition/lawful-learning-trust-surface-tier2-binding.v1.json
+    bound_modes:
+      receipt_integration: hash_bound_reference
+      authority_scope_analysis: declared_scope_lattice_v1
+      non_claim_analysis: explicit_propagate_or_resolve_v1
+      monitor_independence_analysis: declared_monitor_independence_v1
+      evidence_freshness_analysis: declared_evidence_freshness_v1
+  research_pack:
+    repo: SocioProphet/systems-learning-loops
+    paths:
+      - kb/sources/lawful-learning-sources.yaml
+      - kb/claims/lawful-learning-claims.yaml
+      - kb/patterns/lawful-learning-seven-invariants.md
+      - ontology/lawful-learning.ttl
+    ci_target: make validate-lawful-learning-pack
+
+canonical_relationships:
+  doctrine_owner: SocioProphet/superconscious
+  evidence_pack_owner: SocioProphet/systems-learning-loops
+  registry_owner: SocioProphet/sociosphere
+  future_schema_standard_owner: SourceOS-Linux/sourceos-spec
+  runtime_evidence_owner: SocioProphet/agentplane
+
+non_claims:
+  - does_not_promote_schemas_to_sourceos_spec
+  - does_not_claim_runtime_execution
+  - does_not_claim_runtime_evidence_integration
+  - does_not_claim_tier2_verified_modes
+  - does_not_claim_cross_plane_evidence_resolution
+  - does_not_replace_superconscious_as_doctrine_owner

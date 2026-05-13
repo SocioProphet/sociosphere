@@ -1,0 +1,74 @@
+# Lawful-learning Phase 8 canonical source map
+#
+# Additive canonical-source pack corresponding to governance/CANONICAL_SOURCES.yaml
+# without rewriting the large aggregate canonical source file.
+
+schema_version: "1.0.0"
+status: active
+updated_at: "2026-05-13"
+source_pack_id: lawful-learning.phase8.canonical_sources
+
+namespaces:
+  research/lawful-learning:
+    canonical_repo: superconscious
+    canonical_path: docs/lawful-learning/
+    note: "Lawful-learning doctrine, categorical foundations, governance invariants, repo-local schemas, checker, and fixtures."
+
+  research/lawful-learning/sources:
+    canonical_repo: systems-learning-loops
+    canonical_path: kb/sources/lawful-learning-sources.yaml
+    upstream_repo: superconscious
+    note: "Phase 7 research source registry derived from superconscious lawful-learning Phases 1-6 and ProCybernetica Tier 2 doctrine."
+
+  research/lawful-learning/claims:
+    canonical_repo: systems-learning-loops
+    canonical_path: kb/claims/lawful-learning-claims.yaml
+    upstream_repo: superconscious
+    note: "Phase 7 claim registry preserving M/T/S/E/G boundaries."
+
+  research/lawful-learning/patterns:
+    canonical_repo: systems-learning-loops
+    canonical_path: kb/patterns/lawful-learning-seven-invariants.md
+    upstream_repo: superconscious
+    note: "Pattern synthesis for seven governance invariants plus categorical substrate."
+
+  ontology/lawful-learning:
+    canonical_repo: systems-learning-loops
+    canonical_path: ontology/lawful-learning.ttl
+    upstream_repo: superconscious
+    note: "RDF/Turtle lawful-learning ontology for source, claim, invariant, trust-surface, schema, fixture, and checker relationships."
+
+  standards/lawful-learning-schema-promotion:
+    canonical_repo: sourceos-spec
+    upstream_repo: superconscious
+    state: deferred
+    note: "Future promotion target for stable lawful-learning schemas after checker-backed use and sourceos-spec review. No promotion is claimed by Phase 8."
+
+  execution/lawful-learning-runtime-evidence:
+    canonical_repo: agentplane
+    upstream_repo: superconscious
+    state: deferred
+    note: "Future Phase 9 runtime evidence integration target. No runtime execution or evidence integration is claimed by Phase 8."
+
+binding_refs:
+  lawful_learning_trust_surface:
+    repo: superconscious
+    path: schemas/composition/lawful-learning-trust-surface-tier2-binding.v1.json
+    non_claims:
+      - no_runtime_receipt_lookup
+      - no_runtime_non_claim_verification
+      - no_runtime_monitor_attestation
+      - no_timestamp_authenticity
+      - opaque_hashes_not_resolved
+      - no_runtime_circuit_discovery
+      - no_runtime_ablation_verification
+      - no_tag_promotion_at_composition
+      - no_substrate_verification
+      - no_frontier_claim_promotion
+
+non_claims:
+  - does_not_rewrite_governance_CANONICAL_SOURCES_yaml
+  - does_not_promote_schemas_to_sourceos_spec
+  - does_not_claim_runtime_execution
+  - does_not_claim_runtime_evidence_integration
+  - does_not_change_doctrine_owner
