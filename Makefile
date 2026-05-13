@@ -23,9 +23,9 @@ ui-dev: ui-preflight
 # --- end ui-workbench targets ---
 
 # --- standards validation targets ---
-.PHONY: validate validate-standards agent-reliability-governance-queue-validate multidomain-geospatial-standards-compliance-validate program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate lattice-runtime-profile-consumer-parity-validate lattice-demo-readiness-validate lattice-replay-evidence-membrane-validate lattice-runtime-release-readiness-validate lattice-product-readiness-program-validate lattice-operating-model-validate lattice-deployment-topology-validate lattice-security-isolation-model-validate lattice-observability-sre-validate lattice-release-rollback-controls-validate lattice-environment-fingerprints-validate superconscious-reasoning-validate sociosphere-authority-dependency-graph-tier2-binding-ci
+.PHONY: validate validate-standards agent-reliability-governance-queue-validate multidomain-geospatial-standards-compliance-validate program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate lattice-runtime-profile-consumer-parity-validate lattice-demo-readiness-validate lattice-replay-evidence-membrane-validate lattice-runtime-release-readiness-validate lattice-product-readiness-program-validate lattice-operating-model-validate lattice-deployment-topology-validate lattice-security-isolation-model-validate lattice-observability-sre-validate lattice-release-rollback-controls-validate lattice-environment-fingerprints-validate superconscious-reasoning-validate sociosphere-authority-dependency-graph-tier2-binding-ci lawful-learning-phase8-registration-validate
 
-validate: validate-standards agent-reliability-governance-queue-validate program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate lattice-runtime-profile-consumer-parity-validate lattice-demo-readiness-validate lattice-replay-evidence-membrane-validate lattice-runtime-release-readiness-validate lattice-product-readiness-program-validate lattice-operating-model-validate lattice-deployment-topology-validate lattice-security-isolation-model-validate lattice-observability-sre-validate lattice-release-rollback-controls-validate lattice-environment-fingerprints-validate superconscious-reasoning-validate sociosphere-authority-dependency-graph-tier2-binding-ci
+validate: validate-standards agent-reliability-governance-queue-validate program-dashboard-validate model-fabric-work-register-validate lattice-data-governai-topology-validate lattice-runtime-profile-consumer-parity-validate lattice-demo-readiness-validate lattice-replay-evidence-membrane-validate lattice-runtime-release-readiness-validate lattice-product-readiness-program-validate lattice-operating-model-validate lattice-deployment-topology-validate lattice-security-isolation-model-validate lattice-observability-sre-validate lattice-release-rollback-controls-validate lattice-environment-fingerprints-validate superconscious-reasoning-validate sociosphere-authority-dependency-graph-tier2-binding-ci lawful-learning-phase8-registration-validate
 	@echo "OK: validate"
 
 validate-standards:
@@ -97,6 +97,10 @@ sociosphere-authority-dependency-graph-tier2-binding-ci:
 	python3 -m json.tool tests/fixtures/composition/sociosphere-authority-dependency-graph-tier2-binding.runtime-field.invalid.synthetic.json >/dev/null
 	python3 tools/check_sociosphere_authority_dependency_tier2_binding.py tests/fixtures/composition/sociosphere-authority-dependency-graph-tier2-binding.synthetic.json
 	! python3 tools/check_sociosphere_authority_dependency_tier2_binding.py tests/fixtures/composition/sociosphere-authority-dependency-graph-tier2-binding.runtime-field.invalid.synthetic.json
+
+lawful-learning-phase8-registration-validate:
+	python3 -m pip install --user pyyaml >/dev/null
+	python3 tools/validate_lawful_learning_phase8_registration.py
 
 multidomain-geospatial-standards-compliance-validate:
 	python3 tools/check_multidomain_geospatial_standards_compliance.py
