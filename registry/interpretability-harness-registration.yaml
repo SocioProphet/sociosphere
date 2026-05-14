@@ -1,0 +1,103 @@
+# Interpretability harness estate registration
+#
+# This additive registry file records the governed interpretability harness lane
+# in SocioSphere without rewriting the large aggregate repository ontology file.
+
+schema_version: "1.0.0"
+status: active
+updated_at: "2026-05-13"
+registration_id: interpretability-harness.registration
+
+lane:
+  id: interpretability-harness
+  title: "Governed Interpretability Harness"
+  owner_repo: SocioProphet/superconscious
+  owner_plane: superconscious
+  role: provider-boundary-and-certificate-composition-lane
+  status: registered
+
+surfaces:
+  doctrine:
+    repo: SocioProphet/superconscious
+    paths:
+      - docs/interpretability-harness-architecture.md
+      - docs/provider-boundary.md
+      - docs/moat-claim.md
+  schemas:
+    repo: SocioProphet/superconscious
+    path: schemas/interpretability/
+    promotion_state: repo_local_draft
+    promotion_target: SourceOS-Linux/sourceos-spec
+    promotion_condition: "stabilize after provider-boundary fixture review and sourceos-spec review"
+  checker:
+    repo: SocioProphet/superconscious
+    path: scripts/check-interpretability-harness.py
+    ci_target: make interpretability-harness-ci
+  fixtures:
+    repo: SocioProphet/superconscious
+    path: tests/fixtures/interpretability/
+  tier2_binding:
+    repo: SocioProphet/superconscious
+    path: schemas/composition/interpretability-harness-tier2-binding.v1.json
+    ci_target: make interpretability-harness-tier2-binding-ci
+    composition_id: superconscious.interpretability_harness.release_bundle
+    fragment_count: 14
+    required_fragments:
+      - ModelArtifact
+      - SAEArtifact
+      - FeatureArtifact
+      - FeatureExplanation
+      - FeatureActivationSet
+      - SteeringIntervention
+      - CausalTriad
+      - AttributionGraph
+      - OffTargetAudit
+      - ManifoldBaseline
+      - ImplementabilityCurve
+      - RobustnessCertificate
+      - BenchmarkResult
+      - PublicInterpretabilityNote
+    bound_modes:
+      receipt_integration: hash_bound_reference
+      authority_scope_analysis: declared_scope_lattice_v1
+      non_claim_analysis: explicit_propagate_or_resolve_v1
+      monitor_independence_analysis: declared_monitor_independence_v1
+      evidence_freshness_analysis: declared_evidence_freshness_v1
+  governance_doctrine:
+    repo: SocioProphet/ProCybernetica
+    paths:
+      - docs/governance-fabric/TIER2_COMPOSITION_INVARIANTS.md
+      - docs/governance-fabric/INTERPRETABILITY_HARNESS_RELEASE_COMPOSITION.md
+  registry_source_boundary:
+    provider: neuronpedia
+    access_mode: registry_only
+    allowed_uses:
+      - candidate_discovery
+      - public_artifact_citation
+    forbidden_uses:
+      - live_runtime_replay
+      - feature_steering_authority
+      - causal_proof
+      - implementability_proof
+      - robustness_proof
+      - safety_certification
+      - public_claim_promotion
+
+canonical_relationships:
+  doctrine_owner: SocioProphet/superconscious
+  governance_doctrine_owner: SocioProphet/ProCybernetica
+  registry_owner: SocioProphet/sociosphere
+  future_schema_standard_owner: SourceOS-Linux/sourceos-spec
+  future_runtime_evidence_owner: SocioProphet/agentplane
+  future_policy_decision_owner: SocioProphet/policy-fabric
+  future_ontology_owner: SocioProphet/ontogenesis
+
+non_claims:
+  - does_not_promote_schemas_to_sourceos_spec
+  - does_not_claim_runtime_execution
+  - does_not_claim_runtime_evidence_integration
+  - does_not_claim_provider_api_integration
+  - does_not_claim_live_steering_execution
+  - does_not_claim_public_claim_promotion
+  - does_not_replace_superconscious_as_harness_owner
+  - does_not_replace_procybernetica_as_governance_doctrine_owner

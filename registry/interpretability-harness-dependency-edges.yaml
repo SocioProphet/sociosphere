@@ -1,0 +1,60 @@
+# Interpretability harness dependency edges
+#
+# Additive edge pack corresponding to registry/dependency-graph.yaml without
+# rewriting the large aggregate graph file.
+
+schema_version: "1.0.0"
+status: active
+updated_at: "2026-05-13"
+edge_pack_id: interpretability-harness.dependency_edges
+
+edges:
+  - from: superconscious
+    to: ProCybernetica
+    type: governance_doctrine_reference
+    state: active
+    lane: interpretability-harness
+    comment: "Superconscious interpretability harness release bundles consume ProCybernetica Tier 2 composition and interpretability-release governance doctrine."
+
+  - from: sociosphere
+    to: superconscious
+    type: doctrine_owner_reference
+    state: active
+    lane: interpretability-harness
+    comment: "SocioSphere records Superconscious as harness doctrine/schema/checker owner; it does not replace that ownership."
+
+  - from: superconscious
+    to: sourceos-spec
+    type: schema_promotion_path
+    state: pre_promotion
+    lane: interpretability-harness
+    comment: "Provider-boundary, source-lock, feature-entry, and intervention schemas promote only after repo-local fixture stabilization and sourceos-spec review."
+
+  - from: superconscious
+    to: agentplane
+    type: future_runtime_evidence_integration
+    state: deferred
+    lane: interpretability-harness
+    comment: "Runtime execution and replay evidence are deferred to AgentPlane; current harness registration is schema/fixture/doctrine only."
+
+  - from: superconscious
+    to: policy-fabric
+    type: future_policy_decision_integration
+    state: deferred
+    lane: interpretability-harness
+    comment: "Future steering or provider-side controls require Policy Fabric admission; no runtime authority is granted by this registration."
+
+  - from: superconscious
+    to: ontogenesis
+    type: future_ontology_promotion_path
+    state: deferred
+    lane: interpretability-harness
+    comment: "Stable interpretability harness vocabulary may promote to Ontogenesis after v0.1 terms stop changing."
+
+non_claims:
+  - does_not_create_runtime_dependency
+  - does_not_promote_schemas_to_sourceos_spec
+  - does_not_claim_agentplane_runtime_integration
+  - does_not_claim_policy_fabric_admission_integration
+  - does_not_claim_ontogenesis_vocabulary_promotion
+  - does_not_change_dependency_graph_aggregate
