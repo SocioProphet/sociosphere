@@ -1,0 +1,39 @@
+name: interpretability-harness-registration
+
+on:
+  pull_request:
+    paths:
+      - 'registry/interpretability-harness-registration.yaml'
+      - 'registry/interpretability-harness-dependency-edges.yaml'
+      - 'governance/interpretability-harness-canonical-sources.yaml'
+      - 'tools/validate_interpretability_harness_registration.py'
+      - '.github/workflows/interpretability-harness-registration.yml'
+  push:
+    branches:
+      - main
+    paths:
+      - 'registry/interpretability-harness-registration.yaml'
+      - 'registry/interpretability-harness-dependency-edges.yaml'
+      - 'governance/interpretability-harness-canonical-sources.yaml'
+      - 'tools/validate_interpretability_harness_registration.py'
+      - '.github/workflows/interpretability-harness-registration.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate-interpretability-harness-registration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install YAML dependency
+        run: python -m pip install pyyaml
+
+      - name: Validate interpretability harness estate registration
+        run: python tools/validate_interpretability_harness_registration.py
