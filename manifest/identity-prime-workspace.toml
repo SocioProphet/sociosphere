@@ -4,8 +4,8 @@
 # the Sociosphere conformance lane introduced by issue #284 and PR #285.
 # The canonical workspace manifest already contains identity-is-prime-reference
 # and regis-entity-graph. This overlay adds the Agent Registry, Holmes,
-# Sherlock Search, and MeshRush materialization requirements without disturbing
-# the broad canonical manifest in this scaffold PR.
+# Sherlock Search, MeshRush, and ER+ materialization requirements without
+# disturbing the broad canonical manifest.
 
 [[repos]]
 name = "agent_registry"
@@ -36,6 +36,10 @@ required_capabilities = [
   "policy_polytope",
   "congruence_lane",
   "proof_artifact",
+  "er_plus_record_geometry",
+  "er_plus_entity_geometry",
+  "er_plus_behavior_features",
+  "er_plus_neutrality_replay",
 ]
 
 [[repos]]
@@ -51,6 +55,10 @@ required_capabilities = [
   "concordance_link",
   "decision_ledger",
   "proof_certificate",
+  "er_plus_graph_contract",
+  "er_plus_evidence_bundle",
+  "er_plus_decision_ledger",
+  "er_plus_validator",
 ]
 
 [[repos]]
