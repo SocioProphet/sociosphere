@@ -1,0 +1,91 @@
+# Interpretability harness canonical source map
+#
+# Additive canonical-source pack corresponding to governance/CANONICAL_SOURCES.yaml
+# without rewriting the large aggregate canonical source file.
+
+schema_version: "1.0.0"
+status: active
+updated_at: "2026-05-13"
+source_pack_id: interpretability-harness.canonical_sources
+
+namespaces:
+  research/interpretability-harness:
+    canonical_repo: superconscious
+    canonical_path: docs/interpretability-harness-architecture.md
+    note: "Provider-agnostic interpretability harness architecture, object model, fragment composition discipline, and runtime boundary."
+
+  research/interpretability-harness/provider-boundary:
+    canonical_repo: superconscious
+    canonical_path: docs/provider-boundary.md
+    note: "Provider access-mode classification and claim-admissibility doctrine."
+
+  research/interpretability-harness/moat:
+    canonical_repo: superconscious
+    canonical_path: docs/moat-claim.md
+    note: "Moat doctrine: governed interpretability composition rather than a single feature registry release or steering demo."
+
+  schemas/interpretability-harness:
+    canonical_repo: superconscious
+    canonical_path: schemas/interpretability/
+    promotion_target: sourceos-spec
+    state: repo_local_draft
+    note: "ProviderBinding, ArtifactSourceLock, FeatureRegistryEntry, and InterventionSpec schemas remain repo-local drafts."
+
+  fixtures/interpretability-harness:
+    canonical_repo: superconscious
+    canonical_path: tests/fixtures/interpretability/
+    note: "Positive and negative provider-boundary, source-lock, feature-entry, and intervention fixtures."
+
+  composition/interpretability-harness-release-bundle:
+    canonical_repo: superconscious
+    canonical_path: schemas/composition/interpretability-harness-tier2-binding.v1.json
+    governance_repo: ProCybernetica
+    governance_path: docs/governance-fabric/INTERPRETABILITY_HARNESS_RELEASE_COMPOSITION.md
+    note: "Exact fourteen-fragment Tier 2 release-bundle binding and ProCybernetica governance interpretation."
+
+  registry/interpretability-harness/neuronpedia-boundary:
+    canonical_repo: superconscious
+    canonical_path: tests/fixtures/interpretability/intervention-spec.neuronpedia-registry-steering.invalid.synthetic.json
+    note: "Negative fixture preserving that registry-only Neuronpedia evidence cannot be treated as live feature-steering substrate."
+
+  governance/interpretability-harness:
+    canonical_repo: ProCybernetica
+    canonical_path: docs/governance-fabric/INTERPRETABILITY_HARNESS_RELEASE_COMPOSITION.md
+    note: "Governance doctrine for Superconscious interpretability harness release-bundle compositions."
+
+  standards/interpretability-harness-schema-promotion:
+    canonical_repo: sourceos-spec
+    upstream_repo: superconscious
+    state: deferred
+    note: "Future schema promotion target after repo-local fixtures stabilize and sourceos-spec review accepts the vocabulary."
+
+  execution/interpretability-harness-runtime-evidence:
+    canonical_repo: agentplane
+    upstream_repo: superconscious
+    state: deferred
+    note: "Future runtime execution and replay evidence target. No runtime execution or evidence integration is claimed by this registration."
+
+binding_refs:
+  interpretability_harness_release_bundle:
+    repo: superconscious
+    path: schemas/composition/interpretability-harness-tier2-binding.v1.json
+    non_claims:
+      - no_runtime_receipt_lookup
+      - no_runtime_non_claim_verification
+      - no_runtime_monitor_attestation
+      - no_timestamp_authenticity
+      - opaque_hashes_not_resolved
+      - no_runtime_provider_access
+      - no_runtime_feature_activation_claim
+      - no_live_steering_execution
+      - no_public_claim_promotion
+      - no_neuronpedia_release_substitution
+
+non_claims:
+  - does_not_rewrite_governance_CANONICAL_SOURCES_yaml
+  - does_not_promote_schemas_to_sourceos_spec
+  - does_not_claim_runtime_execution
+  - does_not_claim_runtime_evidence_integration
+  - does_not_claim_provider_api_integration
+  - does_not_change_harness_owner
+  - does_not_change_governance_doctrine_owner
