@@ -1,0 +1,75 @@
+{
+  "fixture_kind": "procybernetica_safety_case_registry_mapping",
+  "fixture_version": "v0.1",
+  "publication_state": "public-synthetic",
+  "upstream_anchor": {
+    "procybernetica_issue": "SocioProphet/ProCybernetica#28",
+    "schema_bundle_issue": "SocioProphet/ProCybernetica#26",
+    "validator_issue": "SocioProphet/ProCybernetica#27"
+  },
+  "registry_entry": {
+    "registry_entry_id": "sociosphere-procybernetica-safety-case-synthetic-001",
+    "workspace_ref": "workspace://synthetic/procybernetica-governance",
+    "registry_owner": "SocioProphet/sociosphere",
+    "runtime_claim": "none",
+    "private_evidence_included": false
+  },
+  "procybernetica_references": [
+    {
+      "object_kind": "cybernetic_safety_case",
+      "schema_ref": "https://schemas.socioprophet.ai/cybernetic-governance/cybernetic_safety_case.v1.json",
+      "object_ref": "safety-case:sociosphere:synthetic:001",
+      "sociosphere_use": "safety-case registry entry"
+    },
+    {
+      "object_kind": "promotion_decision",
+      "schema_ref": "https://schemas.socioprophet.ai/cybernetic-governance/promotion_decision.v1.json",
+      "object_ref": "promotion:sociosphere:synthetic:001",
+      "sociosphere_use": "cross-repo promotion mapping"
+    },
+    {
+      "object_kind": "authority_graph_snapshot",
+      "schema_ref": "https://schemas.socioprophet.ai/cybernetic-governance/authority_graph_snapshot.v1.json",
+      "object_ref": "authority-graph:sociosphere:synthetic:001",
+      "sociosphere_use": "workspace authority and separation-of-powers view"
+    },
+    {
+      "object_kind": "evidence_receipt",
+      "schema_ref": "https://schemas.socioprophet.ai/cybernetic-governance/evidence_receipt.v1.json",
+      "object_ref": "receipt:sociosphere:synthetic:001",
+      "sociosphere_use": "governance-board evidence reference"
+    },
+    {
+      "object_kind": "privacy_evidence_classification",
+      "schema_ref": "https://schemas.socioprophet.ai/cybernetic-governance/privacy_evidence_classification.v1.json",
+      "object_ref": "privacy-classification:sociosphere:synthetic:001",
+      "sociosphere_use": "public/private evidence boundary display"
+    },
+    {
+      "object_kind": "incident_record",
+      "schema_ref": "https://schemas.socioprophet.ai/cybernetic-governance/incident_record.v1.json",
+      "object_ref": "incident:sociosphere:synthetic:001",
+      "sociosphere_use": "incident or control-failure triage reference"
+    },
+    {
+      "object_kind": "release_delta_report",
+      "schema_ref": "https://schemas.socioprophet.ai/cybernetic-governance/release_delta_report.v1.json",
+      "object_ref": "release-delta:sociosphere:synthetic:001",
+      "sociosphere_use": "release or change governance view"
+    }
+  ],
+  "registry_rules": {
+    "do_not_fork_schema_names": true,
+    "sociosphere_registry_ownership_preserved": true,
+    "procybernetica_semantics_preserved": true,
+    "redaction_boundary_required_for_private_evidence": true,
+    "safety_case_is_not_production_readiness_by_default": true
+  },
+  "non_claims": [
+    "This fixture does not represent live workspace governance data.",
+    "This fixture does not claim production readiness.",
+    "This fixture does not implement registry runtime.",
+    "This fixture does not implement policy enforcement.",
+    "This fixture does not redefine ProCybernetica schemas."
+  ]
+}
